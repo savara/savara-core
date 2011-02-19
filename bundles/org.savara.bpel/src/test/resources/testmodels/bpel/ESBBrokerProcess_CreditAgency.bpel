@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" name="ESBBrokerProcess_CreditAgency" targetNamespace="http://www.pi4soa.org/ESBBroker/CreditAgency">
+    <import namespace="http://www.pi4soa.org/ESBBroker/CreditAgency" location="ESBBrokerProcess_CreditAgency.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/Broker" location="ESBBrokerProcess_Broker.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/Supplier" location="ESBBrokerProcess_Supplier.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/Supplier" location="ESBBrokerProcess_SupplierTxnProcessor.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/CreditAgency" location="ESBBrokerProcess_CreditAgencyArtifacts.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="BrokerToCreditAgency" partnerLinkType="cay:BrokerToCreditAgencyServiceLT" myRole="CreditAgency"/>
+    </partnerLinks>
+    <variables>
+        <variable name="checkCreditRequestVar" messageType="cay:checkCreditRequest"/>
+        <variable name="checkCreditResponseVar" messageType="cay:checkCreditResponse"/>
+        <variable name="invalidCreditFaultVar" messageType="cay:invalidCreditFault"/>
+    </variables>
+    <sequence>
+        <receive partnerLink="BrokerToCreditAgency" portType="cay:CreditAgencyBehavior" operation="checkCredit" variable="checkCreditRequestVar" createInstance="yes" name="Receive_CreditCheckRequest"/>
+        <if>
+            <sequence>
+                <reply partnerLink="BrokerToCreditAgency" portType="cay:CreditAgencyBehavior" operation="checkCredit" variable="checkCreditResponseVar" name="Send_CreditCheckOk"/>
+            </sequence>
+            <else>
+                <sequence>
+                    <reply partnerLink="BrokerToCreditAgency" portType="cay:CreditAgencyBehavior" operation="checkCredit" variable="invalidCreditFaultVar" faultName="cay:invalidCredit" name="Send_CreditCheckInvalid"/>
+                </sequence>
+            </else>
+        </if>
+    </sequence>
+</process>

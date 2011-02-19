@@ -1,0 +1,9 @@
+protocol PurchaseGoodsProcess_CreditAgency @ CreditAgencyInterface {
+	checkCredit(CreditCheckRequest) from Store;
+	choice to Store {
+		checkCredit(CreditCheckOk):
+
+		checkCredit(CreditCheckInvalid):
+
+	}
+}

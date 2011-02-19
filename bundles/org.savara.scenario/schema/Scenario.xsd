@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.savara.org/scenario" xmlns:tns="http://www.savara.org/scenario" elementFormDefault="qualified">
+
+    <complexType name="Role">
+    	<attribute name="id" type="ID"></attribute>
+    	<attribute name="name" type="string"></attribute>
+    </complexType>
+
+    <complexType name="Scenario">
+    	<sequence>
+    		<element name="role" type="tns:Role" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</element>
+    		<element name="event" type="tns:Event"
+    			maxOccurs="unbounded" minOccurs="0">
+    		</element>
+    		<element name="link" type="tns:Link" maxOccurs="unbounded"
+    			minOccurs="0">
+    		</element>
+    	</sequence>
+    	<attribute name="name" type="string"></attribute>
+    	<attribute name="description" type="string"></attribute>
+    	<attribute name="author" type="string"></attribute>
+    </complexType>
+
+    <complexType name="Event" abstract="true">
+    	<attribute name="id" type="ID"></attribute>
+    	<attribute name="role" type="IDREF"></attribute>
+    	<attribute name="errorExpected" type="boolean"></attribute>
+    </complexType>
+
+    <complexType name="Link">
+    	<attribute name="source" type="IDREF"></attribute>
+    	<attribute name="target" type="IDREF"></attribute>
+    </complexType>
+
+    <complexType name="MessageEvent" abstract="true">
+    	<complexContent>
+    		<extension base="tns:Event">
+    			<attribute name="operationName" type="string"></attribute>
+    			<attribute name="faultName" type="string"></attribute>
+    			<attribute name="type" type="string"></attribute>
+    			<attribute name="value" type="anyURI"></attribute>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="SendEvent">
+    	<complexContent>
+    		<extension base="tns:MessageEvent"></extension>
+    	</complexContent>
+    </complexType>
+    
+    <complexType name="ReceiveEvent">
+    	<complexContent>
+    		<extension base="tns:MessageEvent"></extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="Group">
+    	<complexContent>
+    		<extension base="tns:Event">
+        		<sequence>
+          			<element maxOccurs="unbounded" minOccurs="0" name="event" type="tns:Event"/>
+        		</sequence>
+    			<attribute name="name" type="string"></attribute>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="TimeElapsedEvent">
+    	<complexContent>
+    		<extension base="tns:Event">
+    			<attribute name="duration" type="string"></attribute>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="Import">
+    	<complexContent>
+    		<extension base="tns:Event">
+    			<attribute name="url" type="anyURI"></attribute>
+    			<attribute name="group" type="string"></attribute>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <element name="scenario" type="tns:Scenario"></element>
+</schema>

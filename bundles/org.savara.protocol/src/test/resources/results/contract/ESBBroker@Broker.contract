@@ -1,0 +1,22 @@
+Contract {http://www.pi4soa.org/ESBBroker/Broker}Broker {
+	Namespace prefix=brk uri=http://www.pi4soa.org/ESBBroker/Broker schemaLocation=null
+	Namespace prefix=cay uri=http://www.pi4soa.org/ESBBroker/CreditAgency schemaLocation=null
+	Namespace prefix=spr uri=http://www.pi4soa.org/ESBBroker/Supplier schemaLocation=null
+	[[ XSDElement ]]
+	TypeDef BookingReference type=bookingReference location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef Buy type=buy location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef Cancel type=cancel location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef Enquiry type=enquiry location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef OrderRejected type=orderRejected location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef QuoteList type=quoteList location=null typeSystem=xsd
+	Interface {http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior {
+		RequestResponseMEP makeEnquiry( Enquiry ) : QuoteList 
+		RequestResponseMEP buy( Buy ) : BookingReference Fault rejected( OrderRejected ) 
+		OneWayRequestMEP cancel( Cancel )
+	}
+}

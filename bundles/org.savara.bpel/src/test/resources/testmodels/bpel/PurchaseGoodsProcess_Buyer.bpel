@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:sto="http://www.jboss.org/examples/store" xmlns:pur="java:org.jboss.savara.examples.purchasing" name="PurchaseGoodsProcess_Buyer" targetNamespace="http://www.jboss.org/savara/examples" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable">
+    <import namespace="java:org.jboss.savara.examples.purchasing" location="PurchaseGoodsProcess_CreditAgency.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.jboss.org/examples/store" location="PurchaseGoodsProcess_Store.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.jboss.org/savara/examples" location="PurchaseGoodsProcess_BuyerArtifacts.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="BuyerToStore" myRole="Buyer" partnerLinkType="tns:BuyerToStoreLT" partnerRole="StoreRequester"/>
+    </partnerLinks>
+    <variables>
+        <variable name="buyRequestVar" messageType="sto:buyRequest"/>
+        <variable name="buyResponseVar" messageType="sto:buyResponse"/>
+    </variables>
+    <sequence>
+        <scope>
+            <faultHandlers>
+                <catch faultName="sto:BuyFailed" faultVariable="BuyFailedFaultVar" faultMessageType="sto:BuyFailedFault">
+                    <sequence/>
+                </catch>
+            </faultHandlers>
+            <sequence>
+                <invoke partnerLink="BuyerToStore" portType="sto:StoreInterface" operation="buy" inputVariable="buyRequestVar" outputVariable="buyResponseVar" name="Send_BuyRequest"/>
+            </sequence>
+        </scope>
+    </sequence>
+</process>

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SAVARA Activity
+Bundle-SymbolicName: org.savara.activity
+Bundle-Version: 2.0.0.SNAPSHOT
+Bundle-Activator: org.savara.activity.osgi.Activator
+Bundle-Vendor: www.savara.org
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"
+Export-Package: org.savara.activity,
+ org.savara.activity.model,
+ org.savara.activity.util
+Bundle-ClassPath: .

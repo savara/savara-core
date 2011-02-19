@@ -1,0 +1,11 @@
+Contract {http://creditagency.com/creditCheckService}CreditCheckService {
+	Namespace prefix=cred uri=http://creditagency.com/creditCheck schemaLocation=schema/creditCheck.xsd
+	Namespace prefix=ca uri=http://creditagency.com/creditCheckService schemaLocation=null
+	[[ XSDElement ]]
+	TypeDef CreditCheckRequest type={http://creditagency.com/creditCheck}creditCheckRequest location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef CreditCheckResponse type={http://creditagency.com/creditCheck}creditCheckResponse location=null typeSystem=xsd
+	Interface {http://creditagency.com/creditCheckService}CreditCheckService {
+		RequestResponseMEP checkCredit( CreditCheckRequest ) : CreditCheckResponse 
+	}
+}

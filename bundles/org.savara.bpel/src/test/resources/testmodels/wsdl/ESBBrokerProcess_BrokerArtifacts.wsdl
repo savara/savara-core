@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://www.pi4soa.org/ESBBroker/Broker" xmlns:ns2="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:ns3="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" targetNamespace="http://www.pi4soa.org/ESBBroker/Broker">
+    <wsdl:import location="ESBBrokerProcess_Broker.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Broker"/>
+    <wsdl:import location="ESBBrokerProcess_CreditAgency.wsdl" namespace="http://www.pi4soa.org/ESBBroker/CreditAgency"/>
+    <wsdl:import location="ESBBrokerProcess_Supplier.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
+    <plnk:partnerLinkType name="BuyerToBrokerServiceLT">
+        <plnk:role name="BrokerBehavior" portType="ns1:BrokerBehavior"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="BrokerToSupplierQuoteEngineLT">
+        <plnk:role name="SupplierQuoteEngineRequester" portType="ns2:SupplierBehavior"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="BrokerToCreditAgencyLT">
+        <plnk:role name="CreditAgencyRequester" portType="ns3:CreditAgencyBehavior"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="BrokerToSupplierTxnProcessorLT">
+        <plnk:role name="SupplierTxnProcessorRequester" portType="ns2:SupplierBehavior"/>
+    </plnk:partnerLinkType>
+</wsdl:definitions>

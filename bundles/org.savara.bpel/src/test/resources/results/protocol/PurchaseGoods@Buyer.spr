@@ -1,0 +1,9 @@
+protocol PurchaseGoodsProcess_Buyer @ Buyer {
+	buy(BuyRequest) to Store;
+	choice from Store {
+		buy(BuyConfirmed):
+
+		buy(BuyFailed):
+
+	}
+}

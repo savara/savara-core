@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:pur="java:org.jboss.savara.examples.purchasing" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PurchaseGoodsProcess_Store" targetNamespace="http://www.jboss.org/examples/store">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_Store.wsdl" namespace="http://www.jboss.org/examples/store"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_CreditAgency.wsdl" namespace="java:org.jboss.savara.examples.purchasing"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_StoreArtifacts.wsdl" namespace="http://www.jboss.org/examples/store"/>
+    <partnerLinks>
+        <partnerLink myRole="StoreInterface" name="BuyerToStore" partnerLinkType="sto:BuyerToStoreServiceLT"/>
+        <partnerLink name="StoreToCreditAgency" partnerLinkType="sto:StoreToCreditAgencyLT" partnerRole="CreditAgencyRequester"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="sto:buyRequest" name="buyRequestVar"/>
+        <variable messageType="pur:checkCreditRequest" name="checkCreditRequestVar"/>
+        <variable messageType="pur:checkCreditResponse" name="checkCreditResponseVar"/>
+        <variable messageType="sto:buyResponse" name="buyResponseVar"/>
+        <variable messageType="sto:BuyFailedFault" name="BuyFailedFaultVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_BuyRequest" operation="buy" partnerLink="BuyerToStore" portType="sto:StoreInterface" variable="buyRequestVar"/>
+        <scope>
+            <faultHandlers>
+                <catch faultMessageType="pur:CreditCheckFailedFault" faultName="pur:CreditCheckFailed" faultVariable="CreditCheckFailedFaultVar">
+                    <sequence>
+                        <reply faultName="sto:BuyFailed" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="sto:StoreInterface" variable="BuyFailedFaultVar"/>
+                    </sequence>
+                </catch>
+            </faultHandlers>
+            <sequence>
+                <invoke inputVariable="checkCreditRequestVar" name="Send_CreditCheckRequest" operation="checkCredit" outputVariable="checkCreditResponseVar" partnerLink="StoreToCreditAgency" portType="pur:CreditAgencyInterface"/>
+                <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="sto:StoreInterface" variable="buyResponseVar"/>
+            </sequence>
+        </scope>
+    </sequence>
+</process>

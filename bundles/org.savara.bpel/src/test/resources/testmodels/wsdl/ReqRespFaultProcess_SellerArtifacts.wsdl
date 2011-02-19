@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://www.pi4soa.org/ReqRespFault/Seller" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" targetNamespace="http://www.pi4soa.org/ReqRespFault/Seller">
+    <wsdl:import location="ReqRespFaultProcess_Seller.wsdl" namespace="http://www.pi4soa.org/ReqRespFault/Seller"/>
+    <plnk:partnerLinkType name="BuyerToSellerServiceLT">
+        <plnk:role name="SellerBehavior" portType="ns1:SellerBehavior"/>
+    </plnk:partnerLinkType>
+</wsdl:definitions>

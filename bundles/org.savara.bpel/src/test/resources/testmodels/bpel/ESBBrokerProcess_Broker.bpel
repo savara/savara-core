@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" name="ESBBrokerProcess_Broker" targetNamespace="http://www.pi4soa.org/ESBBroker/Broker">
+    <import namespace="http://www.pi4soa.org/ESBBroker/Broker" location="ESBBrokerProcess_Broker.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/CreditAgency" location="ESBBrokerProcess_CreditAgency.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/Supplier" location="ESBBrokerProcess_Supplier.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/Broker" location="ESBBrokerProcess_BrokerArtifacts.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="BuyerToBroker" partnerLinkType="brk:BuyerToBrokerServiceLT" myRole="BrokerBehavior"/>
+        <partnerLink name="BrokerToSupplierQuoteEngine" partnerLinkType="brk:BrokerToSupplierQuoteEngineLT" partnerRole="SupplierQuoteEngineRequester"/>
+        <partnerLink name="BrokerToCreditAgency" partnerLinkType="brk:BrokerToCreditAgencyLT" partnerRole="CreditAgencyRequester"/>
+        <partnerLink name="BrokerToSupplierTxnProcessor" partnerLinkType="brk:BrokerToSupplierTxnProcessorLT" partnerRole="SupplierTxnProcessorRequester"/>
+    </partnerLinks>
+    <variables>
+        <variable name="makeEnquiryRequestVar" messageType="brk:makeEnquiryRequest"/>
+        <variable name="getQuoteRequestVar" messageType="spr:getQuoteRequest"/>
+        <variable name="getQuoteResponseVar" messageType="spr:getQuoteResponse"/>
+        <variable name="makeEnquiryResponseVar" messageType="brk:makeEnquiryResponse"/>
+        <variable name="checkCreditRequestVar" messageType="cay:checkCreditRequest"/>
+        <variable name="checkCreditResponseVar" messageType="cay:checkCreditResponse"/>
+        <variable name="confirmRequestVar" messageType="spr:confirmRequest"/>
+        <variable name="confirmResponseVar" messageType="spr:confirmResponse"/>
+        <variable name="buyResponseVar" messageType="brk:buyResponse"/>
+        <variable name="rejectedFaultVar" messageType="brk:rejectedFault"/>
+        <variable name="buyRequestVar" messageType="brk:buyRequest"/>
+        <variable name="cancelRequestVar" messageType="brk:cancelRequest"/>
+    </variables>
+    <sequence>
+        <receive partnerLink="BuyerToBroker" portType="brk:BrokerBehavior" operation="makeEnquiry" variable="makeEnquiryRequestVar" createInstance="yes" name="Receive_enquiry"/>
+        <while>
+            <sequence>
+                <scope>
+                    <sequence>
+                        <invoke partnerLink="BrokerToSupplierQuoteEngine" portType="spr:SupplierBehavior" operation="getQuote" inputVariable="getQuoteRequestVar" outputVariable="getQuoteResponseVar" name="Send_requestForQuote"/>
+                    </sequence>
+                </scope>
+            </sequence>
+        </while>
+        <reply partnerLink="BuyerToBroker" portType="brk:BrokerBehavior" operation="makeEnquiry" variable="makeEnquiryResponseVar" name="Send_quoteList"/>
+        <pick>
+            <onMessage partnerLink="BuyerToBroker" portType="brk:BrokerBehavior" operation="buy" variable="buyRequestVar">
+                <sequence>
+                    <scope>
+                        <faultHandlers>
+                            <catch faultName="cay:invalidCredit" faultVariable="invalidCreditFaultVar" faultMessageType="cay:invalidCreditFault">
+<sequence>
+    <reply partnerLink="BuyerToBroker" portType="brk:BrokerBehavior" operation="buy" variable="rejectedFaultVar" faultName="brk:rejected" name="Send_orderRejected"/>
+</sequence>
+                            </catch>
+                        </faultHandlers>
+                        <sequence>
+                            <invoke partnerLink="BrokerToCreditAgency" portType="cay:CreditAgencyBehavior" operation="checkCredit" inputVariable="checkCreditRequestVar" outputVariable="checkCreditResponseVar" name="Send_CreditCheckRequest"/>
+                            <invoke partnerLink="BrokerToSupplierTxnProcessor" portType="spr:SupplierBehavior" operation="confirm" inputVariable="confirmRequestVar" outputVariable="confirmResponseVar" name="Send_orderConfirmed"/>
+                            <reply partnerLink="BuyerToBroker" portType="brk:BrokerBehavior" operation="buy" variable="buyResponseVar" name="Send_bookingReference"/>
+                        </sequence>
+                    </scope>
+                </sequence>
+            </onMessage>
+            <onMessage partnerLink="BuyerToBroker" portType="brk:BrokerBehavior" operation="cancel" variable="cancelRequestVar">
+                <sequence/>
+            </onMessage>
+        </pick>
+    </sequence>
+</process>

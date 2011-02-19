@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://www.pi4soa.org/ESBBroker/Broker" xmlns:ns2="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" targetNamespace="http://www.pi4soa.org/ESBBroker/Buyer">
+    <!-- >wsdl:import location="ESBBrokerProcess_Buyer.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Buyer"/ -->
+    <wsdl:import location="ESBBrokerProcess_Broker.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Broker"/>
+    <wsdl:import location="ESBBrokerProcess_CreditAgency.wsdl" namespace="http://www.pi4soa.org/ESBBroker/CreditAgency"/>
+    <wsdl:import location="ESBBrokerProcess_Supplier.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
+    <plnk:partnerLinkType name="BuyerToBrokerLT">
+        <plnk:role name="BrokerRequester" portType="ns1:BrokerBehavior"/>
+        <plnk:role name="BrokerBehavior" portType="ns2:BuyerBehavior"/>
+    </plnk:partnerLinkType>
+</wsdl:definitions>

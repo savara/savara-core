@@ -1,0 +1,23 @@
+Contract {http://www.example.org/policyQuoteProcessService}PolicyQuoteProcessService {
+	Namespace prefix=ca uri=http://creditagency.com/creditCheckService schemaLocation=null
+	Namespace prefix=drv uri=http://dmv.com/drivingRecord schemaLocation=schema/drivingRecord.xsd
+	Namespace prefix=dmv uri=http://dmv.com/drivingRecordService schemaLocation=null
+	Namespace prefix=pol uri=http://www.example.org/policyQuote schemaLocation=schema/policyQuote.xsd
+	Namespace prefix=pcs uri=http://www.example.org/policyQuoteCalculationService schemaLocation=null
+	Namespace prefix=pes uri=http://www.example.org/policyQuoteEntityService schemaLocation=null
+	Namespace prefix=pps uri=http://www.example.org/policyQuoteProcessService schemaLocation=null
+	[[ XSDElement ]]
+	TypeDef DrivingRecordResponse type={http://dmv.com/drivingRecord}drivingRecordResponse location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef PolicyQuote type={http://www.example.org/policyQuote}policyQuote location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef PolicyQuoteFault type={http://www.example.org/policyQuote}policyQuoteFault location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef PolicyQuoteReply type={http://www.example.org/policyQuote}policyQuoteReply location=null typeSystem=xsd
+	Interface {http://www.example.org/policyQuoteProcessService}DrivingRecordCallbackService {
+		OneWayRequestMEP receiveDrivingRecord( DrivingRecordResponse )
+	}
+	Interface {http://www.example.org/policyQuoteProcessService}PolicyQuoteProcessService {
+		RequestResponseMEP receivePolicyQuote( PolicyQuote ) : PolicyQuoteReply Fault policyQuoteFault( PolicyQuoteFault ) 
+	}
+}

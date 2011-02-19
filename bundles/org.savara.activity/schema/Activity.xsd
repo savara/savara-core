@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.savara.org/activity" xmlns:tns="http://www.savara.org/activity" elementFormDefault="qualified">
+
+    <complexType name="Activity">
+    	<sequence>
+    		<element name="analysis" type="tns:Analysis" minOccurs="0"
+    			maxOccurs="unbounded">
+    		</element>
+    		<element name="context" type="tns:Context" minOccurs="0"
+    			maxOccurs="unbounded">
+    		</element>
+    	</sequence>
+    	<attribute name="id" type="ID"></attribute>
+    	<attribute name="timestamp" type="dateTime"></attribute>
+    </complexType>
+
+    <complexType name="Analysis" abstract="true"></complexType>
+
+    <complexType name="Context">
+		<attribute name="name" type="string"></attribute>
+		<attribute name="value" type="string"></attribute>
+    </complexType>
+
+    <complexType name="ComponentActivity">
+    	<complexContent>
+    		<extension base="tns:Activity">
+      			<attribute name="instanceId" type="string"></attribute>
+     			<attribute name="componentId" type="string"></attribute>
+     			<attribute name="componentName" type="string"></attribute>
+     			<attribute name="status" type="tns:Status"></attribute>
+    		</extension>
+    	</complexContent>
+    </complexType>
+    
+    <simpleType name="Status">
+    	<restriction base="string">
+    		<enumeration value="Started"></enumeration>
+    		<enumeration value="Finished"></enumeration>
+    	</restriction>
+    </simpleType>
+    
+    <complexType name="InteractionActivity">
+    	<complexContent>
+    		<extension base="tns:Activity">
+    			<sequence>
+    				<element name="parameter" type="tns:MessageParameter" maxOccurs="unbounded" minOccurs="0"></element>
+    			</sequence>
+    			<attribute name="destinationType" type="string"></attribute>
+    			<attribute name="destinationAddress" type="string"></attribute>
+    			<attribute name="replyToAddress" type="string"></attribute>
+    			<attribute name="operationName" type="string"></attribute>
+    			<attribute name="faultName" type="string"></attribute>
+    			<attribute name="exchangeType" type="tns:ExchangeType" default="undefined"></attribute>
+    			<attribute name="outbound" type="boolean" default="true"></attribute>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <complexType name="MessageParameter">
+    	<sequence>
+    		<element name="value" type="anyURI"></element>
+    	</sequence>
+    	<attribute name="type" type="string"></attribute>
+    </complexType>
+
+    <simpleType name="ExchangeType">
+    	<restriction base="string">
+    		<enumeration value="undefined"></enumeration>
+    		<enumeration value="request"></enumeration>
+    		<enumeration value="response"></enumeration>
+    	</restriction>
+    </simpleType>
+
+    <complexType name="ProtocolAnalysis">
+    	<complexContent>
+    		<extension base="tns:Analysis">
+    			<attribute name="protocol" type="string"></attribute>
+    			<attribute name="role" type="string"></attribute>
+    			<attribute name="expected" type="boolean" default="true"></attribute>
+    		</extension>
+    	</complexContent>
+    </complexType>
+
+    <element name="activity" type="tns:Activity"></element>
+
+</schema>

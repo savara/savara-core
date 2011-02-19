@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:pur="java:org.jboss.savara.examples.purchasing" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PurchaseGoodsProcess_CreditAgency" targetNamespace="java:org.jboss.savara.examples.purchasing">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_CreditAgency.wsdl" namespace="java:org.jboss.savara.examples.purchasing"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_CreditAgencyArtifacts.wsdl" namespace="java:org.jboss.savara.examples.purchasing"/>
+    <partnerLinks>
+        <partnerLink myRole="CreditAgencyInterface" name="StoreToCreditAgency" partnerLinkType="pur:StoreToCreditAgencyServiceLT"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="pur:checkCreditRequest" name="checkCreditRequestVar"/>
+        <variable messageType="pur:checkCreditResponse" name="checkCreditResponseVar"/>
+        <variable messageType="pur:CreditCheckFailedFault" name="CreditCheckFailedFaultVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_CreditCheckRequest" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="pur:CreditAgencyInterface" variable="checkCreditRequestVar"/>
+        <if>
+            <sequence>
+                <reply name="Send_CreditCheckOk" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="pur:CreditAgencyInterface" variable="checkCreditResponseVar"/>
+            </sequence>
+            <else>
+                <sequence>
+                    <reply faultName="pur:CreditCheckFailed" name="Send_CreditCheckInvalid" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="pur:CreditAgencyInterface" variable="CreditCheckFailedFaultVar"/>
+                </sequence>
+            </else>
+        </if>
+    </sequence>
+</process>

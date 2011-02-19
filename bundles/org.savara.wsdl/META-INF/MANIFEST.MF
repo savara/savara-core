@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SAVARA WSDL
+Bundle-SymbolicName: org.savara.wsdl
+Bundle-Version: 2.0.0.SNAPSHOT
+Bundle-Activator: org.savara.wsdl.osgi.Activator
+Bundle-Vendor: www.savara.org
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"
+Require-Bundle: javax.wsdl;visibility:=reexport,
+ org.savara.common,
+ org.savara.contract,
+ org.apache.commons.logging,
+ org.scribble.common,
+ org.scribble.protocol,
+ org.junit
+Export-Package: org.savara.wsdl.generator,
+ org.savara.wsdl.generator.impl,
+ org.savara.wsdl.generator.soap,
+ org.savara.wsdl.util

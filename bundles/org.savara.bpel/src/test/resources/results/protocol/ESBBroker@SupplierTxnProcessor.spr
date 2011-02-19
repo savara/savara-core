@@ -1,0 +1,4 @@
+protocol CompleteTransaction_SupplierTxnProcessor @ SupplierTxnProcessor {
+	confirm(orderConfirmed) from Broker;
+	confirm(bookingReference) to Broker;
+}

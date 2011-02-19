@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="CreditAgency" targetNamespace="http://www.pi4soa.org/ESBBroker/CreditAgency">
+    <types xmlns="http://schemas.xmlsoap.org/wsdl/">
+        <schema xmlns="http://www.w3.org/2001/XMLSchema"/>
+    </types>
+    <wsdl:message name="checkCreditResponse">
+        <wsdl:part element="CreditCheckOk" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="checkCreditRequest">
+        <wsdl:part element="CreditCheckRequest" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="invalidCreditFault">
+        <wsdl:part element="CreditCheckInvalid" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="CreditAgencyBehavior">
+        <wsdl:operation name="checkCredit">
+            <wsdl:input message="cay:checkCreditRequest">
+            </wsdl:input>
+            <wsdl:output message="cay:checkCreditResponse">
+            </wsdl:output>
+            <wsdl:fault message="cay:invalidCreditFault" name="invalidCredit">
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="CreditAgencyBehaviorBinding" type="cay:CreditAgencyBehavior">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="checkCredit">
+            <soap:operation soapAction="http://www.pi4soa.org/ESBBroker/CreditAgency/checkCredit"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="invalidCredit">
+                <soap:fault name="invalidCredit" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="CreditAgencyService">
+        <wsdl:port binding="cay:CreditAgencyBehaviorBinding" name="CreditAgencyBehaviorPort">
+            <soap:address location="http://localhost:8080/CreditAgencyService/CreditAgencyBehaviorPort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

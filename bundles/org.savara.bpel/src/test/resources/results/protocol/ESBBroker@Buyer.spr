@@ -1,0 +1,16 @@
+protocol ESBBrokerProcess_Buyer @ Buyer {
+	makeEnquiry(enquiry) to Broker;
+	makeEnquiry(quoteList) from Broker;
+	choice to Broker {
+		buy():
+			choice from Broker {
+				buy(bookingReference):
+
+				buy(orderRejected):
+
+			}
+
+		cancel():
+
+	}
+}

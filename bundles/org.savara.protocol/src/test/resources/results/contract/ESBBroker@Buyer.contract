@@ -1,0 +1,3 @@
+Contract {http://www.pi4soa.org/ESBBroker/Buyer}Buyer {
+	Namespace prefix=brk uri=http://www.pi4soa.org/ESBBroker/Broker schemaLocation=null
+}

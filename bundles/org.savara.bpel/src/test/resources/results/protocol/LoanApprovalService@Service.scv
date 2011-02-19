@@ -1,0 +1,41 @@
+namespace null;
+
+conversation loanApprovalProcess {
+	try {
+		boolean	receive-to-assess, receive-to-approval, approval-to-reply, assess-to-setMessage, setMessage-to-reply, assess-to-approval;
+		parallel {
+			request(creditInformationMessage) from customer;
+			receive-to-assess = xpath[true()];
+			receive-to-approval = xpath[true()];
+		} and {
+			when (xpath[$receive-to-assess])  {
+				check(creditInformationMessage) to assessor;
+				if {
+					check(riskAssessmentMessage) from assessor;
+				} else if {
+					check(errorMessage) from assessor;
+					raise lns:loanProcessFault;
+				}
+				assess-to-setMessage = xpath[true()];
+				assess-to-approval = xpath[true()];
+			}
+		} and {
+			when (xpath[$receive-to-approval and $assess-to-approval])  {
+				approve(creditInformationMessage) to approver;
+				if {
+					approve(approvalMessage) from approver;
+				} else if {
+					approve(errorMessage) from approver;
+					raise lns:loanProcessFault;
+				}
+				approval-to-reply = xpath[true()];
+			}
+		} and {
+			when (xpath[$setMessage-to-reply and $approval-to-reply])  {
+				request(approvalMessage) to customer;
+			}
+		}
+	} catch lns:loanProcessFault {
+		request(errorMessage) to customer;
+	}
+}

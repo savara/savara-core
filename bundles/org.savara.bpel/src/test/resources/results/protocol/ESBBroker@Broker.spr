@@ -1,0 +1,25 @@
+protocol ESBBrokerProcess_Broker @ BrokerBehavior {
+	makeEnquiry(enquiry) from Buyer;
+	repeat {
+		getQuote(requestForQuote) to SupplierQuoteEngine;
+		getQuote(quote) from SupplierQuoteEngine;
+	}
+	makeEnquiry(quoteList) to Buyer;
+	choice from Buyer {
+		buy(buy):
+			checkCredit(CreditCheckRequest) to CreditAgency;
+			choice from CreditAgency {
+				checkCredit(CreditCheckOk):
+					confirm(orderConfirmed) to SupplierTxnProcessor;
+					confirm(bookingReference) from SupplierTxnProcessor;
+					buy(bookingReference) to Buyer;
+
+				checkCredit(CreditCheckInvalid):
+					buy(orderRejected) to Buyer;
+
+			}
+
+		cancel(cancel):
+
+	}
+}

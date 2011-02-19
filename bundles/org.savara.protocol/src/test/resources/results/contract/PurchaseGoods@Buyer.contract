@@ -1,0 +1,3 @@
+Contract {http://www.jboss.org/savara/examples}Buyer {
+	Namespace prefix=sto uri=http://www.jboss.org/examples/store schemaLocation=null
+}

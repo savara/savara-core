@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="RequestForQuote_SupplierQuoteEngine" targetNamespace="http://www.pi4soa.org/ESBBroker/Supplier">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="RequestForQuote_SupplierQuoteEngine.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="RequestForQuote_SupplierQuoteEngineArtifacts.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
+    <partnerLinks>
+        <partnerLink myRole="SupplierBehavior" name="BrokerToSupplierQuoteEngine" partnerLinkType="spr:BrokerToSupplierQuoteEngineServiceLT"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="spr:getQuoteRequest" name="getQuoteRequestVar"/>
+        <variable messageType="spr:getQuoteResponse" name="getQuoteResponseVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_RequestForQuote" operation="getQuote" partnerLink="BrokerToSupplierQuoteEngine" portType="spr:SupplierBehavior" variable="getQuoteRequestVar"/>
+        <reply name="Send_Quote" operation="getQuote" partnerLink="BrokerToSupplierQuoteEngine" portType="spr:SupplierBehavior" variable="getQuoteResponseVar"/>
+    </sequence>
+</process>

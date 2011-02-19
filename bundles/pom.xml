@@ -1,0 +1,71 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.savara</groupId>
+	<artifactId>bundles</artifactId>
+	<packaging>pom</packaging>
+	<version>2.0.0.20110218-M1</version>
+	<name>Savara::Bundles</name>
+
+    <parent>
+	  <groupId>org</groupId>
+	  <artifactId>savara</artifactId>
+      <version>2.0.0.20110218-M1</version>
+	</parent>
+
+	<properties>
+        <jaxb.version>2.1</jaxb.version>
+        <osgi.version>4.2.0</osgi.version>
+	</properties>
+
+	<modules>
+		<module>org.savara.activity</module>
+		<module>org.savara.activity.notifier.jms</module>
+		<module>org.savara.activity.validator.cdm</module>
+		<module>org.savara.bpel</module>
+		<module>org.savara.common</module>
+		<module>org.savara.common.config.file</module>
+		<module>org.savara.contract</module>
+		<module>org.savara.monitor</module>
+		<module>org.savara.monitor.sstore.rdbms</module>
+		<module>org.savara.pi4soa.cdm</module>
+		<module>org.savara.protocol</module>
+		<module>org.savara.scenario</module>
+		<module>org.savara.wsdl</module>
+	</modules>
+ 
+	<build>
+		<!-- This section defines the default plugin settings inherited by child projects. -->
+		<pluginManagement>
+			<plugins>
+				<!-- Fixes how test resources of a project can be used in projects dependent on it  -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.2</version>
+          			<configuration>
+          				<archive>
+            				<manifestFile>META-INF/MANIFEST.MF</manifestFile>
+          				</archive>
+        			</configuration>
+				</plugin>
+		      <plugin>
+		        <groupId>org.apache.felix</groupId>
+		        <artifactId>maven-bundle-plugin</artifactId>
+		        <executions>
+		          <execution>
+		            <id>bundle-manifest</id>
+		            <phase>process-classes</phase>
+		            <goals>
+		              <goal>manifest</goal>
+		            </goals>
+		          </execution>
+		        </executions>
+		      </plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
+

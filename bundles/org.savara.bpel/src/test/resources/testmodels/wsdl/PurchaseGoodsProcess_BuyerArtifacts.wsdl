@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" targetNamespace="http://www.jboss.org/savara/examples">
+    <wsdl:import location="PurchaseGoodsProcess_Buyer.wsdl" namespace="http://www.jboss.org/savara/examples"/>
+    <wsdl:import location="PurchaseGoodsProcess_CreditAgency.wsdl" namespace="java:org.jboss.savara.examples.purchasing"/>
+    <wsdl:import location="PurchaseGoodsProcess_Store.wsdl" namespace="http://www.jboss.org/examples/store"/>
+    <plnk:partnerLinkType name="BuyerToStoreLT">
+        <plnk:role name="StoreRequester" portType="ns1:StoreInterface"/>
+    </plnk:partnerLinkType>
+</wsdl:definitions>

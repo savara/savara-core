@@ -1,0 +1,12 @@
+Contract {java:org.jboss.savara.examples.purchasing}CreditAgency {
+	Namespace prefix=pur uri=java:org.jboss.savara.examples.purchasing schemaLocation=null
+	[[ XSDType ]]
+	TypeDef CreditCheckInvalid type={java:org.jboss.savara.examples.purchasing}CreditCheckInvalid location=null typeSystem=xsd
+	[[ XSDType ]]
+	TypeDef CreditCheckOk type={java:org.jboss.savara.examples.purchasing}CreditCheckOk location=null typeSystem=xsd
+	[[ XSDType ]]
+	TypeDef CreditCheckRequest type={java:org.jboss.savara.examples.purchasing}CreditCheckRequest location=null typeSystem=xsd
+	Interface {java:org.jboss.savara.examples.purchasing}CreditAgencyInterface {
+		RequestResponseMEP checkCredit( CreditCheckRequest ) : CreditCheckOk Fault CreditCheckFailed( CreditCheckInvalid ) 
+	}
+}

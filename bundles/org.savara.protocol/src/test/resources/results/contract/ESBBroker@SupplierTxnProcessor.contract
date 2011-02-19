@@ -1,0 +1,10 @@
+Contract {http://www.pi4soa.org/ESBBroker/Supplier}SupplierTxnProcessor {
+	Namespace prefix=spr uri=http://www.pi4soa.org/ESBBroker/Supplier schemaLocation=null
+	[[ XSDElement ]]
+	TypeDef BookingReference type=bookingReference location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef OrderConfirmed type=orderConfirmed location=null typeSystem=xsd
+	Interface {http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior {
+		RequestResponseMEP confirm( OrderConfirmed ) : BookingReference 
+	}
+}

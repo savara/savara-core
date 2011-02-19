@@ -1,0 +1,13 @@
+Contract {http://www.jboss.org/examples/store}Store {
+	Namespace prefix=sto uri=http://www.jboss.org/examples/store schemaLocation=null
+	Namespace prefix=pur uri=java:org.jboss.savara.examples.purchasing schemaLocation=null
+	[[ XSDType ]]
+	TypeDef BuyConfirmed type={http://www.jboss.org/examples/store}BuyConfirmed location=null typeSystem=xsd
+	[[ XSDType ]]
+	TypeDef BuyFailed type={http://www.jboss.org/examples/store}BuyFailed location=null typeSystem=xsd
+	[[ XSDType ]]
+	TypeDef BuyRequest type={http://www.jboss.org/examples/store}BuyRequest location=null typeSystem=xsd
+	Interface {http://www.jboss.org/examples/store}StoreInterface {
+		RequestResponseMEP buy( BuyRequest ) : BuyConfirmed Fault BuyFailed( BuyFailed ) 
+	}
+}

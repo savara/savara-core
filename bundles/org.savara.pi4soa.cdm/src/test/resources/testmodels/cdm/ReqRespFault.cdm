@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.pi4soa.cdl:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.pi4soa.cdl="http:///org/pi4soa/cdl.ecore" description="The choreography description for ReqRespFault" name="ReqRespFault" author="gary" version="0.3" targetNamespace="http://www.pi4soa.org/ReqRespFault">
+  <typeDefinitions>
+    <nameSpaces description="Target Namespace for ReqRespFault" prefix="tns" uRI="http://www.pi4soa.org/ReqRespFault"/>
+    <nameSpaces description="XML Schema Namespace" prefix="xsd" uRI="http://www.w3.org/2001/XMLSchema"/>
+    <nameSpaces description="Target Namespace for ReqRespFault" prefix="byr" uRI="http://www.pi4soa.org/ReqRespFault/Buyer"/>
+    <nameSpaces description="Target Namespace for ReqRespFault" prefix="slr" uRI="http://www.pi4soa.org/ReqRespFault/Seller"/>
+    <informationTypes description="This is the information type CreditInformation" name="CreditInformation" elementName="CreditCheckRequest"/>
+    <informationTypes description="This is the information type CreditInvalid" name="CreditInvalid" elementName="CreditCheckInvalid"/>
+    <informationTypes description="This is the information type CreditValid" name="CreditValid" elementName="CreditCheckOk"/>
+    <informationTypes description="This is the information type URIType" name="URIType"/>
+    <tokens description="This is the token URI" name="URI" informationType="//@typeDefinitions/@informationTypes.3"/>
+    <roleTypes description="This is the role type Buyer" name="Buyer">
+      <behaviors description="This is the behavior BuyerBehavior" name="BuyerBehavior"/>
+    </roleTypes>
+    <roleTypes description="This is the role type Seller" name="Seller">
+      <behaviors description="This is the behavior SellerBehavior" name="SellerBehavior"/>
+    </roleTypes>
+    <relationshipTypes description="Relationship between Buyer and Seller" name="BuyerToSellerRel" firstRoleType="//@typeDefinitions/@roleTypes.0" secondRoleType="//@typeDefinitions/@roleTypes.1"/>
+    <participantTypes description="This is the participant type byr:Buyer" name="byr:Buyer" roleTypes="//@typeDefinitions/@roleTypes.0">
+      <semanticAnnotations annotation="overlord.cdl.samples.LoanBroker@Buyer" name="conversationType"/>
+    </participantTypes>
+    <participantTypes description="This is the participant type slr:Seller" name="slr:Seller" roleTypes="//@typeDefinitions/@roleTypes.1">
+      <semanticAnnotations annotation="overlord.cdl.samples.LoanBroker@Broker" name="conversationType"/>
+    </participantTypes>
+    <channelTypes description="This is the channel type SellerChannelType" name="SellerChannelType" referenceToken="//@typeDefinitions/@tokens.0" roleType="//@typeDefinitions/@roleTypes.1"/>
+  </typeDefinitions>
+  <choreographies description="Choreography flow for the ReqRespFault process" name="ReqRespFaultProcess" root="true">
+    <variableDefinitions description="Channel to facilitate interaction to Broker" name="BrokerChannel" type="//@typeDefinitions/@channelTypes.0" roleTypes="//@typeDefinitions/@roleTypes.1 //@typeDefinitions/@roleTypes.0"/>
+    <activities xsi:type="org.pi4soa.cdl:Interaction" name="CreditCheck" operation="checkCredit" channelVariable="//@choreographies.0/@variableDefinitions.0" relationship="//@typeDefinitions/@relationshipTypes.0">
+      <exchangeDetails description="This is the exchange details for the request exchange associated with interaction CreditCheck" name="CreditCheckRequestExchange" type="//@typeDefinitions/@informationTypes.0"/>
+    </activities>
+    <activities xsi:type="org.pi4soa.cdl:Choice">
+      <activities xsi:type="org.pi4soa.cdl:Sequence">
+        <activities xsi:type="org.pi4soa.cdl:Interaction" name="CreditCheckValid" operation="checkCredit" channelVariable="//@choreographies.0/@variableDefinitions.0" relationship="//@typeDefinitions/@relationshipTypes.0">
+          <exchangeDetails description="This is the exchange details for the respond exchange associated with interaction CreditCheckValid" name="CreditCheckValidRespondExchange" type="//@typeDefinitions/@informationTypes.2" action="Respond"/>
+        </activities>
+      </activities>
+      <activities xsi:type="org.pi4soa.cdl:Sequence">
+        <activities xsi:type="org.pi4soa.cdl:Interaction" name="CreditCheckInvalid" operation="checkCredit" channelVariable="//@choreographies.0/@variableDefinitions.0" relationship="//@typeDefinitions/@relationshipTypes.0">
+          <exchangeDetails description="This is the exchange details for the respond exchange associated with interaction CreditCheckInvalid" name="CreditCheckInvalidRespondExchange" type="//@typeDefinitions/@informationTypes.1" action="Respond" faultName="insufficientCredit"/>
+        </activities>
+      </activities>
+    </activities>
+  </choreographies>
+</org.pi4soa.cdl:Package>

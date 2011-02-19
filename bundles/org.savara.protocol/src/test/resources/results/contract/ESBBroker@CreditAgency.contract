@@ -1,0 +1,12 @@
+Contract {http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgency {
+	Namespace prefix=cay uri=http://www.pi4soa.org/ESBBroker/CreditAgency schemaLocation=null
+	[[ XSDElement ]]
+	TypeDef CreditInformation type=CreditCheckRequest location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef CreditInvalid type=CreditCheckInvalid location=null typeSystem=xsd
+	[[ XSDElement ]]
+	TypeDef CreditValid type=CreditCheckOk location=null typeSystem=xsd
+	Interface {http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior {
+		RequestResponseMEP checkCredit( CreditInformation ) : CreditValid Fault invalidCredit( CreditInvalid ) 
+	}
+}

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Buyer" targetNamespace="http://www.jboss.org/savara/examples" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sto="http://www.jboss.org/examples/store" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:service name="BuyerService">
+  </wsdl:service>
+</wsdl:definitions>

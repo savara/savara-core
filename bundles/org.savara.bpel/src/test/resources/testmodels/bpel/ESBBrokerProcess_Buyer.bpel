@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" name="ESBBrokerProcess_Buyer" targetNamespace="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable">
+    <import namespace="http://www.pi4soa.org/ESBBroker/Broker" location="ESBBrokerProcess_Broker.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/CreditAgency" location="ESBBrokerProcess_CreditAgency.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/Supplier" location="ESBBrokerProcess_Supplier.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ESBBroker/Buyer" location="ESBBrokerProcess_BuyerArtifacts.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="BuyerToBroker" partnerLinkType="byr:BuyerToBrokerLT" partnerRole="BrokerRequester" myRole="Buyer"/>
+    </partnerLinks>
+    <variables>
+        <variable name="makeEnquiryRequestVar" messageType="brk:makeEnquiryRequest"/>
+        <variable name="makeEnquiryResponseVar" messageType="brk:makeEnquiryResponse"/>
+        <variable name="buyRequestVar" messageType="byr:buyRequest"/>
+        <variable name="buyResponseVar" messageType="brk:buyResponse"/>
+        <variable name="cancelRequestVar" messageType="byr:cancelRequest"/>
+    </variables>
+    <sequence>
+        <invoke partnerLink="BuyerToBroker" portType="brk:BrokerBehavior" operation="makeEnquiry" inputVariable="makeEnquiryRequestVar" outputVariable="makeEnquiryResponseVar" name="Send_enquiry"/>
+        <if>
+            <sequence>
+                <scope>
+                    <faultHandlers>
+                        <catch faultName="brk:rejected" faultVariable="rejectedFaultVar" faultMessageType="brk:rejectedFault">
+                            <sequence/>
+                        </catch>
+                    </faultHandlers>
+                    <sequence>
+                        <invoke partnerLink="BuyerToBroker" portType="byr:BuyerBehavior" operation="buy" inputVariable="buyRequestVar" outputVariable="buyResponseVar" name="Send_buy"/>
+                    </sequence>
+                </scope>
+            </sequence>
+            <else>
+                <sequence>
+                    <invoke partnerLink="BuyerToBroker" portType="byr:BuyerBehavior" operation="cancel" inputVariable="cancelRequestVar" name="Send_cancel"/>
+                </sequence>
+            </else>
+        </if>
+    </sequence>
+</process>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ca="http://creditagency.com/creditCheckService" xmlns:cred="http://creditagency.com/creditCheck" xmlns:dmv="http://dmv.com/drivingRecordService" xmlns:drv="http://dmv.com/drivingRecord" xmlns:ns0="http://www.scribble.org/conversation" xmlns:pcs="http://www.example.org/policyQuoteCalculationService" xmlns:pes="http://www.example.org/policyQuoteEntityService" xmlns:pol="http://www.example.org/policyQuote" xmlns:pps="http://www.example.org/policyQuoteProcessService" xmlns:tns="http://www.pi4soa.org/PolicyQuote" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PolicyQuoteProcess_PolicyQuoteProcessService" ns0:conversationType="org.pi4soa.policyquote.policyquote.PolicyQuoteProcess@PolicyQuoteProcessService" targetNamespace="http://www.example.org/policyQuoteProcessService">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_PolicyQuoteProcessService.wsdl" namespace="http://www.example.org/policyQuoteProcessService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_CreditCheckService.wsdl" namespace="http://creditagency.com/creditCheckService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_DrivingRecordService.wsdl" namespace="http://dmv.com/drivingRecordService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_PolicyQuoteCalculationService.wsdl" namespace="http://www.example.org/policyQuoteCalculationService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_PolicyQuoteEntityService.wsdl" namespace="http://www.example.org/policyQuoteEntityService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_PolicyQuoteProcessServiceArtifacts.wsdl" namespace="http://www.example.org/policyQuoteProcessService"/>
+    <partnerLinks>
+        <partnerLink myRole="PolicyQuoteProcessService" name="DriverToPolicyQuoteProcessService" partnerLinkType="pps:DriverToPolicyQuoteProcessServiceServiceLT"/>
+        <partnerLink name="PolicyQuoteProcessServiceToDrivingRecordService" partnerLinkType="pps:PolicyQuoteProcessServiceToDrivingRecordServiceLT" partnerRole="DrivingRecordServiceRequester"/>
+        <partnerLink myRole="DrivingRecordCallbackService" name="DrivingRecordServiceToPolicyQuoteProcessService" partnerLinkType="pps:DrivingRecordServiceToPolicyQuoteProcessServiceServiceLT"/>
+        <partnerLink name="PolicyQuoteProcessServiceToCreditCheckService" partnerLinkType="pps:PolicyQuoteProcessServiceToCreditCheckServiceLT" partnerRole="CreditCheckServiceRequester"/>
+        <partnerLink name="PolicyQuoteProcessServiceToPolicyQuoteCalculationService" partnerLinkType="pps:PolicyQuoteProcessServiceToPolicyQuoteCalculationServiceLT" partnerRole="PolicyQuoteCalculationServiceRequester"/>
+        <partnerLink name="PolicyQuoteProcessServiceToPolicyQuoteEntityService" partnerLinkType="pps:PolicyQuoteProcessServiceToPolicyQuoteEntityServiceLT" partnerRole="PolicyQuoteEntityServiceRequester"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="pps:receivePolicyQuoteRequest" name="policyQuoteVar"/>
+        <variable messageType="dmv:checkDrivingRecordRequest" name="drivingRecordRequestVar"/>
+        <variable messageType="pps:receiveDrivingRecordRequest" name="drivingRecordResponseVar"/>
+        <variable messageType="ca:checkCreditRequest" name="creditCheckRequestVar"/>
+        <variable messageType="ca:checkCreditResponse" name="creditCheckResponseVar"/>
+        <variable messageType="pcs:calculatePolicyQuoteResponse" name="policyQuoteReplyVar"/>
+        <variable messageType="pps:policyQuoteFaultFault" name="policyQuoteFaultVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_policyQuote" operation="receivePolicyQuote" partnerLink="DriverToPolicyQuoteProcessService" portType="pps:PolicyQuoteProcessService" variable="policyQuoteVar"/>
+        <invoke inputVariable="drivingRecordRequestVar" name="Send_drivingRecordRequest" operation="checkDrivingRecord" partnerLink="PolicyQuoteProcessServiceToDrivingRecordService" portType="dmv:DrivingRecordService"/>
+        <receive name="Receive_drivingRecordResponse" operation="receiveDrivingRecord" partnerLink="DrivingRecordServiceToPolicyQuoteProcessService" portType="pps:DrivingRecordCallbackService" variable="drivingRecordResponseVar"/>
+        <if>
+            <sequence>
+                <invoke inputVariable="creditCheckRequestVar" name="Send_creditCheckRequest" operation="checkCredit" outputVariable="creditCheckResponseVar" partnerLink="PolicyQuoteProcessServiceToCreditCheckService" portType="ca:CreditCheckService"/>
+                <invoke inputVariable="policyQuoteVar" name="Send_policyQuote" operation="calculatePolicyQuote" outputVariable="policyQuoteReplyVar" partnerLink="PolicyQuoteProcessServiceToPolicyQuoteCalculationService" portType="pcs:PolicyQuoteCalculationService"/>
+                <invoke inputVariable="policyQuoteVar" name="Send_policyQuote" operation="createPolicyQuote" outputVariable="policyQuoteReplyVar" partnerLink="PolicyQuoteProcessServiceToPolicyQuoteEntityService" portType="pes:PolicyQuoteEntityService"/>
+                <reply name="Send_policyQuoteReply" operation="receivePolicyQuote" partnerLink="DriverToPolicyQuoteProcessService" portType="pps:PolicyQuoteProcessService" variable="policyQuoteReplyVar"/>
+            </sequence>
+            <else>
+                <sequence>
+                    <reply faultName="pps:policyQuoteFault" name="Send_policyQuoteFault" operation="receivePolicyQuote" partnerLink="DriverToPolicyQuoteProcessService" portType="pps:PolicyQuoteProcessService" variable="policyQuoteFaultVar"/>
+                </sequence>
+            </else>
+        </if>
+    </sequence>
+</process>

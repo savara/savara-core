@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CreditAgency" targetNamespace="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency">
+  <wsdl:message name="checkCreditResponse">
+    <wsdl:part name="content" element="CreditCheckOk">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkCreditRequest">
+    <wsdl:part name="content" element="CreditCheckRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="invalidCreditFault">
+    <wsdl:part name="content" element="CreditCheckInvalid">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CreditAgencyBehavior">
+    <wsdl:operation name="checkCredit">
+      <wsdl:input message="cay:checkCreditRequest">
+    </wsdl:input>
+      <wsdl:output message="cay:checkCreditResponse">
+    </wsdl:output>
+      <wsdl:fault name="invalidCredit" message="cay:invalidCreditFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CreditAgencyBehaviorBinding" type="cay:CreditAgencyBehavior">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="checkCredit">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input>
+        <soap:body use="literal" namespace="http://www.pi4soa.org/ESBBroker/CreditAgency"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="http://www.pi4soa.org/ESBBroker/CreditAgency"/>
+      </wsdl:output>
+      <wsdl:fault name="invalidCredit">
+        <soap:fault name="invalidCredit" use="literal" namespace="http://www.pi4soa.org/ESBBroker/CreditAgency"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CreditAgencyService">
+    <wsdl:port name="CreditAgencyBehaviorPort" binding="cay:CreditAgencyBehaviorBinding">
+      <soap:address location="http://localhost:8080/CreditAgencyService/CreditAgencyBehaviorPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

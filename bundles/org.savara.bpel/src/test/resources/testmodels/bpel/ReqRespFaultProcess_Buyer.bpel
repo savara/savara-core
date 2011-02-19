@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:tns="http://www.pi4soa.org/ReqRespFault" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:byr="http://www.pi4soa.org/ReqRespFault/Buyer" xmlns:slr="http://www.pi4soa.org/ReqRespFault/Seller" name="ReqRespFaultProcess_Buyer" targetNamespace="http://www.pi4soa.org/ReqRespFault/Buyer">
+    <import namespace="http://www.pi4soa.org/ReqRespFault/Seller" location="ReqRespFaultProcess_Seller.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://www.pi4soa.org/ReqRespFault/Buyer" location="ReqRespFaultProcess_BuyerArtifacts.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="BuyerToSeller" partnerLinkType="byr:BuyerToSellerLT" partnerRole="SellerRequester"/>
+    </partnerLinks>
+    <variables>
+        <variable name="checkCreditRequestVar" messageType="slr:checkCreditRequest"/>
+        <variable name="checkCreditResponseVar" messageType="slr:checkCreditResponse"/>
+    </variables>
+    <sequence>
+        <scope>
+            <faultHandlers>
+                <catch faultName="slr:insufficientCredit" faultVariable="insufficientCreditFaultVar" faultMessageType="slr:insufficientCreditFault">
+                    <sequence/>
+                </catch>
+            </faultHandlers>
+            <sequence>
+                <invoke partnerLink="BuyerToSeller" portType="slr:SellerBehavior" operation="checkCredit" inputVariable="checkCreditRequestVar" outputVariable="checkCreditResponseVar" name="Send_CreditCheckRequest"/>
+            </sequence>
+        </scope>
+    </sequence>
+</process>
