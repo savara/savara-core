@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org</groupId>
 	<artifactId>savara</artifactId>
-	<version>2.0.0.20110218-M1</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
     <name>Savara</name>
 	<url>http://www.savara.org</url>
@@ -38,7 +38,7 @@
 	</developers>
 
 	<properties>
-		<savara.version>2.0.0.20110218-M1</savara.version>
+		<savara.version>2.0.0-SNAPSHOT</savara.version>
 		<scribble.version>2.0.0-SNAPSHOT</scribble.version>
 		<pi4soa.version>3.1.0.Final</pi4soa.version>
 		<junit.version>4.4</junit.version>
@@ -140,19 +140,17 @@
 	    </repository>
 	</repositories>
 
-  <!-- No need for distribution details as there are no artifacts to publish
-  <distributionManagement>
-    <repository>
-      <id>jboss-releases-repository</id>
-      <name>JBoss Releases Repository</name>
-      <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>jboss-snapshots-repository</id>
-      <name>JBoss Snapshots Repository</name>
-      <url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
-    </snapshotRepository>
-  </distributionManagement>
-  -->
+	<distributionManagement>
+		<repository>
+			<id>jboss-releases-repository</id>
+			<name>JBoss Releases Repository</name>
+			<url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>jboss-snapshots-repository</id>
+			<name>JBoss Snapshots Repository</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
   
 </project>

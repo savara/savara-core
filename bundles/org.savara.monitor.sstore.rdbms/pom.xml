@@ -3,14 +3,14 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bundles</groupId>
 	<artifactId>org.savara.monitor.sstore.rdbms</artifactId> 
-	<version>2.0.0.20110218-M1</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Savara::Bundles::Monitor-SessionStore-RDBMS</name>
 
 	<parent>
 		<groupId>org.savara</groupId>
 		<artifactId>bundles</artifactId>
-		<version>2.0.0.20110218-M1</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 	
 	<properties>
