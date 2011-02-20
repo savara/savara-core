@@ -38,7 +38,7 @@
 	</developers>
 
 	<properties>
-		<savara.version>2.0.0-SNAPSHOT</savara.version>
+		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
 		<scribble.version>2.0.0-SNAPSHOT</scribble.version>
 		<pi4soa.version>3.1.0.Final</pi4soa.version>
 		<junit.version>4.4</junit.version>

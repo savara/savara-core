@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.common</artifactId>
-			<version>${savara.version}</version>
+			<version>${savara.core.version}</version>
 		</dependency>
 	    <dependency>
 	      <groupId>org.osgi</groupId>
