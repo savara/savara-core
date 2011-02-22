@@ -648,7 +648,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 	
 				if (i == 0) {
 					act.setSequence(seq);
-				} else if (i == elem.getPaths().size()-1) {
+				} else if (i == elem.getWhens().size()-1) {
 					TActivityContainer construct=new TActivityContainer();
 					construct.setSequence(seq);
 					

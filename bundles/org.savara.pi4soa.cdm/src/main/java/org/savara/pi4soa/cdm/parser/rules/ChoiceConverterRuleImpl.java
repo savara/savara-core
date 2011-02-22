@@ -224,11 +224,12 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 		}
 		
 		// Build up initiator role list
-		java.util.List<Role> roles=null;
+		//java.util.List<Role> roles=null;
 		
 		for (int i=0; i < blocks.size(); i++) {
 			When b=blocks.get(i);
 			
+			/*
 			java.util.List<Role> blockRoles=
 					b.getBlock().initiatorRoles();
 				
@@ -243,6 +244,7 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 					}
 				}
 			}
+			*/
 			
 			if (b.getMessageSignature() == null) {
 				// Create label
