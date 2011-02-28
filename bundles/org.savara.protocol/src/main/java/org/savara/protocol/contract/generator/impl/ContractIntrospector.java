@@ -51,6 +51,7 @@ import org.scribble.protocol.model.TypeImport;
 import org.scribble.protocol.model.TypeImportList;
 import org.scribble.protocol.model.TypeReference;
 import org.scribble.protocol.model.When;
+import org.scribble.protocol.util.RunUtil;
 import org.scribble.protocol.util.TypesUtil;
 
 /**
@@ -224,7 +225,8 @@ public class ContractIntrospector extends DefaultVisitor {
 	}
 
 	public boolean start(Run elem) {
-		Protocol toProtocol=elem.getProtocol();
+		Protocol toProtocol=RunUtil.getInnerProtocol(elem.enclosingProtocol(),
+								elem.getProtocolReference());
 		
 		if (toProtocol != null) {
 			// Check if protocol already processed to avoid stack overflow

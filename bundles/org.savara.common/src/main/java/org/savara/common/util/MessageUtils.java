@@ -77,7 +77,7 @@ public class MessageUtils {
 				logger.warning("Failed to obtain message type from value: "+value);
 			}
 			
-		} else {
+		} else if (value != null) {
 			ret = value.getClass().getName();
 		}
 		

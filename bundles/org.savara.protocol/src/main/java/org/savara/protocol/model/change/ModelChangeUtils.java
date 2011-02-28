@@ -21,6 +21,7 @@ import org.savara.contract.model.Contract;
 import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.util.ProtocolModelUtil;
+import org.scribble.protocol.util.RunUtil;
 
 /**
  * Model change utilities.
@@ -177,18 +178,20 @@ public class ModelChangeUtils {
 					(java.util.Map<String,Contract>)
 					context.getProperties().get(Contract.class.getName());
 
+			// Store protocol against mapped role
+			//Protocol defn=run.getProtocol();
+			Protocol defn=RunUtil.getInnerProtocol(run.enclosingProtocol(),
+							run.getProtocolReference());
+			
 			if (run.enclosingProtocol().getRole() != null &&
-					run.getProtocol().getRole() != null) {
+					defn != null && defn.getRole() != null) {
 				Contract c=contracts.remove(run.enclosingProtocol().getRole().getName());
 				
 				if (c != null) {
-					contracts.put(run.getProtocol().getRole().getName(), c);
+					contracts.put(defn.getRole().getName(), c);
 				}
 			}
 		
-			// Store protocol against mapped role
-			Protocol defn=run.getProtocol();
-			
 			if (defn == null) {
 				// Check if protocol import defined for protocol
 				ProtocolImport pi=ProtocolModelUtil.getProtocolImport(run.getModel(),
@@ -249,17 +252,19 @@ public class ModelChangeUtils {
 					(java.util.Map<String,Contract>)
 					context.getProperties().get(Contract.class.getName());
 
+			// Store protocol against mapped role
+			//Protocol defn=run.getProtocol();
+			Protocol defn=RunUtil.getInnerProtocol(run.enclosingProtocol(),
+					run.getProtocolReference());
+
 			if (run.enclosingProtocol().getRole() != null &&
-					run.getProtocol().getRole() != null) {
-				Contract c=contracts.remove(run.getProtocol().getRole().getName());
+					defn != null && defn.getRole() != null) {
+				Contract c=contracts.remove(defn.getRole().getName());
 				
 				if (c != null) {
 					contracts.put(run.enclosingProtocol().getRole().getName(), c);
 				}
 			}
-			
-			// Store protocol against mapped role
-			Protocol defn=run.getProtocol();
 			
 			if (defn == null) {
 				// Check if protocol import defined for protocol

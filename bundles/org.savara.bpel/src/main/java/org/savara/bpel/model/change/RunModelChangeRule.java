@@ -23,6 +23,7 @@ import org.savara.bpel.model.TSequence;
 import org.savara.protocol.model.change.ModelChangeContext;
 import org.savara.protocol.model.change.ModelChangeUtils;
 import org.scribble.protocol.model.*;
+import org.scribble.protocol.util.RunUtil;
 
 /**
  * This is the model change rule for the Run.
@@ -84,7 +85,10 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
 		Run elem=(Run)mobj;
 
-		if (elem.getProtocol() != null) {
+		Protocol defn=RunUtil.getInnerProtocol(elem.enclosingProtocol(),
+				elem.getProtocolReference());
+
+		if (defn != null) {
 			
 			// Push details related to sub-choreo
 			ModelChangeUtils.pushRoleContractMapping(context, elem, context.getJournal());
@@ -110,7 +114,7 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 			context.getProperties().put(BPELDefinitions.BPEL_SCOPE_PROPERTY, scope);
 
 			// Process the activities within the conversation
-			java.util.List<Activity> acts=elem.getProtocol().getBlock().getContents();
+			java.util.List<Activity> acts=defn.getBlock().getContents();
 			
 			Object parent=context.getParent();
 			

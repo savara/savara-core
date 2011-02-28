@@ -18,6 +18,7 @@
 package org.savara.bpel.model.change;
 
 import org.scribble.protocol.util.ActivityUtil;
+import org.scribble.protocol.util.RunUtil;
 import org.savara.protocol.model.util.InteractionUtil;
 import org.scribble.protocol.model.*;
 
@@ -194,7 +195,9 @@ public class InteractionPatterns {
 								
 			// Check if scope
 			if (sub instanceof Run) {
-				Protocol defn=((Run)sub).getProtocol();
+				//Protocol defn=((Run)sub).getProtocol();
+				Protocol defn=RunUtil.getInnerProtocol(((Run)sub).enclosingProtocol(),
+						((Run)sub).getProtocolReference());
 				org.scribble.protocol.model.Activity b=null;
 				
 				for (int j=0; b == null &&
