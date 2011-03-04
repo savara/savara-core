@@ -7,7 +7,8 @@ Bundle-Activator: org.savara.scenario.osgi.Activator
 Bundle-Vendor: www.savara.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.junit,
- org.osgi.framework
+ org.osgi.framework,
+ org.osgi.util.tracker
 Require-Bundle: org.scribble.common,
  org.savara.common,
  org.savara.monitor

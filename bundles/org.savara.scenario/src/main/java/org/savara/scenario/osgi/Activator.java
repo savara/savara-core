@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,33 +15,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.activity;
+package org.savara.scenario.osgi;
 
-/**
- * This class provides a factory for the ActivityProcessor
- * component.
- *
- */
-public class ActivityProcessorFactory {
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
 
-	private static ActivityProcessor m_instance=new DefaultActivityProcessor();
-	
-	/**
-	 * This method returns the activity processor.
-	 * 
-	 * @return The activity processor
+public class Activator implements BundleActivator {
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public static ActivityProcessor getActivityProcessor() {
-		return(m_instance);
+	public void start(BundleContext context) throws Exception {
 	}
-	
-	/**
-	 * This method sets the activity processor associated with the
-	 * factory.
-	 * 
-	 * @param processor The activity processor
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
-	public static void setActivityProcessor(ActivityProcessor processor) {
-		m_instance = processor;
+	public void stop(BundleContext context) throws Exception {
 	}
+
 }
