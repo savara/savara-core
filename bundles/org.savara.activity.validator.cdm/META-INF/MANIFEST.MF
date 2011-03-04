@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Activity Validator CDM
 Bundle-SymbolicName: org.savara.activity.validator.cdm
-Bundle-Version: 2.0.0.SNAPSHOT
+Bundle-Version: 2.0.0.20110304-M1
 Bundle-Activator: org.savara.activity.validator.cdm.osgi.Activator
 Bundle-Vendor: www.savara.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
