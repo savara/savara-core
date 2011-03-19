@@ -117,7 +117,8 @@ public class ProtocolToWSDLGeneratorTest {
 							// Convert to WSDL
 							WSDLGenerator gen=WSDLGeneratorFactory.getWSDLGenerator();
 							
-							java.util.List<Definition> defns=gen.generate(contract, new SOAPRPCWSDLBinding());
+							java.util.List<Definition> defns=gen.generate(contract,
+										new SOAPRPCWSDLBinding(), journal);
 							
 							for (int i=0; i < defns.size(); i++) {
 								Definition defn=defns.get(i);

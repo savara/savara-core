@@ -17,6 +17,8 @@
  */
 package org.savara.wsdl.generator;
 
+import org.scribble.common.logging.Journal;
+
 /**
  * This interface generates a WSDL definition from a Contract model.
  *
@@ -28,9 +30,10 @@ public interface WSDLGenerator {
 	 * 
 	 * @param contract The contract model
 	 * @param wsdlBinding The WSDL binding to use, or null if no binding
+	 * @param journal The journal
 	 * @return The WSDL definition
 	 */
 	public java.util.List<javax.wsdl.Definition> generate(org.savara.contract.model.Contract contract,
-								WSDLBinding wsdlBinding);
+								WSDLBinding wsdlBinding, Journal journal);
 
 }

@@ -17,6 +17,7 @@
  */
 package org.savara.wsdl.generator.impl;
 
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -37,6 +38,7 @@ import org.savara.contract.model.TypeDefinition;
 import org.savara.wsdl.generator.WSDLBinding;
 import org.savara.wsdl.generator.WSDLGenerator;
 import org.savara.wsdl.util.WSDLGeneratorUtil;
+import org.scribble.common.logging.Journal;
 
 /**
  * This class generates a WSDL definition from a Contract model.
@@ -56,10 +58,11 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 	 * 
 	 * @param contract The contract model
 	 * @param wsdlBinding The WSDL binding to use, or null if no binding
+	 * @param journal The journal
 	 * @return The WSDL definition
 	 */
 	public java.util.List<javax.wsdl.Definition> generate(org.savara.contract.model.Contract contract,
-								WSDLBinding wsdlBinding) {
+								WSDLBinding wsdlBinding, Journal journal) {
 		java.util.List<javax.wsdl.Definition> ret=new java.util.Vector<javax.wsdl.Definition>();
 		
 		try {
@@ -85,10 +88,10 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 				Interface intf=iter.next();
 				
 				javax.wsdl.PortType portType=
-							createPortType(ret, contract, intf, wsdlBinding);
+							createPortType(ret, contract, intf, wsdlBinding, journal);
 				
 				javax.wsdl.Binding binding=
-							createBinding(ret, contract, intf, portType, wsdlBinding);
+							createBinding(ret, contract, intf, portType, wsdlBinding, journal);
 				
 				// Create service port for interface
 				javax.wsdl.Port port=main.createPort();
@@ -209,7 +212,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 	public javax.wsdl.PortType createPortType(java.util.List<javax.wsdl.Definition> wsdls,
 						org.savara.contract.model.Contract contract,
 								org.savara.contract.model.Interface intf,
-								WSDLBinding wsdlBinding) {
+								WSDLBinding wsdlBinding, Journal journal) {
 		javax.wsdl.PortType ret=null;
 		
 		if (intf != null) {
@@ -230,7 +233,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 					
 					if (mep.getTypes().size() > 0) {
 						createOperation(wsdls, contract, ret,
-								mep, wsdlBinding);
+								mep, wsdlBinding, journal);
 					}
 				}
 
@@ -258,7 +261,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 						org.savara.contract.model.Contract contract,
 								org.savara.contract.model.Interface intf,
 								javax.wsdl.PortType portType,
-								WSDLBinding wsdlBinding) {
+								WSDLBinding wsdlBinding, Journal journal) {
 		javax.wsdl.Binding ret=null;
 		
 		if (intf != null) {
@@ -286,7 +289,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 					
 					if (mep.getTypes().size() > 0) {
 						createBindingOperation(wsdls, contract, ret,
-									mep, wsdlBinding);
+									mep, wsdlBinding, journal);
 					}
 				}
 
@@ -313,7 +316,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 	public javax.wsdl.Operation createOperation(java.util.List<javax.wsdl.Definition> wsdls,
 			org.savara.contract.model.Contract contract, javax.wsdl.PortType portType,
 								org.savara.contract.model.MessageExchangePattern mep,
-								WSDLBinding wsdlBinding) {
+								WSDLBinding wsdlBinding, Journal journal) {
 		javax.wsdl.Operation ret=null;
 		
 		javax.wsdl.Definition defn=null;
@@ -332,7 +335,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 								mep.getOperation(), null);
 			
 			javax.wsdl.Message mesg=getMessage(wsdls, contract, msgname,
-								mep.getTypes(), wsdlBinding);
+								mep.getTypes(), wsdlBinding, journal);
 			
 			if (mesg != null) {
 				javax.wsdl.Input input=defn.createInput();
@@ -348,7 +351,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 								mep.getOperation(), null);
 			
 				javax.wsdl.Message om=getMessage(wsdls, contract, msgname,
-									rr.getResponseTypes(), wsdlBinding);
+									rr.getResponseTypes(), wsdlBinding, journal);
 				if (om != null) {
 					javax.wsdl.Output output=defn.createOutput();
 					output.setMessage(om);
@@ -364,7 +367,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 												fd.getName(), null);
 					
 						javax.wsdl.Message fm=getMessage(wsdls, contract, msgname,
-											fd.getTypes(), wsdlBinding);
+											fd.getTypes(), wsdlBinding, journal);
 						if (fm != null) {
 							javax.wsdl.Fault fault=defn.createFault();
 							fault.setName(fd.getName());
@@ -395,7 +398,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 	public javax.wsdl.BindingOperation createBindingOperation(java.util.List<javax.wsdl.Definition> wsdls,
 			org.savara.contract.model.Contract contract, javax.wsdl.Binding binding,
 								org.savara.contract.model.MessageExchangePattern mep,
-								WSDLBinding wsdlBinding) {
+								WSDLBinding wsdlBinding, Journal journal) {
 		javax.wsdl.BindingOperation ret=null;
 		
 		javax.wsdl.Definition defn=null;
@@ -419,7 +422,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 											mep.getOperation(), null);
 		
 			javax.wsdl.Message mesg=getMessage(wsdls, contract,msgname,
-								mep.getTypes(), wsdlBinding);
+								mep.getTypes(), wsdlBinding, journal);
 			
 			if (mesg != null) {
 				javax.wsdl.BindingInput input=defn.createBindingInput();
@@ -440,7 +443,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 										mep.getOperation(), null);
 	
 				javax.wsdl.Message om=getMessage(wsdls, contract, msgname,
-									rr.getResponseTypes(), wsdlBinding);
+									rr.getResponseTypes(), wsdlBinding, journal);
 				if (om != null) {
 					javax.wsdl.BindingOutput output=defn.createBindingOutput();
 					
@@ -461,7 +464,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 												fd.getName(), null);
 			
 						javax.wsdl.Message fm=getMessage(wsdls, contract, msgname,
-									fd.getTypes(), wsdlBinding);
+									fd.getTypes(), wsdlBinding, journal);
 						if (fm != null) {
 							javax.wsdl.BindingFault fault=defn.createBindingFault();
 							fault.setName(fd.getName());
@@ -504,7 +507,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 						org.savara.contract.model.Contract contract,
 						javax.xml.namespace.QName msgname,
 						java.util.List<org.savara.contract.model.Type> types,
-								WSDLBinding wsdlBinding) {
+								WSDLBinding wsdlBinding, Journal journal) {
 		javax.wsdl.Message ret=null;
 		
 		if (types == null || types.size() == 0) {
@@ -529,6 +532,10 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 					
 					ret.setQName(msgname);
 					
+					Part part=createPart(defn, td, qname,
+							wsdlBinding, journal);
+					
+					/*
 					// Create single part for type or element
 					Part part=defn.createPart();
 					part.setName("content");
@@ -538,7 +545,18 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 						part.setElementName(qname);					
 					} else {
 						part.setTypeName(qname);
+						
+						if (!wsdlBinding.isXSDTypeMessagePartSupported()) {
+							// Raise error
+							journal.error(MessageFormat.format(
+									java.util.PropertyResourceBundle.getBundle(
+											"org.savara.wsdl.Messages").getString(
+												"_WSDL_BINDING_MESSAGE_PART_CANNOT_BE_XSD_TYPE"),
+												wsdlBinding.getName(),
+												qname.toString()), null);
+						}
 					}
+					*/
 					
 					ret.addPart(part);
 					
@@ -548,5 +566,31 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 		}
 		
 		return(ret);
+	}
+	
+	protected Part createPart(javax.wsdl.Definition defn, TypeDefinition td,
+					javax.xml.namespace.QName qname, WSDLBinding wsdlBinding, Journal journal) {
+		// Create single part for type or element
+		Part part=defn.createPart();
+		part.setName("content");
+		
+		if (AnnotationDefinitions.getAnnotation(td.getAnnotations(),
+						AnnotationDefinitions.XSD_ELEMENT) != null) {
+			part.setElementName(qname);					
+		} else {
+			part.setTypeName(qname);
+			
+			if (!wsdlBinding.isXSDTypeMessagePartSupported()) {
+				// Raise error
+				journal.error(MessageFormat.format(
+						java.util.PropertyResourceBundle.getBundle(
+								"org.savara.wsdl.Messages").getString(
+									"_WSDL_BINDING_MESSAGE_PART_CANNOT_BE_XSD_TYPE"),
+									wsdlBinding.getName(),
+									qname.toString()), null);
+			}
+		}
+
+		return(part);
 	}
 }

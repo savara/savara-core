@@ -167,4 +167,14 @@ public class SOAPRPCWSDLBinding implements WSDLBinding {
 		}
 	}
 	
+	/**
+	 * This method determines whether the binding supports the use of XSD types
+	 * in the message parts.
+	 * 
+	 * @return Whether XSD types are supported in message parts
+	 */
+	public boolean isXSDTypeMessagePartSupported() {
+		return(true);
+	}
+	
 }

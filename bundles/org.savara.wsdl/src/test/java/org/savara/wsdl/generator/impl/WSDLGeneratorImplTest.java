@@ -15,23 +15,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.wsdl.generator;
+package org.savara.wsdl.generator.impl;
+
+import java.text.MessageFormat;
 
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
-
-import org.savara.protocol.model.util.PropertyName;
 import org.savara.protocol.model.util.TypeSystem;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.contract.model.*;
-import org.savara.wsdl.generator.WSDLGenerator;
-import org.savara.wsdl.generator.WSDLGeneratorFactory;
+import org.savara.wsdl.generator.WSDLBinding;
 import org.savara.wsdl.generator.impl.WSDLGeneratorImpl;
+import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
+import org.savara.wsdl.generator.soap.SOAPRPCWSDLBinding;
+import org.scribble.common.logging.CachedJournal;
+import org.scribble.common.logging.CachedJournal.IssueDetails;
+import org.scribble.common.logging.CachedJournal.IssueType;
 
 import junit.framework.TestCase;
 
-public class WSDLGeneratorTest extends TestCase {
+public class WSDLGeneratorImplTest extends TestCase {
 
 	private static final String TEST_LOCALPART = "test.localpart";
 	private static final String HTTP_TEST_NAMESPACE = "http://test.namespace";
@@ -53,7 +57,12 @@ public class WSDLGeneratorTest extends TestCase {
 		
 		WSDLGeneratorImpl gen=new WSDLGeneratorImpl();
 		
-		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, null);
+		CachedJournal journal=new CachedJournal();
+		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, null, journal);
+		
+		if (journal.hasErrors() || journal.hasWarnings()) {
+			fail("Journal has errors or warnings");
+		}
 		
 		if (defns.size() != 1) {
 			fail("Only one Definition found: "+defns.size());
@@ -92,10 +101,15 @@ public class WSDLGeneratorTest extends TestCase {
 		
 		java.util.List<javax.wsdl.Definition> defns=new java.util.Vector<javax.wsdl.Definition>();
 		
-		javax.wsdl.PortType result=gen.createPortType(defns, new Contract(), src, null);
+		CachedJournal journal=new CachedJournal();
+		javax.wsdl.PortType result=gen.createPortType(defns, new Contract(), src, null, journal);
 		
 		if (result == null) {
 			fail("PortType is null");
+		}
+		
+		if (journal.hasErrors() || journal.hasWarnings()) {
+			fail("Journal has errors or warnings");
 		}
 		
 		if (result.getQName() == null) {
@@ -129,10 +143,15 @@ public class WSDLGeneratorTest extends TestCase {
 		
 		java.util.List<javax.wsdl.Definition> defns=new java.util.Vector<javax.wsdl.Definition>();
 		
-		javax.wsdl.Binding result=gen.createBinding(defns, new Contract(), src, null, null);
+		CachedJournal journal=new CachedJournal();
+		javax.wsdl.Binding result=gen.createBinding(defns, new Contract(), src, null, null, journal);
 		
 		if (result == null) {
 			fail("PortType is null");
+		}
+		
+		if (journal.hasErrors() || journal.hasWarnings()) {
+			fail("Journal has errors or warnings");
 		}
 		
 		if (result.getQName() == null) {
@@ -238,7 +257,12 @@ public class WSDLGeneratorTest extends TestCase {
 		
 		WSDLGeneratorImpl gen=new WSDLGeneratorImpl();
 		
-		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, null);
+		CachedJournal journal=new CachedJournal();
+		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, new SOAPRPCWSDLBinding(), journal);
+		
+		if (journal.hasErrors() || journal.hasWarnings()) {
+			fail("Journal has errors or warnings");
+		}
 		
 		if (defns.size() != 1) {
 			fail("Only one Definition found: "+defns.size());
@@ -306,10 +330,16 @@ public class WSDLGeneratorTest extends TestCase {
 		javax.wsdl.PortType ptype=defn.createPortType();
 		ptype.setQName(new javax.xml.namespace.QName(TEST_NAME_SPACE, TEST_NAME));
 		
-		javax.wsdl.Operation result=gen.createOperation(defns, c, ptype, src, null);
+		CachedJournal journal=new CachedJournal();
+		javax.wsdl.Operation result=gen.createOperation(defns, c, ptype, src,
+						new SOAPRPCWSDLBinding(), journal);
 		
 		if (result == null) {
 			fail("Operation is null");
+		}
+		
+		if (journal.hasErrors() || journal.hasWarnings()) {
+			fail("Journal has errors or warnings");
 		}
 		
 		if (TEST_NAME.equals(result.getName()) == false) {
@@ -421,10 +451,16 @@ public class WSDLGeneratorTest extends TestCase {
 		javax.wsdl.PortType ptype=defn.createPortType();
 		ptype.setQName(new javax.xml.namespace.QName(TEST_NAME_SPACE, TEST_NAME));
 		
-		javax.wsdl.Operation result=gen.createOperation(defns, c, ptype, src, null);
+		CachedJournal journal=new CachedJournal();
+		javax.wsdl.Operation result=gen.createOperation(defns, c, ptype, src,
+							new SOAPRPCWSDLBinding(), journal);
 		
 		if (result == null) {
 			fail("Operation is null");
+		}
+		
+		if (journal.hasErrors() || journal.hasWarnings()) {
+			fail("Journal has errors or warnings");
 		}
 		
 		if (TEST_NAME.equals(result.getName()) == false) {
@@ -486,10 +522,16 @@ public class WSDLGeneratorTest extends TestCase {
 		
 		QName msgname=new QName(HTTP_TEST_NAMESPACE,TEST_LOCALPART);
 		
-		javax.wsdl.Message result=gen.getMessage(defns, c, msgname, refs, null);
+		CachedJournal journal=new CachedJournal();
+		javax.wsdl.Message result=gen.getMessage(defns, c, msgname, refs, 
+							new SOAPRPCWSDLBinding(), journal);
 		
 		if (result == null) {
 			fail("Message is null");
+		}
+		
+		if (journal.hasErrors() || journal.hasWarnings()) {
+			fail("Journal has errors or warnings");
 		}
 		
 		if (result.getQName() == null) {
@@ -633,7 +675,13 @@ public class WSDLGeneratorTest extends TestCase {
 		
 		WSDLGeneratorImpl gen=new WSDLGeneratorImpl();
 		
-		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, null);
+		CachedJournal journal=new CachedJournal();
+		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, 
+						new SOAPRPCWSDLBinding(), journal);
+		
+		if (journal.hasErrors() || journal.hasWarnings()) {
+			fail("Journal has errors or warnings");
+		}
 		
 		if (defns.size() != 2) {
 			fail("Two Definitions expected, but got: "+defns.size());
@@ -686,6 +734,154 @@ public class WSDLGeneratorTest extends TestCase {
 		
 		if (defn2.getServices().size() != 0) {
 			fail("Second definition should not have any services: "+defn2.getServices().size());
+		}
+	}
+	
+	public void testCreatePartTypeInDocLit() {
+		javax.wsdl.Definition defn=null;
+		try {
+			javax.wsdl.factory.WSDLFactory fact=
+						javax.wsdl.factory.WSDLFactory.newInstance();
+			
+			defn = fact.newDefinition();
+			
+		} catch(Exception e) {
+			fail("Failed to get definition");
+		}
+		
+		Contract c=new Contract();
+		
+		TypeDefinition src=new TypeDefinition();
+		
+		QName qname=new QName(TEST_TYPE_NS,TEST_TYPE_LP);
+		
+		src.setName(TEST_TYPE_LP);
+		src.setDataType(qname.toString());
+		src.setTypeSystem(TypeSystem.XSD);
+		
+		src.getAnnotations().add(new Annotation(AnnotationDefinitions.XSD_TYPE));
+		c.getTypeDefinitions().add(src);
+
+		Type t=new Type();
+		//t.getTypeDefinitions().add(src);
+		t.setName(TEST_TYPE_LP);
+		
+		java.util.List<Type> refs=new java.util.Vector<Type>();
+		refs.add(t);
+		
+		WSDLGeneratorImpl gen=new WSDLGeneratorImpl();
+		
+		//java.util.List<javax.wsdl.Definition> defns=new java.util.Vector<javax.wsdl.Definition>();
+		
+		//QName msgname=new QName(HTTP_TEST_NAMESPACE,TEST_LOCALPART);
+		
+		CachedJournal journal=new CachedJournal();
+		
+		WSDLBinding wsdlBinding = new SOAPDocLitWSDLBinding();
+		
+		javax.wsdl.Part part=gen.createPart(defn, src, qname, wsdlBinding, journal);
+		
+		if (part == null) {
+			fail("Part is null");
+		}
+		
+		if (part.getElementName() != null) {
+			fail("Element name should not be set");
+		}
+		
+		if (part.getTypeName() == null) {
+			fail("Type name not set");
+		}
+		
+		if (TEST_TYPE_NS.equals(part.getTypeName().getNamespaceURI()) == false) {
+			fail("Type namespace incorrect: "+part.getTypeName().getNamespaceURI());
+		}
+		
+		if (TEST_TYPE_LP.equals(part.getTypeName().getLocalPart()) == false) {
+			fail("Type localpart incorrect: "+part.getTypeName().getLocalPart());
+		}
+
+		if (journal.getIssues().size() != 1) {
+			fail("Journal should have 1 issue: "+journal.getIssues().size());
+		}
+		
+		IssueDetails issue=journal.getIssues().get(0);
+		
+		if (issue.getIssueType() != IssueType.Error) {
+			fail("Issue is not an error");
+		}
+		
+		String mesg=MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+					"org.savara.wsdl.Messages").getString("_WSDL_BINDING_MESSAGE_PART_CANNOT_BE_XSD_TYPE"),
+							wsdlBinding.getName(), qname.toString());
+		
+		if (issue.getMessage().equals(mesg) == false) {
+			fail("Unexpected issue message: "+issue.getMessage());
+		}
+	}
+	
+	public void testCreatePartTypeInRPC() {
+		javax.wsdl.Definition defn=null;
+		try {
+			javax.wsdl.factory.WSDLFactory fact=
+						javax.wsdl.factory.WSDLFactory.newInstance();
+			
+			defn = fact.newDefinition();
+			
+		} catch(Exception e) {
+			fail("Failed to get definition");
+		}
+		
+		Contract c=new Contract();
+		
+		TypeDefinition src=new TypeDefinition();
+		
+		QName qname=new QName(TEST_TYPE_NS,TEST_TYPE_LP);
+		
+		src.setName(TEST_TYPE_LP);
+		src.setDataType(qname.toString());
+		src.setTypeSystem(TypeSystem.XSD);
+		
+		src.getAnnotations().add(new Annotation(AnnotationDefinitions.XSD_TYPE));
+		c.getTypeDefinitions().add(src);
+
+		Type t=new Type();
+		//t.getTypeDefinitions().add(src);
+		t.setName(TEST_TYPE_LP);
+		
+		java.util.List<Type> refs=new java.util.Vector<Type>();
+		refs.add(t);
+		
+		WSDLGeneratorImpl gen=new WSDLGeneratorImpl();
+		
+		CachedJournal journal=new CachedJournal();
+		
+		WSDLBinding wsdlBinding = new SOAPRPCWSDLBinding();
+		
+		javax.wsdl.Part part=gen.createPart(defn, src, qname, wsdlBinding, journal);
+		
+		if (part == null) {
+			fail("Part is null");
+		}
+		
+		if (part.getElementName() != null) {
+			fail("Element name should not be set");
+		}
+		
+		if (part.getTypeName() == null) {
+			fail("Type name not set");
+		}
+		
+		if (TEST_TYPE_NS.equals(part.getTypeName().getNamespaceURI()) == false) {
+			fail("Type namespace incorrect: "+part.getTypeName().getNamespaceURI());
+		}
+		
+		if (TEST_TYPE_LP.equals(part.getTypeName().getLocalPart()) == false) {
+			fail("Type localpart incorrect: "+part.getTypeName().getLocalPart());
+		}
+
+		if (journal.getIssues().size() != 0) {
+			fail("Journal should have 0 issues");
 		}
 	}
 }

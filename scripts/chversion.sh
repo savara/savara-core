@@ -1,4 +1,20 @@
 #!/bin/bash
-# Script takes two parameters, the current version and the new version
+# Takes two parameters, the 'from' and 'to' versions
 
-perl -pi -e "s/$1/$2/g" `find . -name pom.xml -or -name MANIFEST.MF`
+FROMVER=$1
+TESTFROMVER=`echo $FROMVER | egrep '*-SNAPSHOT'`
+TOVER=$2
+TESTTOVER=`echo $TOVER | egrep '*-SNAPSHOT'`
+
+perl -pi -e "s/$FROMVER/$TOVER/g" `find . -name pom.xml`
+
+if [ "$TESTFROMVER" == "$FROMVER" ]; then
+	FROMVER=`echo $FROMVER | sed 's/-SNAPSHOT/.SNAPSHOT/g'`
+fi
+
+if [ "$TESTTOVER" == "$TOVER" ]; then
+	TOVER=`echo $TOVER | sed 's/-SNAPSHOT/.SNAPSHOT/g'`
+fi
+
+perl -pi -e "s/$FROMVER/$TOVER/g" `find . -name MANIFEST.MF`
+
