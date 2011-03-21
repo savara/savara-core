@@ -24,6 +24,7 @@ import org.savara.monitor.Message;
 import org.savara.monitor.Monitor;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.MessageEvent;
+import org.savara.scenario.model.Parameter;
 import org.savara.scenario.model.ReceiveEvent;
 import org.savara.scenario.model.Role;
 import org.savara.scenario.model.Scenario;
@@ -85,8 +86,11 @@ public class DefaultScenarioSimulator implements ScenarioSimulator {
 	protected Message getMessageForEvent(MessageEvent event) {
 		Message mesg=new Message();
 		mesg.setOperator(event.getOperationName());
-		mesg.getTypes().add(event.getType());
-		mesg.getValues().add(event.getValue());
+		
+		for (Parameter p : event.getParameter()) {
+			mesg.getTypes().add(p.getType());
+			mesg.getValues().add(p.getValue());
+		}
 		
 		return(mesg);
 	}

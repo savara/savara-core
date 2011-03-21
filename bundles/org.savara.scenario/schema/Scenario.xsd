@@ -37,12 +37,20 @@
     <complexType name="MessageEvent" abstract="true">
     	<complexContent>
     		<extension base="tns:Event">
+    			<sequence>
+    				<element name="parameter" type="tns:Parameter" minOccurs="0"
+    					maxOccurs="unbounded">
+    				</element>
+    			</sequence>
     			<attribute name="operationName" type="string"></attribute>
     			<attribute name="faultName" type="string"></attribute>
-    			<attribute name="type" type="string"></attribute>
-    			<attribute name="value" type="anyURI"></attribute>
     		</extension>
     	</complexContent>
+    </complexType>
+
+    <complexType name="Parameter">
+    	<attribute name="type" type="string"></attribute>
+    	<attribute name="value" type="anyURI"></attribute>
     </complexType>
 
     <complexType name="SendEvent">
