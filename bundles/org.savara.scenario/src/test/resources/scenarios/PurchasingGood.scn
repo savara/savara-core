@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<tns:scenario xmlns:tns="http://www.savara.org/scenario" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.savara.org/scenario Scenario.xsd ">
-  <tns:role id="r1" name="Buyer"/>
-  <tns:role id="r2" name="Seller"/>
-  <tns:event xsi:type="tns:SendEvent" id="e1" role="r1" operationName="buy"/>
-  <tns:event xsi:type="tns:ReceiveEvent" id="e2" role="r2" operationName="buy"/>
-  <tns:link source="e1" target="e2"/>
-</tns:scenario>
