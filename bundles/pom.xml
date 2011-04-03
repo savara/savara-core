@@ -32,6 +32,10 @@
 		<module>org.savara.pi4soa.cdm</module>
 		<module>org.savara.protocol</module>
 		<module>org.savara.scenario</module>
+		<module>org.savara.scenario.simulator.cdm</module>
+<!--
+		<module>org.savara.scenario.simulator.scribble</module>
+-->
 		<module>org.savara.wsdl</module>
 	</modules>
  

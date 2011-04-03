@@ -28,7 +28,7 @@ public class ScenarioSimulatorFactory {
 	 * 
 	 * @return The scenario simulator
 	 */
-	public static ScenarioSimulator createScenarioSimulator() {
+	public static ScenarioSimulator getScenarioSimulator() {
 		return(new DefaultScenarioSimulator());
 	}
 	

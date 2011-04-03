@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -17,107 +17,65 @@
  */
 package org.savara.scenario.simulation;
 
-import java.util.UUID;
+import java.text.MessageFormat;
 
-import org.savara.monitor.ConversationInstanceId;
-import org.savara.monitor.Message;
-import org.savara.monitor.Monitor;
 import org.savara.scenario.model.Event;
-import org.savara.scenario.model.MessageEvent;
-import org.savara.scenario.model.Parameter;
-import org.savara.scenario.model.ReceiveEvent;
 import org.savara.scenario.model.Role;
+import org.savara.scenario.model.RoleEvent;
 import org.savara.scenario.model.Scenario;
-import org.savara.scenario.model.SendEvent;
 
 /**
- * This class provides the default implementation of the Scenario Simulator interface.
+ * This class provides the default implementation for the scenario
+ * simulator interface.
  *
  */
 public class DefaultScenarioSimulator implements ScenarioSimulator {
 
-	private Monitor m_monitor=null;
-	
-	/**
-	 * This method sets the monitor used to simulate the scenario.
-	 * 
-	 * @param monitor The monitor
-	 */
-	public void setMonitor(Monitor monitor) {
-		m_monitor = monitor;
-	}
-	
 	/**
 	 * This method simulates the scenario against the pre-configured
 	 * monitor. Results from the simulation are notified to the
 	 * supplied simulation handler.
 	 * 
 	 * @param scenario The scenario to be simulated
+	 * @param roleSimulators The simulators for the relevant roles in the scenario
+	 * @oaram contexts The simulation contexts for each role being simulated
 	 * @param handler The callback to notify of the simulation results
 	 */
-	public void simulate(Scenario scenario, SimulationHandler handler) {
+	public void simulate(Scenario scenario, java.util.Map<Role,RoleSimulator> roleSimulators,
+			java.util.Map<Role,SimulationContext> contexts, SimulationHandler handler) {
 		
-		ConversationInstanceId cid=new ConversationInstanceId(UUID.randomUUID().toString());
-		
-		simulateEvents(cid, scenario.getEvent(), handler);
-	}
-	
-	/**
-	 * This method simulates a list of events, associated with a scenario.
-	 * 
-	 * @param cid The conversation instance id
-	 * @param events The list of events
-	 * @param handler The handler
-	 */
-	protected void simulateEvents(ConversationInstanceId cid,
-					java.util.List<Event> events, SimulationHandler handler) {
-		
-		for (Event event : events) {
-			if (event instanceof SendEvent) {
-				handleSendEvent(cid, (SendEvent)event, handler);
-			} else if (event instanceof ReceiveEvent) {
-				handleReceiveEvent(cid, (ReceiveEvent)event, handler);
+		for (Event event : scenario.getEvent()) {
+			
+			if (event instanceof RoleEvent) {
+				simulateAtRole((Role)((RoleEvent)event).getRole(), event,
+								roleSimulators, contexts, handler);
 			} else {
-				handler.unknownEvent(event);
+				// Need to distribute to all role simulators
+				for (Role role : roleSimulators.keySet()) {
+					simulateAtRole(role, event, roleSimulators, contexts, handler);
+				}
 			}
 		}
 	}
 	
-	protected Message getMessageForEvent(MessageEvent event) {
-		Message mesg=new Message();
-		mesg.setOperator(event.getOperationName());
+	protected void simulateAtRole(Role role, Event event, java.util.Map<Role,RoleSimulator> roleSimulators,
+			java.util.Map<Role,SimulationContext> contexts, SimulationHandler handler) {
+		RoleSimulator sim=roleSimulators.get(role);
 		
-		for (Parameter p : event.getParameter()) {
-			mesg.getTypes().add(p.getType());
-			mesg.getValues().add(p.getValue());
-		}
-		
-		return(mesg);
-	}
-	
-	protected void handleSendEvent(ConversationInstanceId cid,
-					SendEvent event, SimulationHandler handler) {
-		try {
-			Message mesg=getMessageForEvent(event);
+		if (sim != null) {
+			SimulationContext context=contexts.get(role);
 			
-			mesg.setSourceEndpointType(((Role)event.getRole()).getName());
-
-			m_monitor.process(null, cid, mesg);
-		} catch(Exception e) {
-			handler.exception("Failed when handling send event", event, e);
+			if (context != null) {
+				sim.onEvent(context, event, handler);
+			} else {
+				handler.exception(MessageFormat.format(
+						java.util.PropertyResourceBundle.getBundle(
+						"org.savara.scenario.Messages").
+							getString("SAVARASCN-00001"),
+							role.getName()), event, null);
+			}
+		} else {
+			handler.noSimulator(event);
 		}
-	}
-	
-	protected void handleReceiveEvent(ConversationInstanceId cid,
-					ReceiveEvent event, SimulationHandler handler) {
-		try {
-			Message mesg=getMessageForEvent(event);
-			
-			mesg.setDestinationEndpointType(((Role)event.getRole()).getName());
-
-			m_monitor.process(null, cid, mesg);
-		} catch(Exception e) {
-			handler.exception("Failed when handling receive event", event, e);
-		}		
 	}
 }
