@@ -15,9 +15,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulation;
+package org.savara.scenario.simulator.cdm;
 
 import org.savara.scenario.model.Event;
+import org.savara.scenario.simulation.SimulationHandler;
 
 public class TestSimulationHandler implements SimulationHandler {
 

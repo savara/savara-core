@@ -55,4 +55,11 @@ public class TestRoleSimulator implements RoleSimulator {
 		}
 	}
 
+	public void initialize(SimulationContext context) throws Exception {
+	}
+
+	public Object getModelForRole(Object model, Role role) {
+		return null;
+	}
+
 }

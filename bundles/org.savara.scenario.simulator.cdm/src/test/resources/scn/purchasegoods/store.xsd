@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/examples/store" elementFormDefault="qualified">
+
+    <element name="BuyRequest" type="tns:StoreType"></element>
+    <element name="BuyConfirmed" type="tns:StoreType"></element>
+    <element name="BuyFailed" type="tns:StoreType"></element>
+
+    <complexType name="StoreType">
+    	<attribute name="id" type="string"></attribute>
+    	<attribute name="amount" type="integer"></attribute>
+    </complexType>
+</schema>

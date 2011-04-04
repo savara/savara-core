@@ -57,6 +57,6 @@ public interface SimulationHandler {
 	 * @param event The event
 	 * @param e The exception
 	 */
-	public void exception(String mesg, Event event, Exception e);
+	public void error(String mesg, Event event, Throwable e);
 	
 }

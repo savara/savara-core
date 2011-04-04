@@ -23,18 +23,18 @@ package org.savara.scenario.simulation;
  */
 public class SimulationModel {
 
-	private String m_name=null;
+	private String m_path=null;
 	private byte[] m_contents=null;
 	
 	/**
 	 * This constructor initializes the simulation model information.
 	 * 
-	 * @param name The name
+	 * @param path The path
 	 * @param is The contents
 	 * @throws Exception Failed to initialize the simulation model info
 	 */
-	public SimulationModel(String name, java.io.InputStream is) throws Exception {
-		m_name = name;
+	public SimulationModel(String path, java.io.InputStream is) throws Exception {
+		m_path = path;
 		m_contents = new byte[is.available()];
 		is.read(m_contents);
 	}
@@ -45,7 +45,7 @@ public class SimulationModel {
 	 * @return The model
 	 */
 	public String getName() {
-		return(m_name);
+		return(m_path);
 	}
 	
 	/**

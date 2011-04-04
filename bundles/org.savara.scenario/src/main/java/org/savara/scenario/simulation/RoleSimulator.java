@@ -35,6 +35,14 @@ public interface RoleSimulator {
 	public String getName();
 	
 	/**
+	 * This method initializes the simulation context.
+	 * 
+	 * @param context The simulation context
+	 * @throws Exception Failed to initialize the context
+	 */
+	public void initialize(SimulationContext context) throws Exception;
+	
+	/**
 	 * This method identifies whether the role simulator supports
 	 * the model information, and if so, returns the specific model
 	 * representation. If the model is not supported, then a null
@@ -56,6 +64,16 @@ public interface RoleSimulator {
 	 */
 	public java.util.List<Role> getModelRoles(Object model);
 
+	/**
+	 * This method returns the model, derived from the supplied model,
+	 * that should be used for the specified role.
+	 * 
+	 * @param model The model
+	 * @param role The role
+	 * @return The simulation model
+	 */
+	public Object getModelForRole(Object model, Role role);
+	
 	/**
 	 * This method simulates the supplied event within the specified simulation
 	 * context. The results are reported to the supplied handler.

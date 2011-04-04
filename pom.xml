@@ -50,6 +50,7 @@
 		<jbossws.version>3.2.2.GA</jbossws.version>
 		<emfcommon.version>2.3.0</emfcommon.version>
 		<emfecore.version>2.3.1</emfecore.version>
+		<xalan.version>2.7.1</xalan.version>
 	</properties>
 
 	<modules>

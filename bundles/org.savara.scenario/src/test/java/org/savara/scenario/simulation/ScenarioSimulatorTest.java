@@ -27,7 +27,6 @@ import static org.junit.Assert.*;
 
 public class ScenarioSimulatorTest {
 
-
 	@Test
 	public void testSimulate() {
 		Scenario scenario=new Scenario();
@@ -55,8 +54,8 @@ public class ScenarioSimulatorTest {
 		
 		roleSim.put(r1, new TestRoleSimulator("r1sim", false));
 		roleSim.put(r2, new TestRoleSimulator("r2sim", false));
-		contexts.put(r1, new SimulationContext());
-		contexts.put(r2, new SimulationContext());
+		contexts.put(r1, new DefaultSimulationContext(null));
+		contexts.put(r2, new DefaultSimulationContext(null));
 		
 		sim.simulate(scenario, roleSim, contexts, handler);
 		
@@ -99,7 +98,7 @@ public class ScenarioSimulatorTest {
 		java.util.Map<Role,SimulationContext> contexts=new java.util.HashMap<Role,SimulationContext>();
 		
 		roleSim.put(r1, new TestRoleSimulator("r1sim", false));
-		contexts.put(r1, new SimulationContext());
+		contexts.put(r1, new DefaultSimulationContext(null));
 		
 		sim.simulate(scenario, roleSim, contexts, handler);
 		
@@ -141,11 +140,11 @@ public class ScenarioSimulatorTest {
 		
 		sim.simulate(scenario, roleSim, contexts, handler);
 		
-		if (handler.getExceptionEvents().size() != 1) {
+		if (handler.getErrorEvents().size() != 1) {
 			fail("Expecting 1 'exception' event");
 		}
 		
-		if (handler.getExceptionEvents().get(0) != e1) {
+		if (handler.getErrorEvents().get(0) != e1) {
 			fail("Expecting e1 as exception event");
 		}
 	}

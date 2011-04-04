@@ -17,9 +17,18 @@
  */
 package org.savara.scenario.simulator.cdm;
 
+import java.io.File;
+
 import org.junit.Test;
 import org.savara.scenario.model.Role;
+import org.savara.scenario.model.Scenario;
+import org.savara.scenario.simulation.DefaultSimulationContext;
+import org.savara.scenario.simulation.RoleSimulator;
+import org.savara.scenario.simulation.ScenarioSimulator;
+import org.savara.scenario.simulation.ScenarioSimulatorFactory;
+import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationModel;
+import org.savara.scenario.util.ScenarioModelUtil;
 
 import static org.junit.Assert.*;
 
@@ -85,6 +94,270 @@ public class CDMRoleSimulatorTest {
 			
 			if (roles.get(2).getName().equals("{http://www.jboss.org/examples/store}Store") == false) {
 				fail("Third role name incorrect");
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to get model roles: "+e);
+		}
+	}
+
+	@Test
+	public void testSimulatePurchaseGoodsSuccessfulPurchase() {
+		
+		String filename="cdm/PurchaseGoods.cdm";
+		
+		java.io.InputStream is=
+			ClassLoader.getSystemResourceAsStream(filename);
+		
+		try {
+			SimulationModel sm=new SimulationModel(filename, is);
+			
+			CDMRoleSimulator rsim=new CDMRoleSimulator();
+			
+			Object model=rsim.getSupportedModel(sm);
+			
+			java.util.List<Role> roles=rsim.getModelRoles(model);
+			
+			// Load the scenario
+			String scenarioFile="scn/purchasegoods/SuccessfulPurchase.scn";
+			
+			java.net.URL url=ClassLoader.getSystemResource(scenarioFile);
+			
+			java.io.InputStream sis=url.openStream();
+			
+			Scenario scenario=ScenarioModelUtil.deserialize(sis);
+			
+			sis.close();
+
+			// Create the simulator
+			ScenarioSimulator ssim=ScenarioSimulatorFactory.getScenarioSimulator();
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			java.util.Map<Role,RoleSimulator> roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
+			java.util.Map<Role,SimulationContext> contexts=new java.util.HashMap<Role,SimulationContext>();
+			
+			// Reorder roles
+			roles.add(1, roles.remove(2));
+			
+			for (int i=0; i < roles.size(); i++) {
+				roleSimulators.put(scenario.getRole().get(i), rsim);
+				
+				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
+				
+				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				
+				rsim.initialize(context);
+				
+				contexts.put(scenario.getRole().get(i), context);
+			}
+			
+			ssim.simulate(scenario, roleSimulators, contexts, handler);
+			
+			if (handler.getProcessedEvents().size() != 8) {
+				fail("Eight events were not processed");
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to get model roles: "+e);
+		}
+	}
+
+	@Test
+	public void testSimulatePurchaseGoodsInvalidPurchase() {
+		
+		String filename="cdm/PurchaseGoods.cdm";
+		
+		java.io.InputStream is=
+			ClassLoader.getSystemResourceAsStream(filename);
+		
+		try {
+			SimulationModel sm=new SimulationModel(filename, is);
+			
+			CDMRoleSimulator rsim=new CDMRoleSimulator();
+			
+			Object model=rsim.getSupportedModel(sm);
+			
+			java.util.List<Role> roles=rsim.getModelRoles(model);
+			
+			// Load the scenario
+			String scenarioFile="scn/purchasegoods/InvalidPurchase.scn";
+			
+			java.net.URL url=ClassLoader.getSystemResource(scenarioFile);
+			
+			java.io.InputStream sis=url.openStream();
+			
+			Scenario scenario=ScenarioModelUtil.deserialize(sis);
+			
+			sis.close();
+
+			// Create the simulator
+			ScenarioSimulator ssim=ScenarioSimulatorFactory.getScenarioSimulator();
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			java.util.Map<Role,RoleSimulator> roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
+			java.util.Map<Role,SimulationContext> contexts=new java.util.HashMap<Role,SimulationContext>();
+			
+			// Reorder roles
+			roles.add(1, roles.remove(2));
+			
+			for (int i=0; i < roles.size(); i++) {
+				roleSimulators.put(scenario.getRole().get(i), rsim);
+				
+				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
+				
+				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				
+				rsim.initialize(context);
+				
+				contexts.put(scenario.getRole().get(i), context);
+			}
+			
+			ssim.simulate(scenario, roleSimulators, contexts, handler);
+			
+			if (handler.getProcessedEvents().size() != 7) {
+				fail("Should be 7 processed events: "+handler.getProcessedEvents().size());
+			}
+			
+			if (handler.getUnexpectedEvents().size() != 1) {
+				fail("Should be 1 unexpected event: "+handler.getUnexpectedEvents().size());
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to get model roles: "+e);
+		}
+	}
+
+	@Test
+	public void testSimulatePurchaseGoodsExpectedErrorInvalidPurchase() {
+		
+		String filename="cdm/PurchaseGoods.cdm";
+		
+		java.io.InputStream is=
+			ClassLoader.getSystemResourceAsStream(filename);
+		
+		try {
+			SimulationModel sm=new SimulationModel(filename, is);
+			
+			CDMRoleSimulator rsim=new CDMRoleSimulator();
+			
+			Object model=rsim.getSupportedModel(sm);
+			
+			java.util.List<Role> roles=rsim.getModelRoles(model);
+			
+			// Load the scenario
+			String scenarioFile="scn/purchasegoods/ExpectedErrorInvalidPurchase.scn";
+			
+			java.net.URL url=ClassLoader.getSystemResource(scenarioFile);
+			
+			java.io.InputStream sis=url.openStream();
+			
+			Scenario scenario=ScenarioModelUtil.deserialize(sis);
+			
+			sis.close();
+
+			// Create the simulator
+			ScenarioSimulator ssim=ScenarioSimulatorFactory.getScenarioSimulator();
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			java.util.Map<Role,RoleSimulator> roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
+			java.util.Map<Role,SimulationContext> contexts=new java.util.HashMap<Role,SimulationContext>();
+			
+			// Reorder roles
+			roles.add(1, roles.remove(2));
+			
+			for (int i=0; i < roles.size(); i++) {
+				roleSimulators.put(scenario.getRole().get(i), rsim);
+				
+				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
+				
+				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				
+				rsim.initialize(context);
+				
+				contexts.put(scenario.getRole().get(i), context);
+			}
+			
+			ssim.simulate(scenario, roleSimulators, contexts, handler);
+			
+			if (handler.getProcessedEvents().size() != 8) {
+				fail("Should be 8 processed events: "+handler.getProcessedEvents().size());
+			}
+			
+			if (handler.getUnexpectedEvents().size() != 0) {
+				fail("Should be 0 unexpected event: "+handler.getUnexpectedEvents().size());
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to get model roles: "+e);
+		}
+	}
+	
+	@Test
+	public void testSimulatePurchaseGoodsExpectingErrorSuccessfulPurchase() {
+		
+		String filename="cdm/PurchaseGoods.cdm";
+		
+		java.io.InputStream is=
+			ClassLoader.getSystemResourceAsStream(filename);
+		
+		try {
+			SimulationModel sm=new SimulationModel(filename, is);
+			
+			CDMRoleSimulator rsim=new CDMRoleSimulator();
+			
+			Object model=rsim.getSupportedModel(sm);
+			
+			java.util.List<Role> roles=rsim.getModelRoles(model);
+			
+			// Load the scenario
+			String scenarioFile="scn/purchasegoods/ExpectingErrorSuccessfulPurchase.scn";
+			
+			java.net.URL url=ClassLoader.getSystemResource(scenarioFile);
+			
+			java.io.InputStream sis=url.openStream();
+			
+			Scenario scenario=ScenarioModelUtil.deserialize(sis);
+			
+			sis.close();
+
+			// Create the simulator
+			ScenarioSimulator ssim=ScenarioSimulatorFactory.getScenarioSimulator();
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			java.util.Map<Role,RoleSimulator> roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
+			java.util.Map<Role,SimulationContext> contexts=new java.util.HashMap<Role,SimulationContext>();
+			
+			// Reorder roles
+			roles.add(1, roles.remove(2));
+			
+			for (int i=0; i < roles.size(); i++) {
+				roleSimulators.put(scenario.getRole().get(i), rsim);
+				
+				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
+				
+				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				
+				rsim.initialize(context);
+				
+				contexts.put(scenario.getRole().get(i), context);
+			}
+			
+			ssim.simulate(scenario, roleSimulators, contexts, handler);
+			
+			if (handler.getProcessedEvents().size() != 6) {
+				fail("Expecting 6 processed events: "+handler.getProcessedEvents().size());
+			}
+			
+			if (handler.getErrorEvents().size() != 2) {
+				fail("Expecting 2 error events: "+handler.getErrorEvents().size());
 			}
 			
 		} catch(Exception e) {

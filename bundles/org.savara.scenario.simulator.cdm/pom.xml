@@ -55,6 +55,11 @@
 			<version>${emfecore.version}</version>
 		</dependency>
 	    <dependency>
+	      <groupId>xalan</groupId>
+	      <artifactId>xalan</artifactId>
+	      <version>${xalan.version}</version>
+	    </dependency>
+	    <dependency>
 	      <groupId>org.osgi</groupId>
 	      <artifactId>org.osgi.core</artifactId>
 	      <version>${osgi.version}</version>

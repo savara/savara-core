@@ -27,11 +27,24 @@ import org.pi4soa.cdl.CDLManager;
 import org.pi4soa.cdl.Participant;
 import org.pi4soa.cdl.ParticipantType;
 import org.pi4soa.cdl.util.CDLTypeUtil;
+import org.pi4soa.service.Channel;
+import org.pi4soa.service.DefaultMessage;
+import org.pi4soa.service.Message;
+import org.pi4soa.service.ServiceException;
+import org.pi4soa.service.behavior.MessageDefinition;
+import org.pi4soa.service.behavior.Receive;
+import org.pi4soa.service.behavior.Send;
+import org.pi4soa.service.behavior.ServiceDescription;
+import org.pi4soa.service.behavior.projection.BehaviorProjection;
 import org.pi4soa.service.monitor.ServiceMonitor;
 import org.pi4soa.service.monitor.ServiceMonitorFactory;
 import org.pi4soa.service.monitor.XMLMonitorConfiguration;
+import org.pi4soa.service.session.Session;
+import org.pi4soa.service.tracker.ServiceTracker;
 import org.savara.scenario.model.Event;
+import org.savara.scenario.model.MessageEvent;
 import org.savara.scenario.model.Role;
+import org.savara.scenario.model.SendEvent;
 import org.savara.scenario.simulation.RoleSimulator;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
@@ -81,6 +94,26 @@ public class CDMRoleSimulator implements RoleSimulator {
 		return(ret);
 	}
 
+	protected Role getRole(ParticipantType pt) {
+		String ns=CDLTypeUtil.getNamespace(pt.getName(), pt, true);
+		String lp=XmlUtil.getLocalPart(pt.getName());
+		
+		Role r=new Role();
+		r.setName(new QName(ns, lp).toString());
+
+		return(r);
+	}
+	
+	protected Role getRole(Participant p) {
+		String ns=CDLTypeUtil.getNamespace(p.getName(), p, true);
+		String lp=XmlUtil.getLocalPart(p.getName());
+		
+		Role r=new Role();
+		r.setName(new QName(ns, lp).toString());
+
+		return(r);
+	}
+	
 	/**
 	 * This method returns the list of roles associated with the supplied
 	 * model, if the model represents a global conversation type. If the
@@ -96,26 +129,14 @@ public class CDMRoleSimulator implements RoleSimulator {
 		if (model instanceof org.pi4soa.cdl.Package) {
 			java.util.List<ParticipantType> partTypes=((org.pi4soa.cdl.Package)model).getTypeDefinitions().getParticipantTypes();			
 			for (ParticipantType pt : partTypes) {
-				String ns=CDLTypeUtil.getNamespace(pt.getName(), pt, true);
-				String lp=XmlUtil.getLocalPart(pt.getName());
-				
-				Role r=new Role();
-				r.setName(new QName(ns, lp).toString());
-				
-				ret.add(r);
+				ret.add(getRole(pt));
 			}			
 			
 			@SuppressWarnings("unchecked")
 			java.util.List<Participant> parts=((org.pi4soa.cdl.Package)model).getParticipants();
 			
 			for (Participant p : parts) {
-				String ns=CDLTypeUtil.getNamespace(p.getName(), p, true);
-				String lp=XmlUtil.getLocalPart(p.getName());
-				
-				Role r=new Role();
-				r.setName(new QName(ns, lp).toString());
-				
-				ret.add(r);
+				ret.add(getRole(p));
 			}
 		}
 		
@@ -128,16 +149,23 @@ public class CDMRoleSimulator implements RoleSimulator {
 	 * @param context The simulation context
 	 * @throws Exception Failed to initialize the context
 	 */
-	public void initialize(SimulationContext context, SimulationHandler handler) throws Exception {
+	public void initialize(SimulationContext context) throws Exception {
 		
-		if (context.getModel() instanceof org.pi4soa.cdl.Package) {
+		if (context.getModel() instanceof org.pi4soa.service.behavior.ServiceDescription) {
 			
 			XMLMonitorConfiguration config=
 				new XMLMonitorConfiguration();
 			
-			// TODO: Create service tracker proxy to the simulation handler
+			SimulationHandlerProxy tracker=new SimulationHandlerProxy();
+			context.getProperties().put(SimulationHandlerProxy.class.getName(), tracker);
+			
+			config.setServiceTracker(tracker);
+			config.setEvaluateState(true);
 	
 			ServiceMonitor mon=ServiceMonitorFactory.getServiceMonitor(config);
+			
+			mon.getConfiguration().getServiceRepository().
+					addServiceDescription((org.pi4soa.service.behavior.ServiceDescription)context.getModel());
 
 			context.getProperties().put(ServiceMonitor.class.getName(), mon);
 		} else {
@@ -145,6 +173,44 @@ public class CDMRoleSimulator implements RoleSimulator {
 		}
 	}
 
+	/**
+	 * This method returns the model, derived from the supplied model,
+	 * that should be used for the specified role.
+	 * 
+	 * @param model The model
+	 * @param role The role
+	 * @return The simulation model
+	 */
+	public Object getModelForRole(Object model, Role role) {
+		Object ret=null;
+		
+		if (model instanceof org.pi4soa.cdl.Package) {
+			org.pi4soa.cdl.Package cdlpack=(org.pi4soa.cdl.Package)model;
+			
+			java.util.List<ParticipantType> participants=
+				cdlpack.getTypeDefinitions().getParticipantTypes();
+			
+			java.util.Iterator<ParticipantType> iter=participants.iterator();
+			while (ret == null && iter.hasNext()) {
+				ParticipantType partType=iter.next();
+				
+				Role r=getRole(partType);
+				
+				if (r.getName().equals(role.getName())) {
+					try {
+						ret = BehaviorProjection.projectServiceDescription(cdlpack,
+									partType, null);
+					} catch(ServiceException se) {
+						logger.severe("Failed to project service " +
+								"description '"+partType.getName()+"'");
+					}
+				}
+			}
+		}
+		
+		return(ret);
+	}
+	
 	/**
 	 * This method simulates the supplied event within the specified simulation
 	 * context. The results are reported to the supplied handler.
@@ -157,13 +223,164 @@ public class CDMRoleSimulator implements RoleSimulator {
 							SimulationHandler handler) {
 		ServiceMonitor mon=(ServiceMonitor)
 				context.getProperties().get(ServiceMonitor.class.getName());
-		
-		if (mon != null) {
-			// TODO: Dispatch event to service monitor
+		SimulationHandlerProxy proxy=(SimulationHandlerProxy)
+				context.getProperties().get(SimulationHandlerProxy.class.getName());
+
+		if (mon != null && proxy != null) {
+			
+			synchronized(mon) {
+				proxy.setEvent(event);
+				proxy.setSimulationHandler(handler);
+				
+				if (event instanceof MessageEvent) {
+					MessageEvent me=(MessageEvent)event;
+					
+					if (me.getParameter().size() == 1) {
+						String type=me.getParameter().get(0).getType();
+						String path=me.getParameter().get(0).getValue();
+						
+						java.io.Serializable value=null;
+						
+						if (path != null) {
+							try {
+								java.io.InputStream is=context.getResource(path);
+								
+								byte[] b=new byte[is.available()];
+								
+								is.read(b);
+								
+								is.close();
+								
+								// Assume value is text
+								value = new String(b);
+								
+							} catch(Exception e) {
+								handler.error("Failed to obtain message value", event, e);
+							}
+						}
+						
+						Message mesg=mon.createMessage(type,
+								null, null, value, null, null);
+						
+						if (mesg instanceof DefaultMessage) {
+							// Not nice, but the factory method does not offer ability
+							// to set op/fault names on messgae - only req or resp
+							((DefaultMessage)mesg).setOperationName(me.getOperationName());
+							((DefaultMessage)mesg).setFaultName(me.getFaultName());
+						}
+						
+						try {
+							if (event instanceof SendEvent) {
+								mon.messageSent(mesg);
+							} else {
+								mon.messageReceived(mesg);
+							}
+						} catch(Exception e) {
+							handler.error("Failed to simulate message", event, e);
+						}
+					} else {
+						handler.error("Cannot simulate event as does not have single parameter",
+										event, null);
+					}
+				}
+			}
 			
 		} else {
-			handler.exception("Service monitor not configured", event, null);
+			handler.error("Service monitor not configured", event, null);
 		}
 	}
 
+	public static class SimulationHandlerProxy implements ServiceTracker {
+
+		private SimulationHandler m_handler=null;
+		private Event m_event=null;
+		
+		public SimulationHandlerProxy() {
+		}
+		
+		public void setSimulationHandler(SimulationHandler handler) {
+			m_handler = handler;
+		}
+		
+		public void setEvent(Event event) {
+			m_event = event;
+		}
+		
+		public void close() throws ServiceException {
+		}
+
+		public void error(Session arg0, String mesg, Throwable e) {
+			m_handler.error(mesg, m_event, e);
+		}
+
+		public void information(Session arg0, String arg1) {
+		}
+
+		public void initialize() throws ServiceException {
+		}
+
+		public void receivedMessage(MessageDefinition arg0, Message arg1) {
+			if (!m_event.isErrorExpected()) {
+				m_handler.processed(m_event);
+			} else {
+				m_handler.error("Error was expected", m_event, null);
+			}
+		}
+
+		public void receivedMessage(Receive arg0, Session arg1, Channel arg2,
+				Message arg3) {
+			if (!m_event.isErrorExpected()) {
+				m_handler.processed(m_event);
+			} else {
+				m_handler.error("Error was expected", m_event, null);
+			}
+		}
+
+		public void sentMessage(MessageDefinition arg0, Message arg1) {
+			if (!m_event.isErrorExpected()) {
+				m_handler.processed(m_event);
+			} else {
+				m_handler.error("Error was expected", m_event, null);
+			}
+		}
+
+		public void sentMessage(Send arg0, Session arg1, Channel arg2,
+				Message arg3) {
+			if (!m_event.isErrorExpected()) {
+				m_handler.processed(m_event);
+			} else {
+				m_handler.error("Error was expected", m_event, null);
+			}
+		}
+
+		public void serviceFinished(ServiceDescription arg0, Session arg1) {
+		}
+
+		public void serviceStarted(ServiceDescription arg0, Session arg1) {
+		}
+
+		public void subSessionFinished(Session arg0, Session arg1) {
+		}
+
+		public void subSessionStarted(Session arg0, Session arg1) {
+		}
+
+		public void unexpectedMessage(ServiceDescription arg0, Session arg1,
+				Message arg2, String arg3) {
+			if (!m_event.isErrorExpected()) {
+				m_handler.unexpected(m_event);
+			} else {
+				m_handler.processed(m_event);
+			}
+		}
+
+		public void unhandledException(Session arg0, String arg1) {
+			// TODO: Determine if this should be reported as unexpected or as an error?
+			m_handler.unexpected(m_event);
+		}
+
+		public void warning(Session arg0, String arg1, Throwable arg2) {
+		}
+		
+	}
 }
