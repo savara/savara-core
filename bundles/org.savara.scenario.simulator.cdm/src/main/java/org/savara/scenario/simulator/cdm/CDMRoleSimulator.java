@@ -275,6 +275,9 @@ public class CDMRoleSimulator implements RoleSimulator {
 							} else {
 								mon.messageReceived(mesg);
 							}
+						} catch(org.pi4soa.service.OutOfSequenceMessageException oosme) {
+							// Ignore, as logged as unexpected messages with handler
+							
 						} catch(Exception e) {
 							handler.error("Failed to simulate message", event, e);
 						}

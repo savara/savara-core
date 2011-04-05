@@ -159,6 +159,18 @@ public class CDMRoleSimulatorTest {
 				fail("Eight events were not processed");
 			}
 			
+			if (handler.getUnexpectedEvents().size() != 0) {
+				fail("Should be no unexpected events");
+			}
+			
+			if (handler.getErrorEvents().size() != 0) {
+				fail("Should be no error events");
+			}
+			
+			if (handler.getNoSimulatorEvents().size() != 0) {
+				fail("Should be no 'no simulator' events");
+			}
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail("Failed to get model roles: "+e);
@@ -224,6 +236,14 @@ public class CDMRoleSimulatorTest {
 			
 			if (handler.getUnexpectedEvents().size() != 1) {
 				fail("Should be 1 unexpected event: "+handler.getUnexpectedEvents().size());
+			}
+			
+			if (handler.getErrorEvents().size() != 0) {
+				fail("Should be no error events");
+			}
+			
+			if (handler.getNoSimulatorEvents().size() != 0) {
+				fail("Should be no 'no simulator' events");
 			}
 			
 		} catch(Exception e) {
@@ -293,6 +313,14 @@ public class CDMRoleSimulatorTest {
 				fail("Should be 0 unexpected event: "+handler.getUnexpectedEvents().size());
 			}
 			
+			if (handler.getErrorEvents().size() != 0) {
+				fail("Should be no error events");
+			}
+			
+			if (handler.getNoSimulatorEvents().size() != 0) {
+				fail("Should be no 'no simulator' events");
+			}
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail("Failed to get model roles: "+e);
@@ -358,6 +386,14 @@ public class CDMRoleSimulatorTest {
 			
 			if (handler.getErrorEvents().size() != 2) {
 				fail("Expecting 2 error events: "+handler.getErrorEvents().size());
+			}
+			
+			if (handler.getUnexpectedEvents().size() != 0) {
+				fail("Should be no unexpected events");
+			}
+			
+			if (handler.getNoSimulatorEvents().size() != 0) {
+				fail("Should be no 'no simulator' events");
 			}
 			
 		} catch(Exception e) {
