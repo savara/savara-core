@@ -58,6 +58,8 @@ import com.sun.xml.internal.ws.util.xml.XmlUtil;
  */
 public class CDMRoleSimulator implements RoleSimulator {
 
+	private static final String WS_CDL_SIMULATOR = "WS-CDL simulator";
+
 	private static final String CDM_FILE_EXTENSION = ".cdm";
 	
 	private static final Logger logger=Logger.getLogger(CDMRoleSimulator.class.getName());
@@ -68,7 +70,7 @@ public class CDMRoleSimulator implements RoleSimulator {
 	 * @return The name
 	 */
 	public String getName() {
-		return("pi4soa CDM simulator");
+		return WS_CDL_SIMULATOR;
 	}
 
 	/**

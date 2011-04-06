@@ -35,8 +35,11 @@ public class SimulationModel {
 	 */
 	public SimulationModel(String path, java.io.InputStream is) throws Exception {
 		m_path = path;
-		m_contents = new byte[is.available()];
-		is.read(m_contents);
+		
+		if (is != null) {
+			m_contents = new byte[is.available()];
+			is.read(m_contents);
+		}
 	}
 	
 	/**
@@ -51,9 +54,15 @@ public class SimulationModel {
 	/**
 	 * This method provides the contents as an input stream.
 	 * 
-	 * @return The contents
+	 * @return The contents, or null if not available
 	 */
 	public java.io.InputStream getContents() {
-		return(new java.io.ByteArrayInputStream(m_contents));
+		java.io.InputStream ret=null;
+		
+		if (m_contents != null) {
+			ret = new java.io.ByteArrayInputStream(m_contents);
+		}
+		
+		return(ret);
 	}
 }

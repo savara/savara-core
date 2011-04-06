@@ -18,6 +18,7 @@
 package org.savara.scenario.simulator.cdm;
 
 import org.savara.scenario.model.Event;
+import org.savara.scenario.model.MessageEvent;
 import org.savara.scenario.simulation.SimulationHandler;
 
 public class TestSimulationHandler implements SimulationHandler {
@@ -57,5 +58,61 @@ public class TestSimulationHandler implements SimulationHandler {
 
 	public void error(String mesg, Event event, Throwable e) {
 		m_errorEvents.add(event);
+	}
+	
+	public String toString() {
+		StringBuffer buf=new StringBuffer();
+		
+		buf.append("Test Simulation Handler Report\r\n");
+		buf.append("==============================\r\n");
+		
+		if (m_noSimulatorEvents.size() > 0) {
+			buf.append("\r\nNo Simulator Events:\r\n");
+			for (Event event : m_noSimulatorEvents) {
+				buf.append(describe(event));
+			}
+		}
+		
+		if (m_processedEvents.size() > 0) {
+			buf.append("\r\nProcessed Events:\r\n");
+			for (Event event : m_processedEvents) {
+				buf.append(describe(event));
+			}
+		}
+		
+		if (m_unexpectedEvents.size() > 0) {
+			buf.append("\r\nUnexpected Events:\r\n");
+			for (Event event : m_unexpectedEvents) {
+				buf.append(describe(event));
+			}
+		}
+		
+		if (m_errorEvents.size() > 0) {
+			buf.append("\r\nError Events:\r\n");
+			for (Event event : m_errorEvents) {
+				buf.append(describe(event));
+			}
+		}
+		
+		buf.append("\r\n==============================\r\n");
+		
+		return(buf.toString());
+	}
+	
+	protected String describe(Event event) {
+		String ret=event.getClass().getSimpleName();
+		
+		if (event instanceof MessageEvent) {
+			MessageEvent me=(MessageEvent)event;
+			
+			ret += " operation="+me.getOperationName();
+			if (me.getFaultName() != null) {
+				ret += " fault="+me.getFaultName();
+			}
+		}
+		
+		ret += "\r\n";
+		
+		return(ret);
 	}
 }
