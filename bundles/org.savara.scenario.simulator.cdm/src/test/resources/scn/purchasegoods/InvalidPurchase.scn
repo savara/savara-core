@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scenario xmlns="http://www.savara.org/scenario">
+    <role name="Buyer" id="90d54d2a-14aa-4de0-a3e6-43e28fe844f3"/>
+    <role name="Store" id="231e55ce-3f9f-4f14-9a6d-9075aab58d35"/>
+    <role name="CreditAgency" id="bea1a41d-829f-4e86-8941-c7eb2ca10d71"/>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="buy" role="90d54d2a-14aa-4de0-a3e6-43e28fe844f3" id="e72f8241-6c84-45aa-be53-ce9dfaeffeb9">
+        <parameter value="BuyRequest.xml" type="{http://www.jboss.org/examples/store}BuyRequest"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="buy" role="231e55ce-3f9f-4f14-9a6d-9075aab58d35" id="4a776179-2d40-4e3b-95e3-570e3c936b2f">
+        <parameter value="BuyRequest.xml" type="{http://www.jboss.org/examples/store}BuyRequest"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="checkCredit" role="231e55ce-3f9f-4f14-9a6d-9075aab58d35" id="daa81ad2-36de-4334-acb7-e3ae928041bf">
+        <parameter value="CreditCheckRequest2.xml" type="{http://www.jboss.org/examples/creditAgency}CreditCheckRequest"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="checkCredit" role="bea1a41d-829f-4e86-8941-c7eb2ca10d71" id="9636ec84-5c61-4a8c-9aa5-d393991169fe">
+        <parameter value="CreditCheckRequest2.xml" type="{http://www.jboss.org/examples/creditAgency}CreditCheckRequest"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="checkCredit" role="bea1a41d-829f-4e86-8941-c7eb2ca10d71" id="17b72855-435e-4cac-b1fe-4d07464fe88c">
+        <parameter value="CreditCheckInvalid.xml" type="{http://www.jboss.org/examples/creditAgency}CreditCheckInvalid"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="checkCredit" role="231e55ce-3f9f-4f14-9a6d-9075aab58d35" id="664e5ad7-64c0-496b-9fbf-d2ab733a6fdc">
+        <parameter value="CreditCheckInvalid.xml" type="{http://www.jboss.org/examples/creditAgency}CreditCheckInvalid"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="buy" role="231e55ce-3f9f-4f14-9a6d-9075aab58d35" id="e42dbd0e-3c3d-4205-9840-cbe3dc06c654">
+        <parameter value="BuyConfirmed.xml" type="{http://www.jboss.org/examples/store}BuyConfirmed"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="buy" role="90d54d2a-14aa-4de0-a3e6-43e28fe844f3" id="c20b025f-8c3b-4e9d-9b36-e00ee98ed08f">
+        <parameter value="BuyConfirmed.xml" type="{http://www.jboss.org/examples/store}BuyConfirmed"/>
+    </event>
+    <link target="4a776179-2d40-4e3b-95e3-570e3c936b2f" source="e72f8241-6c84-45aa-be53-ce9dfaeffeb9"/>
+    <link target="9636ec84-5c61-4a8c-9aa5-d393991169fe" source="daa81ad2-36de-4334-acb7-e3ae928041bf"/>
+    <link target="664e5ad7-64c0-496b-9fbf-d2ab733a6fdc" source="17b72855-435e-4cac-b1fe-4d07464fe88c"/>
+    <link target="c20b025f-8c3b-4e9d-9b36-e00ee98ed08f" source="e42dbd0e-3c3d-4205-9840-cbe3dc06c654"/>
+</scenario>

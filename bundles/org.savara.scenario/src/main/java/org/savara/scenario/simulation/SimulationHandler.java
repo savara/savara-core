@@ -27,11 +27,27 @@ import org.savara.scenario.model.Event;
 public interface SimulationHandler {
 
 	/**
+	 * This method is called to indicate that there was no appropriate
+	 * simulator for the supplied event.
+	 * 
+	 * @param event The unsimulated event
+	 */
+	public void noSimulator(Event event);
+	
+	/**
+	 * This method indicates that the event has been successfully processed
+	 * by the simulator.
+	 * 
+	 * @param event The event
+	 */
+	public void processed(Event event);
+	
+	/**
 	 * This method is called when an unknown event is detected.
 	 * 
 	 * @param event The unknown event
 	 */
-	public void unknownEvent(Event event);
+	public void unexpected(Event event);
 	
 	/**
 	 * This method is invoked if an exception is thrown while
@@ -41,6 +57,6 @@ public interface SimulationHandler {
 	 * @param event The event
 	 * @param e The exception
 	 */
-	public void exception(String mesg, Event event, Exception e);
+	public void error(String mesg, Event event, Throwable e);
 	
 }

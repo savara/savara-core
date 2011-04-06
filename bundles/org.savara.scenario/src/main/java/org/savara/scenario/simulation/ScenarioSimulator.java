@@ -17,7 +17,7 @@
  */
 package org.savara.scenario.simulation;
 
-import org.savara.monitor.Monitor;
+import org.savara.scenario.model.Role;
 import org.savara.scenario.model.Scenario;
 
 /**
@@ -27,20 +27,16 @@ import org.savara.scenario.model.Scenario;
 public interface ScenarioSimulator {
 
 	/**
-	 * This method sets the monitor used to simulate the scenario.
-	 * 
-	 * @param monitor The monitor
-	 */
-	public void setMonitor(Monitor monitor);
-	
-	/**
 	 * This method simulates the scenario against the pre-configured
 	 * monitor. Results from the simulation are notified to the
 	 * supplied simulation handler.
 	 * 
 	 * @param scenario The scenario to be simulated
+	 * @param roleSimulators The simulators for the relevant roles in the scenario
+	 * @oaram contexts The simulation contexts for each role being simulated
 	 * @param handler The callback to notify of the simulation results
 	 */
-	public void simulate(Scenario scenario, SimulationHandler handler);
+	public void simulate(Scenario scenario, java.util.Map<Role,RoleSimulator> roleSimulators,
+			java.util.Map<Role,SimulationContext> contexts, SimulationHandler handler);
 	
 }

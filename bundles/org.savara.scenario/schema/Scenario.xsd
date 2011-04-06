@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.savara.org/scenario" xmlns:tns="http://www.savara.org/scenario" elementFormDefault="qualified">
 
+    <include schemaLocation=""></include>
     <complexType name="Role">
     	<attribute name="id" type="ID"></attribute>
     	<attribute name="name" type="string"></attribute>
@@ -25,8 +26,15 @@
 
     <complexType name="Event" abstract="true">
     	<attribute name="id" type="ID"></attribute>
-    	<attribute name="role" type="IDREF"></attribute>
-    	<attribute name="errorExpected" type="boolean"></attribute>
+    	<attribute name="errorExpected" type="boolean" default="false"></attribute>
+    </complexType>
+
+    <complexType name="RoleEvent" abstract="true">
+    	<complexContent>
+    		<extension base="tns:Event">
+    			<attribute name="role" type="IDREF"></attribute>
+    		</extension>
+    	</complexContent>
     </complexType>
 
     <complexType name="Link">
@@ -36,7 +44,7 @@
 
     <complexType name="MessageEvent" abstract="true">
     	<complexContent>
-    		<extension base="tns:Event">
+    		<extension base="tns:RoleEvent">
     			<sequence>
     				<element name="parameter" type="tns:Parameter" minOccurs="0"
     					maxOccurs="unbounded">
