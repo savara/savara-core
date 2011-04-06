@@ -27,6 +27,7 @@ import org.pi4soa.cdl.CDLManager;
 import org.pi4soa.cdl.Participant;
 import org.pi4soa.cdl.ParticipantType;
 import org.pi4soa.cdl.util.CDLTypeUtil;
+import org.pi4soa.common.xml.XMLUtils;
 import org.pi4soa.service.Channel;
 import org.pi4soa.service.DefaultMessage;
 import org.pi4soa.service.Message;
@@ -49,8 +50,6 @@ import org.savara.scenario.simulation.RoleSimulator;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
 import org.savara.scenario.simulation.SimulationModel;
-
-import com.sun.xml.internal.ws.util.xml.XmlUtil;
 
 /**
  * This class provides the pi4soa CDM implementation of the Role Simulator interface.
@@ -98,7 +97,7 @@ public class CDMRoleSimulator implements RoleSimulator {
 
 	protected Role getRole(ParticipantType pt) {
 		String ns=CDLTypeUtil.getNamespace(pt.getName(), pt, true);
-		String lp=XmlUtil.getLocalPart(pt.getName());
+		String lp=XMLUtils.getLocalname(pt.getName());
 		
 		Role r=new Role();
 		r.setName(new QName(ns, lp).toString());
@@ -108,7 +107,7 @@ public class CDMRoleSimulator implements RoleSimulator {
 	
 	protected Role getRole(Participant p) {
 		String ns=CDLTypeUtil.getNamespace(p.getName(), p, true);
-		String lp=XmlUtil.getLocalPart(p.getName());
+		String lp=XMLUtils.getLocalname(p.getName());
 		
 		Role r=new Role();
 		r.setName(new QName(ns, lp).toString());

@@ -6,11 +6,9 @@ Bundle-Version: 2.0.0.SNAPSHOT
 Bundle-Activator: org.savara.scenario.simulator.cdm.osgi.Activator
 Bundle-Vendor: www.savara.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Import-Package: org.junit,
- org.osgi.framework,
- org.osgi.util.tracker
-Require-Bundle: org.scribble.common,
- org.savara.common,
+Import-Package: org.osgi.framework;version="1.3.0"
+Require-Bundle: org.pi4soa.cdl,
+ org.pi4soa.common,
+ org.pi4soa.service,
  org.savara.scenario,
- org.savara.monitor
-Export-Package: 
+ org.junit
