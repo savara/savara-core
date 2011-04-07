@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Activity
 Bundle-SymbolicName: org.savara.activity
-Bundle-Version: 2.0.0.20110407-M2
+Bundle-Version: 2.0.0.SNAPSHOT
 Bundle-Activator: org.savara.activity.osgi.Activator
 Bundle-Vendor: www.savara.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
