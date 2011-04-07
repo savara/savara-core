@@ -3,14 +3,14 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bundles</groupId>
 	<artifactId>org.savara.monitor</artifactId> 
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.0.20110407-M2</version>
 	<packaging>jar</packaging>
 	<name>Savara::Bundles::Monitor</name>
 
 	<parent>
 		<groupId>org.savara</groupId>
 		<artifactId>bundles</artifactId>
-		<version>2.0.0-SNAPSHOT</version>
+		<version>2.0.0.20110407-M2</version>
 	</parent>
   
 	<dependencies>
