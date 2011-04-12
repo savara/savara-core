@@ -32,7 +32,7 @@ public class BPMN2ModelUtilTest {
 	@Test
 	public void testGetDefinitions() {
 		java.io.InputStream is=
-			ClassLoader.getSystemResourceAsStream("models/PurchaseGoods.bpmn2");
+			ClassLoader.getSystemResourceAsStream("testmodels/bpmn2/PurchaseGoods.bpmn2");
 
 		try {
 			org.savara.bpmn2.model.TDefinitions defns=BPMN2ModelUtil.deserialize(is);
@@ -53,10 +53,8 @@ public class BPMN2ModelUtilTest {
 				} else if (elem.getDeclaredType() == TItemDefinition.class) {
 					TItemDefinition itemdefn=(TItemDefinition)elem.getValue();
 					
-					if (itemdefn.getStructureRef().equals(QName.valueOf(
-							"{http://www.jboss.org/examples/store}BuyRequest")) == false) {
-						fail("Item definition not correct '"+itemdefn.getStructureRef()+
-										"', expecting: ");
+					if (itemdefn.getStructureRef() == null) {
+						fail("Item definition structure ref is null");
 					}
 				}
 			}

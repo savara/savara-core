@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:sto="http://www.jboss.org/examples/store" id="_i51WAWIeEeCXwJo-SA2DHw">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:sto="http://www.jboss.org/examples/store" xmlns:ca="http://www.jboss.org/examples/creditAgency" id="_i51WAWIeEeCXwJo-SA2DHw">
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="store.xsd" namespace="http://www.jboss.org/examples/store"/>
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
   <bpmn2:collaboration id="_i519EGIeEeCXwJo-SA2DHw">
@@ -103,6 +103,7 @@
     <bpmn2:sequenceFlow id="_1uF0UGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_UWTwQGIgEeCPQb9rqCPGUQ" targetRef="_FP8OEGIgEeCPQb9rqCPGUQ"/>
   </bpmn2:choreography>
   <bpmn2:itemDefinition id="_UVIwYGQ1EeCKf-Rw12msHA" structureRef="sto:BuyRequest"/>
+  <bpmn2:itemDefinition id="_2NvLMGU1EeCQyqHoENBreQ" structureRef="ca:CreditCheckRequest"/>
   <bpmndi:BPMNDiagram id="_mVquQGIfEeCXwJo-SA2DHw">
     <bpmndi:BPMNPlane id="_mVrVUGIfEeCXwJo-SA2DHw" bpmnElement="_MPMJEGIpEeCPQb9rqCPGUQ">
       <bpmndi:BPMNShape id="_vhVCAGIeEeCXwJo-SA2DHw" bpmnElement="_vhFxcGIeEeCXwJo-SA2DHw">
