@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:sto="http://www.jboss.org/examples/store" xmlns:ca="http://www.jboss.org/examples/creditAgency" id="_i51WAWIeEeCXwJo-SA2DHw">
+  <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="store.xsd" namespace="http://www.jboss.org/examples/store"/>
+  <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
+  <bpmn2:collaboration id="_i519EGIeEeCXwJo-SA2DHw">
+    <bpmn2:participant id="_JLBZAGIfEeCXwJo-SA2DHw" name="Buyer"/>
+    <bpmn2:participant id="_rOJgIGIfEeCXwJo-SA2DHw" name="Seller"/>
+    <bpmn2:participant id="_57dCEGIfEeCPQb9rqCPGUQ" name="CreditAgency"/>
+    <bpmn2:messageFlow id="_LXfJMGIiEeCPQb9rqCPGUQ" messageRef="_QmpVsGIiEeCPQb9rqCPGUQ" name="BuyRequest" sourceRef="_JLBZAGIfEeCXwJo-SA2DHw" targetRef="_rOJgIGIfEeCXwJo-SA2DHw"/>
+    <bpmn2:messageFlow id="_OLjE4GIlEeCPQb9rqCPGUQ" messageRef="_iscLgGIkEeCPQb9rqCPGUQ" name="CreditCheckRequest" sourceRef="_rOJgIGIfEeCXwJo-SA2DHw" targetRef="_57dCEGIfEeCPQb9rqCPGUQ"/>
+    <bpmn2:messageFlow id="_9fWX4GIlEeCPQb9rqCPGUQ" messageRef="_oC5S0GIkEeCPQb9rqCPGUQ" name="CreditCheckOk" sourceRef="_57dCEGIfEeCPQb9rqCPGUQ" targetRef="_rOJgIGIfEeCXwJo-SA2DHw"/>
+    <bpmn2:messageFlow id="_MGvfEGImEeCPQb9rqCPGUQ" messageRef="_qQWo4GIkEeCPQb9rqCPGUQ" name="CreditCheckInvalid" sourceRef="_57dCEGIfEeCPQb9rqCPGUQ" targetRef="_rOJgIGIfEeCXwJo-SA2DHw"/>
+    <bpmn2:messageFlow id="_VqJH8GImEeCPQb9rqCPGUQ" messageRef="_5c_LIGIkEeCPQb9rqCPGUQ" name="BuyApproved" sourceRef="_rOJgIGIfEeCXwJo-SA2DHw" targetRef="_JLBZAGIfEeCXwJo-SA2DHw"/>
+    <bpmn2:messageFlow id="_WC170GImEeCPQb9rqCPGUQ" messageRef="_BhksoGIlEeCPQb9rqCPGUQ" name="BuyRejected" sourceRef="_rOJgIGIfEeCXwJo-SA2DHw" targetRef="_JLBZAGIfEeCXwJo-SA2DHw"/>
+    <bpmn2:messageFlow id="_Waql8GImEeCPQb9rqCPGUQ" messageRef="_E-EosGIlEeCPQb9rqCPGUQ" name="Acknowledge" sourceRef="_JLBZAGIfEeCXwJo-SA2DHw" targetRef="_rOJgIGIfEeCXwJo-SA2DHw"/>
+  </bpmn2:collaboration>
+  <bpmn2:message id="_QmpVsGIiEeCPQb9rqCPGUQ" itemRef="_UVIwYGQ1EeCKf-Rw12msHA" name="BuyRequest"/>
+  <bpmn2:message id="_iscLgGIkEeCPQb9rqCPGUQ" name="CreditCheckRequest"/>
+  <bpmn2:message id="_oC5S0GIkEeCPQb9rqCPGUQ" name="CreditCheckOk"/>
+  <bpmn2:message id="_qQWo4GIkEeCPQb9rqCPGUQ" name="CreditCheckInvalid"/>
+  <bpmn2:message id="_5c_LIGIkEeCPQb9rqCPGUQ" name="BuyApproved"/>
+  <bpmn2:message id="_BhksoGIlEeCPQb9rqCPGUQ" name="BuyRejected"/>
+  <bpmn2:message id="_E-EosGIlEeCPQb9rqCPGUQ" name="Acknowledge"/>
+  <bpmn2:choreography id="_MPMJEGIpEeCPQb9rqCPGUQ" name="PurchaseGoods">
+    <bpmn2:startEvent id="_vhFxcGIeEeCXwJo-SA2DHw" name="Start">
+      <bpmn2:outgoing>_0JhDMGIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:sequenceFlow id="_0JhDMGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_vhFxcGIeEeCXwJo-SA2DHw" targetRef="_0JKIwGIeEeCXwJo-SA2DHw"/>
+    <bpmn2:choreographyTask id="_0JKIwGIeEeCXwJo-SA2DHw" name="Buy Request" initiatingParticipantRef="_JLBZAGIfEeCXwJo-SA2DHw">
+      <bpmn2:incoming>_0JhDMGIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:outgoing>_0t7X0GIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+      <bpmn2:participantRef>_JLBZAGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:participantRef>_rOJgIGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>_LXfJMGIiEeCPQb9rqCPGUQ</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:choreographyTask id="_DYNQYGIgEeCPQb9rqCPGUQ" name="Check Credit" initiatingParticipantRef="_rOJgIGIfEeCXwJo-SA2DHw">
+      <bpmn2:incoming>_0t7X0GIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:outgoing>_1BUN4GIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+      <bpmn2:participantRef>_rOJgIGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:participantRef>_57dCEGIfEeCPQb9rqCPGUQ</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>_OLjE4GIlEeCPQb9rqCPGUQ</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:choreographyTask id="_D_bocGIgEeCPQb9rqCPGUQ" name="Credit Good" initiatingParticipantRef="_57dCEGIfEeCPQb9rqCPGUQ">
+      <bpmn2:incoming>_1WWCsGIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:outgoing>_2DTPUGIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+      <bpmn2:participantRef>_rOJgIGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:participantRef>_57dCEGIfEeCPQb9rqCPGUQ</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>_9fWX4GIlEeCPQb9rqCPGUQ</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:choreographyTask id="_FP8OEGIgEeCPQb9rqCPGUQ" name="Credit Bad" initiatingParticipantRef="_57dCEGIfEeCPQb9rqCPGUQ">
+      <bpmn2:incoming>_1uF0UGIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:outgoing>_2f0zQGIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+      <bpmn2:participantRef>_rOJgIGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:participantRef>_57dCEGIfEeCPQb9rqCPGUQ</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>_MGvfEGImEeCPQb9rqCPGUQ</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:choreographyTask id="_EuUuwGIgEeCPQb9rqCPGUQ" name="Purchase Approved" initiatingParticipantRef="_rOJgIGIfEeCXwJo-SA2DHw">
+      <bpmn2:incoming>_2DTPUGIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:outgoing>_3jLGoGIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+      <bpmn2:participantRef>_JLBZAGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:participantRef>_rOJgIGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>_VqJH8GImEeCPQb9rqCPGUQ</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:choreographyTask id="_FgX2wGIgEeCPQb9rqCPGUQ" name="Purchase Rejected" initiatingParticipantRef="_rOJgIGIfEeCXwJo-SA2DHw">
+      <bpmn2:incoming>_2f0zQGIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:incoming>_2wOmwWIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:outgoing>_2wOmwWIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+      <bpmn2:outgoing>_3JtdwGIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+      <bpmn2:participantRef>_JLBZAGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:participantRef>_rOJgIGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>_WC170GImEeCPQb9rqCPGUQ</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:exclusiveGateway id="_bTasUGIgEeCPQb9rqCPGUQ">
+      <bpmn2:incoming>_3JtdwGIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:incoming>_3jLGoGIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:outgoing>_4GRMoGIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:choreographyTask id="_ceO5oGIgEeCPQb9rqCPGUQ" name="Confirm" initiatingParticipantRef="_JLBZAGIfEeCXwJo-SA2DHw">
+      <bpmn2:incoming>_4GRMoGIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:outgoing>_4tTXcGIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+      <bpmn2:participantRef>_JLBZAGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:participantRef>_rOJgIGIfEeCXwJo-SA2DHw</bpmn2:participantRef>
+      <bpmn2:messageFlowRef>_Waql8GImEeCPQb9rqCPGUQ</bpmn2:messageFlowRef>
+    </bpmn2:choreographyTask>
+    <bpmn2:sequenceFlow id="_0t7X0GIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_0JKIwGIeEeCXwJo-SA2DHw" targetRef="_DYNQYGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:sequenceFlow id="_1BUN4GIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_DYNQYGIgEeCPQb9rqCPGUQ" targetRef="_UWTwQGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:sequenceFlow id="_2DTPUGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_D_bocGIgEeCPQb9rqCPGUQ" targetRef="_EuUuwGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:sequenceFlow id="_2f0zQGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_FP8OEGIgEeCPQb9rqCPGUQ" targetRef="_FgX2wGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:sequenceFlow id="_2wOmwWIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_FgX2wGIgEeCPQb9rqCPGUQ" targetRef="_FgX2wGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:sequenceFlow id="_3JtdwGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_FgX2wGIgEeCPQb9rqCPGUQ" targetRef="_bTasUGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:sequenceFlow id="_3jLGoGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_EuUuwGIgEeCPQb9rqCPGUQ" targetRef="_bTasUGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:sequenceFlow id="_4GRMoGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_bTasUGIgEeCPQb9rqCPGUQ" targetRef="_ceO5oGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:sequenceFlow id="_4tTXcGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_ceO5oGIgEeCPQb9rqCPGUQ" targetRef="_f8tysGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:endEvent id="_f8tysGIgEeCPQb9rqCPGUQ" name="End">
+      <bpmn2:incoming>_4tTXcGIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:exclusiveGateway id="_UWTwQGIgEeCPQb9rqCPGUQ">
+      <bpmn2:incoming>_1BUN4GIgEeCPQb9rqCPGUQ</bpmn2:incoming>
+      <bpmn2:outgoing>_1WWCsGIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+      <bpmn2:outgoing>_1uF0UGIgEeCPQb9rqCPGUQ</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="_1WWCsGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_UWTwQGIgEeCPQb9rqCPGUQ" targetRef="_D_bocGIgEeCPQb9rqCPGUQ"/>
+    <bpmn2:sequenceFlow id="_1uF0UGIgEeCPQb9rqCPGUQ" name="Sequence Flow" sourceRef="_UWTwQGIgEeCPQb9rqCPGUQ" targetRef="_FP8OEGIgEeCPQb9rqCPGUQ"/>
+  </bpmn2:choreography>
+  <bpmn2:itemDefinition id="_UVIwYGQ1EeCKf-Rw12msHA" structureRef="sto:BuyRequest"/>
+  <bpmn2:itemDefinition id="_2NvLMGU1EeCQyqHoENBreQ" structureRef="ca:CreditCheckRequest"/>
+  <bpmndi:BPMNDiagram id="_mVquQGIfEeCXwJo-SA2DHw">
+    <bpmndi:BPMNPlane id="_mVrVUGIfEeCXwJo-SA2DHw" bpmnElement="_MPMJEGIpEeCPQb9rqCPGUQ">
+      <bpmndi:BPMNShape id="_vhVCAGIeEeCXwJo-SA2DHw" bpmnElement="_vhFxcGIeEeCXwJo-SA2DHw">
+        <dc:Bounds height="51.0" width="36.0" x="101.0" y="318.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_0JUg0GIeEeCXwJo-SA2DHw" bpmnElement="_0JKIwGIeEeCXwJo-SA2DHw">
+        <dc:Bounds height="121.0" width="131.0" x="180.0" y="275.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_8829kGIfEeCPQb9rqCPGUQ" bpmnElement="_JLBZAGIfEeCXwJo-SA2DHw" choreographyActivityShape="_0JUg0GIeEeCXwJo-SA2DHw" isMessageVisible="true">
+        <dc:Bounds height="20.0" width="131.0" x="180.0" y="275.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_884ywGIfEeCPQb9rqCPGUQ" bpmnElement="_rOJgIGIfEeCXwJo-SA2DHw" choreographyActivityShape="_0JUg0GIeEeCXwJo-SA2DHw" participantBandKind="bottom_non_initiating">
+        <dc:Bounds height="20.0" width="131.0" x="180.0" y="376.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_DYSI4GIgEeCPQb9rqCPGUQ" bpmnElement="_DYNQYGIgEeCPQb9rqCPGUQ">
+        <dc:Bounds height="121.0" width="131.0" x="360.0" y="275.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_D_f54GIgEeCPQb9rqCPGUQ" bpmnElement="_D_bocGIgEeCPQb9rqCPGUQ">
+        <dc:Bounds height="118.0" width="123.0" x="610.0" y="158.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_EuYZIGIgEeCPQb9rqCPGUQ" bpmnElement="_EuUuwGIgEeCPQb9rqCPGUQ">
+        <dc:Bounds height="118.0" width="114.0" x="790.0" y="158.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_FP_4cGIgEeCPQb9rqCPGUQ" bpmnElement="_FP8OEGIgEeCPQb9rqCPGUQ">
+        <dc:Bounds height="121.0" width="123.0" x="610.0" y="395.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_FgbhIGIgEeCPQb9rqCPGUQ" bpmnElement="_FgX2wGIgEeCPQb9rqCPGUQ">
+        <dc:Bounds height="120.0" width="118.0" x="793.0" y="390.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_UWWMgGIgEeCPQb9rqCPGUQ" bpmnElement="_UWTwQGIgEeCPQb9rqCPGUQ">
+        <dc:Bounds height="65.0" width="50.0" x="530.0" y="303.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_bTb6cGIgEeCPQb9rqCPGUQ" bpmnElement="_bTasUGIgEeCPQb9rqCPGUQ">
+        <dc:Bounds height="65.0" width="50.0" x="960.0" y="303.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_ceSkAGIgEeCPQb9rqCPGUQ" bpmnElement="_ceO5oGIgEeCPQb9rqCPGUQ">
+        <dc:Bounds height="121.0" width="116.0" x="1070.0" y="270.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_f81ugGIgEeCPQb9rqCPGUQ" bpmnElement="_f8tysGIgEeCPQb9rqCPGUQ">
+        <dc:Bounds height="51.0" width="36.0" x="1250.0" y="313.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_K5lhsGIhEeCPQb9rqCPGUQ" bpmnElement="_rOJgIGIfEeCXwJo-SA2DHw" choreographyActivityShape="_DYSI4GIgEeCPQb9rqCPGUQ" isMessageVisible="true">
+        <dc:Bounds height="20.0" width="131.0" x="360.0" y="275.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_K5mv0GIhEeCPQb9rqCPGUQ" bpmnElement="_57dCEGIfEeCPQb9rqCPGUQ" choreographyActivityShape="_DYSI4GIgEeCPQb9rqCPGUQ" participantBandKind="bottom_non_initiating">
+        <dc:Bounds height="20.0" width="131.0" x="360.0" y="376.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_OMbygGIhEeCPQb9rqCPGUQ" bpmnElement="_rOJgIGIfEeCXwJo-SA2DHw" choreographyActivityShape="_D_f54GIgEeCPQb9rqCPGUQ" participantBandKind="top_non_initiating">
+        <dc:Bounds height="20.0" width="123.0" x="610.0" y="158.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_OMeOwGIhEeCPQb9rqCPGUQ" bpmnElement="_57dCEGIfEeCPQb9rqCPGUQ" choreographyActivityShape="_D_f54GIgEeCPQb9rqCPGUQ" isMessageVisible="true" participantBandKind="bottom_initiating">
+        <dc:Bounds height="20.0" width="123.0" x="610.0" y="256.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_QZ9aAGIhEeCPQb9rqCPGUQ" bpmnElement="_rOJgIGIfEeCXwJo-SA2DHw" choreographyActivityShape="_FP_4cGIgEeCPQb9rqCPGUQ" participantBandKind="top_non_initiating">
+        <dc:Bounds height="20.0" width="123.0" x="610.0" y="395.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_QZ-oIGIhEeCPQb9rqCPGUQ" bpmnElement="_57dCEGIfEeCPQb9rqCPGUQ" choreographyActivityShape="_FP_4cGIgEeCPQb9rqCPGUQ" isMessageVisible="true" participantBandKind="bottom_initiating">
+        <dc:Bounds height="20.0" width="123.0" x="610.0" y="496.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_dRBzEGIhEeCPQb9rqCPGUQ" bpmnElement="_JLBZAGIfEeCXwJo-SA2DHw" choreographyActivityShape="_EuYZIGIgEeCPQb9rqCPGUQ" participantBandKind="top_non_initiating">
+        <dc:Bounds height="20.0" width="114.0" x="790.0" y="158.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_dRDBMGIhEeCPQb9rqCPGUQ" bpmnElement="_rOJgIGIfEeCXwJo-SA2DHw" choreographyActivityShape="_EuYZIGIgEeCPQb9rqCPGUQ" isMessageVisible="true" participantBandKind="bottom_initiating">
+        <dc:Bounds height="20.0" width="114.0" x="790.0" y="256.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_gmBY8GIhEeCPQb9rqCPGUQ" bpmnElement="_JLBZAGIfEeCXwJo-SA2DHw" choreographyActivityShape="_FgbhIGIgEeCPQb9rqCPGUQ" participantBandKind="top_non_initiating">
+        <dc:Bounds height="20.0" width="118.0" x="793.0" y="390.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_gmCnEGIhEeCPQb9rqCPGUQ" bpmnElement="_rOJgIGIfEeCXwJo-SA2DHw" choreographyActivityShape="_FgbhIGIgEeCPQb9rqCPGUQ" isMessageVisible="true" participantBandKind="bottom_initiating">
+        <dc:Bounds height="20.0" width="118.0" x="793.0" y="490.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_kQQ2EGIhEeCPQb9rqCPGUQ" bpmnElement="_JLBZAGIfEeCXwJo-SA2DHw" choreographyActivityShape="_ceSkAGIgEeCPQb9rqCPGUQ" isMessageVisible="true">
+        <dc:Bounds height="20.0" width="116.0" x="1070.0" y="270.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_kQSrQGIhEeCPQb9rqCPGUQ" bpmnElement="_rOJgIGIfEeCXwJo-SA2DHw" choreographyActivityShape="_ceSkAGIgEeCPQb9rqCPGUQ" participantBandKind="bottom_non_initiating">
+        <dc:Bounds height="20.0" width="116.0" x="1070.0" y="371.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_0JlUoGIgEeCPQb9rqCPGUQ" bpmnElement="_0JhDMGIgEeCPQb9rqCPGUQ" sourceElement="_vhVCAGIeEeCXwJo-SA2DHw" targetElement="_0JUg0GIeEeCXwJo-SA2DHw">
+        <di:waypoint xsi:type="dc:Point" x="137.0" y="336.0"/>
+        <di:waypoint xsi:type="dc:Point" x="180.0" y="335.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_0t8l8GIgEeCPQb9rqCPGUQ" bpmnElement="_0t7X0GIgEeCPQb9rqCPGUQ" sourceElement="_0JUg0GIeEeCXwJo-SA2DHw" targetElement="_DYSI4GIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="311.0" y="335.0"/>
+        <di:waypoint xsi:type="dc:Point" x="360.0" y="335.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_1BVcAGIgEeCPQb9rqCPGUQ" bpmnElement="_1BUN4GIgEeCPQb9rqCPGUQ" sourceElement="_DYSI4GIgEeCPQb9rqCPGUQ" targetElement="_UWWMgGIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="491.0" y="335.0"/>
+        <di:waypoint xsi:type="dc:Point" x="530.0" y="328.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_1WX34GIgEeCPQb9rqCPGUQ" bpmnElement="_1WWCsGIgEeCPQb9rqCPGUQ" sourceElement="_UWWMgGIgEeCPQb9rqCPGUQ" targetElement="_D_f54GIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="555.0" y="303.0"/>
+        <di:waypoint xsi:type="dc:Point" x="555.0" y="217.0"/>
+        <di:waypoint xsi:type="dc:Point" x="610.0" y="217.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_1uHpgGIgEeCPQb9rqCPGUQ" bpmnElement="_1uF0UGIgEeCPQb9rqCPGUQ" sourceElement="_UWWMgGIgEeCPQb9rqCPGUQ" targetElement="_FP_4cGIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="555.0" y="354.0"/>
+        <di:waypoint xsi:type="dc:Point" x="554.0" y="455.0"/>
+        <di:waypoint xsi:type="dc:Point" x="610.0" y="455.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_2DVEgGIgEeCPQb9rqCPGUQ" bpmnElement="_2DTPUGIgEeCPQb9rqCPGUQ" sourceElement="_D_f54GIgEeCPQb9rqCPGUQ" targetElement="_EuYZIGIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="733.0" y="217.0"/>
+        <di:waypoint xsi:type="dc:Point" x="790.0" y="217.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_2f2ocGIgEeCPQb9rqCPGUQ" bpmnElement="_2f0zQGIgEeCPQb9rqCPGUQ" sourceElement="_FP_4cGIgEeCPQb9rqCPGUQ" targetElement="_FgbhIGIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="733.0" y="455.0"/>
+        <di:waypoint xsi:type="dc:Point" x="793.0" y="450.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_2wPN0GIgEeCPQb9rqCPGUQ" bpmnElement="_2wOmwWIgEeCPQb9rqCPGUQ" sourceElement="_FgbhIGIgEeCPQb9rqCPGUQ" targetElement="_FgbhIGIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="852.0" y="390.0"/>
+        <di:waypoint xsi:type="dc:Point" x="852.0" y="390.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_3JvS8GIgEeCPQb9rqCPGUQ" bpmnElement="_3JtdwGIgEeCPQb9rqCPGUQ" sourceElement="_FgbhIGIgEeCPQb9rqCPGUQ" targetElement="_bTb6cGIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="911.0" y="450.0"/>
+        <di:waypoint xsi:type="dc:Point" x="985.0" y="449.0"/>
+        <di:waypoint xsi:type="dc:Point" x="985.0" y="354.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_3jMUwGIgEeCPQb9rqCPGUQ" bpmnElement="_3jLGoGIgEeCPQb9rqCPGUQ" sourceElement="_EuYZIGIgEeCPQb9rqCPGUQ" targetElement="_bTb6cGIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="904.0" y="217.0"/>
+        <di:waypoint xsi:type="dc:Point" x="984.0" y="217.0"/>
+        <di:waypoint xsi:type="dc:Point" x="985.0" y="303.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_4GSawGIgEeCPQb9rqCPGUQ" bpmnElement="_4GRMoGIgEeCPQb9rqCPGUQ" sourceElement="_bTb6cGIgEeCPQb9rqCPGUQ" targetElement="_ceSkAGIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="1011.0" y="328.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1070.0" y="330.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_4tVMoGIgEeCPQb9rqCPGUQ" bpmnElement="_4tTXcGIgEeCPQb9rqCPGUQ" sourceElement="_ceSkAGIgEeCPQb9rqCPGUQ" targetElement="_f81ugGIgEeCPQb9rqCPGUQ">
+        <di:waypoint xsi:type="dc:Point" x="1186.0" y="330.0"/>
+        <di:waypoint xsi:type="dc:Point" x="1250.0" y="331.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

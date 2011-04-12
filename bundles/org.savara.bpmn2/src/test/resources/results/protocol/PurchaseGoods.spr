@@ -1,0 +1,2 @@
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest from "store.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest from "creditAgency.xsd";
