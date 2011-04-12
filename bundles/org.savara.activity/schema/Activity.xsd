@@ -6,6 +6,9 @@
     		<element name="analysis" type="tns:Analysis" minOccurs="0"
     			maxOccurs="unbounded">
     		</element>
+    		<element name="correlation" type="tns:Correlation" minOccurs="0"
+    			maxOccurs="unbounded">
+    		</element>
     		<element name="context" type="tns:Context" minOccurs="0"
     			maxOccurs="unbounded">
     		</element>
@@ -83,4 +86,25 @@
 
     <element name="activity" type="tns:Activity"></element>
 
+
+    <complexType name="Correlation">
+    	<sequence>
+    		<element name="key" type="tns:CorrelationKey" minOccurs="0"
+    						maxOccurs="unbounded">
+    		</element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="CorrelationKey">
+		<attribute name="name" type="string"></attribute>
+		<attribute name="value" type="string"></attribute>
+    </complexType>
+
+    <complexType name="ActivityList">
+    	<sequence>
+    		<element name="activity" type="tns:Activity" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+    <element name="activityList" type="tns:ActivityList"></element>
 </schema>
