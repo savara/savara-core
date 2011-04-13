@@ -96,7 +96,7 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 				// Process the flow element list
 				BPMN2ParserRule rule=ParserRuleFactory.getParserRule(choreo);
 				
-				rule.parse(parserContext, choreo);
+				rule.parse(parserContext, choreo, p.getBlock());
 				
 				parserContext.popScope();
 				

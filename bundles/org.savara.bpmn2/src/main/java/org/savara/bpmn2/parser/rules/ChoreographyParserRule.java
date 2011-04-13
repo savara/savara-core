@@ -22,12 +22,9 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.pi4soa.cdl.util.CDLTypeUtil;
 import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TStartEvent;
-import org.savara.common.model.annotation.Annotation;
-import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.Block;
 
 public class ChoreographyParserRule implements BPMN2ParserRule {
@@ -51,7 +48,7 @@ public class ChoreographyParserRule implements BPMN2ParserRule {
 	 * @param elem The element
 	 * @param container The container into which converted objects should be placed
 	 */
-	public void convert(BPMN2ParserContext context, Object elem, Block container) {
+	public void parse(BPMN2ParserContext context, Object elem, Block container) {
 		TChoreography choreo=(TChoreography)elem;
 		
 		// Need to find the 'start event'
