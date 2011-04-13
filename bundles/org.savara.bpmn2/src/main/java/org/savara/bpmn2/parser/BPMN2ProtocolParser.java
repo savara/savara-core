@@ -77,6 +77,7 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 				initialize(pm, defns);
 				
 				// Construct the choreography behaviour
+				/*
 				Protocol p=new Protocol();
 				p.setName(choreo.getName());
 				
@@ -101,6 +102,7 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 				parserContext.popScope();
 				
 				pm.setProtocol(p);
+				*/
 				
 				ret = pm;
 				
