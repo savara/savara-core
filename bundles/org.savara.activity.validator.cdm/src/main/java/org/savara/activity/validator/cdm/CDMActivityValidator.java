@@ -17,6 +17,8 @@
  */
 package org.savara.activity.validator.cdm;
 
+import java.io.Serializable;
+
 import org.savara.activity.ActivityValidator;
 import org.savara.activity.model.Activity;
 import org.savara.activity.model.ExchangeType;
@@ -89,10 +91,10 @@ public class CDMActivityValidator implements ActivityValidator {
 		        try {
 		        	if (ia.isOutbound()) {
 			        	contexts = validators.get(i).messageSent(ia.getParameter().get(0).getType(),
-        						ia.getParameter().get(0).getValue());
+        						(Serializable)ia.getParameter().get(0).getAny());
 		        	} else {
 		        		contexts = validators.get(i).messageReceived(ia.getParameter().get(0).getType(),
-        						ia.getParameter().get(0).getValue());
+		        				(Serializable)ia.getParameter().get(0).getAny());
 		        	}
 		        	validated = true;
 		        } catch(Exception t) {

@@ -442,7 +442,7 @@ public class JMSServiceTracker implements ServiceTracker {
 		
 		MessageParameter mp=new MessageParameter();
 		mp.setType(mesg.getType());
-		mp.setValue(getMessagePayload(mesg));
+		mp.setAny(getMessagePayload(mesg));
 		
 		ia.getParameter().add(mp);
 
@@ -998,6 +998,7 @@ public class JMSServiceTracker implements ServiceTracker {
 	 * @param mesg The message
 	 * @return The payload
 	 */
+	@SuppressWarnings("rawtypes")
 	protected String getMessagePayload(Message mesg) {
 		String ret="";
 		

@@ -24,6 +24,7 @@
 		<module>org.savara.activity.notifier.jms</module>
 		<module>org.savara.activity.validator.cdm</module>
 		<module>org.savara.bpel</module>
+		<module>org.savara.bpmn2</module>
 		<module>org.savara.common</module>
 		<module>org.savara.common.config.file</module>
 		<module>org.savara.contract</module>

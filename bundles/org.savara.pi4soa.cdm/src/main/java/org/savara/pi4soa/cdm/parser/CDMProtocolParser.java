@@ -38,6 +38,8 @@ import org.scribble.protocol.parser.ProtocolParser;
  */
 public class CDMProtocolParser implements ProtocolParser {
 
+	private static Logger logger = Logger.getLogger(CDMProtocolParser.class.getName());
+
 	/**
 	 * The default constructor.
 	 */
@@ -101,6 +103,4 @@ public class CDMProtocolParser implements ProtocolParser {
 	public void setAnnotationProcessor(AnnotationProcessor ap) {
 		// Not required
 	}
-
-	private static Logger logger = Logger.getLogger("org.pi4soa.scribble.cdm.parser");
 }
