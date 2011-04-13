@@ -17,16 +17,42 @@
  */
 package org.savara.bpmn2.parser.rules;
 
+import org.savara.bpmn2.model.TDefinitions;
+
 public class Scope {
 	
+	private TDefinitions m_definitions=null;
 	private Scope m_parent=null;
 	private java.util.Map<String,Object> m_elements=new java.util.HashMap<String,Object>();
 
-	public Scope() {
+	public Scope(TDefinitions defns) {
+		m_definitions = defns;
 	}
 	
 	public Scope(Scope parent) {
 		m_parent = parent;
+	}
+	
+	/**
+	 * This method returns the top level definitions associated with
+	 * the BPMN2 model.
+	 * 
+	 * @return The definitions
+	 */
+	public TDefinitions getDefinitions() {
+		if (m_parent != null) {
+			return(m_parent.getDefinitions());
+		}
+		return(m_definitions);
+	}
+	
+	/**
+	 * This method returns the parent scope.
+	 * 
+	 * @return The parent scope
+	 */
+	public Scope getParent() {
+		return(m_parent);
 	}
 	
 	/**
@@ -50,7 +76,7 @@ public class Scope {
 	 * 
 	 * @param obj The object
 	 */
-	public void register(Object obj) {
-		
+	public void register(String id, Object obj) {
+		m_elements.put(id, obj);
 	}
 }

@@ -17,7 +17,18 @@
  */
 package org.savara.bpmn2.parser.rules;
 
+import java.text.MessageFormat;
+import java.util.List;
+
+import javax.xml.bind.JAXBElement;
+
+import org.pi4soa.cdl.util.CDLTypeUtil;
 import org.savara.bpmn2.model.TChoreography;
+import org.savara.bpmn2.model.TFlowElement;
+import org.savara.bpmn2.model.TStartEvent;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.scribble.protocol.model.Block;
 
 public class ChoreographyParserRule implements BPMN2ParserRule {
 
@@ -32,4 +43,36 @@ public class ChoreographyParserRule implements BPMN2ParserRule {
 		return(elem.getClass() == TChoreography.class);
 	}
 
+	/**
+	 * This method parses the supplied element against the supplied
+	 * context.
+	 * 
+	 * @param context The context
+	 * @param elem The element
+	 * @param container The container into which converted objects should be placed
+	 */
+	public void convert(BPMN2ParserContext context, Object elem, Block container) {
+		TChoreography choreo=(TChoreography)elem;
+		
+		// Need to find the 'start event'
+		TStartEvent startEvent=null;
+		
+		for (JAXBElement<? extends TFlowElement> jaxb : choreo.getFlowElement()) {
+			if (jaxb.getValue().getClass() == TStartEvent.class) {
+				if (startEvent != null) {
+					context.getJournal().error(MessageFormat.format(
+							java.util.PropertyResourceBundle.getBundle(
+							"org.savara.bpmn2.Messages").
+								getString("SAVARABPMN2-00001"), (Object)null), null);
+				} else {
+					startEvent = (TStartEvent)jaxb.getValue();
+				}
+			}
+		}
+
+		if (startEvent != null) {
+			
+		}
+	}
+	
 }

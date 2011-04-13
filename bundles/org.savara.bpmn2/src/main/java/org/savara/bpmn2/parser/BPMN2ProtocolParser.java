@@ -25,8 +25,14 @@ import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TImport;
 import org.savara.bpmn2.model.TItemDefinition;
 import org.savara.bpmn2.model.TRootElement;
+import org.savara.bpmn2.parser.rules.BPMN2ParserContext;
+import org.savara.bpmn2.parser.rules.BPMN2ParserRule;
+import org.savara.bpmn2.parser.rules.DefaultBPMN2ParserContext;
+import org.savara.bpmn2.parser.rules.ParserRuleFactory;
 import org.savara.bpmn2.parser.rules.Scope;
 import org.savara.bpmn2.util.BPMN2ModelUtil;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.model.util.TypeSystem;
 import org.scribble.common.logging.Journal;
 import org.scribble.protocol.ProtocolContext;
@@ -57,6 +63,10 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 		ProtocolModel ret=null;
 		
 		org.savara.bpmn2.model.TDefinitions defns=BPMN2ModelUtil.deserialize(is);
+		
+		Scope scope=BPMN2ParserUtil.createScope(defns);
+		
+		BPMN2ParserContext parserContext=new DefaultBPMN2ParserContext(context, journal, scope);
 
 		for (JAXBElement<? extends TRootElement> elem : defns.getRootElement()) {
 			if (elem.getDeclaredType() == TChoreography.class) {
@@ -68,14 +78,27 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 				
 				// Construct the choreography behaviour
 				Protocol p=new Protocol();
-				
 				p.setName(choreo.getName());
 				
-				Scope scope=new Scope();
-				scope.register(defns);
+				// Create annotation to link the protocol to the source choreography
+				Annotation pann=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
+
+				pann.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
+							choreo.getId());
+				
+				p.getAnnotations().add(pann);
+				
+				// Push scope when processing the choreography
+				parserContext.pushScope();
+				
+				BPMN2ParserUtil.initializeScope(parserContext.getScope(), choreo);
 				
 				// Process the flow element list
+				BPMN2ParserRule rule=ParserRuleFactory.getParserRule(choreo);
 				
+				rule.parse(parserContext, choreo);
+				
+				parserContext.popScope();
 				
 				pm.setProtocol(p);
 				

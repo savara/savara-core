@@ -17,11 +17,50 @@
  */
 package org.savara.bpmn2.parser;
 
+import java.util.List;
+
+import javax.xml.bind.JAXBElement;
+
+import org.savara.bpmn2.model.TChoreography;
+import org.savara.bpmn2.model.TDefinitions;
+import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.parser.rules.Scope;
 
 public class BPMN2ParserUtil {
 
-	public static void initializeScope(Scope scope) {
+	/**
+	 * This method creates a scope based on the supplied BPMN2
+	 * definitions.
+	 * 
+	 * @param defns The definitions
+	 * @return The scope
+	 */
+	public static Scope createScope(TDefinitions defns) {
+		return(new Scope(defns));
+	}
+	
+	/**
+	 * This method initializes the supplied scope based on the
+	 * supplied BPMN2 model element.
+	 * 
+	 * @param scope The scope
+	 * @param elem The element
+	 */
+	public static void initializeScope(Scope scope, Object elem) {
 		
+		if (elem.getClass() == TChoreography.class) {
+			TChoreography choreo=(TChoreography)elem;
+			
+			initializeFlowElements(scope, choreo.getFlowElement());
+		}
+	}
+	
+	private static void initializeFlowElements(Scope scope,
+				List<JAXBElement<? extends TFlowElement>> flowElements) {
+		for (JAXBElement<? extends TFlowElement> jaxb : flowElements) {
+			TFlowElement fe=jaxb.getValue();
+			
+			scope.register(fe.getId(), fe);
+		}
 	}
 }
