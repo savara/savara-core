@@ -99,4 +99,12 @@
 		<attribute name="name" type="string"></attribute>
 		<attribute name="value" type="string"></attribute>
     </complexType>
+
+    <complexType name="ActivityList">
+    	<sequence>
+    		<element name="activity" type="tns:Activity" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+    <element name="activityList" type="tns:ActivityList"></element>
 </schema>

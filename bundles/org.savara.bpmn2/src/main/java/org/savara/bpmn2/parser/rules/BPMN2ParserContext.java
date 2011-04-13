@@ -17,31 +17,42 @@
  */
 package org.savara.bpmn2.parser.rules;
 
-import org.scribble.protocol.model.Block;
+import org.scribble.common.logging.Journal;
+import org.scribble.protocol.ProtocolContext;
 
-/**
- * This interface represents a BPMN2 parser rule.
- *
- */
-public interface BPMN2ParserRule {
+public interface BPMN2ParserContext {
 
 	/**
-	 * This method determines whether the rule supports the
-	 * supplied BPMN2 model element.
+	 * This method returns the protocol context.
 	 * 
-	 * @param elem The element
-	 * @return Whether the rule parses the supplied element
+	 * @return The protocol context
 	 */
-	public boolean isSupported(Object elem);
+	public ProtocolContext getProtocolContext();
 	
 	/**
-	 * This method parses the supplied element against the supplied
-	 * context.
+	 * This method returns the journal for reporting issues.
 	 * 
-	 * @param context The context
-	 * @param elem The element
-	 * @param container The container into which converted objects should be placed
+	 * @return The journal
 	 */
-	public void parse(BPMN2ParserContext context, Object elem, Block container);
+	public Journal getJournal();
+	
+	/**
+	 * This method returns the current scope.
+	 * 
+	 * @return The scope
+	 */
+	public Scope getScope();
+	
+	/**
+	 * This method pushes the scope, to clear the current
+	 * state associated with a parent scope.
+	 */
+	public void pushScope();
+	
+	/**
+	 * This method pops the scope associated with a parent
+	 * conversation.
+	 */
+	public void popScope();
 	
 }
