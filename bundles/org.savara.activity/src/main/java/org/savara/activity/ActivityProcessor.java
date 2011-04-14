@@ -29,74 +29,74 @@ import org.savara.activity.model.Activity;
 public interface ActivityProcessor {
 
 	/**
-	 * This method adds a new activity analyser.
+	 * This method returns the list of activity analysers.
 	 * 
-	 * @param analyser The analyser
+	 * @return The analysers
 	 */
-	public void addActivityAnalyser(ActivityAnalyser analyser);
+	public java.util.List<ActivityAnalyser> getAnalysers();
 	
 	/**
-	 * This method removes an existing activity analyser.
+	 * This method sets the list of activity analysers.
 	 * 
-	 * @param analyser The analyser
+	 * @param analysers The analysers
 	 */
-	public void removeActivityAnalyser(ActivityAnalyser analyser);
+	public void setAnalysers(java.util.List<ActivityAnalyser> analysers);
 	
 	/**
-	 * This method adds a new activity filter.
+	 * This method returns the list of activity filters.
 	 * 
-	 * @param filter The filter
+	 * @return The filters
 	 */
-	public void addActivityFilter(ActivityFilter filter);
+	public java.util.List<ActivityFilter> getFilters();
 	
 	/**
-	 * This method removes an existing activity filter.
+	 * This method sets the list of activity filters.
 	 * 
-	 * @param filter The filter
+	 * @param filters The filters
 	 */
-	public void removeActivityFilter(ActivityFilter filter);
+	public void setFilters(java.util.List<ActivityFilter> filters);
 	
 	/**
-	 * This method adds a new activity validator.
+	 * This method returns the list of activity validators.
 	 * 
-	 * @param validator The validator
+	 * @return The validators
 	 */
-	public void addActivityValidator(ActivityValidator validator);
+	public java.util.List<ActivityValidator> getValidators();
 	
 	/**
-	 * This method removes an existing activity validator.
+	 * This method sets the list of activity validators.
 	 * 
-	 * @param validator The validator
+	 * @param validators The validators
 	 */
-	public void removeActivityValidator(ActivityValidator validator);
+	public void setValidators(java.util.List<ActivityValidator> validators);
 	
 	/**
-	 * This method adds a new activity store.
+	 * This method returns the list of activity stores.
 	 * 
-	 * @param store The store
+	 * @return The stores
 	 */
-	public void addActivityStore(ActivityStore store);
+	public java.util.List<ActivityStore> getStores();
 	
 	/**
-	 * This method removes an existing activity store.
+	 * This method sets the list of activity stores.
 	 * 
-	 * @param store The store
+	 * @param stores The stores
 	 */
-	public void removeActivityStore(ActivityStore store);
+	public void setStores(java.util.List<ActivityStore> stores);
 	
 	/**
-	 * This method adds a new activity notifier.
+	 * This method returns the list of activity notifiers.
 	 * 
-	 * @param notifier The notifier
+	 * @return The notifiers
 	 */
-	public void addActivityNotifier(ActivityNotifier notifier);
+	public java.util.List<ActivityNotifier> getNotifiers();
 	
 	/**
-	 * This method removes an existing activity notifier.
+	 * This method sets the list of activity notifiers.
 	 * 
-	 * @param notifier The notifier
+	 * @param notifiers The notifiers
 	 */
-	public void removeActivityNotifier(ActivityNotifier notifier);
+	public void setNotifiers(java.util.List<ActivityNotifier> notifiers);
 	
 	/**
 	 * This method processes the supplied activity event against

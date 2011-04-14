@@ -50,6 +50,8 @@ public class JMSActivityNotifier implements ActivityNotifier {
 	private javax.jms.Connection m_connection=null;
 	private javax.jms.Session m_session=null;
 	private javax.jms.MessageProducer m_producer=null;
+	
+	private boolean m_initialized=false;
 
 	public void setConfiguration(Configuration config) {
 		
@@ -75,7 +77,9 @@ public class JMSActivityNotifier implements ActivityNotifier {
 		if (m_jmsDestination == null) {
 			m_jmsDestination = config.getProperty(JMS_DESTINATION);
 		}
-		
+	}
+	
+	protected void initialize() {		
 		javax.naming.Context ctx=null;
 
 		try {
@@ -128,6 +132,8 @@ public class JMSActivityNotifier implements ActivityNotifier {
 					logger.fine(Thread.currentThread()+
 							": Created JMS Activity Notifier connection");
 				}
+				
+				m_initialized = true;
 				
 			} catch(Exception e) {
 				logger.severe("Failed to create JMS connection: "+e);
@@ -191,6 +197,10 @@ public class JMSActivityNotifier implements ActivityNotifier {
 	 * @param mesg The message
 	 */
 	public void publish(Activity activity) {
+		
+		if (m_initialized == false) {
+			
+		}
 		
 		if (m_producer != null) {
 			
