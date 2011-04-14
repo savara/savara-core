@@ -18,10 +18,8 @@
 package org.savara.protocol.contract.generator;
 
 import org.savara.contract.model.Contract;
-import org.scribble.common.logging.Journal;
-import org.scribble.protocol.ProtocolContext;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.Protocol;
-import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 
 /**
@@ -32,18 +30,6 @@ import org.scribble.protocol.model.Role;
 public interface ContractGenerator {
 
 	/**
-	 * This method creates contracts for the roles associated with the
-	 * supplied protocol model and associates them with the relevant
-	 * roles.
-	 * 
-	 * @param pm The protocol model
-	 * @param journal The journal
-	 * @param context The protocol context
-	 * @throws IllegalArgumentException
-	 */
-	//public void generate(ProtocolModel pm, Journal journal, ProtocolContext context) throws IllegalArgumentException;
-	
-	/**
 	 * This method generates a contract associated with a supplied located
 	 * protocol.
 	 * 
@@ -51,7 +37,7 @@ public interface ContractGenerator {
 	 * @param journal The journal
 	 * @return The contract
 	 */
-	public Contract generate(Protocol cm, Journal journal) throws IllegalArgumentException;
+	public Contract generate(Protocol cm, FeedbackHandler journal) throws IllegalArgumentException;
 	
 	/**
 	 * This method generates a contract, derived from the supplied protocol model,
@@ -65,7 +51,7 @@ public interface ContractGenerator {
 	 * @param journal The journal
 	 * @return The contract
 	 */
-	public Contract generate(Protocol cm, java.util.Set<Role> clients, Role server, Journal journal)
+	public Contract generate(Protocol cm, java.util.Set<Role> clients, Role server, FeedbackHandler journal)
 								throws IllegalArgumentException;
 	
 }

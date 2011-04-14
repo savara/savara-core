@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,25 +15,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.wsdl.generator;
+package org.savara.protocol.util;
 
-import org.savara.common.task.FeedbackHandler;
+import java.net.URI;
+
+import org.savara.common.task.ResourceLocator;
 
 /**
- * This interface generates a WSDL definition from a Contract model.
+ * This class provides a proxy between the Savara and Scribble
+ * resource locators.
  *
  */
-public interface WSDLGenerator {
+public class SavaraResourceLocatorProxy implements ResourceLocator {
+	
+	private org.scribble.common.resource.ResourceLocator m_locator=null;
 
-	/**
-	 * This method generates a WSDL definition from a Scribble contract model.
-	 * 
-	 * @param contract The contract model
-	 * @param wsdlBinding The WSDL binding to use, or null if no binding
-	 * @param journal The journal
-	 * @return The WSDL definition
-	 */
-	public java.util.List<javax.wsdl.Definition> generate(org.savara.contract.model.Contract contract,
-								WSDLBinding wsdlBinding, FeedbackHandler journal);
+	public SavaraResourceLocatorProxy(org.scribble.common.resource.ResourceLocator locator) {
+		m_locator = locator;
+	}
 
+	public URI getResourceURI(String uri) throws Exception {
+		return(m_locator.getResourceURI(uri));
+	}
 }

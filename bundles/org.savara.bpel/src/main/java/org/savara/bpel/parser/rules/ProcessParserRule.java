@@ -29,7 +29,7 @@ import org.savara.bpel.model.TSequence;
 import org.savara.bpel.model.TVariable;
 import org.savara.bpel.util.ActivityUtil;
 import org.savara.bpel.util.BPELInteractionUtil;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**
@@ -44,7 +44,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-								Journal journal) {
+						FeedbackHandler handler) {
 		TProcess process=(TProcess)component;
 		
 		// Add variables to the context
@@ -53,7 +53,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 		}
 		
 		// Count number of invoke activities
-		int invokeCount=BPELInteractionUtil.countInvokes(process);
+		//int invokeCount=BPELInteractionUtil.countInvokes(process);
 		
 		// Check whether scope has been defined to represent
 		// an interaction with one or more fault responses and
@@ -81,7 +81,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 			if (act instanceof TSequence) {
 				for (int i=1; i < ((TSequence)act).getActivity().size(); i++) {
 					context.convert(((TSequence)act).getActivity().get(i), cb.getBlock().getContents(),
-										journal);
+										handler);
 				}
 			}
 			
@@ -116,7 +116,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 				TActivity cbact=ActivityUtil.getActivity(catchBlock);
 				
 				if (cbact != null) {
-					context.convert(cbact, fcb.getBlock().getContents(), journal);
+					context.convert(cbact, fcb.getBlock().getContents(), handler);
 				}
 				
 				choice.getWhens().add(fcb);
@@ -173,7 +173,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 					TActivity cbact=ActivityUtil.getActivity(catchPath);
 					
 					if (cbact != null) {
-						context.convert(cbact, cb.getBlock().getContents(), journal);
+						context.convert(cbact, cb.getBlock().getContents(), handler);
 					}
 					
 					if (faultVar != null) {
@@ -186,7 +186,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 			
 			// Convert normal activities in scope
 			if (act != null) {
-				context.convert(act, acts, journal);
+				context.convert(act, acts, handler);
 			}
 		}
 	}

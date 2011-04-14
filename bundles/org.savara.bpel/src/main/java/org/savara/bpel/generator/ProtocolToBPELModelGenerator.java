@@ -26,13 +26,9 @@ import org.savara.bpel.util.BPELModelUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.generator.ModelGenerator;
-import org.savara.contract.model.Contract;
-import org.savara.protocol.contract.generator.ContractGenerator;
-import org.savara.protocol.contract.generator.ContractGeneratorFactory;
-import org.savara.protocol.model.change.ModelChangeUtils;
-import org.scribble.common.resource.ResourceLocator;
-import org.scribble.common.logging.CachedJournal;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.common.task.FeedbackHandler;
+import org.savara.common.task.ResourceLocator;
 import org.scribble.protocol.ProtocolDefinitions;
 import org.scribble.protocol.model.*;
 
@@ -47,9 +43,9 @@ public class ProtocolToBPELModelGenerator implements ModelGenerator {
 							targetType.equals(BPELDefinitions.BPEL_TYPE));
 	}
 
-	public Object generate(Object source, Journal journal, ResourceLocator locator) {
+	public Object generate(Object source, FeedbackHandler handler, ResourceLocator locator) {
 		BPELModelChangeContext context=
-			new BPELModelChangeContext(null, new CachedJournal());
+			new BPELModelChangeContext(null, new DefaultFeedbackHandler());
 		ProtocolModel pm=(ProtocolModel)source;
 		
 		// SAVARA-175:
@@ -91,7 +87,7 @@ public class ProtocolToBPELModelGenerator implements ModelGenerator {
 			
 			io.close();
 		} catch(Exception e) {
-			journal.error("Failed to create initial BPEL process", null);
+			handler.error("Failed to create initial BPEL process", null);
 		}
 		
 		context.setParent(bpel);

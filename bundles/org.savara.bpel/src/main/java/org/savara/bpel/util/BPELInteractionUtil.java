@@ -34,7 +34,7 @@ import org.savara.bpel.model.TProcess;
 import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TSequence;
 import org.savara.common.util.XMLUtils;
-import org.scribble.common.resource.ResourceLocator;
+import org.savara.common.task.ResourceLocator;
 
 /**
  * This class contains utility functions for dealing with Interactions.

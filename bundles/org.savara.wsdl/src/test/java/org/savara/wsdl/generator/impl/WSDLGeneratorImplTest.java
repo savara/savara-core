@@ -24,14 +24,14 @@ import javax.xml.namespace.QName;
 import org.savara.protocol.model.util.TypeSystem;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.common.task.DefaultFeedbackHandler.IssueDetails;
+import org.savara.common.task.DefaultFeedbackHandler.IssueType;
 import org.savara.contract.model.*;
 import org.savara.wsdl.generator.WSDLBinding;
 import org.savara.wsdl.generator.impl.WSDLGeneratorImpl;
 import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
 import org.savara.wsdl.generator.soap.SOAPRPCWSDLBinding;
-import org.scribble.common.logging.CachedJournal;
-import org.scribble.common.logging.CachedJournal.IssueDetails;
-import org.scribble.common.logging.CachedJournal.IssueType;
 
 import junit.framework.TestCase;
 
@@ -57,10 +57,10 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		WSDLGeneratorImpl gen=new WSDLGeneratorImpl();
 		
-		CachedJournal journal=new CachedJournal();
-		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, null, journal);
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
+		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, null, handler);
 		
-		if (journal.hasErrors() || journal.hasWarnings()) {
+		if (handler.hasErrors() || handler.hasWarnings()) {
 			fail("Journal has errors or warnings");
 		}
 		
@@ -101,14 +101,14 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		java.util.List<javax.wsdl.Definition> defns=new java.util.Vector<javax.wsdl.Definition>();
 		
-		CachedJournal journal=new CachedJournal();
-		javax.wsdl.PortType result=gen.createPortType(defns, new Contract(), src, null, journal);
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
+		javax.wsdl.PortType result=gen.createPortType(defns, new Contract(), src, null, handler);
 		
 		if (result == null) {
 			fail("PortType is null");
 		}
 		
-		if (journal.hasErrors() || journal.hasWarnings()) {
+		if (handler.hasErrors() || handler.hasWarnings()) {
 			fail("Journal has errors or warnings");
 		}
 		
@@ -143,14 +143,14 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		java.util.List<javax.wsdl.Definition> defns=new java.util.Vector<javax.wsdl.Definition>();
 		
-		CachedJournal journal=new CachedJournal();
-		javax.wsdl.Binding result=gen.createBinding(defns, new Contract(), src, null, null, journal);
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
+		javax.wsdl.Binding result=gen.createBinding(defns, new Contract(), src, null, null, handler);
 		
 		if (result == null) {
 			fail("PortType is null");
 		}
 		
-		if (journal.hasErrors() || journal.hasWarnings()) {
+		if (handler.hasErrors() || handler.hasWarnings()) {
 			fail("Journal has errors or warnings");
 		}
 		
@@ -257,10 +257,10 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		WSDLGeneratorImpl gen=new WSDLGeneratorImpl();
 		
-		CachedJournal journal=new CachedJournal();
-		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, new SOAPRPCWSDLBinding(), journal);
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
+		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, new SOAPRPCWSDLBinding(), handler);
 		
-		if (journal.hasErrors() || journal.hasWarnings()) {
+		if (handler.hasErrors() || handler.hasWarnings()) {
 			fail("Journal has errors or warnings");
 		}
 		
@@ -330,15 +330,15 @@ public class WSDLGeneratorImplTest extends TestCase {
 		javax.wsdl.PortType ptype=defn.createPortType();
 		ptype.setQName(new javax.xml.namespace.QName(TEST_NAME_SPACE, TEST_NAME));
 		
-		CachedJournal journal=new CachedJournal();
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
 		javax.wsdl.Operation result=gen.createOperation(defns, c, ptype, src,
-						new SOAPRPCWSDLBinding(), journal);
+						new SOAPRPCWSDLBinding(), handler);
 		
 		if (result == null) {
 			fail("Operation is null");
 		}
 		
-		if (journal.hasErrors() || journal.hasWarnings()) {
+		if (handler.hasErrors() || handler.hasWarnings()) {
 			fail("Journal has errors or warnings");
 		}
 		
@@ -451,15 +451,15 @@ public class WSDLGeneratorImplTest extends TestCase {
 		javax.wsdl.PortType ptype=defn.createPortType();
 		ptype.setQName(new javax.xml.namespace.QName(TEST_NAME_SPACE, TEST_NAME));
 		
-		CachedJournal journal=new CachedJournal();
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
 		javax.wsdl.Operation result=gen.createOperation(defns, c, ptype, src,
-							new SOAPRPCWSDLBinding(), journal);
+							new SOAPRPCWSDLBinding(), handler);
 		
 		if (result == null) {
 			fail("Operation is null");
 		}
 		
-		if (journal.hasErrors() || journal.hasWarnings()) {
+		if (handler.hasErrors() || handler.hasWarnings()) {
 			fail("Journal has errors or warnings");
 		}
 		
@@ -522,15 +522,15 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		QName msgname=new QName(HTTP_TEST_NAMESPACE,TEST_LOCALPART);
 		
-		CachedJournal journal=new CachedJournal();
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
 		javax.wsdl.Message result=gen.getMessage(defns, c, msgname, refs, 
-							new SOAPRPCWSDLBinding(), journal);
+							new SOAPRPCWSDLBinding(), handler);
 		
 		if (result == null) {
 			fail("Message is null");
 		}
 		
-		if (journal.hasErrors() || journal.hasWarnings()) {
+		if (handler.hasErrors() || handler.hasWarnings()) {
 			fail("Journal has errors or warnings");
 		}
 		
@@ -675,11 +675,11 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		WSDLGeneratorImpl gen=new WSDLGeneratorImpl();
 		
-		CachedJournal journal=new CachedJournal();
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
 		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, 
-						new SOAPRPCWSDLBinding(), journal);
+						new SOAPRPCWSDLBinding(), handler);
 		
-		if (journal.hasErrors() || journal.hasWarnings()) {
+		if (handler.hasErrors() || handler.hasWarnings()) {
 			fail("Journal has errors or warnings");
 		}
 		
@@ -775,11 +775,11 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		//QName msgname=new QName(HTTP_TEST_NAMESPACE,TEST_LOCALPART);
 		
-		CachedJournal journal=new CachedJournal();
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
 		
 		WSDLBinding wsdlBinding = new SOAPDocLitWSDLBinding();
 		
-		javax.wsdl.Part part=gen.createPart(defn, src, qname, wsdlBinding, journal);
+		javax.wsdl.Part part=gen.createPart(defn, src, qname, wsdlBinding, handler);
 		
 		if (part == null) {
 			fail("Part is null");
@@ -801,11 +801,11 @@ public class WSDLGeneratorImplTest extends TestCase {
 			fail("Type localpart incorrect: "+part.getTypeName().getLocalPart());
 		}
 
-		if (journal.getIssues().size() != 1) {
-			fail("Journal should have 1 issue: "+journal.getIssues().size());
+		if (handler.getIssues().size() != 1) {
+			fail("Journal should have 1 issue: "+handler.getIssues().size());
 		}
 		
-		IssueDetails issue=journal.getIssues().get(0);
+		IssueDetails issue=handler.getIssues().get(0);
 		
 		if (issue.getIssueType() != IssueType.Error) {
 			fail("Issue is not an error");
@@ -854,11 +854,11 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		WSDLGeneratorImpl gen=new WSDLGeneratorImpl();
 		
-		CachedJournal journal=new CachedJournal();
+		DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
 		
 		WSDLBinding wsdlBinding = new SOAPRPCWSDLBinding();
 		
-		javax.wsdl.Part part=gen.createPart(defn, src, qname, wsdlBinding, journal);
+		javax.wsdl.Part part=gen.createPart(defn, src, qname, wsdlBinding, handler);
 		
 		if (part == null) {
 			fail("Part is null");
@@ -880,7 +880,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 			fail("Type localpart incorrect: "+part.getTypeName().getLocalPart());
 		}
 
-		if (journal.getIssues().size() != 0) {
+		if (handler.getIssues().size() != 0) {
 			fail("Journal should have 0 issues");
 		}
 	}

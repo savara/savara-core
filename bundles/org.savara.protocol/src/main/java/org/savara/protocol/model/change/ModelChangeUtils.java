@@ -18,7 +18,8 @@
 package org.savara.protocol.model.change;
 
 import org.savara.contract.model.Contract;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
+import org.savara.protocol.util.JournalProxy;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.util.ProtocolModelUtil;
 import org.scribble.protocol.util.RunUtil;
@@ -36,7 +37,7 @@ public class ModelChangeUtils {
 	 * @param conv The conversation
 	 * @param root Whether this is the root conversation
 	 */
-	//@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	//public static void addContracts(ModelChangeContext context, Protocol conv, boolean root) {
 	public static void addContract(ModelChangeContext context, Role role, Contract contract) {
 		
@@ -171,7 +172,7 @@ public class ModelChangeUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void pushRoleContractMapping(ModelChangeContext context,
-							Run run, Journal journal) {
+							Run run, FeedbackHandler journal) {
 
 		if (context.getProperties().containsKey(Contract.class.getName())) {
 			java.util.Map<String,Contract> contracts=
@@ -201,7 +202,8 @@ public class ModelChangeUtils {
 					journal.error("Referenced protocol '"+run.getProtocolReference().getName()+
 								"' not found within model or in import statements", run.getProperties());
 				} else {
-					ProtocolModel pm=context.getProtocolContext().getProtocolModel(pi, journal);
+					ProtocolModel pm=context.getProtocolContext().getProtocolModel(pi,
+										new JournalProxy(journal));
 					
 					if (pm != null) {
 						defn = pm.getProtocol();
@@ -245,7 +247,7 @@ public class ModelChangeUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void popRoleContractMapping(ModelChangeContext context,
-									Run run, Journal journal) {
+									Run run, FeedbackHandler journal) {
 
 		if (context.getProperties().containsKey(Contract.class.getName())) {
 			java.util.Map<String,Contract> contracts=
@@ -275,7 +277,8 @@ public class ModelChangeUtils {
 					journal.error("Referenced protocol '"+run.getProtocolReference().getName()+
 								"' not found within model or in import statements", run.getProperties());
 				} else {
-					ProtocolModel pm=context.getProtocolContext().getProtocolModel(pi, journal);
+					ProtocolModel pm=context.getProtocolContext().getProtocolModel(pi, 
+										new JournalProxy(journal));
 					
 					if (pm != null) {
 						defn = pm.getProtocol();

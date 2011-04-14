@@ -23,7 +23,7 @@ import org.savara.bpel.model.TActivity;
 import org.savara.bpel.model.TElseif;
 import org.savara.bpel.model.TIf;
 import org.savara.bpel.util.ActivityUtil;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**
@@ -37,7 +37,7 @@ public class IfParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-									Journal journal) {
+								FeedbackHandler handler) {
 		TIf bpelElem=(TIf)component;
 		
 		//getSource().setComponentURI(getURI());
@@ -52,7 +52,7 @@ public class IfParserRule implements ProtocolParserRule {
 		TActivity act=ActivityUtil.getActivity(bpelElem);
 		
 		if (act != null) {
-			context.convert(act, cb.getBlock().getContents(), journal);
+			context.convert(act, cb.getBlock().getContents(), handler);
 			
 			// Check if first activity is interaction
 			if (cb.getBlock().getContents().size() > 0 &&
@@ -71,7 +71,7 @@ public class IfParserRule implements ProtocolParserRule {
 					elem.setToRole(interaction.getToRoles().get(0));
 				}
 			} else {
-				journal.error("Main block of if does not contain an initial interaction", null);
+				handler.error("Main block of if does not contain an initial interaction", null);
 			}
 		}
 		
@@ -83,9 +83,9 @@ public class IfParserRule implements ProtocolParserRule {
 			
 			cb = new When();
 			
-			context.convert(elseIfElem, cb.getBlock().getContents(), journal);
+			context.convert(elseIfElem, cb.getBlock().getContents(), handler);
 			
-			setupWhenMs(elem, cb, journal);
+			setupWhenMs(elem, cb, handler);
 
 			elem.getWhens().add(cb);
 		}
@@ -94,9 +94,9 @@ public class IfParserRule implements ProtocolParserRule {
 		if (bpelElem.getElse() != null) {
 			cb = new When();
 			
-			context.convert(bpelElem.getElse(), cb.getBlock().getContents(), journal);
+			context.convert(bpelElem.getElse(), cb.getBlock().getContents(), handler);
 			
-			setupWhenMs(elem, cb, journal);
+			setupWhenMs(elem, cb, handler);
 			
 			elem.getWhens().add(cb);
 		}
@@ -104,7 +104,7 @@ public class IfParserRule implements ProtocolParserRule {
 		activities.add(elem);
 	}
 	
-	protected void setupWhenMs(Choice elem, When cb, Journal journal) {
+	protected void setupWhenMs(Choice elem, When cb, FeedbackHandler handler) {
 		
 		// Check if first activity is interaction
 		if (cb.getBlock().getContents().size() > 0 &&
@@ -121,10 +121,10 @@ public class IfParserRule implements ProtocolParserRule {
 			if (elem.getFromRole() != null) {
 				if (interaction.getFromRole() != null) {
 					if (elem.getFromRole().equals(interaction.getFromRole()) == false) {
-						journal.error("ElseIf path has interaction with incompatible 'from' role", null);
+						handler.error("ElseIf path has interaction with incompatible 'from' role", null);
 					}
 				} else {
-					journal.error("ElseIf path does not contain a required 'from' role", null);
+					handler.error("ElseIf path does not contain a required 'from' role", null);
 				}
 			}
 			elem.setFromRole(interaction.getFromRole());
@@ -132,14 +132,14 @@ public class IfParserRule implements ProtocolParserRule {
 			if (elem.getToRole() != null) {
 				if (interaction.getToRoles().size() > 0) {
 					if (elem.getToRole().equals(interaction.getToRoles().get(0)) == false) {
-						journal.error("ElseIf path has interaction with incompatible 'to' role", null);
+						handler.error("ElseIf path has interaction with incompatible 'to' role", null);
 					}
 				} else {
-					journal.error("ElseIf path does not contain a required 'to' role", null);
+					handler.error("ElseIf path does not contain a required 'to' role", null);
 				}
 			}
 		} else {
-			journal.error("Main block of if does not contain an initial interaction", null);
+			handler.error("Main block of if does not contain an initial interaction", null);
 		}
 	}
 }

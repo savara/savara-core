@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,25 +15,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.wsdl.generator;
-
-import org.savara.common.task.FeedbackHandler;
+package org.savara.common.task;
 
 /**
- * This interface generates a WSDL definition from a Contract model.
+ * This interface represents a resource locator that can be used to
+ * load artifacts relative to another resource being processed.
  *
  */
-public interface WSDLGenerator {
+public interface ResourceLocator {
 
 	/**
-	 * This method generates a WSDL definition from a Scribble contract model.
+	 * This method can be used to retrieve the URI of a resource which
+	 * is located at the specified URI, potentially relative to a resource
+	 * that is being processed.
 	 * 
-	 * @param contract The contract model
-	 * @param wsdlBinding The WSDL binding to use, or null if no binding
-	 * @param journal The journal
-	 * @return The WSDL definition
+	 * @param uri The relative URI of the resource to load
+	 * @return The URI, or null if not found
+	 * @throws Exception Failed to obtain URI
 	 */
-	public java.util.List<javax.wsdl.Definition> generate(org.savara.contract.model.Contract contract,
-								WSDLBinding wsdlBinding, FeedbackHandler journal);
+	public java.net.URI getResourceURI(String uri) throws Exception;
 
 }

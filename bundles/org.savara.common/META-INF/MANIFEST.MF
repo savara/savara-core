@@ -10,6 +10,7 @@ Import-Package: org.osgi.framework;version="1.3.0"
 Export-Package: org.savara.common.config,
  org.savara.common.model.annotation,
  org.savara.common.model.generator,
+ org.savara.common.task,
  org.savara.common.util
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.scribble.common

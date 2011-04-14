@@ -28,8 +28,10 @@ import javax.xml.namespace.QName;
 
 import org.savara.protocol.model.util.InteractionUtil;
 import org.savara.protocol.model.util.TypeSystem;
+import org.savara.protocol.util.JournalProxy;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.common.task.FeedbackHandler;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.FaultDetails;
 import org.savara.contract.model.Interface;
@@ -79,8 +81,8 @@ public class ContractIntrospector extends DefaultVisitor {
 	 * @param journal The journal
 	 */
 	public ContractIntrospector(Protocol protocol, java.util.Set<Role> clients,
-					Role server, Journal journal) {
-		this(protocol, clients, server, null, null, journal);
+					Role server, FeedbackHandler handler) {
+		this(protocol, clients, server, null, null, new JournalProxy(handler));
 	}
 	
 	/**

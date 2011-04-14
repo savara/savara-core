@@ -22,7 +22,7 @@ import java.util.List;
 import org.savara.bpel.model.TActivity;
 import org.savara.bpel.model.TWhile;
 import org.savara.bpel.util.ActivityUtil;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**
@@ -37,7 +37,7 @@ public class WhileParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-									Journal journal) {
+									FeedbackHandler handler) {
 		TWhile bpelElem=(TWhile)component;
 		
 		//getSource().setComponentURI(getURI());
@@ -50,7 +50,7 @@ public class WhileParserRule implements ProtocolParserRule {
 		TActivity act=ActivityUtil.getActivity(bpelElem);
 		
 		if (act != null) {
-			context.convert(act, elem.getBlock().getContents(), journal);
+			context.convert(act, elem.getBlock().getContents(), handler);
 		}
 		
 		activities.add(elem);

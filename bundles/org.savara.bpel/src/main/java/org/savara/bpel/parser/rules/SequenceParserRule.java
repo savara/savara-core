@@ -20,7 +20,7 @@ package org.savara.bpel.parser.rules;
 import java.util.List;
 
 import org.savara.bpel.model.TSequence;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**
@@ -35,13 +35,13 @@ public class SequenceParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-									Journal journal) {
+								FeedbackHandler handler) {
 		TSequence bpelElem=(TSequence)component;
 		
 		//getSource().setComponentURI(getURI());
 		
 		for (int i=0; i < bpelElem.getActivity().size(); i++) {
-			context.convert(bpelElem.getActivity().get(i), activities, journal);
+			context.convert(bpelElem.getActivity().get(i), activities, handler);
 		}
 	}
 }

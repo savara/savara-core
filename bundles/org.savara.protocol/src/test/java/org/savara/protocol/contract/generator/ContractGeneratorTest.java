@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
-import org.scribble.common.logging.CachedJournal;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.Role;
 
@@ -19,7 +19,7 @@ public class ContractGeneratorTest {
 		try {
 			Protocol conv=null;
 			
-			Journal journal=new CachedJournal();
+			FeedbackHandler journal=new DefaultFeedbackHandler();
 			
 			generator.generate(conv, journal);
 			
@@ -39,7 +39,7 @@ public class ContractGeneratorTest {
 			Protocol conv=new Protocol();
 			conv.setName("NonLocatedProtocol");
 			
-			Journal journal=new CachedJournal();
+			FeedbackHandler journal=new DefaultFeedbackHandler();
 			
 			generator.generate(conv, journal);
 			
@@ -60,7 +60,7 @@ public class ContractGeneratorTest {
 			conv.setRole(new Role());
 			conv.setName("LocatedProtocol");
 			
-			Journal journal=new CachedJournal();
+			FeedbackHandler journal=new DefaultFeedbackHandler();
 			
 			generator.generate(conv, journal);
 			

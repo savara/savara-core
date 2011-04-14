@@ -28,7 +28,8 @@ import org.savara.bpel.model.TVariable;
 import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.TypeReferenceUtil;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
+import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.protocol.model.*;
 
 /**
@@ -43,7 +44,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-								Journal journal) {
+								FeedbackHandler handler) {
 		TInvoke invoke=(TInvoke)component;
 		
 		//getSource().setComponentURI(getURI());
@@ -127,7 +128,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		TVariable var=context.getVariable(invoke.getInputVariable());
 		
 		String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-				context.getProtocolContext().getResourceLocator());
+				new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
 
 		TypeReference tref=TypeReferenceUtil.createTypeReference(xmlType, context);
 				
@@ -160,7 +161,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		TVariable var=context.getVariable(invoke.getOutputVariable());
 		
 		String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-				context.getProtocolContext().getResourceLocator());
+				new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
 
 		TypeReference tref=TypeReferenceUtil.createTypeReference(xmlType, context);
 		
@@ -201,7 +202,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		
 		if (var != null) {
 			String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-					context.getProtocolContext().getResourceLocator());
+					new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
 
 			tref = TypeReferenceUtil.createTypeReference(xmlType, context);
 			//tref.setLocalpart(var.getMessageType());

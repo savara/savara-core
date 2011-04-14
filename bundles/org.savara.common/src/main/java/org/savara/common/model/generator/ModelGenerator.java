@@ -19,8 +19,8 @@
  */
 package org.savara.common.model.generator;
 
-import org.scribble.common.resource.ResourceLocator;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
+import org.savara.common.task.ResourceLocator;
 
 /**
  * This interface represents a model generator.
@@ -42,10 +42,10 @@ public interface ModelGenerator {
 	 * model using information in the source model.
 	 * 
 	 * @param source The source model
-	 * @param journal The log
+	 * @param handler The feedback handler
 	 * @param locator The resource locator
 	 * @return The target model
 	 */
-	public Object generate(Object source, Journal journal, ResourceLocator locator);
+	public Object generate(Object source, FeedbackHandler handler, ResourceLocator locator);
 	
 }
