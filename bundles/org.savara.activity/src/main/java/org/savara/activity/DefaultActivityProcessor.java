@@ -28,120 +28,115 @@ import org.savara.activity.model.Activity;
  */
 public class DefaultActivityProcessor implements ActivityProcessor {
 
-	private java.util.List<ActivityAnalyser> m_analysers=new java.util.Vector<ActivityAnalyser>();
-	private java.util.List<ActivityFilter> m_filters=new java.util.Vector<ActivityFilter>();
-	private java.util.List<ActivityValidator> m_validators=new java.util.Vector<ActivityValidator>();
-	private java.util.List<ActivityStore> m_stores=new java.util.Vector<ActivityStore>();
-	private java.util.List<ActivityNotifier> m_notifiers=new java.util.Vector<ActivityNotifier>();
+	private java.util.List<ActivityAnalyser> m_analysers=null;
+	private java.util.List<ActivityFilter> m_filters=null;
+	private java.util.List<ActivityValidator> m_validators=null;
+	private java.util.List<ActivityStore> m_stores=null;
+	private java.util.List<ActivityNotifier> m_notifiers=null;
 	
-	protected java.util.List<ActivityAnalyser> getAnalysers() {
+	/**
+	 * This method returns the list of activity analysers.
+	 * 
+	 * @return The analysers
+	 */
+	public java.util.List<ActivityAnalyser> getAnalysers() {
+		if (m_analysers == null) {
+			m_analysers = new java.util.Vector<ActivityAnalyser>();
+		}
 		return(m_analysers);
 	}
 	
-	protected java.util.List<ActivityFilter> getFilters() {
+	/**
+	 * This method sets the list of activity analysers.
+	 * 
+	 * @param analysers The analysers
+	 */
+	public void setAnalysers(java.util.List<ActivityAnalyser> analysers) {
+		m_analysers = analysers;
+	}
+	
+	/**
+	 * This method returns the list of activity filters.
+	 * 
+	 * @return The filters
+	 */
+	public java.util.List<ActivityFilter> getFilters() {
+		if (m_filters == null) {
+			m_filters = new java.util.Vector<ActivityFilter>();
+		}
 		return(m_filters);
 	}
 	
-	protected java.util.List<ActivityValidator> getValidators() {
+	/**
+	 * This method sets the list of activity filters.
+	 * 
+	 * @param filters The filters
+	 */
+	public void setFilters(java.util.List<ActivityFilter> filters) {
+		m_filters = filters;
+	}
+	
+	/**
+	 * This method returns the list of activity validators.
+	 * 
+	 * @return The validators
+	 */
+	public java.util.List<ActivityValidator> getValidators() {
+		if (m_validators == null) {
+			m_validators = new java.util.Vector<ActivityValidator>();
+		}
 		return(m_validators);
 	}
 	
-	protected java.util.List<ActivityStore> getStores() {
+	/**
+	 * This method sets the list of activity validators.
+	 * 
+	 * @param validators The validators
+	 */
+	public void setValidators(java.util.List<ActivityValidator> validators) {
+		m_validators = validators;
+	}
+	
+	/**
+	 * This method returns the list of activity stores.
+	 * 
+	 * @return The stores
+	 */
+	public java.util.List<ActivityStore> getStores() {
+		if (m_stores == null) {
+			m_stores = new java.util.Vector<ActivityStore>();
+		}
 		return(m_stores);
 	}
 	
-	protected java.util.List<ActivityNotifier> getNotifiers() {
+	/**
+	 * This method sets the list of activity stores.
+	 * 
+	 * @param stores The stores
+	 */
+	public void setStores(java.util.List<ActivityStore> stores) {
+		m_stores = stores;
+	}
+	
+	/**
+	 * This method returns the list of activity notifiers.
+	 * 
+	 * @return The notifiers
+	 */
+	public java.util.List<ActivityNotifier> getNotifiers() {
+		if (m_notifiers == null) {
+			m_notifiers = new java.util.Vector<ActivityNotifier>();
+		}
 		return(m_notifiers);
 	}
 	
 	/**
-	 * This method adds a new activity analyser.
+	 * This method sets the list of activity notifiers.
 	 * 
-	 * @param analyser The analyser
+	 * @param notifiers The notifiers
 	 */
-	public void addActivityAnalyser(ActivityAnalyser analyser) {
-		m_analysers.add(analyser);
-	}
-	
-	/**
-	 * This method removes an existing activity analyser.
-	 * 
-	 * @param analyser The analyser
-	 */
-	public void removeActivityAnalyser(ActivityAnalyser analyser) {
-		m_analysers.remove(analyser);
-	}
-	
-	/**
-	 * This method adds a new activity filter.
-	 * 
-	 * @param filter The filter
-	 */
-	public void addActivityFilter(ActivityFilter filter) {
-		m_filters.add(filter);
-	}
-	
-	/**
-	 * This method removes an existing activity filter.
-	 * 
-	 * @param filter The filter
-	 */
-	public void removeActivityFilter(ActivityFilter filter) {
-		m_filters.remove(filter);
-	}
-	
-	/**
-	 * This method adds a new activity validator.
-	 * 
-	 * @param validator The validator
-	 */
-	public void addActivityValidator(ActivityValidator validator) {
-		m_validators.add(validator);
-	}
-	
-	/**
-	 * This method removes an existing activity validator.
-	 * 
-	 * @param validator The validator
-	 */
-	public void removeActivityValidator(ActivityValidator validator) {
-		m_validators.remove(validator);
-	}
-	
-	/**
-	 * This method adds a new activity notifier.
-	 * 
-	 * @param notifier The notifier
-	 */
-	public void addActivityNotifier(ActivityNotifier notifier) {
-		m_notifiers.add(notifier);
-	}
-	
-	/**
-	 * This method removes an existing activity notifier.
-	 * 
-	 * @param notifier The notifier
-	 */
-	public void removeActivityNotifier(ActivityNotifier notifier) {
-		m_notifiers.remove(notifier);
-	}
-	
-	/**
-	 * This method adds a new activity store.
-	 * 
-	 * @param store The store
-	 */
-	public void addActivityStore(ActivityStore store) {
-		m_stores.add(store);
-	}
-	
-	/**
-	 * This method removes an existing activity store.
-	 * 
-	 * @param store The store
-	 */
-	public void removeActivityStore(ActivityStore store) {
-		m_stores.remove(store);
+	public void setNotifiers(java.util.List<ActivityNotifier> notifiers) {
+		m_notifiers = notifiers;
 	}
 	
 	/**

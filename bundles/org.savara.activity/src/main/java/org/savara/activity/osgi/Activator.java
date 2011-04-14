@@ -67,7 +67,7 @@ public class Activator implements BundleActivator {
 				
 				_log.fine("Activity validator has been added: "+ret);
 				
-				avm.addActivityValidator((ActivityValidator)ret);
+				avm.getValidators().add((ActivityValidator)ret);
 				
 				return(ret);
 			}
@@ -83,7 +83,7 @@ public class Activator implements BundleActivator {
 				
 				_log.fine("Activity analyser has been added: "+ret);
 				
-				avm.addActivityAnalyser((ActivityAnalyser)ret);
+				avm.getAnalysers().add((ActivityAnalyser)ret);
 				
 				return(ret);
 			}
