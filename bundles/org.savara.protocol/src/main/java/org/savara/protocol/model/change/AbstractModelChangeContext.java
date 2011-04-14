@@ -19,7 +19,7 @@
  */
 package org.savara.protocol.model.change;
 
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.*;
 
@@ -31,7 +31,7 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	
 	private Object m_parent=null;
 	private ProtocolContext m_context=null;
-	private Journal m_journal=null;
+	private FeedbackHandler m_journal=null;
 	private java.util.Map<String,Object> m_properties=new java.util.HashMap<String,Object>();
 
 	/**
@@ -40,7 +40,7 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	 * @param context The protocol context
 	 * @param journal The journal
 	 */
-	public AbstractModelChangeContext(ProtocolContext context, Journal journal) {
+	public AbstractModelChangeContext(ProtocolContext context, FeedbackHandler journal) {
 		m_context = context;
 		m_journal = journal;
 	}
@@ -59,7 +59,7 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	 * 
 	 * @return The journal
 	 */
-	public Journal getJournal() {
+	public FeedbackHandler getJournal() {
 		return(m_journal);
 	}
 	

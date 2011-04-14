@@ -28,7 +28,9 @@ import org.savara.bpel.util.BPELModelUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.generator.ModelGenerator;
-import org.scribble.common.logging.CachedJournal;
+import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.protocol.util.JournalProxy;
+import org.scribble.common.logging.Journal;
 import org.scribble.protocol.parser.antlr.ANTLRProtocolParser;
 
 public class ProtocolToBPELGeneratorTest {
@@ -91,8 +93,9 @@ public class ProtocolToBPELGeneratorTest {
     		if (is == null) {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
-    		} else {			
-    			CachedJournal journal=new CachedJournal();
+    		} else {		
+    			DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
+    			Journal journal=new JournalProxy(handler);
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
@@ -171,7 +174,7 @@ public class ProtocolToBPELGeneratorTest {
     					
     					ModelGenerator generator=new ProtocolToBPELModelGenerator();
     				
-						Object target=generator.generate(projected, journal, null);
+						Object target=generator.generate(projected, handler, null);
 						
 						/*
 						ModelReference targetRef=

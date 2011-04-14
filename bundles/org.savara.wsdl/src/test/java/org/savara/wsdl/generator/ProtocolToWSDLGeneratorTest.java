@@ -25,10 +25,11 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.savara.contract.model.Contract;
-import org.scribble.common.logging.CachedJournal;
+import org.savara.common.task.DefaultFeedbackHandler;
 import org.scribble.protocol.model.Role;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
+import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
 import org.savara.wsdl.generator.soap.SOAPRPCWSDLBinding;
 
@@ -91,7 +92,7 @@ public class ProtocolToWSDLGeneratorTest {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
     		} else {			
-    			CachedJournal journal=new CachedJournal();
+    			DefaultFeedbackHandler journal=new DefaultFeedbackHandler();
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
@@ -100,7 +101,8 @@ public class ProtocolToWSDLGeneratorTest {
 				
     			try {
     				//model = parser.parse(is, journal, null);
-    				model = ProtocolServices.getParserManager().parse("spr", is, journal, null);
+    				model = ProtocolServices.getParserManager().parse("spr", is,
+    								new JournalProxy(journal), null);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}
@@ -110,7 +112,8 @@ public class ProtocolToWSDLGeneratorTest {
     			} else {
    					ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 					if (cg != null) {
-						Contract contract=cg.generate(model.getProtocol(), null, new Role(m_role), journal);
+						Contract contract=cg.generate(model.getProtocol(), null, new Role(m_role),
+											journal);
 						
 						if (contract != null) {
 							

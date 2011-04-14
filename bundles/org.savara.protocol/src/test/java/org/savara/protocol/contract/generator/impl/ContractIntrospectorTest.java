@@ -24,14 +24,14 @@ package org.savara.protocol.contract.generator.impl;
 import org.savara.protocol.contract.generator.impl.ContractIntrospector;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.common.task.FeedbackHandler;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.Interface;
 import org.savara.contract.model.MessageExchangePattern;
 import org.savara.contract.model.OneWayRequestMEP;
 import org.savara.contract.model.RequestResponseMEP;
 import org.savara.contract.model.Type;
-import org.scribble.common.logging.CachedJournal;
-import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.Interaction;
 import org.scribble.protocol.model.ProtocolReference;
@@ -78,9 +78,9 @@ public class ContractIntrospectorTest {
 		mid.getBlock().getContents().add(run);
 		mid.getBlock().getContents().add(sub);
 		
-		Journal journal=new CachedJournal();
+		FeedbackHandler handler=new DefaultFeedbackHandler();
 		
-		ContractIntrospector introspector=new ContractIntrospector(top, null, r, journal);
+		ContractIntrospector introspector=new ContractIntrospector(top, null, r, handler);
 		
 		introspector.process();
 		
@@ -126,9 +126,9 @@ public class ContractIntrospectorTest {
 		mid.getBlock().getContents().add(run2);
 		mid.getBlock().getContents().add(sub);
 		
-		Journal journal=new CachedJournal();
+		FeedbackHandler handler=new DefaultFeedbackHandler();
 		
-		ContractIntrospector introspector=new ContractIntrospector(top, null, r, journal);
+		ContractIntrospector introspector=new ContractIntrospector(top, null, r, handler);
 		
 		introspector.process();
 		
@@ -152,9 +152,9 @@ public class ContractIntrospectorTest {
 		role.setName(MY_ROLE);
 		protocol.setRole(role);
 		
-		Journal journal=new CachedJournal();
+		FeedbackHandler handler=new DefaultFeedbackHandler();
 		
-		ContractIntrospector introspector=new ContractIntrospector(protocol, null, role, journal);
+		ContractIntrospector introspector=new ContractIntrospector(protocol, null, role, handler);
 		
 		if (introspector.getContract().getInterfaces().size() != 0) {
 			fail("Should be 0 interfaces: "+introspector.getContract().getInterfaces().size());
@@ -188,9 +188,9 @@ public class ContractIntrospectorTest {
 		role.setName(MY_ROLE);
 		protocol.setRole(role);
 		
-		Journal journal=new CachedJournal();
+		FeedbackHandler handler=new DefaultFeedbackHandler();
 		
-		ContractIntrospector introspector=new ContractIntrospector(protocol, null, role, journal);
+		ContractIntrospector introspector=new ContractIntrospector(protocol, null, role, handler);
 		
 		Interaction interaction=new Interaction();
 		
@@ -246,9 +246,9 @@ public class ContractIntrospectorTest {
 		role.setName(MY_ROLE);
 		protocol.setRole(role);
 		
-		Journal journal=new CachedJournal();
+		FeedbackHandler handler=new DefaultFeedbackHandler();
 		
-		ContractIntrospector introspector=new ContractIntrospector(protocol, null, role, journal);
+		ContractIntrospector introspector=new ContractIntrospector(protocol, null, role, handler);
 		
 		Interaction interaction=new Interaction();
 		

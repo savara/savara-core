@@ -22,7 +22,7 @@ import java.util.List;
 import org.savara.bpel.model.TActivity;
 import org.savara.bpel.model.TElseif;
 import org.savara.bpel.util.ActivityUtil;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.Activity;
 
 /**
@@ -36,13 +36,13 @@ public class ElseifParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-								Journal journal) {
+								FeedbackHandler handler) {
 		TElseif container=(TElseif)component;
 		
 		TActivity act=ActivityUtil.getActivity(container);
 		
 		if (act != null) {
-			context.convert(act, activities, journal);
+			context.convert(act, activities, handler);
 		}
 	}
 }

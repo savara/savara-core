@@ -20,7 +20,7 @@ package org.savara.bpel.parser.rules;
 import java.util.List;
 
 import org.savara.bpel.model.TFlow;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**
@@ -34,7 +34,7 @@ public class FlowParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-									Journal journal) {
+								FeedbackHandler handler) {
 		TFlow elem=(TFlow)component;
 		
 		//getSource().setComponentURI(getURI());
@@ -76,7 +76,7 @@ public class FlowParserRule implements ProtocolParserRule {
 		for (int i=0; i < elem.getActivity().size(); i++) {
 			Block b=new Block();
 			
-			context.convert(elem.getActivity().get(i), b.getContents(), journal);
+			context.convert(elem.getActivity().get(i), b.getContents(), handler);
 			
 			parallel.getBlocks().add(b);
 		}

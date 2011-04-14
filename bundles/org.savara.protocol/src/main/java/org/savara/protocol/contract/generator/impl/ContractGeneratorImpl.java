@@ -19,9 +19,9 @@ package org.savara.protocol.contract.generator.impl;
 
 import java.text.MessageFormat;
 
+import org.savara.common.task.FeedbackHandler;
 import org.savara.contract.model.Contract;
 import org.savara.protocol.contract.generator.ContractGenerator;
-import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.Role;
 
@@ -37,10 +37,10 @@ public class ContractGeneratorImpl implements ContractGenerator {
 	 * protocol.
 	 * 
 	 * @param cm The protocol
-	 * @param journal The journal
+	 * @param handler The feedback handler
 	 * @return The contract
 	 */
-	public Contract generate(Protocol cm, Journal journal) throws IllegalArgumentException {
+	public Contract generate(Protocol cm, FeedbackHandler handler) throws IllegalArgumentException {
 		if (cm == null) {
 			throw new IllegalArgumentException(MessageFormat.format(
 					java.util.PropertyResourceBundle.getBundle(
@@ -54,7 +54,7 @@ public class ContractGeneratorImpl implements ContractGenerator {
 							getString("SAVARAPC-00002"), (Object)null));
 		}
 
-		return(generate(cm, null, cm.getRole(), journal));
+		return(generate(cm, null, cm.getRole(), handler));
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class ContractGeneratorImpl implements ContractGenerator {
 	 * @param journal The journal
 	 * @return The contract
 	 */
-	public Contract generate(Protocol cm, java.util.Set<Role> clients, Role server, Journal journal)
+	public Contract generate(Protocol cm, java.util.Set<Role> clients, Role server, FeedbackHandler handler)
 								throws IllegalArgumentException {
 		// Check parameters
 		if (cm == null) {
@@ -85,7 +85,7 @@ public class ContractGeneratorImpl implements ContractGenerator {
 							getString("SAVARAPC-00003"), (Object)null));
 		}
 		
-		ContractIntrospector introspector=new ContractIntrospector(cm, clients, server, journal);
+		ContractIntrospector introspector=new ContractIntrospector(cm, clients, server, handler);
 		
 		introspector.process();
 		

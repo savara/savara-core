@@ -29,7 +29,7 @@ import org.savara.bpel.model.TSequence;
 import org.savara.bpel.model.TVariable;
 import org.savara.bpel.util.ActivityUtil;
 import org.savara.bpel.util.BPELInteractionUtil;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**
@@ -44,7 +44,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-							Journal journal) {
+							FeedbackHandler handler) {
 		TScope scope=(TScope)component;
 		
 		//getSource().setComponentURI(getURI());
@@ -57,7 +57,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 		}
 		
 		// Count number of invoke activities
-		int invokeCount=BPELInteractionUtil.countInvokes(scope);
+		//int invokeCount=BPELInteractionUtil.countInvokes(scope);
 
 		// Check whether scope has been defined to represent
 		// an interaction with one or more fault responses and
@@ -93,7 +93,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 			if (scope.getSequence() != null) {
 				for (int i=1; i < ((TSequence)scope.getSequence()).getActivity().size(); i++) {
 					context.convert(((TSequence)scope.getSequence()).getActivity().get(i),
-									cb.getBlock().getContents(), journal);
+									cb.getBlock().getContents(), handler);
 				}
 			}
 			
@@ -134,14 +134,14 @@ public class ScopeParserRule implements ProtocolParserRule {
 					if (resp.getFromRole() != null &&
 							choice.getFromRole() != null &&
 							resp.getFromRole().equals(choice.getFromRole()) == false) {
-						journal.error("Fault handler 'from role' not same as normal response", null);
+						handler.error("Fault handler 'from role' not same as normal response", null);
 					}
 				}
 				
 				TActivity act=ActivityUtil.getActivity(catchBlock);
 				
 				if (act != null) {
-					context.convert(act, fcb.getBlock().getContents(), journal);
+					context.convert(act, fcb.getBlock().getContents(), handler);
 				}
 				
 				choice.getWhens().add(fcb);
@@ -198,7 +198,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 					TActivity act=ActivityUtil.getActivity(catchPath);
 					
 					if (act != null) {
-						context.convert(act, cb.getBlock().getContents(), journal);
+						context.convert(act, cb.getBlock().getContents(), handler);
 					}
 					
 					if (faultVar != null) {
@@ -213,7 +213,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 			TActivity act=ActivityUtil.getActivity(scope);
 			
 			if (act != null) {
-				context.convert(act, acts, journal);
+				context.convert(act, acts, handler);
 			}
 		}
 	}

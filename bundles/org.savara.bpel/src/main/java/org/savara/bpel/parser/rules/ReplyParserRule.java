@@ -24,7 +24,8 @@ import org.savara.bpel.model.TVariable;
 import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.TypeReferenceUtil;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
+import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.protocol.model.*;
 
 /**
@@ -39,7 +40,7 @@ public class ReplyParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-									Journal journal) {
+									FeedbackHandler handler) {
 		TReply reply=(TReply)component;
 		
 		//getSource().setComponentURI(getURI());
@@ -50,7 +51,7 @@ public class ReplyParserRule implements ProtocolParserRule {
 		TVariable var=context.getVariable(reply.getVariable());
 		
 		String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-							context.getProtocolContext().getResourceLocator());
+				new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
 
 		TypeReference tref=TypeReferenceUtil.createTypeReference(xmlType, context);
 		

@@ -19,7 +19,7 @@
  */
 package org.savara.protocol.model.change;
 
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.*;
 
@@ -41,7 +41,7 @@ public interface ModelChangeContext {
 	 * 
 	 * @return The protocol context
 	 */
-	public Journal getJournal();
+	public FeedbackHandler getJournal();
 	
 	/**
 	 * This method returns the current parent component.

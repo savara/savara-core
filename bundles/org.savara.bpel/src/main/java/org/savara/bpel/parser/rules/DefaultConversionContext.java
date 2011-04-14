@@ -20,7 +20,7 @@ package org.savara.bpel.parser.rules;
 import org.savara.bpel.model.TProcess;
 import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TVariable;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.Activity;
 
@@ -76,7 +76,7 @@ public class DefaultConversionContext implements ConversionContext {
 	 * @param component The domain component
 	 * @param activities The list of protocol activities to place the conversion results
 	 */
-	public void convert(Object component, java.util.List<Activity> activities, Journal journal) {
+	public void convert(Object component, java.util.List<Activity> activities, FeedbackHandler handler) {
 		ProtocolParserRule rule=null;
 		
 		for (int i=0; rule == null && i < m_rules.size(); i++) {
@@ -86,7 +86,7 @@ public class DefaultConversionContext implements ConversionContext {
 		}
 		
 		if (rule != null) {
-			rule.convert(this, component, activities, journal);
+			rule.convert(this, component, activities, handler);
 		}
 	}
 	

@@ -22,11 +22,13 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
+import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.common.task.FeedbackHandler;
 import org.savara.contract.model.Contract;
-import org.scribble.common.logging.CachedJournal;
 import org.scribble.protocol.model.Role;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
+import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
 
 public class ProtocolToContractGeneratorTest {
@@ -98,7 +100,7 @@ public class ProtocolToContractGeneratorTest {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
     		} else {			
-    			CachedJournal journal=new CachedJournal();
+    			FeedbackHandler journal=new DefaultFeedbackHandler();
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
@@ -106,7 +108,8 @@ public class ProtocolToContractGeneratorTest {
 				//parser.setAnnotationProcessor(new org.savara.protocol.parser.AnnotationProcessor());
     			
     			try {
-    				model = ProtocolServices.getParserManager().parse("spr", is, journal, null);
+    				model = ProtocolServices.getParserManager().parse("spr", is,
+    								new JournalProxy(journal), null);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}
@@ -117,7 +120,8 @@ public class ProtocolToContractGeneratorTest {
     							ProtocolServices.getProtocolProjector();
     				
     				if (projector != null) {
-    					model = projector.project(model, new Role(m_projectedRole), journal, null);
+    					model = projector.project(model, new Role(m_projectedRole),
+    									new JournalProxy(journal), null);
     					
     					if (model == null) {
     	    				result.addError(this, new Throwable("Projected model is null"));
@@ -132,7 +136,8 @@ public class ProtocolToContractGeneratorTest {
     			} else {
    					ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 					if (cg != null) {
-						Contract contract=cg.generate(model.getProtocol(), null, new Role(m_role), journal);
+						Contract contract=cg.generate(model.getProtocol(), null,
+										new Role(m_role), journal);
 						
 						if (contract != null) {
 							checkResults(result, contract.toString());

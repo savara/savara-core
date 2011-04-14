@@ -22,13 +22,13 @@ import java.util.List;
 import org.savara.bpel.model.TActivity;
 import org.savara.bpel.model.TOnMessage;
 import org.savara.bpel.model.TPick;
-import org.savara.bpel.model.TReply;
 import org.savara.bpel.model.TVariable;
 import org.savara.bpel.util.ActivityUtil;
 import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.TypeReferenceUtil;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
+import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.protocol.model.*;
 
 /**
@@ -43,7 +43,7 @@ public class PickParserRule implements ProtocolParserRule {
 	}
 		
 	public void convert(ConversionContext context, Object component, List<Activity> activities,
-										Journal journal) {
+								FeedbackHandler handler) {
 		TPick pick=(TPick)component;
 		
 		//getSource().setComponentURI(getURI());
@@ -59,7 +59,7 @@ public class PickParserRule implements ProtocolParserRule {
 			
 			When cb = new When();
 			
-			context.convert(onMessageElem, cb.getBlock().getContents(), journal);
+			context.convert(onMessageElem, cb.getBlock().getContents(), handler);
 			
 			String fromRoleName=PartnerLinkUtil.getServerPartnerRole(onMessageElem.getPartnerLink());
 			
@@ -73,7 +73,7 @@ public class PickParserRule implements ProtocolParserRule {
 				if (fromRoleName != null &&
 						fromRole != null &&
 						fromRoleName.equals(fromRole.getName()) == false) {
-					journal.error("Pick path has different from roles", null);
+					handler.error("Pick path has different from roles", null);
 				}
 			}
 			
@@ -82,7 +82,7 @@ public class PickParserRule implements ProtocolParserRule {
 			TVariable var=context.getVariable(onMessageElem.getVariable());
 			
 			String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-					context.getProtocolContext().getResourceLocator());
+					new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
 
 			TypeReference tref=TypeReferenceUtil.createTypeReference(xmlType, context);
 			
@@ -96,7 +96,7 @@ public class PickParserRule implements ProtocolParserRule {
 			TActivity act=ActivityUtil.getActivity(onMessageElem);
 			
 			if (act != null) {
-				context.convert(act, cb.getBlock().getContents(), journal);
+				context.convert(act, cb.getBlock().getContents(), handler);
 			}
 
 			elem.getWhens().add(cb);

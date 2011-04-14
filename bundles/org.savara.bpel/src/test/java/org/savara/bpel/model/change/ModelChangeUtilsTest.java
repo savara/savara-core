@@ -19,8 +19,8 @@ package org.savara.bpel.model.change;
 
 import org.savara.protocol.model.change.ModelChangeContext;
 import org.savara.protocol.model.change.ModelChangeUtils;
+import org.savara.common.task.DefaultFeedbackHandler;
 import org.savara.contract.model.*;
-import org.scribble.common.logging.CachedJournal;
 import org.scribble.protocol.model.*;
 
 import junit.framework.TestCase;
@@ -34,7 +34,7 @@ public class ModelChangeUtilsTest extends TestCase {
 	private static final String MY_OTHER_LOCATED_ROLE = "MyOtherLocatedRole";
 
 	public void testInitialiseContracts() {
-		ModelChangeContext context=new BPELModelChangeContext(null, new CachedJournal());
+		ModelChangeContext context=new BPELModelChangeContext(null, new DefaultFeedbackHandler());
 		
 		Protocol conv=new Protocol();
 		Role r=new Role();
@@ -59,7 +59,7 @@ public class ModelChangeUtilsTest extends TestCase {
 	}
 
 	public void testInitialiseContractsTwice() {
-		ModelChangeContext context=new BPELModelChangeContext(null, new CachedJournal());
+		ModelChangeContext context=new BPELModelChangeContext(null, new DefaultFeedbackHandler());
 		
 		Protocol conv=new Protocol();
 		Role r=new Role();
@@ -105,7 +105,7 @@ public class ModelChangeUtilsTest extends TestCase {
 	}
 	
 	public void testPushRoleContractMapping() {
-		ModelChangeContext context=new BPELModelChangeContext(null, new CachedJournal());
+		ModelChangeContext context=new BPELModelChangeContext(null, new DefaultFeedbackHandler());
 		
 		Protocol conv=new Protocol();
 		Role r1=new Role();
@@ -189,7 +189,7 @@ public class ModelChangeUtilsTest extends TestCase {
 	}
 	
 	public void testPopRoleContractMapping() {
-		ModelChangeContext context=new BPELModelChangeContext(null, new CachedJournal());
+		ModelChangeContext context=new BPELModelChangeContext(null, new DefaultFeedbackHandler());
 		
 		Protocol conv=new Protocol();
 		Role r1=new Role();

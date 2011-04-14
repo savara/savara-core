@@ -17,7 +17,7 @@
  */
 package org.savara.bpel.parser.rules;
 
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.Activity;
 
 /**
@@ -46,6 +46,6 @@ public interface ProtocolParserRule {
 	 * @param activities The list of protocol activities
 	 */
 	public void convert(ConversionContext context, Object component, java.util.List<Activity> activities,
-								Journal journal);
+								FeedbackHandler handler);
 	
 }

@@ -21,7 +21,7 @@ package org.savara.bpel.model.change;
 
 import org.savara.protocol.model.change.AbstractModelChangeContext;
 import org.savara.protocol.model.change.ModelChangeRule;
-import org.scribble.common.logging.Journal;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.ProtocolContext;
 
 /**
@@ -47,7 +47,7 @@ public class BPELModelChangeContext extends AbstractModelChangeContext {
 	 * @param context The protocol context
 	 * @param journal The journal
 	 */
-	public BPELModelChangeContext(ProtocolContext context, Journal journal) {
+	public BPELModelChangeContext(ProtocolContext context, FeedbackHandler journal) {
 		super(context, journal);
 	}
 	
