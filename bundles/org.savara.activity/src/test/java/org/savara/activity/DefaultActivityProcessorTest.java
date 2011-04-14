@@ -34,13 +34,13 @@ public class DefaultActivityProcessorTest {
 		DefaultActivityProcessor avm=new DefaultActivityProcessor();
 		
 		TestAnalyser ta=new TestAnalyser();		
-		avm.addActivityAnalyser(ta);
+		avm.getAnalysers().add(ta);
 		
 		if (avm.getAnalysers().contains(ta) == false) {
 			fail("Analyser not found");
 		}
 		
-		avm.removeActivityAnalyser(ta);
+		avm.getAnalysers().remove(ta);
 		
 		if (avm.getAnalysers().contains(ta) == true) {
 			fail("Analyser not removed");
@@ -52,13 +52,13 @@ public class DefaultActivityProcessorTest {
 		DefaultActivityProcessor avm=new DefaultActivityProcessor();
 		
 		TestValidator tv=new TestValidator();		
-		avm.addActivityValidator(tv);
+		avm.getValidators().add(tv);
 		
 		if (avm.getValidators().contains(tv) == false) {
 			fail("Validator not found");
 		}
 		
-		avm.removeActivityValidator(tv);
+		avm.getValidators().remove(tv);
 		
 		if (avm.getValidators().contains(tv) == true) {
 			fail("Validator not removed");
@@ -71,8 +71,8 @@ public class DefaultActivityProcessorTest {
 		
 		TestOrderAnalyserValidator tav=new TestOrderAnalyserValidator();
 		
-		avm.addActivityAnalyser(tav);
-		avm.addActivityValidator(tav);
+		avm.getAnalysers().add(tav);
+		avm.getValidators().add(tav);
 		
 		Activity act=new Activity();
 		
@@ -85,7 +85,7 @@ public class DefaultActivityProcessorTest {
 		
 		TestStore store=new TestStore();
 		
-		ap.addActivityStore(store);
+		ap.getStores().add(store);
 		
 		Activity act=new Activity();
 		
@@ -103,8 +103,8 @@ public class DefaultActivityProcessorTest {
 		TestStore store=new TestStore();
 		TestFilter filter=new TestFilter(true);
 		
-		ap.addActivityFilter(filter);
-		ap.addActivityStore(store);
+		ap.getFilters().add(filter);
+		ap.getStores().add(store);
 		
 		Activity act=new Activity();
 		
@@ -122,8 +122,8 @@ public class DefaultActivityProcessorTest {
 		TestStore store=new TestStore();
 		TestFilter filter=new TestFilter(false);
 		
-		ap.addActivityFilter(filter);
-		ap.addActivityStore(store);
+		ap.getFilters().add(filter);
+		ap.getStores().add(store);
 		
 		Activity act=new Activity();
 		
@@ -143,9 +143,9 @@ public class DefaultActivityProcessorTest {
 		TestFilter filterFalse=new TestFilter(false);
 		TestFilter filterTrue=new TestFilter(true);
 		
-		ap.addActivityFilter(filterFalse);
-		ap.addActivityFilter(filterTrue);
-		ap.addActivityStore(store);
+		ap.getFilters().add(filterFalse);
+		ap.getFilters().add(filterTrue);
+		ap.getStores().add(store);
 		
 		Activity act=new Activity();
 		
