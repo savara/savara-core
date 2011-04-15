@@ -21,7 +21,7 @@ import org.savara.bpel.model.TProcess;
 import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TVariable;
 import org.savara.common.task.FeedbackHandler;
-import org.scribble.protocol.ProtocolContext;
+import org.savara.common.task.ResourceLocator;
 import org.scribble.protocol.model.Activity;
 
 /**
@@ -32,7 +32,7 @@ public class DefaultConversionContext implements ConversionContext {
 	
 	private String m_role=null;
 	private TProcess m_process=null;
-	private ProtocolContext m_context=null;
+	private ResourceLocator m_resourceLocator=null;
 	private java.util.Map<String,TVariable> m_variables=
 					new java.util.HashMap<String,TVariable>();
 	private java.util.Stack<TScope> m_scopeStack=new java.util.Stack<TScope>();
@@ -62,12 +62,12 @@ public class DefaultConversionContext implements ConversionContext {
 	 * 
 	 * @param role The role
 	 * @param proc The process
-	 * @param context The protocol context
+	 * @param locator The resource locator
 	 */
-	public DefaultConversionContext(String role, TProcess proc, ProtocolContext context) {
+	public DefaultConversionContext(String role, TProcess proc, ResourceLocator locator) {
 		m_role = role;
 		m_process = proc;
-		m_context = context;
+		m_resourceLocator = locator;
 	}
 	
 	/**
@@ -91,12 +91,12 @@ public class DefaultConversionContext implements ConversionContext {
 	}
 	
 	/**
-	 * This method returns a reference to the protocol context.
+	 * This method returns the resource locator.
 	 * 
-	 * @return The protocol context
+	 * @return The resource locator
 	 */
-	public ProtocolContext getProtocolContext() {
-		return(m_context);
+	public ResourceLocator getResourceLocator() {
+		return(m_resourceLocator);
 	}
 	
 	/**

@@ -25,7 +25,6 @@ import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.TypeReferenceUtil;
 import org.savara.common.task.FeedbackHandler;
-import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.protocol.model.*;
 
 /**
@@ -52,7 +51,7 @@ public class ReceiveParserRule implements ProtocolParserRule {
 		TVariable var=context.getVariable(elem.getVariable());
 		
 		String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-				new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
+						context.getResourceLocator());
 		
 		TypeReference tref=TypeReferenceUtil.createTypeReference(xmlType, context);
 		

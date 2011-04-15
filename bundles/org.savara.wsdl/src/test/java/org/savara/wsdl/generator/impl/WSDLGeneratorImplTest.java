@@ -61,7 +61,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, null, handler);
 		
 		if (handler.hasErrors() || handler.hasWarnings()) {
-			fail("Journal has errors or warnings");
+			fail("Feedback handler has errors or warnings");
 		}
 		
 		if (defns.size() != 1) {
@@ -109,7 +109,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		}
 		
 		if (handler.hasErrors() || handler.hasWarnings()) {
-			fail("Journal has errors or warnings");
+			fail("Feedback handler has errors or warnings");
 		}
 		
 		if (result.getQName() == null) {
@@ -151,7 +151,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		}
 		
 		if (handler.hasErrors() || handler.hasWarnings()) {
-			fail("Journal has errors or warnings");
+			fail("Feedback handler has errors or warnings");
 		}
 		
 		if (result.getQName() == null) {
@@ -261,7 +261,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		java.util.List<javax.wsdl.Definition> defns=gen.generate(c, new SOAPRPCWSDLBinding(), handler);
 		
 		if (handler.hasErrors() || handler.hasWarnings()) {
-			fail("Journal has errors or warnings");
+			fail("Feedback handler has errors or warnings");
 		}
 		
 		if (defns.size() != 1) {
@@ -339,7 +339,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		}
 		
 		if (handler.hasErrors() || handler.hasWarnings()) {
-			fail("Journal has errors or warnings");
+			fail("Feedback handler has errors or warnings");
 		}
 		
 		if (TEST_NAME.equals(result.getName()) == false) {
@@ -460,7 +460,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		}
 		
 		if (handler.hasErrors() || handler.hasWarnings()) {
-			fail("Journal has errors or warnings");
+			fail("Feedback handler has errors or warnings");
 		}
 		
 		if (TEST_NAME.equals(result.getName()) == false) {
@@ -531,7 +531,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		}
 		
 		if (handler.hasErrors() || handler.hasWarnings()) {
-			fail("Journal has errors or warnings");
+			fail("Feedback handler has errors or warnings");
 		}
 		
 		if (result.getQName() == null) {
@@ -680,7 +680,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 						new SOAPRPCWSDLBinding(), handler);
 		
 		if (handler.hasErrors() || handler.hasWarnings()) {
-			fail("Journal has errors or warnings");
+			fail("Feedback handler has errors or warnings");
 		}
 		
 		if (defns.size() != 2) {
@@ -802,7 +802,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		}
 
 		if (handler.getIssues().size() != 1) {
-			fail("Journal should have 1 issue: "+handler.getIssues().size());
+			fail("Feedback handler should have 1 issue: "+handler.getIssues().size());
 		}
 		
 		IssueDetails issue=handler.getIssues().get(0);
@@ -881,7 +881,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		}
 
 		if (handler.getIssues().size() != 0) {
-			fail("Journal should have 0 issues");
+			fail("Feedback handler should have 0 issues");
 		}
 	}
 }

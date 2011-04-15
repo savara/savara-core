@@ -26,6 +26,7 @@ import org.savara.pi4soa.cdm.parser.rules.ConverterContext;
 import org.savara.pi4soa.cdm.parser.rules.ConverterRule;
 import org.savara.pi4soa.cdm.parser.rules.ConverterRuleFactory;
 import org.savara.pi4soa.cdm.parser.rules.DefaultConverterContext;
+import org.savara.protocol.util.FeedbackHandlerProxy;
 import org.scribble.common.logging.Journal;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.ProtocolModel;
@@ -64,7 +65,7 @@ public class CDMProtocolParser implements ProtocolParser {
 			
 				if (rule != null) {
 					ConverterContext cctxt=
-						new DefaultConverterContext(journal, context);
+						new DefaultConverterContext(new FeedbackHandlerProxy(journal));
 					
 					ret = (ProtocolModel)rule.convert(cctxt,
 							ProtocolModel.class, cdlpack);

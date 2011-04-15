@@ -25,6 +25,7 @@ import org.savara.bpel.model.TProcess;
 import org.savara.bpel.parser.rules.DefaultConversionContext;
 import org.savara.bpel.util.BPELModelUtil;
 import org.savara.protocol.util.FeedbackHandlerProxy;
+import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.common.logging.Journal;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.*;
@@ -74,7 +75,8 @@ public class BPELProtocolParser implements ProtocolParser {
 		}
 		
 		// Convert the process contents
-		DefaultConversionContext convContext=new DefaultConversionContext(role, process, context);
+		DefaultConversionContext convContext=new DefaultConversionContext(role, process,
+							new SavaraResourceLocatorProxy(context.getResourceLocator()));
 		
 		convContext.convert(process, protocol.getBlock().getContents(),
 							new FeedbackHandlerProxy(journal));

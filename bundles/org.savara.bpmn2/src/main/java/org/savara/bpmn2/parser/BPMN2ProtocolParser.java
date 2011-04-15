@@ -34,6 +34,7 @@ import org.savara.bpmn2.util.BPMN2ModelUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.model.util.TypeSystem;
+import org.savara.protocol.util.FeedbackHandlerProxy;
 import org.scribble.common.logging.Journal;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.DataType;
@@ -66,7 +67,8 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 		
 		Scope scope=BPMN2ParserUtil.createScope(defns);
 		
-		BPMN2ParserContext parserContext=new DefaultBPMN2ParserContext(context, journal, scope);
+		BPMN2ParserContext parserContext=
+				new DefaultBPMN2ParserContext(new FeedbackHandlerProxy(journal), scope);
 
 		for (JAXBElement<? extends TRootElement> elem : defns.getRootElement()) {
 			if (elem.getDeclaredType() == TChoreography.class) {

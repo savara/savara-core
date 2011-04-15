@@ -91,7 +91,7 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 		if (defn != null) {
 			
 			// Push details related to sub-choreo
-			ModelChangeUtils.pushRoleContractMapping(context, elem, context.getJournal());
+			ModelChangeUtils.pushRoleContractMapping(context, elem, context.getFeedbackHandler());
 			
 			//ModelChangeUtils.addContracts(context, elem.getProtocol(), false);
 			
@@ -130,7 +130,7 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 			// Pop details related to sub-choreo
 			//ModelChangeUtils.removeContracts(context, elem.getProtocol(), false);
 			
-			ModelChangeUtils.popRoleContractMapping(context, elem, context.getJournal());
+			ModelChangeUtils.popRoleContractMapping(context, elem, context.getFeedbackHandler());
 		}
 		
 		return(true);

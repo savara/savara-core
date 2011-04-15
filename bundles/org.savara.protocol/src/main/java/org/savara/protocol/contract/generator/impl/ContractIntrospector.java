@@ -28,7 +28,6 @@ import javax.xml.namespace.QName;
 
 import org.savara.protocol.model.util.InteractionUtil;
 import org.savara.protocol.model.util.TypeSystem;
-import org.savara.protocol.util.JournalProxy;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.task.FeedbackHandler;
@@ -41,7 +40,6 @@ import org.savara.contract.model.OneWayRequestMEP;
 import org.savara.contract.model.RequestResponseMEP;
 import org.savara.contract.model.Type;
 import org.savara.contract.model.TypeDefinition;
-import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.Choice;
 import org.scribble.protocol.model.DefaultVisitor;
 import org.scribble.protocol.model.Protocol;
@@ -68,7 +66,7 @@ public class ContractIntrospector extends DefaultVisitor {
 	private Role m_serverRole=null;
 	private java.util.Set<Role> m_clientRoles=null;
 	private Protocol m_protocol=null;
-	private Journal m_journal=null;
+	private FeedbackHandler m_feedbackHandler=null;
 	
 	private static Logger logger = Logger.getLogger(ContractIntrospector.class.getName());	
 	
@@ -78,11 +76,11 @@ public class ContractIntrospector extends DefaultVisitor {
 	 * @param protocol The protocol to introspect
 	 * @param clients The optional set of client roles
 	 * @param server The server role
-	 * @param journal The journal
+	 * @param handler The feedback handler
 	 */
 	public ContractIntrospector(Protocol protocol, java.util.Set<Role> clients,
 					Role server, FeedbackHandler handler) {
-		this(protocol, clients, server, null, null, new JournalProxy(handler));
+		this(protocol, clients, server, null, null, handler);
 	}
 	
 	/**
@@ -93,13 +91,16 @@ public class ContractIntrospector extends DefaultVisitor {
 	 * @param server The server role
 	 * @param contract The optional contract being derived
 	 * @param processed The optional set of protocols currently processed
+	 * @param handler The feedback handler
 	 */
 	public ContractIntrospector(Protocol protocol, java.util.Set<Role> clients,
-			Role server, Contract contract,	java.util.Set<Protocol> processed, Journal journal) {
+			Role server, Contract contract,	java.util.Set<Protocol> processed, FeedbackHandler handler) {
 		m_contract = contract;
 		
 		m_clientRoles = clients;
 		m_serverRole = server;
+		
+		m_feedbackHandler = handler;
 		
 		if (m_contract == null) {
 			m_contract = new Contract();
@@ -140,12 +141,12 @@ public class ContractIntrospector extends DefaultVisitor {
 	}
 	
 	/**
-	 * This method returns the journal.
+	 * This method returns the feedback handler.
 	 * 
-	 * @return The journal
+	 * @return The feedback handler
 	 */
-	public Journal getJournal() {
-		return(m_journal);
+	protected FeedbackHandler getFeedbackHandler() {
+		return(m_feedbackHandler);
 	}
 	
 	/**
@@ -241,7 +242,7 @@ public class ContractIntrospector extends DefaultVisitor {
 				
 				ContractIntrospector ci=new ContractIntrospector(toProtocol,
 							mappedClientRoles, mappedServerRole,
-							getContract(), getProcessedProtocols(), getJournal());
+							getContract(), getProcessedProtocols(), getFeedbackHandler());
 					
 				ci.process();
 			} else {
@@ -396,7 +397,7 @@ public class ContractIntrospector extends DefaultVisitor {
 					} else if (rrmep.getResponseTypes().size() == 0) {
 						
 						if (interaction.getMessageSignature().getTypeReferences().size() > 1) {
-							getJournal().error("Response has more than one type", null);
+							getFeedbackHandler().error("Response has more than one type", null);
 						} else if (interaction.getMessageSignature().getTypeReferences().size() == 1) {
 							rrmep.getResponseTypes().add(convertType(
 									interaction.getMessageSignature().getTypeReferences().get(0)));
@@ -487,7 +488,7 @@ public class ContractIntrospector extends DefaultVisitor {
 					} else if (rrmep.getResponseTypes().size() == 0) {
 						
 						if (when.getMessageSignature().getTypeReferences().size() > 1) {
-							getJournal().error("Response has more than one type", null);
+							getFeedbackHandler().error("Response has more than one type", null);
 						} else if (when.getMessageSignature().getTypeReferences().size() == 1) {
 							rrmep.getResponseTypes().add(convertType(
 									when.getMessageSignature().getTypeReferences().get(0)));

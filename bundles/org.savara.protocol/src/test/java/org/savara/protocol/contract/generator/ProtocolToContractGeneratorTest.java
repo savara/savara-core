@@ -100,7 +100,7 @@ public class ProtocolToContractGeneratorTest {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
     		} else {			
-    			FeedbackHandler journal=new DefaultFeedbackHandler();
+    			FeedbackHandler feedback=new DefaultFeedbackHandler();
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
@@ -109,7 +109,7 @@ public class ProtocolToContractGeneratorTest {
     			
     			try {
     				model = ProtocolServices.getParserManager().parse("spr", is,
-    								new JournalProxy(journal), null);
+    								new JournalProxy(feedback), null);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}
@@ -121,7 +121,7 @@ public class ProtocolToContractGeneratorTest {
     				
     				if (projector != null) {
     					model = projector.project(model, new Role(m_projectedRole),
-    									new JournalProxy(journal), null);
+    									new JournalProxy(feedback), null);
     					
     					if (model == null) {
     	    				result.addError(this, new Throwable("Projected model is null"));
@@ -137,7 +137,7 @@ public class ProtocolToContractGeneratorTest {
    					ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 					if (cg != null) {
 						Contract contract=cg.generate(model.getProtocol(), null,
-										new Role(m_role), journal);
+										new Role(m_role), feedback);
 						
 						if (contract != null) {
 							checkResults(result, contract.toString());

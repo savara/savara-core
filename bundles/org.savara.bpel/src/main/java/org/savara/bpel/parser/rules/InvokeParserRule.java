@@ -29,7 +29,6 @@ import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.TypeReferenceUtil;
 import org.savara.common.task.FeedbackHandler;
-import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.protocol.model.*;
 
 /**
@@ -128,7 +127,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		TVariable var=context.getVariable(invoke.getInputVariable());
 		
 		String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-				new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
+								context.getResourceLocator());
 
 		TypeReference tref=TypeReferenceUtil.createTypeReference(xmlType, context);
 				
@@ -161,7 +160,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		TVariable var=context.getVariable(invoke.getOutputVariable());
 		
 		String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-				new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
+						context.getResourceLocator());
 
 		TypeReference tref=TypeReferenceUtil.createTypeReference(xmlType, context);
 		
@@ -202,7 +201,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		
 		if (var != null) {
 			String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-					new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
+							context.getResourceLocator());
 
 			tref = TypeReferenceUtil.createTypeReference(xmlType, context);
 			//tref.setLocalpart(var.getMessageType());

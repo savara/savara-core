@@ -21,7 +21,7 @@ import org.savara.bpel.model.TProcess;
 import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TVariable;
 import org.savara.common.task.FeedbackHandler;
-import org.scribble.protocol.ProtocolContext;
+import org.savara.common.task.ResourceLocator;
 import org.scribble.protocol.model.Activity;
 
 public interface ConversionContext {
@@ -35,11 +35,11 @@ public interface ConversionContext {
 	public void convert(Object component, java.util.List<Activity> activities, FeedbackHandler handler);
 	
 	/**
-	 * This method returns a reference to the protocol context.
+	 * This method returns the resource locator.
 	 * 
-	 * @return The protocol context
+	 * @return The resource locator
 	 */
-	public ProtocolContext getProtocolContext();
+	public ResourceLocator getResourceLocator();
 	
 	/**
 	 * This method returns the process.

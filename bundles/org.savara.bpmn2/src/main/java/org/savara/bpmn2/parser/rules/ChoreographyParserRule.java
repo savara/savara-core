@@ -57,7 +57,7 @@ public class ChoreographyParserRule implements BPMN2ParserRule {
 		for (JAXBElement<? extends TFlowElement> jaxb : choreo.getFlowElement()) {
 			if (jaxb.getValue().getClass() == TStartEvent.class) {
 				if (startEvent != null) {
-					context.getJournal().error(MessageFormat.format(
+					context.getFeedbackHandler().error(MessageFormat.format(
 							java.util.PropertyResourceBundle.getBundle(
 							"org.savara.bpmn2.Messages").
 								getString("SAVARABPMN2-00001"), (Object)null), null);

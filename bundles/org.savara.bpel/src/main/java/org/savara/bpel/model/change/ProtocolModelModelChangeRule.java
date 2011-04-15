@@ -93,7 +93,7 @@ public class ProtocolModelModelChangeRule extends AbstractBPELModelChangeRule {
 			
 			if (cg != null) {
 				if (cm.getProtocol().getRole() != null) {
-					Contract c=cg.generate(cm.getProtocol(), null, cm.getProtocol().getRole(), context.getJournal());
+					Contract c=cg.generate(cm.getProtocol(), null, cm.getProtocol().getRole(), context.getFeedbackHandler());
 					
 					if (c != null) {
 						ModelChangeUtils.addContract(context, cm.getProtocol().getRole(), c);
@@ -103,7 +103,7 @@ public class ProtocolModelModelChangeRule extends AbstractBPELModelChangeRule {
 				java.util.List<Role> roles=cm.getRoles();
 				
 				for (Role r : roles) {
-					Contract c=cg.generate(cm.getProtocol(), null, r, context.getJournal());
+					Contract c=cg.generate(cm.getProtocol(), null, r, context.getFeedbackHandler());
 					
 					if (c != null) {
 						ModelChangeUtils.addContract(context, r, c);
