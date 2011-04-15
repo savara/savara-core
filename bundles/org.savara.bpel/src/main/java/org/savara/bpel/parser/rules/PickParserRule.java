@@ -41,7 +41,7 @@ public class PickParserRule implements ProtocolParserRule {
 		return(component instanceof TPick);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 								FeedbackHandler handler) {
 		TPick pick=(TPick)component;
 		
@@ -58,7 +58,7 @@ public class PickParserRule implements ProtocolParserRule {
 			
 			When cb = new When();
 			
-			context.convert(onMessageElem, cb.getBlock().getContents(), handler);
+			context.parse(onMessageElem, cb.getBlock().getContents(), handler);
 			
 			String fromRoleName=PartnerLinkUtil.getServerPartnerRole(onMessageElem.getPartnerLink());
 			
@@ -95,7 +95,7 @@ public class PickParserRule implements ProtocolParserRule {
 			TActivity act=ActivityUtil.getActivity(onMessageElem);
 			
 			if (act != null) {
-				context.convert(act, cb.getBlock().getContents(), handler);
+				context.parse(act, cb.getBlock().getContents(), handler);
 			}
 
 			elem.getWhens().add(cb);

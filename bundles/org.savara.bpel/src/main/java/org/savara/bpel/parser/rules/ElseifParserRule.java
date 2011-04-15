@@ -35,14 +35,14 @@ public class ElseifParserRule implements ProtocolParserRule {
 		return(component instanceof TElseif);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 								FeedbackHandler handler) {
 		TElseif container=(TElseif)component;
 		
 		TActivity act=ActivityUtil.getActivity(container);
 		
 		if (act != null) {
-			context.convert(act, activities, handler);
+			context.parse(act, activities, handler);
 		}
 	}
 }

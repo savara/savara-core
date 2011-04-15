@@ -33,7 +33,7 @@ public class FlowParserRule implements ProtocolParserRule {
 		return(component instanceof TFlow);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 								FeedbackHandler handler) {
 		TFlow elem=(TFlow)component;
 		
@@ -76,7 +76,7 @@ public class FlowParserRule implements ProtocolParserRule {
 		for (int i=0; i < elem.getActivity().size(); i++) {
 			Block b=new Block();
 			
-			context.convert(elem.getActivity().get(i), b.getContents(), handler);
+			context.parse(elem.getActivity().get(i), b.getContents(), handler);
 			
 			parallel.getBlocks().add(b);
 		}

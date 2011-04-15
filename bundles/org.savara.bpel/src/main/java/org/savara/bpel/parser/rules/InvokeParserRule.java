@@ -42,7 +42,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		return(component instanceof TInvoke);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 								FeedbackHandler handler) {
 		TInvoke invoke=(TInvoke)component;
 		
@@ -119,7 +119,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 	}
 	
 	protected static void convertRequest(TInvoke invoke, java.util.List<Activity> activities,
-			ConversionContext context) {
+			ParserContext context) {
 		// Create interaction for request
 		Interaction interaction=new Interaction();
 		//interaction.derivedFrom(this);
@@ -151,7 +151,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 	}
 
 	protected static void convertResponse(TInvoke invoke, java.util.List<Activity> activities,
-			ConversionContext context) {
+			ParserContext context) {
 		
 		// Create interaction for request
 		Interaction interaction=new Interaction();
@@ -184,7 +184,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 	}
 	
 	protected static void convertFaultResponse(TInvoke invoke, java.util.List<Activity> activities,
-			String faultVar, QName faultMesgType, ConversionContext context) {
+			String faultVar, QName faultMesgType, ParserContext context) {
 		
 		// Create interaction for request
 		Interaction interaction=new Interaction();

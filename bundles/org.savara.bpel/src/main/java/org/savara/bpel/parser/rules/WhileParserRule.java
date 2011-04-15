@@ -36,7 +36,7 @@ public class WhileParserRule implements ProtocolParserRule {
 		return(component instanceof TWhile);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 									FeedbackHandler handler) {
 		TWhile bpelElem=(TWhile)component;
 		
@@ -50,7 +50,7 @@ public class WhileParserRule implements ProtocolParserRule {
 		TActivity act=ActivityUtil.getActivity(bpelElem);
 		
 		if (act != null) {
-			context.convert(act, elem.getBlock().getContents(), handler);
+			context.parse(act, elem.getBlock().getContents(), handler);
 		}
 		
 		activities.add(elem);

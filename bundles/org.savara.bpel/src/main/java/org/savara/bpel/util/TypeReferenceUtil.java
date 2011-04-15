@@ -19,12 +19,12 @@ package org.savara.bpel.util;
 
 import javax.xml.namespace.QName;
 
-import org.savara.bpel.parser.rules.ConversionContext;
+import org.savara.bpel.parser.rules.ParserContext;
 import org.scribble.protocol.model.TypeReference;
 
 public class TypeReferenceUtil {
 
-	public static TypeReference createTypeReference(String type, ConversionContext context) {
+	public static TypeReference createTypeReference(String type, ParserContext context) {
 		TypeReference ret=new TypeReference();
 		//ret.derivedFrom(this);
 		

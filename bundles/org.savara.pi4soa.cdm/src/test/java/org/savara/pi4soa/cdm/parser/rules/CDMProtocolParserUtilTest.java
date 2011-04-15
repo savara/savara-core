@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 import org.pi4soa.cdl.CDLManager;
 import org.scribble.protocol.model.Role;
 
-public class ConverterUtilTest {
+public class CDMProtocolParserUtilTest {
 
 	@org.junit.Test
 	public void testGetRoleDeclarationsTopChoreo() {
@@ -39,7 +39,7 @@ public class ConverterUtilTest {
 			fail("Expecting only one top level choreo");
 		}
 		
-		java.util.List<Role> roles=ConverterUtil.getRoleDeclarations(cdlpack.getChoreographies().get(0));
+		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleDeclarations(cdlpack.getChoreographies().get(0));
 		
 		if (roles.size() != 4) {
 			fail("Was expecting 4 roles");
@@ -86,7 +86,7 @@ public class ConverterUtilTest {
 			fail("Failed to get 'RequestForQuote' sub-choreo");
 		}
 		
-		java.util.List<Role> roles=ConverterUtil.getRoleDeclarations(sub);
+		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleDeclarations(sub);
 		
 		if (roles.size() != 1) {
 			fail("Was expecting 1 roles");
@@ -120,7 +120,7 @@ public class ConverterUtilTest {
 			fail("Failed to get 'CompleteTransaction' sub-choreo");
 		}
 		
-		java.util.List<Role> roles=ConverterUtil.getRoleDeclarations(sub);
+		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleDeclarations(sub);
 		
 		if (roles.size() != 1) {
 			fail("Was expecting 1 roles");
@@ -146,7 +146,7 @@ public class ConverterUtilTest {
 			fail("Expecting only one top level choreo");
 		}
 		
-		java.util.List<Role> roles=ConverterUtil.getRoleParameters(cdlpack.getChoreographies().get(0));
+		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleParameters(cdlpack.getChoreographies().get(0));
 		
 		if (roles.size() != 0) {
 			fail("Was expecting 0 roles");
@@ -176,7 +176,7 @@ public class ConverterUtilTest {
 			fail("Failed to get 'RequestForQuote' sub-choreo");
 		}
 		
-		java.util.List<Role> roles=ConverterUtil.getRoleParameters(sub);
+		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleParameters(sub);
 		
 		if (roles.size() != 1) {
 			fail("Was expecting 1 roles");
@@ -210,7 +210,7 @@ public class ConverterUtilTest {
 			fail("Failed to get 'CompleteTransaction' sub-choreo");
 		}
 		
-		java.util.List<Role> roles=ConverterUtil.getRoleParameters(sub);
+		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleParameters(sub);
 		
 		if (roles.size() != 3) {
 			fail("Was expecting 3 roles");

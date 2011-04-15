@@ -24,7 +24,7 @@ import org.savara.common.task.FeedbackHandler;
 import org.savara.common.task.ResourceLocator;
 import org.scribble.protocol.model.Activity;
 
-public interface ConversionContext {
+public interface ParserContext {
 
 	/**
 	 * This method applies the conversion process to the supplied component.
@@ -32,7 +32,7 @@ public interface ConversionContext {
 	 * @param component The domain component
 	 * @param activities The list of protocol activities to place the conversion results
 	 */
-	public void convert(Object component, java.util.List<Activity> activities, FeedbackHandler handler);
+	public void parse(Object component, java.util.List<Activity> activities, FeedbackHandler handler);
 	
 	/**
 	 * This method returns the resource locator.

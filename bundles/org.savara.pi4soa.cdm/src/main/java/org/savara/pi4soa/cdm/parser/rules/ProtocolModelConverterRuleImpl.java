@@ -32,7 +32,7 @@ import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.model.DataType;
 
-public class ProtocolModelConverterRuleImpl implements ConverterRule {
+public class ProtocolModelConverterRuleImpl implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -58,7 +58,7 @@ public class ProtocolModelConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
 		ProtocolModel ret=new ProtocolModel();
 		org.pi4soa.cdl.Package cdlpack=(org.pi4soa.cdl.Package)cdlType;
@@ -118,11 +118,11 @@ public class ProtocolModelConverterRuleImpl implements ConverterRule {
 			}
 		}
 			
-		ConverterRule rule=ConverterRuleFactory.getConverter(Protocol.class,
+		ParserRule rule=ParserRuleFactory.getConverter(Protocol.class,
 					choreo);
 		
 		if (rule != null) {
-			ret.setProtocol((Protocol)rule.convert(context,
+			ret.setProtocol((Protocol)rule.parse(context,
 					Protocol.class, choreo));
 			
 			if (ret.getProtocol() != null) {

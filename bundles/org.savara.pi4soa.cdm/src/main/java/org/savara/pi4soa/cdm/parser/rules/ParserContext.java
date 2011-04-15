@@ -24,7 +24,7 @@ import org.pi4soa.cdl.ExchangeDetails;
 import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
-public interface ConverterContext {
+public interface ParserContext {
 
 	/**
 	 * This method returns the feedback handler for reporting issues.

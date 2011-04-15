@@ -29,14 +29,14 @@ import org.scribble.protocol.model.*;
 /**
  * The default implementation of the converter context.
  */
-public class DefaultConverterContext implements ConverterContext {
+public class DefaultParserContext implements ParserContext {
 
 	private FeedbackHandler m_feedbackHandler=null;
 	
 	/**
 	 * Default constructor.
 	 */
-	public DefaultConverterContext(FeedbackHandler handler) {
+	public DefaultParserContext(FeedbackHandler handler) {
 		m_feedbackHandler = handler;
 	}
 	
@@ -215,7 +215,7 @@ public class DefaultConverterContext implements ConverterContext {
 		return(ret);
 	}
 	
-	private static Logger logger = Logger.getLogger(DefaultConverterContext.class.getName());
+	private static Logger logger = Logger.getLogger(DefaultParserContext.class.getName());
 
 	//private ModelReference m_source=null;
 	private Scope m_scope=new Scope();

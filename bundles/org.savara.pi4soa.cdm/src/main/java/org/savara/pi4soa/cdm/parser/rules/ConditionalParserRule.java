@@ -24,11 +24,11 @@ import org.pi4soa.cdl.util.CDLTypeUtil;
 import org.pi4soa.cdl.util.InteractionUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.savara.pi4soa.cdm.parser.rules.ChoiceConverterRuleImpl.InteractionLocator;
+import org.savara.pi4soa.cdm.parser.rules.ChoiceParserRule.InteractionLocator;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.model.When;
 
-public class ConditionalConverterRuleImpl implements ConverterRule {
+public class ConditionalParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -54,7 +54,7 @@ public class ConditionalConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
 		org.scribble.protocol.model.Choice ret=
 				new org.scribble.protocol.model.Choice();
@@ -96,7 +96,7 @@ public class ConditionalConverterRuleImpl implements ConverterRule {
 				// TODO: Deal with interfaces that have multiple behaviours	
 				Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
 				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
-								InteractionConverterRuleImpl.getInterfaceName(locator.getInteraction()));
+								InteractionParserRule.getInterfaceName(locator.getInteraction()));
 				block.getAnnotations().add(annotation);
 			}
 			
@@ -105,23 +105,23 @@ public class ConditionalConverterRuleImpl implements ConverterRule {
 			
 			if (ed != null) {
 			
-				MessageSignature ms=InteractionConverterRuleImpl.createMessageSignature(ed,
+				MessageSignature ms=InteractionParserRule.createMessageSignature(ed,
 										block);
 			
 				// TODO: Need to update/verify from/to roles on containing choice
 			
 				block.setMessageSignature(ms);
 				
-				ret.setFromRole(new Role(InteractionConverterRuleImpl.getFromRole(context,
+				ret.setFromRole(new Role(InteractionParserRule.getFromRole(context,
 											ed)));
 				
-				ret.setToRole(new Role(InteractionConverterRuleImpl.getToRole(context,
+				ret.setToRole(new Role(InteractionParserRule.getToRole(context,
 											ed)));
 				
 				if (ed.getAction() == ExchangeActionType.RESPOND) {
 					Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
 					annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY,
-								ConverterUtil.getLabel(ed));
+								CDMProtocolParserUtil.getLabel(ed));
 					block.getAnnotations().add(annotation);
 				} else {
 					// Check if request has response/fault exchanges
@@ -131,7 +131,7 @@ public class ConditionalConverterRuleImpl implements ConverterRule {
 					if (resps != null && resps.size() > 0) {
 						Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
 						annotation.getProperties().put(AnnotationDefinitions.REQUEST_PROPERTY,
-									ConverterUtil.getLabel(ed));
+									CDMProtocolParserUtil.getLabel(ed));
 						block.getAnnotations().add(annotation);
 					}
 				}
@@ -157,13 +157,13 @@ public class ConditionalConverterRuleImpl implements ConverterRule {
 		while (actiter.hasNext()) {
 			org.pi4soa.cdl.Activity act=actiter.next();
 			
-			ConverterRule rule=ConverterRuleFactory.getConverter(
+			ParserRule rule=ParserRuleFactory.getConverter(
 					org.scribble.protocol.model.Activity.class, act);
 		
 			if (rule != null) {
 				org.scribble.protocol.model.Activity activity=
 					(org.scribble.protocol.model.Activity)
-					rule.convert(context,
+					rule.parse(context,
 							org.scribble.protocol.model.Activity.class, act);
 				
 				if (activity != null) {

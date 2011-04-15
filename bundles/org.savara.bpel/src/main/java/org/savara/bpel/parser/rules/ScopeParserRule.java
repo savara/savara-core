@@ -43,7 +43,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 		return(component instanceof TScope);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 							FeedbackHandler handler) {
 		TScope scope=(TScope)component;
 		
@@ -92,7 +92,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 			// Include remaining activities
 			if (scope.getSequence() != null) {
 				for (int i=1; i < ((TSequence)scope.getSequence()).getActivity().size(); i++) {
-					context.convert(((TSequence)scope.getSequence()).getActivity().get(i),
+					context.parse(((TSequence)scope.getSequence()).getActivity().get(i),
 									cb.getBlock().getContents(), handler);
 				}
 			}
@@ -141,7 +141,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 				TActivity act=ActivityUtil.getActivity(catchBlock);
 				
 				if (act != null) {
-					context.convert(act, fcb.getBlock().getContents(), handler);
+					context.parse(act, fcb.getBlock().getContents(), handler);
 				}
 				
 				choice.getWhens().add(fcb);
@@ -198,7 +198,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 					TActivity act=ActivityUtil.getActivity(catchPath);
 					
 					if (act != null) {
-						context.convert(act, cb.getBlock().getContents(), handler);
+						context.parse(act, cb.getBlock().getContents(), handler);
 					}
 					
 					if (faultVar != null) {
@@ -213,7 +213,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 			TActivity act=ActivityUtil.getActivity(scope);
 			
 			if (act != null) {
-				context.convert(act, acts, handler);
+				context.parse(act, acts, handler);
 			}
 		}
 	}

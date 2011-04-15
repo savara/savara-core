@@ -38,7 +38,7 @@ public class ReplyParserRule implements ProtocolParserRule {
 		return(component instanceof TReply);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 									FeedbackHandler handler) {
 		TReply reply=(TReply)component;
 		

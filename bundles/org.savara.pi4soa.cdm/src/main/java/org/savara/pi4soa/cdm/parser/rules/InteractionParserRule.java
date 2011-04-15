@@ -33,7 +33,7 @@ import org.pi4soa.common.util.NamesUtil;
 import org.pi4soa.common.xml.NameSpaceUtil;
 import org.pi4soa.common.xml.XMLUtils;
 
-public class InteractionConverterRuleImpl implements ConverterRule {
+public class InteractionParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -59,7 +59,7 @@ public class InteractionConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
 		org.scribble.protocol.model.Block ret=new org.scribble.protocol.model.Block();
 		org.pi4soa.cdl.Interaction cdl=
@@ -383,7 +383,7 @@ public class InteractionConverterRuleImpl implements ConverterRule {
 				if (resps != null && resps.size() > 0) {
 					Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
 					annotation.getProperties().put(AnnotationDefinitions.REQUEST_PROPERTY,
-								ConverterUtil.getLabel(details));
+								CDMProtocolParserUtil.getLabel(details));
 					interaction.getAnnotations().add(annotation);
 				}
 				
@@ -442,7 +442,7 @@ public class InteractionConverterRuleImpl implements ConverterRule {
 				if (details.getAction() == ExchangeActionType.RESPOND) {
 					Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
 					annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY,
-								ConverterUtil.getLabel(details));
+								CDMProtocolParserUtil.getLabel(details));
 					interaction.getAnnotations().add(annotation);
 				}
 
@@ -633,7 +633,7 @@ public class InteractionConverterRuleImpl implements ConverterRule {
 		return(ret);
 	}
 	
-	public static Role getFromRole(ConverterContext context, org.pi4soa.cdl.ExchangeDetails ed) {
+	public static Role getFromRole(ParserContext context, org.pi4soa.cdl.ExchangeDetails ed) {
 		Role fromRole=null;
 		org.pi4soa.cdl.Interaction cdl=ed.getInteraction();
 		
@@ -680,7 +680,7 @@ public class InteractionConverterRuleImpl implements ConverterRule {
 		return(fromRole);
 	}
 	
-	public static Role getToRole(ConverterContext context, org.pi4soa.cdl.ExchangeDetails ed) {
+	public static Role getToRole(ParserContext context, org.pi4soa.cdl.ExchangeDetails ed) {
 		Role toRole=null;
 		org.pi4soa.cdl.Interaction cdl=ed.getInteraction();
 		
@@ -751,7 +751,7 @@ public class InteractionConverterRuleImpl implements ConverterRule {
 		if (details.getType() instanceof InformationType) {
 			InformationType itype=(InformationType)details.getType();
 			
-			TypeReference ref=ConverterUtil.getTypeReference(itype);
+			TypeReference ref=CDMProtocolParserUtil.getTypeReference(itype);
 			
 			ms.getTypeReferences().add(ref);
 			

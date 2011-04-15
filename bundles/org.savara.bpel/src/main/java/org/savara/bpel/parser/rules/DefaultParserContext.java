@@ -28,7 +28,7 @@ import org.scribble.protocol.model.Activity;
  * This class provides a default implementation of the conversation
  * context.
  */
-public class DefaultConversionContext implements ConversionContext {
+public class DefaultParserContext implements ParserContext {
 	
 	private String m_role=null;
 	private TProcess m_process=null;
@@ -64,7 +64,7 @@ public class DefaultConversionContext implements ConversionContext {
 	 * @param proc The process
 	 * @param locator The resource locator
 	 */
-	public DefaultConversionContext(String role, TProcess proc, ResourceLocator locator) {
+	public DefaultParserContext(String role, TProcess proc, ResourceLocator locator) {
 		m_role = role;
 		m_process = proc;
 		m_resourceLocator = locator;
@@ -76,7 +76,7 @@ public class DefaultConversionContext implements ConversionContext {
 	 * @param component The domain component
 	 * @param activities The list of protocol activities to place the conversion results
 	 */
-	public void convert(Object component, java.util.List<Activity> activities, FeedbackHandler handler) {
+	public void parse(Object component, java.util.List<Activity> activities, FeedbackHandler handler) {
 		ProtocolParserRule rule=null;
 		
 		for (int i=0; rule == null && i < m_rules.size(); i++) {
@@ -86,7 +86,7 @@ public class DefaultConversionContext implements ConversionContext {
 		}
 		
 		if (rule != null) {
-			rule.convert(this, component, activities, handler);
+			rule.parse(this, component, activities, handler);
 		}
 	}
 	

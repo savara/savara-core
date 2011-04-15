@@ -34,7 +34,7 @@ import org.scribble.protocol.model.*;
 /**
  * This class defines some converter utility functions.
  */
-public class ConverterUtil {
+public class CDMProtocolParserUtil {
 
 	/**
 	 * This method converts the supplied information type into a

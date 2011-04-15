@@ -45,7 +45,7 @@ public interface ProtocolParserRule {
 	 * @param component The domain component
 	 * @param activities The list of protocol activities
 	 */
-	public void convert(ConversionContext context, Object component, java.util.List<Activity> activities,
+	public void parse(ParserContext context, Object component, java.util.List<Activity> activities,
 								FeedbackHandler handler);
 	
 }

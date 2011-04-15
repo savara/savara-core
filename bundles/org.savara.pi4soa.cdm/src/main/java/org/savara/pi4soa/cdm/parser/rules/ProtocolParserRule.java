@@ -26,7 +26,7 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 
-public class ProtocolConverterRuleImpl implements ConverterRule {
+public class ProtocolParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -52,7 +52,7 @@ public class ProtocolConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
 		Protocol ret=new Protocol();
 		Choreography choreo=(Choreography)cdlType;
@@ -72,7 +72,7 @@ public class ProtocolConverterRuleImpl implements ConverterRule {
 		
 		// Define roles
 		//defineRoles(context, choreo, ret.getBlock());
-		java.util.List<Role> roles=ConverterUtil.getRoleParameters(choreo);
+		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleParameters(choreo);
 		
 		for (Role r : roles) {
 			ParameterDefinition pd=new ParameterDefinition();
@@ -82,7 +82,7 @@ public class ProtocolConverterRuleImpl implements ConverterRule {
 			context.setState(r.getName(), r);
 		}
 
-		roles = ConverterUtil.getRoleDeclarations(choreo);
+		roles = CDMProtocolParserUtil.getRoleDeclarations(choreo);
 		
 		if (roles.size() > 0) {
 			RoleList rl=new RoleList();
@@ -118,7 +118,7 @@ public class ProtocolConverterRuleImpl implements ConverterRule {
 				
 				if (subchoreo != choreo) {
 					Protocol subconv=(Protocol)
-							convert(context, Protocol.class, subchoreo);
+							parse(context, Protocol.class, subchoreo);
 					
 					ret.getBlock().getContents().add(subconv);
 					
@@ -128,13 +128,13 @@ public class ProtocolConverterRuleImpl implements ConverterRule {
 				for (int i=0; i < subchoreo.getFinalizers().size(); i++) {
 					FinalizerHandler finalizer=subchoreo.getFinalizers().get(i);
 					
-					ConverterRule rule=ConverterRuleFactory.getConverter(
+					ParserRule rule=ParserRuleFactory.getConverter(
 							Protocol.class, finalizer);
 					
 					if (rule != null) {
 						
 						Protocol subconv=(Protocol)
-							rule.convert(context, Protocol.class, finalizer);
+							rule.parse(context, Protocol.class, finalizer);
 					
 						ret.getBlock().getContents().add(subconv);
 					
@@ -152,7 +152,7 @@ public class ProtocolConverterRuleImpl implements ConverterRule {
 			Choreography subchoreo=citer.next();
 
 			Protocol subconv=(Protocol)
-					convert(context, Protocol.class, subchoreo);
+					parse(context, Protocol.class, subchoreo);
 			
 			ret.getBlock().getContents().add(subconv);
 			
@@ -161,13 +161,13 @@ public class ProtocolConverterRuleImpl implements ConverterRule {
 			for (int i=0; i < subchoreo.getFinalizers().size(); i++) {
 				FinalizerHandler finalizer=subchoreo.getFinalizers().get(i);
 				
-				ConverterRule rule=ConverterRuleFactory.getConverter(
+				ParserRule rule=ParserRuleFactory.getConverter(
 						Protocol.class, finalizer);
 				
 				if (rule != null) {
 					
 					subconv = (Protocol)
-						rule.convert(context, Protocol.class, finalizer);
+						rule.parse(context, Protocol.class, finalizer);
 				
 					ret.getBlock().getContents().add(subconv);
 				
@@ -448,7 +448,7 @@ public class ProtocolConverterRuleImpl implements ConverterRule {
 	}
 	*/
 	
-	protected static void convertActivities(ConverterContext context,
+	protected static void convertActivities(ParserContext context,
 				java.util.List<org.pi4soa.cdl.Activity> acts, Block block) {
 		
 		java.util.Iterator<org.pi4soa.cdl.Activity> actiter=
@@ -457,13 +457,13 @@ public class ProtocolConverterRuleImpl implements ConverterRule {
 		while (actiter.hasNext()) {
 			org.pi4soa.cdl.Activity act=actiter.next();
 			
-			ConverterRule rule=ConverterRuleFactory.getConverter(
+			ParserRule rule=ParserRuleFactory.getConverter(
 					org.scribble.protocol.model.Activity.class, act);
 			
 			if (rule != null) {
 				org.scribble.protocol.model.Activity activity=
 					(org.scribble.protocol.model.Activity)
-					rule.convert(context,
+					rule.parse(context,
 							org.scribble.protocol.model.Activity.class, act);
 				
 				if (activity != null) {

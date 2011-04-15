@@ -36,7 +36,7 @@ public class IfParserRule implements ProtocolParserRule {
 		return(component instanceof TIf);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 								FeedbackHandler handler) {
 		TIf bpelElem=(TIf)component;
 		
@@ -52,7 +52,7 @@ public class IfParserRule implements ProtocolParserRule {
 		TActivity act=ActivityUtil.getActivity(bpelElem);
 		
 		if (act != null) {
-			context.convert(act, cb.getBlock().getContents(), handler);
+			context.parse(act, cb.getBlock().getContents(), handler);
 			
 			// Check if first activity is interaction
 			if (cb.getBlock().getContents().size() > 0 &&
@@ -83,7 +83,7 @@ public class IfParserRule implements ProtocolParserRule {
 			
 			cb = new When();
 			
-			context.convert(elseIfElem, cb.getBlock().getContents(), handler);
+			context.parse(elseIfElem, cb.getBlock().getContents(), handler);
 			
 			setupWhenMs(elem, cb, handler);
 
@@ -94,7 +94,7 @@ public class IfParserRule implements ProtocolParserRule {
 		if (bpelElem.getElse() != null) {
 			cb = new When();
 			
-			context.convert(bpelElem.getElse(), cb.getBlock().getContents(), handler);
+			context.parse(bpelElem.getElse(), cb.getBlock().getContents(), handler);
 			
 			setupWhenMs(elem, cb, handler);
 			

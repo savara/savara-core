@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-9 Pi4 Technologies Ltd
+ * Copyright 2005-8 Pi4 Technologies Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,15 @@
  *
  *
  * Change History:
- * 3 Jun 2009 : Initial version created by gary
+ * 6 Jun 2008 : Initial version created by gary
  */
 package org.savara.pi4soa.cdm.parser.rules;
 
-import org.pi4soa.cdl.*;
-import org.scribble.protocol.model.*;
-
-public class AssignConverterRuleImpl implements ConverterRule {
+/**
+ * This interface represents a CDM to Scribble conversation
+ * rule.
+ */
+public interface ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -34,10 +35,7 @@ public class AssignConverterRuleImpl implements ConverterRule {
 	 * 					the CDL type
 	 */
 	public boolean isSupported(Class<?> scribbleType,
-						CDLType cdlType) {
-		return(scribbleType == org.scribble.protocol.model.Activity.class &&
-				cdlType instanceof org.pi4soa.cdl.Assign);
-	}
+						org.pi4soa.cdl.CDLType cdlType);
 	
 	/**
 	 * This method converts the supplied CDL type into a
@@ -48,9 +46,7 @@ public class AssignConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
-			Class<?> scribbleType, CDLType cdlType) {
-		// No conversion
-		return(null);
-	}
+	public org.scribble.protocol.model.ModelObject parse(ParserContext context,
+			Class<?> scribbleType, org.pi4soa.cdl.CDLType cdlType);
+	
 }

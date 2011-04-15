@@ -43,7 +43,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 		return(component instanceof TProcess);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 						FeedbackHandler handler) {
 		TProcess process=(TProcess)component;
 		
@@ -80,7 +80,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 			// Include remaining activities
 			if (act instanceof TSequence) {
 				for (int i=1; i < ((TSequence)act).getActivity().size(); i++) {
-					context.convert(((TSequence)act).getActivity().get(i), cb.getBlock().getContents(),
+					context.parse(((TSequence)act).getActivity().get(i), cb.getBlock().getContents(),
 										handler);
 				}
 			}
@@ -116,7 +116,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 				TActivity cbact=ActivityUtil.getActivity(catchBlock);
 				
 				if (cbact != null) {
-					context.convert(cbact, fcb.getBlock().getContents(), handler);
+					context.parse(cbact, fcb.getBlock().getContents(), handler);
 				}
 				
 				choice.getWhens().add(fcb);
@@ -173,7 +173,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 					TActivity cbact=ActivityUtil.getActivity(catchPath);
 					
 					if (cbact != null) {
-						context.convert(cbact, cb.getBlock().getContents(), handler);
+						context.parse(cbact, cb.getBlock().getContents(), handler);
 					}
 					
 					if (faultVar != null) {
@@ -186,7 +186,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 			
 			// Convert normal activities in scope
 			if (act != null) {
-				context.convert(act, acts, handler);
+				context.parse(act, acts, handler);
 			}
 		}
 	}
