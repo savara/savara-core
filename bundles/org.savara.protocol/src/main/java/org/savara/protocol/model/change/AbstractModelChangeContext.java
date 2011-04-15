@@ -31,7 +31,7 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	
 	private Object m_parent=null;
 	private ProtocolContext m_context=null;
-	private FeedbackHandler m_journal=null;
+	private FeedbackHandler m_feedbackHandler=null;
 	private java.util.Map<String,Object> m_properties=new java.util.HashMap<String,Object>();
 
 	/**
@@ -42,7 +42,7 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	 */
 	public AbstractModelChangeContext(ProtocolContext context, FeedbackHandler journal) {
 		m_context = context;
-		m_journal = journal;
+		m_feedbackHandler = journal;
 	}
 	
 	/**
@@ -55,12 +55,12 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	}
 	
 	/**
-	 * This method returns the journal.
+	 * This method returns the feedback handler.
 	 * 
-	 * @return The journal
+	 * @return The feedback handler
 	 */
-	public FeedbackHandler getJournal() {
-		return(m_journal);
+	public FeedbackHandler getFeedbackHandler() {
+		return(m_feedbackHandler);
 	}
 	
 	/**

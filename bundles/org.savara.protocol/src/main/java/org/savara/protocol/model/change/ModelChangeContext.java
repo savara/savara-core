@@ -37,11 +37,11 @@ public interface ModelChangeContext {
 	public ProtocolContext getProtocolContext();
 	
 	/**
-	 * This method returns the protocol context.
+	 * This method returns the feedback handler.
 	 * 
-	 * @return The protocol context
+	 * @return The feedback handler
 	 */
-	public FeedbackHandler getJournal();
+	public FeedbackHandler getFeedbackHandler();
 	
 	/**
 	 * This method returns the current parent component.

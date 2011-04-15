@@ -35,14 +35,14 @@ public class ElseParserRule implements ProtocolParserRule {
 		return(component instanceof TActivityContainer);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 								FeedbackHandler handler) {
 		TActivityContainer container=(TActivityContainer)component;
 		
 		TActivity act=ActivityUtil.getActivity(container);
 		
 		if (act != null) {
-			context.convert(act, activities, handler);
+			context.parse(act, activities, handler);
 		}
 	}
 }

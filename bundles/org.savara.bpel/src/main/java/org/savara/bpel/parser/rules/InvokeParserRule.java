@@ -29,7 +29,6 @@ import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.TypeReferenceUtil;
 import org.savara.common.task.FeedbackHandler;
-import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.protocol.model.*;
 
 /**
@@ -43,7 +42,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		return(component instanceof TInvoke);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 								FeedbackHandler handler) {
 		TInvoke invoke=(TInvoke)component;
 		
@@ -120,7 +119,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 	}
 	
 	protected static void convertRequest(TInvoke invoke, java.util.List<Activity> activities,
-			ConversionContext context) {
+			ParserContext context) {
 		// Create interaction for request
 		Interaction interaction=new Interaction();
 		//interaction.derivedFrom(this);
@@ -128,7 +127,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		TVariable var=context.getVariable(invoke.getInputVariable());
 		
 		String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-				new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
+								context.getResourceLocator());
 
 		TypeReference tref=TypeReferenceUtil.createTypeReference(xmlType, context);
 				
@@ -152,7 +151,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 	}
 
 	protected static void convertResponse(TInvoke invoke, java.util.List<Activity> activities,
-			ConversionContext context) {
+			ParserContext context) {
 		
 		// Create interaction for request
 		Interaction interaction=new Interaction();
@@ -161,7 +160,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		TVariable var=context.getVariable(invoke.getOutputVariable());
 		
 		String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-				new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
+						context.getResourceLocator());
 
 		TypeReference tref=TypeReferenceUtil.createTypeReference(xmlType, context);
 		
@@ -185,7 +184,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 	}
 	
 	protected static void convertFaultResponse(TInvoke invoke, java.util.List<Activity> activities,
-			String faultVar, QName faultMesgType, ConversionContext context) {
+			String faultVar, QName faultMesgType, ParserContext context) {
 		
 		// Create interaction for request
 		Interaction interaction=new Interaction();
@@ -202,7 +201,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		
 		if (var != null) {
 			String xmlType=BPELInteractionUtil.getXMLType(context.getProcess(), var.getMessageType(),
-					new SavaraResourceLocatorProxy(context.getProtocolContext().getResourceLocator()));
+							context.getResourceLocator());
 
 			tref = TypeReferenceUtil.createTypeReference(xmlType, context);
 			//tref.setLocalpart(var.getMessageType());

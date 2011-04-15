@@ -25,7 +25,7 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 
-public class ParallelConverterRuleImpl implements ConverterRule {
+public class WhileParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -39,7 +39,7 @@ public class ParallelConverterRuleImpl implements ConverterRule {
 	public boolean isSupported(Class<?> scribbleType,
 						CDLType cdlType) {
 		return(scribbleType == org.scribble.protocol.model.Activity.class &&
-				cdlType instanceof org.pi4soa.cdl.Parallel);
+				cdlType instanceof org.pi4soa.cdl.While);
 	}
 	
 	/**
@@ -51,11 +51,11 @@ public class ParallelConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
-		org.scribble.protocol.model.Parallel ret=
-				new org.scribble.protocol.model.Parallel();
-		org.pi4soa.cdl.Parallel cdl=(org.pi4soa.cdl.Parallel)cdlType;
+		org.scribble.protocol.model.Repeat ret=
+				new org.scribble.protocol.model.Repeat();
+		org.pi4soa.cdl.While cdl=(org.pi4soa.cdl.While)cdlType;
 		
 		Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
 
@@ -63,6 +63,20 @@ public class ParallelConverterRuleImpl implements ConverterRule {
 				CDLTypeUtil.getURIFragment(cdl));
 		ret.getAnnotations().add(scannotation);
 
+		context.pushState();
+		
+		// Set the expression if defined in the 'while'
+		/*
+		if (cdl.getExpression() != null &&
+				cdl.getExpression().trim().length() > 0) {
+			XPathExpression exp=new XPathExpression();
+		
+			exp.setQuery(cdl.getExpression());
+		
+			ret.getBlock().setExpression(exp);
+		}
+		*/
+				
 		// Process all of the activities within the
 		// choreography
 		java.util.Iterator<org.pi4soa.cdl.Activity> actiter=
@@ -70,31 +84,30 @@ public class ParallelConverterRuleImpl implements ConverterRule {
 		while (actiter.hasNext()) {
 			org.pi4soa.cdl.Activity act=actiter.next();
 			
-			ConverterRule rule=ConverterRuleFactory.getConverter(
+			ParserRule rule=ParserRuleFactory.getConverter(
 					org.scribble.protocol.model.Activity.class, act);
 		
 			if (rule != null) {
-				
-				context.pushState();
-				
 				org.scribble.protocol.model.Activity activity=
 					(org.scribble.protocol.model.Activity)
-					rule.convert(context,
+					rule.parse(context,
 							org.scribble.protocol.model.Activity.class, act);
 				
 				if (activity != null) {
 					if (activity instanceof Block) {
-						ret.getBlocks().add((Block)activity);
+						ret.getBlock().getContents().addAll(((Block)activity).getContents());
 					} else {
-						Block block=new Block();
-						block.getContents().add(activity);
-						ret.getBlocks().add(block);
+						ret.getBlock().getContents().add(activity);
 					}
 				}
-				
-				context.popState();
 			}
 		}
+		
+		// Get initiator role(s) for first activity in body and
+		// associated with While
+		//ret.getRoles().addAll(ret.getBlock().getInitiatorRoles());
+		
+		context.popState();
 		
 		return(ret);
 	}

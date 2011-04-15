@@ -23,65 +23,30 @@ import java.util.logging.Logger;
 
 import org.pi4soa.cdl.Choreography;
 import org.pi4soa.cdl.ExchangeDetails;
-import org.scribble.common.logging.Journal;
-import org.scribble.protocol.ProtocolContext;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**
  * The default implementation of the converter context.
  */
-public class DefaultConverterContext implements ConverterContext {
+public class DefaultParserContext implements ParserContext {
 
-	private Journal m_journal=null;
-	private ProtocolContext m_context=null;
+	private FeedbackHandler m_feedbackHandler=null;
 	
 	/**
 	 * Default constructor.
 	 */
-	public DefaultConverterContext(Journal journal, ProtocolContext context) {
-		m_journal = journal;
-		m_context = context;
+	public DefaultParserContext(FeedbackHandler handler) {
+		m_feedbackHandler = handler;
 	}
 	
 	/**
-	 * This is the constructor for the converter context, initialized
-	 * with the source reference.
+	 * This method returns the feedback handler for reporting issues.
 	 * 
-	 * @param ref The source model reference
+	 * @return The feedback handler
 	 */
-	/*
-	public DefaultConverterContext(ModelReference ref) {
-		m_source = ref;
-	}
-	*/
-	
-	/**
-	 * This method returns the source model reference.
-	 * 
-	 * @return The source model reference
-	 */
-	/*
-	public ModelReference getSource() {
-		return(m_source);
-	}
-	*/
-	
-	/**
-	 * This method returns the protocol context.
-	 * 
-	 * @return The protocol context
-	 */
-	public ProtocolContext getProtocolContext() {
-		return(m_context);
-	}
-	
-	/**
-	 * This method returns the journal for reporting issues.
-	 * 
-	 * @return The journal
-	 */
-	public Journal getJournal() {
-		return(m_journal);
+	public FeedbackHandler getFeedbackHandler() {
+		return(m_feedbackHandler);
 	}
 	
 	/**
@@ -250,7 +215,7 @@ public class DefaultConverterContext implements ConverterContext {
 		return(ret);
 	}
 	
-	private static Logger logger = Logger.getLogger(DefaultConverterContext.class.getName());
+	private static Logger logger = Logger.getLogger(DefaultParserContext.class.getName());
 
 	//private ModelReference m_source=null;
 	private Scope m_scope=new Scope();

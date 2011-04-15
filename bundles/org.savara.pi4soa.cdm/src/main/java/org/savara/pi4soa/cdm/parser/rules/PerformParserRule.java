@@ -25,7 +25,7 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 
-public class PerformConverterRuleImpl implements ConverterRule {
+public class PerformParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -51,7 +51,7 @@ public class PerformConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
 		org.pi4soa.cdl.Perform cdl=(org.pi4soa.cdl.Perform)cdlType;
 		ModelObject ret=null;
@@ -66,13 +66,13 @@ public class PerformConverterRuleImpl implements ConverterRule {
 			
 			// Define roles
 			//ProtocolConverterRuleImpl.defineRoles(context, cdl.getChoreography(), (Block)ret);
-			java.util.List<Role> roles=ConverterUtil.getRoleParameters(cdl.getChoreography());
+			java.util.List<Role> roles=CDMProtocolParserUtil.getRoleParameters(cdl.getChoreography());
 			
 			for (Role r : roles) {
 				context.setState(r.getName(), r);
 			}
 			
-			roles = ConverterUtil.getRoleDeclarations(cdl.getChoreography());
+			roles = CDMProtocolParserUtil.getRoleDeclarations(cdl.getChoreography());
 			
 			if (roles.size() > 0) {
 				RoleList rl=new RoleList();
@@ -84,7 +84,7 @@ public class PerformConverterRuleImpl implements ConverterRule {
 			}
 			
 			// Convert sub-activities
-			ProtocolConverterRuleImpl.convertActivities(context, cdl.getChoreography().getActivities(), (Block)ret);
+			ProtocolParserRule.convertActivities(context, cdl.getChoreography().getActivities(), (Block)ret);
 		
 			context.popScope();
 			
@@ -108,7 +108,7 @@ public class PerformConverterRuleImpl implements ConverterRule {
 			run.setProtocolReference(ref);
 			
 			// Generate roles
-			java.util.List<Role> roles=ConverterUtil.getRoleParameters(cdl.getChoreography());
+			java.util.List<Role> roles=CDMProtocolParserUtil.getRoleParameters(cdl.getChoreography());
 			
 			for (Role r : roles) {
 				Parameter p=new Parameter();

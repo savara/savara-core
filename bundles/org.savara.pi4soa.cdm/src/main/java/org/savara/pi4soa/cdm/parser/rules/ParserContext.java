@@ -21,32 +21,17 @@ package org.savara.pi4soa.cdm.parser.rules;
 
 import org.pi4soa.cdl.Choreography;
 import org.pi4soa.cdl.ExchangeDetails;
-import org.scribble.common.logging.Journal;
-import org.scribble.protocol.ProtocolContext;
+import org.savara.common.task.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
-public interface ConverterContext {
+public interface ParserContext {
 
 	/**
-	 * This method returns the protocol context.
+	 * This method returns the feedback handler for reporting issues.
 	 * 
-	 * @return The protocol context
+	 * @return The feedback handler
 	 */
-	public ProtocolContext getProtocolContext();
-	
-	/**
-	 * This method returns the journal for reporting issues.
-	 * 
-	 * @return The journal
-	 */
-	public Journal getJournal();
-	
-	/**
-	 * This method returns the source model reference.
-	 * 
-	 * @return The source model reference
-	 */
-	//public ModelReference getSource();
+	public FeedbackHandler getFeedbackHandler();
 	
 	/**
 	 * This method returns the declaration associated

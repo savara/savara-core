@@ -26,7 +26,7 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 
-public class FinalizerHandlerConverterRuleImpl implements ConverterRule {
+public class FinalizerHandlerParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -52,7 +52,7 @@ public class FinalizerHandlerConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
 		Protocol ret=new Protocol();
 		FinalizerHandler choreo=(FinalizerHandler)cdlType;
@@ -86,7 +86,7 @@ public class FinalizerHandlerConverterRuleImpl implements ConverterRule {
 	}
 
 	
-	protected void defineRoles(ConverterContext context,
+	protected void defineRoles(ParserContext context,
 			final FinalizerHandler choreo, Protocol conv) {
 	
 		final java.util.List<ParticipantType> partTypes=new java.util.Vector<ParticipantType>();
@@ -225,7 +225,7 @@ public class FinalizerHandlerConverterRuleImpl implements ConverterRule {
 	}
 	*/
 	
-	protected void convertActivities(ConverterContext context,
+	protected void convertActivities(ParserContext context,
 				java.util.List<org.pi4soa.cdl.Activity> acts, Block block) {
 		
 		java.util.Iterator<org.pi4soa.cdl.Activity> actiter=
@@ -234,13 +234,13 @@ public class FinalizerHandlerConverterRuleImpl implements ConverterRule {
 		while (actiter.hasNext()) {
 			org.pi4soa.cdl.Activity act=actiter.next();
 			
-			ConverterRule rule=ConverterRuleFactory.getConverter(
+			ParserRule rule=ParserRuleFactory.getConverter(
 					org.scribble.protocol.model.Activity.class, act);
 			
 			if (rule != null) {
 				org.scribble.protocol.model.Activity activity=
 					(org.scribble.protocol.model.Activity)
-					rule.convert(context,
+					rule.parse(context,
 							org.scribble.protocol.model.Activity.class, act);
 				
 				if (activity != null) {

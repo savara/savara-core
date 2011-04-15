@@ -21,18 +21,18 @@ import org.savara.bpel.model.TProcess;
 import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TVariable;
 import org.savara.common.task.FeedbackHandler;
-import org.scribble.protocol.ProtocolContext;
+import org.savara.common.task.ResourceLocator;
 import org.scribble.protocol.model.Activity;
 
 /**
  * This class provides a default implementation of the conversation
  * context.
  */
-public class DefaultConversionContext implements ConversionContext {
+public class DefaultParserContext implements ParserContext {
 	
 	private String m_role=null;
 	private TProcess m_process=null;
-	private ProtocolContext m_context=null;
+	private ResourceLocator m_resourceLocator=null;
 	private java.util.Map<String,TVariable> m_variables=
 					new java.util.HashMap<String,TVariable>();
 	private java.util.Stack<TScope> m_scopeStack=new java.util.Stack<TScope>();
@@ -62,12 +62,12 @@ public class DefaultConversionContext implements ConversionContext {
 	 * 
 	 * @param role The role
 	 * @param proc The process
-	 * @param context The protocol context
+	 * @param locator The resource locator
 	 */
-	public DefaultConversionContext(String role, TProcess proc, ProtocolContext context) {
+	public DefaultParserContext(String role, TProcess proc, ResourceLocator locator) {
 		m_role = role;
 		m_process = proc;
-		m_context = context;
+		m_resourceLocator = locator;
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class DefaultConversionContext implements ConversionContext {
 	 * @param component The domain component
 	 * @param activities The list of protocol activities to place the conversion results
 	 */
-	public void convert(Object component, java.util.List<Activity> activities, FeedbackHandler handler) {
+	public void parse(Object component, java.util.List<Activity> activities, FeedbackHandler handler) {
 		ProtocolParserRule rule=null;
 		
 		for (int i=0; rule == null && i < m_rules.size(); i++) {
@@ -86,17 +86,17 @@ public class DefaultConversionContext implements ConversionContext {
 		}
 		
 		if (rule != null) {
-			rule.convert(this, component, activities, handler);
+			rule.parse(this, component, activities, handler);
 		}
 	}
 	
 	/**
-	 * This method returns a reference to the protocol context.
+	 * This method returns the resource locator.
 	 * 
-	 * @return The protocol context
+	 * @return The resource locator
 	 */
-	public ProtocolContext getProtocolContext() {
-		return(m_context);
+	public ResourceLocator getResourceLocator() {
+		return(m_resourceLocator);
 	}
 	
 	/**

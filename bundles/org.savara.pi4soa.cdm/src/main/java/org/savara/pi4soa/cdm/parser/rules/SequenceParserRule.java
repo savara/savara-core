@@ -25,7 +25,7 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 
-public class SequenceConverterRuleImpl implements ConverterRule {
+public class SequenceParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -51,7 +51,7 @@ public class SequenceConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
 		org.scribble.protocol.model.Block ret=
 				new org.scribble.protocol.model.Block();
@@ -72,13 +72,13 @@ public class SequenceConverterRuleImpl implements ConverterRule {
 		while (actiter.hasNext()) {
 			org.pi4soa.cdl.Activity act=actiter.next();
 			
-			ConverterRule rule=ConverterRuleFactory.getConverter(
+			ParserRule rule=ParserRuleFactory.getConverter(
 					org.scribble.protocol.model.Activity.class, act);
 		
 			if (rule != null) {
 				org.scribble.protocol.model.Activity activity=
 					(org.scribble.protocol.model.Activity)
-					rule.convert(context,
+					rule.parse(context,
 							org.scribble.protocol.model.Activity.class, act);
 				
 				if (activity != null) {

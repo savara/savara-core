@@ -15,7 +15,7 @@
  *
  *
  * Change History:
- * 1 Jun 2009 : Initial version created by gary
+ * 6 Jun 2008 : Initial version created by gary
  */
 package org.savara.pi4soa.cdm.parser.rules;
 
@@ -25,7 +25,7 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 
-public class FinalizeConverterRuleImpl implements ConverterRule {
+public class ParallelParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -39,7 +39,7 @@ public class FinalizeConverterRuleImpl implements ConverterRule {
 	public boolean isSupported(Class<?> scribbleType,
 						CDLType cdlType) {
 		return(scribbleType == org.scribble.protocol.model.Activity.class &&
-				cdlType instanceof org.pi4soa.cdl.Finalize);
+				cdlType instanceof org.pi4soa.cdl.Parallel);
 	}
 	
 	/**
@@ -51,11 +51,11 @@ public class FinalizeConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
-		org.scribble.protocol.model.Run ret=
-					new org.scribble.protocol.model.Run();
-		org.pi4soa.cdl.Finalize cdl=(org.pi4soa.cdl.Finalize)cdlType;
+		org.scribble.protocol.model.Parallel ret=
+				new org.scribble.protocol.model.Parallel();
+		org.pi4soa.cdl.Parallel cdl=(org.pi4soa.cdl.Parallel)cdlType;
 		
 		Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
 
@@ -63,39 +63,39 @@ public class FinalizeConverterRuleImpl implements ConverterRule {
 				CDLTypeUtil.getURIFragment(cdl));
 		ret.getAnnotations().add(scannotation);
 
-		ProtocolReference ref=new ProtocolReference();
-		ref.setName(cdl.getChoreography().getName()+"_"+cdl.getFinalizer().getName());
-		
-		ret.setProtocolReference(ref);
-		
-		// Find conversation related to reference, and use
-		// as inner definition initially - to help with
-		// subsequent processing (e.g. locating initiator
-		// roles). The inner definition will be cleared when
-		// the model is fully converted.
-
-		/* TODO: Is this required for Scribble v2
-		Protocol prot=context.getProtocol(ref);
-		
-		if (prot != null) {
-			ret.setInlineDefinition(prot);
-			context.getComposeActivities().add(ret);
-		
-			// Bind roles
-			java.util.List<Role> roles=prot.getRoles();
+		// Process all of the activities within the
+		// choreography
+		java.util.Iterator<org.pi4soa.cdl.Activity> actiter=
+					cdl.getActivities().iterator();
+		while (actiter.hasNext()) {
+			org.pi4soa.cdl.Activity act=actiter.next();
 			
-			for (int i=0; i < roles.size(); i++) {
-				Role role=roles.get(i);
+			ParserRule rule=ParserRuleFactory.getConverter(
+					org.scribble.protocol.model.Activity.class, act);
+		
+			if (rule != null) {
 				
-				Object decl=context.getState(role.getName());
+				context.pushState();
 				
-				if (decl instanceof Role) {
-					ret.getBindings().add(new DeclarationBinding(((Role)decl).getName(), role.getName()));
+				org.scribble.protocol.model.Activity activity=
+					(org.scribble.protocol.model.Activity)
+					rule.parse(context,
+							org.scribble.protocol.model.Activity.class, act);
+				
+				if (activity != null) {
+					if (activity instanceof Block) {
+						ret.getBlocks().add((Block)activity);
+					} else {
+						Block block=new Block();
+						block.getContents().add(activity);
+						ret.getBlocks().add(block);
+					}
 				}
+				
+				context.popState();
 			}
 		}
-		*/
-				
+		
 		return(ret);
 	}
 }

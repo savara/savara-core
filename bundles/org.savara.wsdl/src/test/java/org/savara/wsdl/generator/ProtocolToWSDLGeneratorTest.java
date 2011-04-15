@@ -92,7 +92,7 @@ public class ProtocolToWSDLGeneratorTest {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
     		} else {			
-    			DefaultFeedbackHandler journal=new DefaultFeedbackHandler();
+    			DefaultFeedbackHandler feedback=new DefaultFeedbackHandler();
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
@@ -102,7 +102,7 @@ public class ProtocolToWSDLGeneratorTest {
     			try {
     				//model = parser.parse(is, journal, null);
     				model = ProtocolServices.getParserManager().parse("spr", is,
-    								new JournalProxy(journal), null);
+    								new JournalProxy(feedback), null);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}
@@ -113,7 +113,7 @@ public class ProtocolToWSDLGeneratorTest {
    					ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 					if (cg != null) {
 						Contract contract=cg.generate(model.getProtocol(), null, new Role(m_role),
-											journal);
+											feedback);
 						
 						if (contract != null) {
 							
@@ -121,7 +121,7 @@ public class ProtocolToWSDLGeneratorTest {
 							WSDLGenerator gen=WSDLGeneratorFactory.getWSDLGenerator();
 							
 							java.util.List<Definition> defns=gen.generate(contract,
-										new SOAPRPCWSDLBinding(), journal);
+										new SOAPRPCWSDLBinding(), feedback);
 							
 							for (int i=0; i < defns.size(); i++) {
 								Definition defn=defns.get(i);

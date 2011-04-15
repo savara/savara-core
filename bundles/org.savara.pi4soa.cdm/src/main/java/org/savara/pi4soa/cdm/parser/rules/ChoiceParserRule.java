@@ -31,7 +31,7 @@ import org.scribble.protocol.model.*;
 import org.scribble.protocol.model.Choice;
 import org.scribble.protocol.model.When;
 
-public class ChoiceConverterRuleImpl implements ConverterRule {
+public class ChoiceParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -57,14 +57,13 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
 		org.scribble.protocol.model.Activity ret=null;
 		org.pi4soa.cdl.Choice cdl=(org.pi4soa.cdl.Choice)cdlType;
 		java.util.List<When> blocks=new java.util.Vector<When>();
 		Role fromRole=null;
 		java.util.List<Role> toRoles=new java.util.Vector<Role>();
-		boolean f_when=false;
 		
 		// Check if all paths are associated with the same from and to role
 		boolean f_sameRoles=isSameRoles(context, cdl);
@@ -76,7 +75,7 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 		while (actiter.hasNext()) {
 			org.pi4soa.cdl.Activity act=actiter.next();
 			
-			ConverterRule rule=ConverterRuleFactory.getConverter(
+			ParserRule rule=ParserRuleFactory.getConverter(
 					org.scribble.protocol.model.Activity.class, act);
 		
 			if (rule != null) {
@@ -97,7 +96,7 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 				
 				org.scribble.protocol.model.Activity activity=
 					(org.scribble.protocol.model.Activity)
-					rule.convert(context,
+					rule.parse(context,
 							org.scribble.protocol.model.Activity.class, act);
 				
 				if (activity != null) {
@@ -157,17 +156,17 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 							
 							if (ed != null) {
 							
-								MessageSignature ms=InteractionConverterRuleImpl.createMessageSignature(ed,
+								MessageSignature ms=InteractionParserRule.createMessageSignature(ed,
 															block);
 							
 								// TODO: Need to update/verify from/to roles on containing choice
 							
 								block.setMessageSignature(ms);
 								
-								fromRole = InteractionConverterRuleImpl.getFromRole(context,
+								fromRole = InteractionParserRule.getFromRole(context,
 														ed);
 								
-								Role toRole = InteractionConverterRuleImpl.getToRole(context,
+								Role toRole = InteractionParserRule.getToRole(context,
 														ed);
 								if (toRoles.contains(toRole) == false) {
 									toRoles.add(toRole);
@@ -176,7 +175,7 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 								if (ed.getAction() == ExchangeActionType.RESPOND) {
 									Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
 									annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY,
-												ConverterUtil.getLabel(ed));
+												CDMProtocolParserUtil.getLabel(ed));
 									block.getAnnotations().add(annotation);
 								} else {
 									// Check if request has response/fault exchanges
@@ -186,7 +185,7 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 									if (resps != null && resps.size() > 0) {
 										Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
 										annotation.getProperties().put(AnnotationDefinitions.REQUEST_PROPERTY,
-													ConverterUtil.getLabel(ed));
+													CDMProtocolParserUtil.getLabel(ed));
 										block.getAnnotations().add(annotation);
 									}
 								}
@@ -203,7 +202,7 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 									// TODO: Deal with interfaces that have multiple behaviours	
 									Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
 									annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
-												InteractionConverterRuleImpl.getInterfaceName(locator.getInteraction()));
+												InteractionParserRule.getInterfaceName(locator.getInteraction()));
 									block.getAnnotations().add(annotation);
 								}
 							}
@@ -310,7 +309,7 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 		return(ret);
 	}
 	
-	protected boolean isSameRoles(ConverterContext context, org.pi4soa.cdl.Choice cdl) {
+	protected boolean isSameRoles(ParserContext context, org.pi4soa.cdl.Choice cdl) {
 		boolean ret=true;
 		Role fromRole=null;
 		Role toRole=null;
@@ -320,7 +319,7 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 			Role from=null;
 			Role to=null;
 			
-			ConverterRule rule=ConverterRuleFactory.getConverter(
+			ParserRule rule=ParserRuleFactory.getConverter(
 					org.scribble.protocol.model.Activity.class, act);
 		
 			if (rule != null) {
@@ -334,7 +333,7 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 				
 				org.scribble.protocol.model.Activity activity=
 					(org.scribble.protocol.model.Activity)
-					rule.convert(context,
+					rule.parse(context,
 							org.scribble.protocol.model.Activity.class, act);
 				
 				if (activity instanceof Choice) {
@@ -350,10 +349,10 @@ public class ChoiceConverterRuleImpl implements ConverterRule {
 						
 						if (ed != null) {
 							
-							from = InteractionConverterRuleImpl.getFromRole(context,
+							from = InteractionParserRule.getFromRole(context,
 														ed);
 								
-							to = InteractionConverterRuleImpl.getToRole(context,
+							to = InteractionParserRule.getToRole(context,
 														ed);
 						}
 					}

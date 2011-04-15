@@ -34,14 +34,14 @@ public class SequenceParserRule implements ProtocolParserRule {
 		return(component instanceof TSequence);
 	}
 		
-	public void convert(ConversionContext context, Object component, List<Activity> activities,
+	public void parse(ParserContext context, Object component, List<Activity> activities,
 								FeedbackHandler handler) {
 		TSequence bpelElem=(TSequence)component;
 		
 		//getSource().setComponentURI(getURI());
 		
 		for (int i=0; i < bpelElem.getActivity().size(); i++) {
-			context.convert(bpelElem.getActivity().get(i), activities, handler);
+			context.parse(bpelElem.getActivity().get(i), activities, handler);
 		}
 	}
 }

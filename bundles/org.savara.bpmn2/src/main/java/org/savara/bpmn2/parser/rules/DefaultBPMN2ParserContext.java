@@ -17,38 +17,26 @@
  */
 package org.savara.bpmn2.parser.rules;
 
-import org.scribble.common.logging.Journal;
-import org.scribble.protocol.ProtocolContext;
+import org.savara.common.task.FeedbackHandler;
 
 public class DefaultBPMN2ParserContext implements BPMN2ParserContext {
 
-	private ProtocolContext m_protocolContext=null;
-	private Journal m_journal=null;
+	private FeedbackHandler m_feedbackHandler=null;
 	private Scope m_scope=null;
 	
-	public DefaultBPMN2ParserContext(ProtocolContext context, Journal journal,
+	public DefaultBPMN2ParserContext(FeedbackHandler handler,
 							Scope scope) {
-		m_protocolContext = context;
-		m_journal = journal;
+		m_feedbackHandler = handler;
 		m_scope = scope;
 	}
 	
 	/**
-	 * This method returns the protocol context.
+	 * This method returns the feedback handler for reporting issues.
 	 * 
-	 * @return The protocol context
+	 * @return The feedback handler
 	 */
-	public ProtocolContext getProtocolContext() {
-		return(m_protocolContext);
-	}
-	
-	/**
-	 * This method returns the journal for reporting issues.
-	 * 
-	 * @return The journal
-	 */
-	public Journal getJournal() {
-		return(m_journal);
+	public FeedbackHandler getFeedbackHandler() {
+		return(m_feedbackHandler);
 	}
 	
 	/**

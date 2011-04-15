@@ -15,7 +15,7 @@
  *
  *
  * Change History:
- * 6 Jun 2008 : Initial version created by gary
+ * 1 Jun 2009 : Initial version created by gary
  */
 package org.savara.pi4soa.cdm.parser.rules;
 
@@ -25,7 +25,7 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 
-public class WhileConverterRuleImpl implements ConverterRule {
+public class FinalizeParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -39,7 +39,7 @@ public class WhileConverterRuleImpl implements ConverterRule {
 	public boolean isSupported(Class<?> scribbleType,
 						CDLType cdlType) {
 		return(scribbleType == org.scribble.protocol.model.Activity.class &&
-				cdlType instanceof org.pi4soa.cdl.While);
+				cdlType instanceof org.pi4soa.cdl.Finalize);
 	}
 	
 	/**
@@ -51,11 +51,11 @@ public class WhileConverterRuleImpl implements ConverterRule {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converted Scribble model object
 	 */
-	public ModelObject convert(ConverterContext context,
+	public ModelObject parse(ParserContext context,
 			Class<?> scribbleType, CDLType cdlType) {
-		org.scribble.protocol.model.Repeat ret=
-				new org.scribble.protocol.model.Repeat();
-		org.pi4soa.cdl.While cdl=(org.pi4soa.cdl.While)cdlType;
+		org.scribble.protocol.model.Run ret=
+					new org.scribble.protocol.model.Run();
+		org.pi4soa.cdl.Finalize cdl=(org.pi4soa.cdl.Finalize)cdlType;
 		
 		Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
 
@@ -63,52 +63,39 @@ public class WhileConverterRuleImpl implements ConverterRule {
 				CDLTypeUtil.getURIFragment(cdl));
 		ret.getAnnotations().add(scannotation);
 
-		context.pushState();
+		ProtocolReference ref=new ProtocolReference();
+		ref.setName(cdl.getChoreography().getName()+"_"+cdl.getFinalizer().getName());
 		
-		// Set the expression if defined in the 'while'
-		/*
-		if (cdl.getExpression() != null &&
-				cdl.getExpression().trim().length() > 0) {
-			XPathExpression exp=new XPathExpression();
+		ret.setProtocolReference(ref);
 		
-			exp.setQuery(cdl.getExpression());
+		// Find conversation related to reference, and use
+		// as inner definition initially - to help with
+		// subsequent processing (e.g. locating initiator
+		// roles). The inner definition will be cleared when
+		// the model is fully converted.
+
+		/* TODO: Is this required for Scribble v2
+		Protocol prot=context.getProtocol(ref);
 		
-			ret.getBlock().setExpression(exp);
-		}
-		*/
-				
-		// Process all of the activities within the
-		// choreography
-		java.util.Iterator<org.pi4soa.cdl.Activity> actiter=
-					cdl.getActivities().iterator();
-		while (actiter.hasNext()) {
-			org.pi4soa.cdl.Activity act=actiter.next();
+		if (prot != null) {
+			ret.setInlineDefinition(prot);
+			context.getComposeActivities().add(ret);
+		
+			// Bind roles
+			java.util.List<Role> roles=prot.getRoles();
 			
-			ConverterRule rule=ConverterRuleFactory.getConverter(
-					org.scribble.protocol.model.Activity.class, act);
-		
-			if (rule != null) {
-				org.scribble.protocol.model.Activity activity=
-					(org.scribble.protocol.model.Activity)
-					rule.convert(context,
-							org.scribble.protocol.model.Activity.class, act);
+			for (int i=0; i < roles.size(); i++) {
+				Role role=roles.get(i);
 				
-				if (activity != null) {
-					if (activity instanceof Block) {
-						ret.getBlock().getContents().addAll(((Block)activity).getContents());
-					} else {
-						ret.getBlock().getContents().add(activity);
-					}
+				Object decl=context.getState(role.getName());
+				
+				if (decl instanceof Role) {
+					ret.getBindings().add(new DeclarationBinding(((Role)decl).getName(), role.getName()));
 				}
 			}
 		}
-		
-		// Get initiator role(s) for first activity in body and
-		// associated with While
-		//ret.getRoles().addAll(ret.getBlock().getInitiatorRoles());
-		
-		context.popState();
-		
+		*/
+				
 		return(ret);
 	}
 }

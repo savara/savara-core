@@ -22,7 +22,7 @@ package org.savara.pi4soa.cdm.parser.rules;
 /**
  * This class represents a factory for converter rules.
  */
-public class ConverterRuleFactory {
+public class ParserRuleFactory {
 
 	/**
 	 * This method converts the supplied CDL type into a
@@ -32,9 +32,9 @@ public class ConverterRuleFactory {
 	 * @param cdlType The CDL type to be converted
 	 * @return The converter rule, or null if not found
 	 */
-	public static ConverterRule getConverter(Class<?> scribbleType,
+	public static ParserRule getConverter(Class<?> scribbleType,
 						org.pi4soa.cdl.CDLType cdlType) {
-		ConverterRule ret=null;
+		ParserRule ret=null;
 		
 		for (int i=0; ret == null && i < m_rules.length; i++) {
 			if (m_rules[i].isSupported(scribbleType, cdlType)) {
@@ -45,19 +45,19 @@ public class ConverterRuleFactory {
 		return(ret);
 	}
 	
-	private static ConverterRule[] m_rules={
+	private static ParserRule[] m_rules={
 		new ProtocolModelConverterRuleImpl(),
-		new ProtocolConverterRuleImpl(),
-		new ParallelConverterRuleImpl(),
-		new ChoiceConverterRuleImpl(),
-		new ConditionalConverterRuleImpl(),
-		new WhenConverterRuleImpl(),
-		new WhileConverterRuleImpl(),
-		new InteractionConverterRuleImpl(),
-		new FinalizeConverterRuleImpl(),
-		new FinalizerHandlerConverterRuleImpl(),
-		new AssignConverterRuleImpl(),
-		new SequenceConverterRuleImpl(),
-		new PerformConverterRuleImpl()
+		new ProtocolParserRule(),
+		new ParallelParserRule(),
+		new ChoiceParserRule(),
+		new ConditionalParserRule(),
+		new WhenParserRule(),
+		new WhileParserRule(),
+		new InteractionParserRule(),
+		new FinalizeParserRule(),
+		new FinalizerHandlerParserRule(),
+		new AssignParserRule(),
+		new SequenceParserRule(),
+		new PerformParserRule()
 	};
 }
