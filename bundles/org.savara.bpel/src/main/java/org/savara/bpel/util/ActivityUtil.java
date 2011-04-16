@@ -18,15 +18,15 @@
 package org.savara.bpel.util;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.savara.bpel.model.TActivity;
 import org.savara.bpel.model.TExtensibleElements;
 
 public class ActivityUtil {
 	
-	private static Log logger = LogFactory.getLog(BPELInteractionUtil.class);
+	private static Logger logger = Logger.getLogger(BPELInteractionUtil.class.getName());
 
 	public static TActivity getActivity(TExtensibleElements container) {
 		TActivity ret=null;
@@ -40,7 +40,7 @@ public class ActivityUtil {
 				ret = (TActivity)method.invoke(container);
 			}
 		} catch(Exception e) {
-			logger.error("Failed to get contained activity", e);
+			logger.log(Level.SEVERE, "Failed to get contained activity", e);
 		}
 
 		return(ret);

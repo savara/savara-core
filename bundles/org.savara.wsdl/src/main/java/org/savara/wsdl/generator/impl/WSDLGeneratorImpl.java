@@ -20,12 +20,12 @@ package org.savara.wsdl.generator.impl;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.savara.protocol.model.util.TypeSystem;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.task.FeedbackHandler;
@@ -48,7 +48,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 
 	public static final String BINDING_SUFFIX = "Binding";
 	
-	private static Log logger = LogFactory.getLog(WSDLGeneratorImpl.class);
+	private static Logger logger = Logger.getLogger(WSDLGeneratorImpl.class.getName());
 	
 	public WSDLGeneratorImpl() {
 	}
@@ -107,7 +107,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 			}
 			
 		} catch(Exception e) {
-			logger.error("Failed to generate WSDL", e);
+			logger.log(Level.SEVERE, "Failed to generate WSDL", e);
 		}
 		
 		return(ret);
@@ -194,7 +194,7 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 			}
 
 		} catch(Exception e) {
-			logger.error("Failed to create WSDL definition for target namespace '"+targetNamespace+"'", e);
+			logger.log(Level.SEVERE, "Failed to create WSDL definition for target namespace '"+targetNamespace+"'", e);
 		}
 
 		return(ret);

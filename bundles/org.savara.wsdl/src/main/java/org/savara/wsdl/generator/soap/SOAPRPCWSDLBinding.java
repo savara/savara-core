@@ -17,8 +17,9 @@
  */
 package org.savara.wsdl.generator.soap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.savara.wsdl.generator.WSDLBinding;
 
 /**
@@ -27,7 +28,8 @@ import org.savara.wsdl.generator.WSDLBinding;
  *
  */
 public class SOAPRPCWSDLBinding implements WSDLBinding {
-	private static Log logger = LogFactory.getLog(SOAPRPCWSDLBinding.class);
+	
+	private static Logger logger = Logger.getLogger(SOAPRPCWSDLBinding.class.getName());
 
 	/**
 	 * This method returns the name of the WSDL binding implementation.
@@ -62,7 +64,7 @@ public class SOAPRPCWSDLBinding implements WSDLBinding {
 			sb.setTransportURI("http://schemas.xmlsoap.org/soap/http");
 			binding.addExtensibilityElement(sb);
 		} catch(Exception e) {
-			logger.error("Failed to add SOAP binding", e);
+			logger.log(Level.SEVERE, "Failed to add SOAP binding", e);
 		}
 	}
 	
@@ -84,7 +86,7 @@ public class SOAPRPCWSDLBinding implements WSDLBinding {
 			soap.setSoapActionURI("");
 			operation.addExtensibilityElement(soap);
 		} catch(Exception e) {
-			logger.error("Failed to add SOAP operation", e);
+			logger.log(Level.SEVERE, "Failed to add SOAP operation", e);
 		}
 	}
 	
@@ -103,7 +105,7 @@ public class SOAPRPCWSDLBinding implements WSDLBinding {
 			soap.setNamespaceURI(defn.getTargetNamespace());
 			input.addExtensibilityElement(soap);
 		} catch(Exception e) {
-			logger.error("Failed to add SOAP body to input", e);
+			logger.log(Level.SEVERE, "Failed to add SOAP body to input", e);
 		}
 	}
 	
@@ -122,7 +124,7 @@ public class SOAPRPCWSDLBinding implements WSDLBinding {
 			soap.setNamespaceURI(defn.getTargetNamespace());
 			output.addExtensibilityElement(soap);
 		} catch(Exception e) {
-			logger.error("Failed to add SOAP body to output", e);
+			logger.log(Level.SEVERE, "Failed to add SOAP body to output", e);
 		}
 	}
 	
@@ -143,7 +145,7 @@ public class SOAPRPCWSDLBinding implements WSDLBinding {
 			
 			fault.addExtensibilityElement(soap);
 		} catch(Exception e) {
-			logger.error("Failed to add SOAP body to fault", e);
+			logger.log(Level.SEVERE, "Failed to add SOAP body to fault", e);
 		}
 	}
 	
@@ -163,7 +165,7 @@ public class SOAPRPCWSDLBinding implements WSDLBinding {
 			
 			port.addExtensibilityElement(soap);
 		} catch(Exception e) {
-			logger.error("Failed to add SOAP address to port", e);
+			logger.log(Level.SEVERE, "Failed to add SOAP address to port", e);
 		}
 	}
 	

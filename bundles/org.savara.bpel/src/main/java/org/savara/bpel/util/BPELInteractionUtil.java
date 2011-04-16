@@ -18,14 +18,14 @@
 package org.savara.bpel.util;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.savara.bpel.model.TActivity;
 import org.savara.bpel.model.TExtensibleElements;
 import org.savara.bpel.model.TImport;
@@ -41,7 +41,7 @@ import org.savara.common.task.ResourceLocator;
  */
 public class BPELInteractionUtil {
 	
-	private static Log logger = LogFactory.getLog(BPELInteractionUtil.class);
+	private static Logger logger = Logger.getLogger(BPELInteractionUtil.class.getName());
 
 	/**
 	 * This method determines whether the supplied activity
@@ -204,7 +204,7 @@ public class BPELInteractionUtil {
 			}
 			
 		} catch(Exception e) {
-			logger.error("Failed to read WSDL", e);
+			logger.log(Level.SEVERE, "Failed to read WSDL", e);
 		}
 		
 		return(ret);
