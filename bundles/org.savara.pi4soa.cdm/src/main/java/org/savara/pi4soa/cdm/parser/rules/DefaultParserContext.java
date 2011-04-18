@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 import org.pi4soa.cdl.Choreography;
 import org.pi4soa.cdl.ExchangeDetails;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**

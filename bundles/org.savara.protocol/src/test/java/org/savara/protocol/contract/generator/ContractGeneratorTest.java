@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
-import org.savara.common.task.DefaultFeedbackHandler;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.DefaultFeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.Role;
 

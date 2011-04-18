@@ -17,16 +17,15 @@
  */
 package org.savara.wsdl.generator.impl;
 
-import java.text.MessageFormat;
-
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 import org.savara.protocol.model.util.TypeSystem;
+import org.savara.common.logging.DefaultFeedbackHandler;
+import org.savara.common.logging.DefaultFeedbackHandler.IssueDetails;
+import org.savara.common.logging.DefaultFeedbackHandler.IssueType;
+import org.savara.common.logging.MessageFormatter;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.savara.common.task.DefaultFeedbackHandler;
-import org.savara.common.task.DefaultFeedbackHandler.IssueDetails;
-import org.savara.common.task.DefaultFeedbackHandler.IssueType;
 import org.savara.contract.model.*;
 import org.savara.wsdl.generator.WSDLBinding;
 import org.savara.wsdl.generator.impl.WSDLGeneratorImpl;
@@ -482,17 +481,6 @@ public class WSDLGeneratorImplTest extends TestCase {
 	}
 	
 	public void testMessage() {
-		javax.wsdl.Definition defn=null;
-		try {
-			javax.wsdl.factory.WSDLFactory fact=
-						javax.wsdl.factory.WSDLFactory.newInstance();
-			
-			defn = fact.newDefinition();
-			
-		} catch(Exception e) {
-			fail("Failed to get definition");
-		}
-		
 		Contract c=new Contract();
 		
 		TypeDefinition src=new TypeDefinition();
@@ -811,9 +799,8 @@ public class WSDLGeneratorImplTest extends TestCase {
 			fail("Issue is not an error");
 		}
 		
-		String mesg=MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-					"org.savara.wsdl.Messages").getString("_WSDL_BINDING_MESSAGE_PART_CANNOT_BE_XSD_TYPE"),
-							wsdlBinding.getName(), qname.toString());
+		String mesg=MessageFormatter.format("org.savara.wsdl",
+					"SAVARA-WSDL-00001", wsdlBinding.getName(), qname.toString());
 		
 		if (issue.getMessage().equals(mesg) == false) {
 			fail("Unexpected issue message: "+issue.getMessage());

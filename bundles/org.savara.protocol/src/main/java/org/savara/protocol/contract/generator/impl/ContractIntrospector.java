@@ -28,9 +28,10 @@ import javax.xml.namespace.QName;
 
 import org.savara.protocol.model.util.InteractionUtil;
 import org.savara.protocol.model.util.TypeSystem;
+import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.logging.MessageFormatter;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.savara.common.task.FeedbackHandler;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.FaultDetails;
 import org.savara.contract.model.Interface;
@@ -201,10 +202,8 @@ public class ContractIntrospector extends DefaultVisitor {
 	public void process() throws IllegalStateException {
 		
 		if (m_protocol == null) {
-			throw new IllegalStateException(MessageFormat.format(
-					java.util.PropertyResourceBundle.getBundle(
-						"org.savara.contract.Messages").
-							getString("SAVARAPC-00001"), (Object)null));
+			throw new IllegalStateException(MessageFormatter.format(
+					"org.savara.contract", "SAVARA-CONTRACT-00001"));
 		}
 		
 		m_protocol.visit(this);

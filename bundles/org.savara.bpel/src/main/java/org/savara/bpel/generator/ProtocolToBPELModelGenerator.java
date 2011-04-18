@@ -23,12 +23,12 @@ import org.savara.bpel.BPELDefinitions;
 import org.savara.bpel.model.TProcess;
 import org.savara.bpel.model.change.BPELModelChangeContext;
 import org.savara.bpel.util.BPELModelUtil;
+import org.savara.common.logging.DefaultFeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.generator.ModelGenerator;
-import org.savara.common.task.DefaultFeedbackHandler;
-import org.savara.common.task.FeedbackHandler;
-import org.savara.common.task.ResourceLocator;
+import org.savara.common.resources.ResourceLocator;
 import org.scribble.protocol.ProtocolDefinitions;
 import org.scribble.protocol.model.*;
 

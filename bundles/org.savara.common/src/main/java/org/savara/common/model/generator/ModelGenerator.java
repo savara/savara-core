@@ -19,8 +19,8 @@
  */
 package org.savara.common.model.generator;
 
-import org.savara.common.task.FeedbackHandler;
-import org.savara.common.task.ResourceLocator;
+import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.resources.ResourceLocator;
 
 /**
  * This interface represents a model generator.

@@ -21,7 +21,7 @@ package org.savara.bpel.model.change;
 
 import org.savara.protocol.model.change.AbstractModelChangeContext;
 import org.savara.protocol.model.change.ModelChangeRule;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.ProtocolContext;
 
 /**

@@ -22,10 +22,10 @@
 package org.savara.protocol.contract.generator.impl;
 
 import org.savara.protocol.contract.generator.impl.ContractIntrospector;
+import org.savara.common.logging.DefaultFeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.savara.common.task.DefaultFeedbackHandler;
-import org.savara.common.task.FeedbackHandler;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.Interface;
 import org.savara.contract.model.MessageExchangePattern;

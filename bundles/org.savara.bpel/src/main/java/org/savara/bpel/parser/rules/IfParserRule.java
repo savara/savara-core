@@ -23,7 +23,7 @@ import org.savara.bpel.model.TActivity;
 import org.savara.bpel.model.TElseif;
 import org.savara.bpel.model.TIf;
 import org.savara.bpel.util.ActivityUtil;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**

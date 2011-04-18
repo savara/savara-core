@@ -22,7 +22,7 @@ import java.util.List;
 import org.savara.bpel.model.TActivity;
 import org.savara.bpel.model.TActivityContainer;
 import org.savara.bpel.util.ActivityUtil;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.model.Activity;
 
 /**
