@@ -15,36 +15,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpmn2.parser.rules;
+package org.savara.common.resources;
 
-import org.savara.common.logging.FeedbackHandler;
-
-public interface BPMN2ParserContext {
+/**
+ * This interface represents a resource locator that can be used to
+ * load artifacts relative to another resource being processed.
+ *
+ */
+public interface ResourceLocator {
 
 	/**
-	 * This method returns the feedback handler for reporting issues.
+	 * This method can be used to retrieve the URI of a resource which
+	 * is located at the specified URI, potentially relative to a resource
+	 * that is being processed.
 	 * 
-	 * @return The feedback handler
+	 * @param uri The relative URI of the resource to load
+	 * @return The URI, or null if not found
+	 * @throws Exception Failed to obtain URI
 	 */
-	public FeedbackHandler getFeedbackHandler();
-	
-	/**
-	 * This method returns the current scope.
-	 * 
-	 * @return The scope
-	 */
-	public Scope getScope();
-	
-	/**
-	 * This method pushes the scope, to clear the current
-	 * state associated with a parent scope.
-	 */
-	public void pushScope();
-	
-	/**
-	 * This method pops the scope associated with a parent
-	 * conversation.
-	 */
-	public void popScope();
-	
+	public java.net.URI getResourceURI(String uri) throws Exception;
+
 }

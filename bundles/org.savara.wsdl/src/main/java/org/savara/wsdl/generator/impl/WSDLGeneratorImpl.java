@@ -17,7 +17,6 @@
  */
 package org.savara.wsdl.generator.impl;
 
-import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Level;
@@ -27,8 +26,9 @@ import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 
 import org.savara.protocol.model.util.TypeSystem;
+import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.logging.MessageFormatter;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.savara.common.task.FeedbackHandler;
 import org.savara.contract.model.FaultDetails;
 import org.savara.contract.model.Interface;
 import org.savara.contract.model.MessageExchangePattern;
@@ -535,29 +535,6 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 					Part part=createPart(defn, td, qname,
 							wsdlBinding, handler);
 					
-					/*
-					// Create single part for type or element
-					Part part=defn.createPart();
-					part.setName("content");
-					
-					if (AnnotationDefinitions.getAnnotation(td.getAnnotations(),
-									AnnotationDefinitions.XSD_ELEMENT) != null) {
-						part.setElementName(qname);					
-					} else {
-						part.setTypeName(qname);
-						
-						if (!wsdlBinding.isXSDTypeMessagePartSupported()) {
-							// Raise error
-							journal.error(MessageFormat.format(
-									java.util.PropertyResourceBundle.getBundle(
-											"org.savara.wsdl.Messages").getString(
-												"_WSDL_BINDING_MESSAGE_PART_CANNOT_BE_XSD_TYPE"),
-												wsdlBinding.getName(),
-												qname.toString()), null);
-						}
-					}
-					*/
-					
 					ret.addPart(part);
 					
 					defn.addMessage(ret);
@@ -582,12 +559,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 			
 			if (!wsdlBinding.isXSDTypeMessagePartSupported()) {
 				// Raise error
-				handler.error(MessageFormat.format(
-						java.util.PropertyResourceBundle.getBundle(
-								"org.savara.wsdl.Messages").getString(
-									"_WSDL_BINDING_MESSAGE_PART_CANNOT_BE_XSD_TYPE"),
-									wsdlBinding.getName(),
-									qname.toString()), null);
+				handler.error(MessageFormatter.format("org.savara.wsdl",
+							"SAVARA-WSDL-00001", wsdlBinding.getName(), qname.toString()), null);
 			}
 		}
 

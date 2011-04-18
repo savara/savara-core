@@ -21,9 +21,9 @@ import java.util.Map;
 
 public class JournalProxy implements org.scribble.common.logging.Journal {
 
-	private org.savara.common.task.FeedbackHandler m_journal=null;
+	private org.savara.common.logging.FeedbackHandler m_journal=null;
 	
-	public JournalProxy(org.savara.common.task.FeedbackHandler journal) {
+	public JournalProxy(org.savara.common.logging.FeedbackHandler journal) {
 		m_journal = journal;
 	}
 

@@ -25,7 +25,7 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.savara.contract.model.Contract;
-import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.common.logging.DefaultFeedbackHandler;
 import org.scribble.protocol.model.Role;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;

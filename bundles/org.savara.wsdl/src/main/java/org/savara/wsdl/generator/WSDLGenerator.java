@@ -17,7 +17,7 @@
  */
 package org.savara.wsdl.generator;
 
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 
 /**
  * This interface generates a WSDL definition from a Contract model.

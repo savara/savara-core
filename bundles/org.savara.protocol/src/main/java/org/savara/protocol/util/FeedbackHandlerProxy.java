@@ -19,7 +19,7 @@ package org.savara.protocol.util;
 
 import java.util.Map;
 
-public class FeedbackHandlerProxy implements org.savara.common.task.FeedbackHandler {
+public class FeedbackHandlerProxy implements org.savara.common.logging.FeedbackHandler {
 
 	private org.scribble.common.logging.Journal m_journal=null;
 	

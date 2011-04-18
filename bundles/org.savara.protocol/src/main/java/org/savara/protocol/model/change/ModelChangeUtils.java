@@ -18,7 +18,7 @@
 package org.savara.protocol.model.change;
 
 import org.savara.contract.model.Contract;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.savara.protocol.util.JournalProxy;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.util.ProtocolModelUtil;

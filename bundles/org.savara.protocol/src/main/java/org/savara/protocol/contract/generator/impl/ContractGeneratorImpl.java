@@ -19,7 +19,8 @@ package org.savara.protocol.contract.generator.impl;
 
 import java.text.MessageFormat;
 
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.logging.MessageFormatter;
 import org.savara.contract.model.Contract;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.scribble.protocol.model.Protocol;
@@ -42,16 +43,12 @@ public class ContractGeneratorImpl implements ContractGenerator {
 	 */
 	public Contract generate(Protocol cm, FeedbackHandler handler) throws IllegalArgumentException {
 		if (cm == null) {
-			throw new IllegalArgumentException(MessageFormat.format(
-					java.util.PropertyResourceBundle.getBundle(
-						"org.savara.contract.Messages").
-							getString("SAVARAPC-00001"), (Object)null));
+			throw new IllegalArgumentException(MessageFormatter.format(
+					"org.savara.contract", "SAVARA-CONTRACT-00001"));
 			
 		} else if (cm.getRole() == null) {
-			throw new IllegalArgumentException(MessageFormat.format(
-					java.util.PropertyResourceBundle.getBundle(
-						"org.savara.contract.Messages").
-							getString("SAVARAPC-00002"), (Object)null));
+			throw new IllegalArgumentException(MessageFormatter.format(
+					"org.savara.contract", "SAVARA-CONTRACT-00002"));
 		}
 
 		return(generate(cm, null, cm.getRole(), handler));
@@ -73,16 +70,12 @@ public class ContractGeneratorImpl implements ContractGenerator {
 								throws IllegalArgumentException {
 		// Check parameters
 		if (cm == null) {
-			throw new IllegalArgumentException(MessageFormat.format(
-					java.util.PropertyResourceBundle.getBundle(
-						"org.savara.contract.Messages").
-							getString("SAVARAPC-00001"), (Object)null));
+			throw new IllegalArgumentException(MessageFormatter.format(
+					"org.savara.contract", "SAVARA-CONTRACT-00001"));
 			
 		} else if (server == null) {
-			throw new IllegalArgumentException(MessageFormat.format(
-					java.util.PropertyResourceBundle.getBundle(
-						"org.savara.contract.Messages").
-							getString("SAVARAPC-00003"), (Object)null));
+			throw new IllegalArgumentException(MessageFormatter.format(
+					"org.savara.contract", "SAVARA-CONTRACT-00003"));
 		}
 		
 		ContractIntrospector introspector=new ContractIntrospector(cm, clients, server, handler);

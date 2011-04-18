@@ -17,7 +17,7 @@
  */
 package org.savara.bpel.parser.rules;
 
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.model.Activity;
 
 /**
