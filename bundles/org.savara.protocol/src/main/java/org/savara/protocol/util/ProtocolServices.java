@@ -59,7 +59,7 @@ public class ProtocolServices {
 					ProtocolParser pp=(ProtocolParser)obj;
 					pp.setAnnotationProcessor(new org.savara.protocol.parser.AnnotationProcessor());
 					
-					m_parserManager.addParser(pp);
+					m_parserManager.getParsers().add(pp);
 				}
 			} catch(Exception e) {
 				// Ignore

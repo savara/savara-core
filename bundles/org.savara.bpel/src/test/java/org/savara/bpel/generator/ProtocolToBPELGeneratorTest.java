@@ -31,6 +31,8 @@ import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.generator.ModelGenerator;
 import org.savara.protocol.util.JournalProxy;
 import org.scribble.common.logging.Journal;
+import org.scribble.common.resource.Content;
+import org.scribble.common.resource.ResourceContent;
 import org.scribble.protocol.parser.antlr.ANTLRProtocolParser;
 
 public class ProtocolToBPELGeneratorTest {
@@ -87,10 +89,10 @@ public class ProtocolToBPELGeneratorTest {
     		
     		String filename="testmodels/protocol/"+m_name+".spr";
     		
-    		java.io.InputStream is=
-    			ClassLoader.getSystemResourceAsStream(filename);
+    		java.net.URL url=
+    			ClassLoader.getSystemResource(filename);
     		
-    		if (is == null) {
+    		if (url == null) {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
     		} else {		
@@ -103,7 +105,9 @@ public class ProtocolToBPELGeneratorTest {
 				parser.setAnnotationProcessor(new org.savara.protocol.parser.AnnotationProcessor());
 				
     			try {
-    				model = parser.parse(is, journal, null);
+    				Content content=new ResourceContent(url.toURI());
+    				
+    				model = parser.parse(content, journal, null);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}

@@ -27,6 +27,7 @@ import org.savara.bpel.util.BPELModelUtil;
 import org.savara.protocol.util.FeedbackHandlerProxy;
 import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.common.logging.Journal;
+import org.scribble.common.resource.Content;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.parser.AnnotationProcessor;
@@ -38,17 +39,20 @@ import org.scribble.protocol.parser.ProtocolParser;
  */
 public class BPELProtocolParser implements ProtocolParser {
 
-	public boolean isSupported(String sourceType) {
-		return(sourceType.equals(BPELDefinitions.BPEL_TYPE));
+	public boolean isSupported(Content content) {
+		return(content.hasExtension(BPELDefinitions.BPEL_TYPE));
 	}
 
-	public ProtocolModel parse(java.io.InputStream is, Journal journal, ProtocolContext context)
+	public ProtocolModel parse(Content content, Journal journal, ProtocolContext context)
 									throws java.io.IOException {
 		ProtocolModel ret=new ProtocolModel();
 		
 		// Load BPEL from the input stream
+		java.io.InputStream is=content.getInputStream();
 		
 		TProcess process=BPELModelUtil.deserialize(is);
+		
+		is.close();
 		
 		//ret.derivedFrom(this);
 		//ret.getBlock().derivedFrom(this);

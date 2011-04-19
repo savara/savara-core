@@ -23,6 +23,8 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.scribble.common.logging.CachedJournal;
+import org.scribble.common.resource.Content;
+import org.scribble.common.resource.ResourceContent;
 import org.savara.pi4soa.cdm.parser.CDMProtocolParser;
 
 public class CDMToProtocolParserTest {
@@ -59,19 +61,16 @@ public class CDMToProtocolParserTest {
     	 * @param result The test result
     	 */
     	public void run(TestResult result) {
-    		// Setup scribble services
-    		//ProtocolServices.setProtocolProjector(
-    		//		new org.scribble.protocol.projection.impl.ProtocolProjectorImpl());
     		
     		// Run test
     		result.startTest(this);
     		
     		String filename="testmodels/cdm/"+m_name+".cdm";
     		
-    		java.io.InputStream is=
-    			ClassLoader.getSystemResourceAsStream(filename);
+    		java.net.URL url=
+    			ClassLoader.getSystemResource(filename);
     		
-    		if (is == null) {
+    		if (url == null) {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
     		} else {			
@@ -82,7 +81,9 @@ public class CDMToProtocolParserTest {
 				CDMProtocolParser parser=new CDMProtocolParser();
 				
     			try {
-    				model = parser.parse(is, journal, null);
+    				Content content=new ResourceContent(url.toURI());
+    				
+    				model = parser.parse(content, journal, null);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}
