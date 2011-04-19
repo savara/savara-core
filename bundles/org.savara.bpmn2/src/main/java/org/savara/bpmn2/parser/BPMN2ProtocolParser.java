@@ -36,6 +36,7 @@ import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.model.util.TypeSystem;
 import org.savara.protocol.util.FeedbackHandlerProxy;
 import org.scribble.common.logging.Journal;
+import org.scribble.common.resource.Content;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.DataType;
 import org.scribble.protocol.model.Protocol;
@@ -55,15 +56,19 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 
 	private static Logger logger = Logger.getLogger(BPMN2ProtocolParser.class.getName());
 
-	public boolean isSupported(String sourceType) {
-		return(BPMN_FILE_EXTENSION.equals(sourceType));
+	public boolean isSupported(Content content) {
+		return(content.hasExtension(BPMN_FILE_EXTENSION));
 	}
 	
-	public ProtocolModel parse(java.io.InputStream is, Journal journal, ProtocolContext context)
+	public ProtocolModel parse(Content content, Journal journal, ProtocolContext context)
 							throws java.io.IOException {
 		ProtocolModel ret=null;
 		
+		java.io.InputStream is=content.getInputStream();
+		
 		org.savara.bpmn2.model.TDefinitions defns=BPMN2ModelUtil.deserialize(is);
+		
+		is.close();
 		
 		Scope scope=BPMN2ParserUtil.createScope(defns);
 		
