@@ -18,7 +18,7 @@
 package org.savara.protocol.contract.generator;
 
 import org.savara.contract.model.Contract;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.Role;
 

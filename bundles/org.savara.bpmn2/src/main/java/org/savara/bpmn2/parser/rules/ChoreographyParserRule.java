@@ -17,14 +17,12 @@
  */
 package org.savara.bpmn2.parser.rules;
 
-import java.text.MessageFormat;
-import java.util.List;
-
 import javax.xml.bind.JAXBElement;
 
 import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TStartEvent;
+import org.savara.common.logging.MessageFormatter;
 import org.scribble.protocol.model.Block;
 
 public class ChoreographyParserRule implements BPMN2ParserRule {
@@ -57,10 +55,8 @@ public class ChoreographyParserRule implements BPMN2ParserRule {
 		for (JAXBElement<? extends TFlowElement> jaxb : choreo.getFlowElement()) {
 			if (jaxb.getValue().getClass() == TStartEvent.class) {
 				if (startEvent != null) {
-					context.getFeedbackHandler().error(MessageFormat.format(
-							java.util.PropertyResourceBundle.getBundle(
-							"org.savara.bpmn2.Messages").
-								getString("SAVARABPMN2-00001"), (Object)null), null);
+					context.getFeedbackHandler().error(MessageFormatter.format(
+							"org.savara.bpmn2", "SAVARA-BPMN2-00001"), null);
 				} else {
 					startEvent = (TStartEvent)jaxb.getValue();
 				}

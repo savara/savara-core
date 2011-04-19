@@ -15,24 +15,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.common.task;
+package org.savara.common.logging;
+
+import java.text.MessageFormat;
 
 /**
- * This interface represents a resource locator that can be used to
- * load artifacts relative to another resource being processed.
+ * This class provides utility functions for formatting messages intended to be
+ * displayed to users, and subject to internationalization.
  *
  */
-public interface ResourceLocator {
+public class MessageFormatter {
 
 	/**
-	 * This method can be used to retrieve the URI of a resource which
-	 * is located at the specified URI, potentially relative to a resource
-	 * that is being processed.
+	 * This method formats a text message based on the supplied module and code
+	 * ids, with optional arguments.
 	 * 
-	 * @param uri The relative URI of the resource to load
-	 * @return The URI, or null if not found
-	 * @throws Exception Failed to obtain URI
+	 * @param module The module id
+	 * @param code The message's code
+	 * @param args The optional list of arguments for inclusion in the message
+	 * @return The formatted text
 	 */
-	public java.net.URI getResourceURI(String uri) throws Exception;
-
+	public static String format(String module, String code, Object... args) {
+		String ret=MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+				module+".Messages").getString(code), args);
+		
+		if (ret != null) {
+			ret += " ["+code+"]";
+		}
+		
+		return(ret);
+	}
 }

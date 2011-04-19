@@ -20,8 +20,8 @@ package org.savara.bpel.parser.rules;
 import org.savara.bpel.model.TProcess;
 import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TVariable;
-import org.savara.common.task.FeedbackHandler;
-import org.savara.common.task.ResourceLocator;
+import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.resources.ResourceLocator;
 import org.scribble.protocol.model.Activity;
 
 /**

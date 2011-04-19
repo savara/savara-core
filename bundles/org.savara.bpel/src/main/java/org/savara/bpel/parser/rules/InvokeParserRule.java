@@ -28,7 +28,7 @@ import org.savara.bpel.model.TVariable;
 import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.TypeReferenceUtil;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**

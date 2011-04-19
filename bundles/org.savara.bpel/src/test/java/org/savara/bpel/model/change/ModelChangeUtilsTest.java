@@ -19,7 +19,7 @@ package org.savara.bpel.model.change;
 
 import org.savara.protocol.model.change.ModelChangeContext;
 import org.savara.protocol.model.change.ModelChangeUtils;
-import org.savara.common.task.DefaultFeedbackHandler;
+import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.contract.model.*;
 import org.scribble.protocol.model.*;
 

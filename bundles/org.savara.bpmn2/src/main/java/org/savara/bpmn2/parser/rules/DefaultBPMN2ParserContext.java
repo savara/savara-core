@@ -17,7 +17,7 @@
  */
 package org.savara.bpmn2.parser.rules;
 
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 
 public class DefaultBPMN2ParserContext implements BPMN2ParserContext {
 

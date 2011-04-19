@@ -17,8 +17,7 @@
  */
 package org.savara.scenario.simulation;
 
-import java.text.MessageFormat;
-
+import org.savara.common.logging.MessageFormatter;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.Role;
 import org.savara.scenario.model.RoleEvent;
@@ -68,10 +67,7 @@ public class DefaultScenarioSimulator implements ScenarioSimulator {
 			if (context != null) {
 				sim.onEvent(context, event, handler);
 			} else {
-				handler.error(MessageFormat.format(
-						java.util.PropertyResourceBundle.getBundle(
-						"org.savara.scenario.Messages").
-							getString("SAVARASCN-00001"),
+				handler.error(MessageFormatter.format("org.savara.scenario", "SAVARA-SCENARIO-00001",
 							role.getName()), event, null);
 			}
 		} else {

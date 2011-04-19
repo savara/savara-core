@@ -19,7 +19,7 @@ package org.savara.protocol.util;
 
 import java.net.URI;
 
-import org.savara.common.task.ResourceLocator;
+import org.savara.common.resources.ResourceLocator;
 
 /**
  * This class provides a proxy between the Savara and Scribble

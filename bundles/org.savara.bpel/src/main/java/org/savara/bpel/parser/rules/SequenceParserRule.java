@@ -20,7 +20,7 @@ package org.savara.bpel.parser.rules;
 import java.util.List;
 
 import org.savara.bpel.model.TSequence;
-import org.savara.common.task.FeedbackHandler;
+import org.savara.common.logging.FeedbackHandler;
 import org.scribble.protocol.model.*;
 
 /**
