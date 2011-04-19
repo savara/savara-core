@@ -23,6 +23,8 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.scribble.common.logging.CachedJournal;
+import org.scribble.common.resource.Content;
+import org.scribble.common.resource.ResourceContent;
 
 public class BPMN2ToProtocolParserTest {
 
@@ -61,10 +63,10 @@ public class BPMN2ToProtocolParserTest {
     		
     		String filename="testmodels/bpmn2/"+m_name+".bpmn2";
     		
-    		java.io.InputStream is=
-    			ClassLoader.getSystemResourceAsStream(filename);
+    		java.net.URL url=
+    			ClassLoader.getSystemResource(filename);
     		
-    		if (is == null) {
+    		if (url == null) {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
     		} else {			
@@ -75,7 +77,9 @@ public class BPMN2ToProtocolParserTest {
 				BPMN2ProtocolParser parser=new BPMN2ProtocolParser();
 				
     			try {
-    				model = parser.parse(is, journal, null);
+    				Content content=new ResourceContent(url.toURI());
+    				
+    				model = parser.parse(content, journal, null);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing BPMN2 failed"));
     			}

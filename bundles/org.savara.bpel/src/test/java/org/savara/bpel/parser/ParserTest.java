@@ -21,6 +21,8 @@ import java.net.URI;
 
 import org.savara.bpel.parser.BPELProtocolParser;
 import org.scribble.common.logging.CachedJournal;
+import org.scribble.common.resource.Content;
+import org.scribble.common.resource.ResourceContent;
 import org.scribble.common.resource.ResourceLocator;
 import org.scribble.protocol.DefaultProtocolContext;
 import org.scribble.protocol.model.ProtocolModel;
@@ -85,11 +87,10 @@ public class ParserTest extends TestCase {
 			
 			String filename="testmodels/bpel/"+m_bpelName+".bpel";
 			
-			java.io.InputStream is=
-				//ParserTest.class.getResourceAsStream(filename);
-				ClassLoader.getSystemResourceAsStream(filename);
+			java.net.URL url=
+				ClassLoader.getSystemResource(filename);
 			
-			if (is == null) {
+			if (url == null) {
 				result.addError(this,
 						new Throwable("Unable to locate resource: "+filename));
 			} else {			
@@ -100,7 +101,9 @@ public class ParserTest extends TestCase {
     			try {
     				BPELProtocolParser parser=new BPELProtocolParser();
     				
-    				model = parser.parse(is, journal, new DefaultProtocolContext(null,
+    				Content content=new ResourceContent(url.toURI());
+    				
+    				model = parser.parse(content, journal, new DefaultProtocolContext(null,
     									new ResourceLoaderImpl()));
     			} catch(Exception e) {
     				e.printStackTrace();
