@@ -57,6 +57,10 @@ public class RDBMSSessionStore implements SessionStore {
 	private TransactionManager txManager;
 	
 	private TxContext tx;
+
+    private Configuration configuration;
+
+    private boolean isInitialized = false;
 	
 	public RDBMSSessionStore(TransactionManager txManager) {
 		this.txManager = txManager;
@@ -68,9 +72,14 @@ public class RDBMSSessionStore implements SessionStore {
 	
 	/*
 	 * (non-Javadoc)
-	 * @see org.savara.monitor.SessionStore#initialize(org.savara.common.config.Configuration)
+	 * @see org.savara.monitor.SessionStore#setConfiguration(org.savara.common.configuration.Configuration)
 	 */
-	public void initialize(Configuration config){
+	public void setConfiguration(Configuration configuration){
+        this.configuration = configuration;
+	}
+
+
+    private void initialization() {
 		if (emf == null) {
 			Map<String, String> props = new HashMap<String, String>();
 			//TODO: convert some of configuration properties into props map.
@@ -79,9 +88,9 @@ public class RDBMSSessionStore implements SessionStore {
 		if (entityManager == null || !entityManager.isOpen()) {
 			entityManager = emf.createEntityManager();
 		}
-		
-		if (config != null) {
-			String txManagerJndiName = config.getProperty(TRANSACTION_MANAGER_JNDI_NAME);
+
+		if (configuration != null) {
+			String txManagerJndiName = configuration.getProperty(TRANSACTION_MANAGER_JNDI_NAME);
 			if (txManagerJndiName != null) {
 				getTransactionManagerFromJNDI(txManagerJndiName);
 			}
@@ -91,7 +100,8 @@ public class RDBMSSessionStore implements SessionStore {
 		} else {
 			tx = new JPANonTxContext(entityManager);
 		}
-	}
+        this.isInitialized = true;
+    }
 
 	private void getTransactionManagerFromJNDI(String txManagerJndiName) {
 		try {
@@ -107,7 +117,11 @@ public class RDBMSSessionStore implements SessionStore {
 	 * @see org.savara.monitor.SessionStore#create(org.savara.protocol.ProtocolId, org.savara.monitor.ConversationInstanceId)
 	 */
 	public java.io.Serializable create(ProtocolId pid, ConversationInstanceId cid, Serializable session) {
-		
+
+        if (!isInitialized) {
+            initialization();
+        }
+
 		RDBMSSession psession = new RDBMSSession();
 		
 		psession.setProtocolName(pid.getName());
@@ -138,7 +152,12 @@ public class RDBMSSessionStore implements SessionStore {
 	 * @see org.savara.monitor.SessionStore#find(org.savara.protocol.ProtocolId, org.savara.monitor.ConversationInstanceId)
 	 */
 	public java.io.Serializable find(ProtocolId pid, ConversationInstanceId cid) {
-		try {
+
+        if (!isInitialized) {
+            initialization();
+        }
+
+        try {
 			tx.begin();
 			List<?> sessions = entityManager.createNamedQuery(RDBMSSession.GET_SESSION_BY_KEY)
 								.setParameter("name", pid.getName())
@@ -166,7 +185,11 @@ public class RDBMSSessionStore implements SessionStore {
 	 * @see org.savara.monitor.SessionStore#remove(org.savara.protocol.ProtocolId, org.savara.monitor.ConversationInstanceId)
 	 */
 	public void remove(ProtocolId pid, ConversationInstanceId cid) {
-		try {
+		if (!isInitialized) {
+            initialization();
+        }
+
+        try {
 			tx.begin();
 			entityManager.createNamedQuery(RDBMSSession.REMOVE_SESSION_BY_KEY)
 							.setParameter("name", pid.getName())
@@ -187,7 +210,10 @@ public class RDBMSSessionStore implements SessionStore {
 	 */
 	public void update(ProtocolId pid, ConversationInstanceId cid,
 					java.io.Serializable session)  {
-		try {
+		if (!isInitialized) {
+            initialization();
+        }
+        try {
 			tx.begin();
 			RDBMSSession s = (RDBMSSession) entityManager.createNamedQuery(RDBMSSession.GET_SESSION_BY_KEY)
 								.setParameter("name", pid.getName())
@@ -209,7 +235,7 @@ public class RDBMSSessionStore implements SessionStore {
 	 * @see org.savara.monitor.SessionStore#close()
 	 */
 	public void close() {
-		if (entityManager != null && entityManager.isOpen()) {
+        if (entityManager != null && entityManager.isOpen()) {
 			entityManager.close();
 		}
 		if (emf != null) {
