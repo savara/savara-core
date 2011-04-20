@@ -28,6 +28,7 @@ import org.savara.pi4soa.cdm.parser.rules.ParserRuleFactory;
 import org.savara.pi4soa.cdm.parser.rules.DefaultParserContext;
 import org.savara.protocol.util.FeedbackHandlerProxy;
 import org.scribble.common.logging.Journal;
+import org.scribble.common.resource.Content;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.parser.AnnotationProcessor;
@@ -47,19 +48,23 @@ public class CDMProtocolParser implements ProtocolParser {
 	public CDMProtocolParser() {
 	}
 	
-	public boolean isSupported(String sourceType) {
-		return("cdm".equals(sourceType));
+	public boolean isSupported(Content content) {
+		return(content.hasExtension("cdm"));
 	}
 	
-	public ProtocolModel parse(java.io.InputStream is, Journal journal, ProtocolContext context)
+	public ProtocolModel parse(Content content, Journal journal, ProtocolContext context)
 							throws java.io.IOException {
 		ProtocolModel ret=null;
 		
-		if (is != null) {
+		if (content != null) {
 			try {						
+				java.io.InputStream is=content.getInputStream();
+				
 				org.pi4soa.cdl.Package cdlpack=
 						org.pi4soa.cdl.CDLManager.load(is);
 		
+				is.close();
+				
 				ParserRule rule=ParserRuleFactory.getConverter(ProtocolModel.class,
 									cdlpack);
 			

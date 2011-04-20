@@ -26,6 +26,8 @@ import junit.framework.TestSuite;
 
 import org.savara.contract.model.Contract;
 import org.savara.common.logging.DefaultFeedbackHandler;
+import org.scribble.common.resource.Content;
+import org.scribble.common.resource.ResourceContent;
 import org.scribble.protocol.model.Role;
 import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
@@ -85,10 +87,10 @@ public class ProtocolToWSDLGeneratorTest {
     		
     		String filename="testmodels/contract/"+m_name+".spr";
     		
-    		java.io.InputStream is=
-    			ClassLoader.getSystemResourceAsStream(filename);
+    		java.net.URL url=
+    			ClassLoader.getSystemResource(filename);
     		
-    		if (is == null) {
+    		if (url == null) {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
     		} else {			
@@ -96,12 +98,10 @@ public class ProtocolToWSDLGeneratorTest {
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
-				//ANTLRProtocolParser parser=new ANTLRProtocolParser();
-				//parser.setAnnotationProcessor(new org.savara.protocol.parser.AnnotationProcessor());
-				
     			try {
-    				//model = parser.parse(is, journal, null);
-    				model = ProtocolServices.getParserManager().parse("spr", is,
+    				Content content=new ResourceContent(url.toURI());
+    				
+    				model = ProtocolServices.getParserManager().parse(content,
     								new JournalProxy(feedback), null);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));

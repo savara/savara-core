@@ -35,7 +35,7 @@ public interface SessionStore {
 	 * store.
 	 * 
 	 *  @param config The configuration
-	 *  @throws IOException Failed to initialize session store
+	 *  @throws IOException Failed to setConfiguration session store
 	 */
 	public void setConfiguration(Configuration config);
 	
