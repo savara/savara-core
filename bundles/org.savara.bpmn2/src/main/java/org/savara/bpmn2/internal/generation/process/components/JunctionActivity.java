@@ -17,73 +17,31 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation.components;
+package org.savara.bpmn2.internal.generation.process.components;
 
 /**
- * This class represents a simple task within a
+ * This class represents a junction within a
  * BPMN process.
  *
  */
-public class SimpleActivity extends AbstractBPMNActivity {
+public class JunctionActivity extends AbstractBPMNActivity {
 
 	/**
-	 * This constructor initializes the simple activity.
+	 * This constructor initializes the junction activity.
 	 * 
-	 * @param act The behavioral activity
+	 * @param node The junction node
 	 * @param parent The parent BPMN state
 	 * @param model The BPMN model
 	 */
-	public SimpleActivity(org.pi4soa.service.behavior.ActivityType act,
-			BPMNActivity parent,
-			org.savara.BPMN2ModelFactory.bpmn.generation.BPMNModelFactory model,
-			org.savara.BPMN2NotationFactory.bpmn.generation.BPMNNotationFactory notation) {
+	public JunctionActivity(Object node,
+			BPMNActivity parent, org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
-		// Create a state
-		/*
-		Activity region=getTopLevelActivity();
-		
-		if (region != null) {
-			m_node = (ActivityNode)
-				region.createNode(null, UMLPackage.eINSTANCE.getCallBehaviorAction());
-			m_node.getInPartitions().add(getActivityPartition());
-			
-			if (label != null) {
-				m_node.setName(label);
-			}
-		}
-		*/
-		m_node = model.createSimpleTask(getContainer(), act);
-		
-	}
-	
-	/**
-	 * Internal constructor which can be used to wrap a vertex.
-	 * 
-	 * @param vertex The vertex
-	 * @param parent The parent state
-	 */
-	/*
-	protected SimpleActivity(org.eclipse.uml2.uml.ActivityNode node, BPMNActivity parent) {
-		super(parent);
-		
 		m_node = node;
-	}
-	*/
-	
-	/**
-	 * This method sets the association between this state and
-	 * the sub-state machine that it represents.
-	 * 
-	 * @param subMachine The sub state machine
-	 */
-	/*
-	public void setSubStateMachine(ActivityModel subMachine) {
 		
-		((State)m_node).setSubmachine(subMachine.getStateMachine());
 	}
-	*/
-
+	
 	/**
 	 * This method returns the start node for the activites
 	 * represented by this UML activity implementation.
@@ -123,22 +81,20 @@ public class SimpleActivity extends AbstractBPMNActivity {
 	}
 	
 	public int getWidth() {
-		return(m_width);
+		return(30);
 	}
 	
 	public int getHeight() {
-		return(60);
-	}
-	
-	public void adjustWidth(int width) {
-		m_width = width;
+		return(30);
 	}
 	
 	public void draw(Object parent) {
-		getNotationFactory().createTask(getModelFactory(),
-				m_node, parent, getX(), getY(), getWidth(), getHeight());
+		
+		if (getModelFactory().isDeleted(m_node) == false) {
+			getNotationFactory().createJunction(getModelFactory(),
+					m_node, parent, getX(), getY(), getWidth(), getHeight());
+		}
 	}
 	
 	private Object m_node=null;
-	private int m_width=110;
 }

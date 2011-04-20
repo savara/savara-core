@@ -17,11 +17,7 @@
  * Change History:
  * 29 Jan 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation.components;
-
-import org.pi4soa.service.behavior.BehaviorDescription;
-import org.pi4soa.service.behavior.Choice;
-import org.savara.tools.bpmn.generation.BPMNGenerationException;
+package org.savara.bpmn2.internal.generation.process.components;
 
 public class BPMNPool extends AbstractBPMNActivity {
 
@@ -35,8 +31,8 @@ public class BPMNPool extends AbstractBPMNActivity {
 	 */
 	public BPMNPool(Object diagram, String name,
 			BPMNActivity parent,
-			org.savara.BPMN2ModelFactory.bpmn.generation.BPMNModelFactory model,
-			org.savara.BPMN2NotationFactory.bpmn.generation.BPMNNotationFactory notation) {
+			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
 		initialize(diagram, name);

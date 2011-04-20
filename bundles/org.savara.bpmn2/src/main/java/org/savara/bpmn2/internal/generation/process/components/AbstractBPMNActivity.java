@@ -17,9 +17,21 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation.components;
+package org.savara.bpmn2.internal.generation.process.components;
 
 public abstract class AbstractBPMNActivity implements BPMNActivity {
+
+	public static final int VERTICAL_GAP = 40;
+	public static final int HORIZONTAL_GAP = 50;
+	
+	private BPMNActivity m_parent=null;
+	private org.savara.bpmn2.generation.process.BPMN2ModelFactory m_modelFactory=null;
+	private org.savara.bpmn2.generation.process.BPMN2NotationFactory m_notationFactory=null;
+	private java.util.List<Object> m_childStates=new java.util.ArrayList<Object>();
+	private int m_x=0;
+	private int m_y=0;
+	private int m_width=0;
+	private int m_height=0;
 
 	/**
 	 * This is the constructor for the default BPMN activity.
@@ -27,8 +39,8 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	 * @param parent The parent
 	 */
 	public AbstractBPMNActivity(BPMNActivity parent,
-			org.savara.BPMN2ModelFactory.bpmn.generation.BPMNModelFactory model,
-			org.savara.BPMN2NotationFactory.bpmn.generation.BPMNNotationFactory notation) {
+			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
 		m_parent = parent;
 		m_modelFactory = model;
 		m_notationFactory = notation;
@@ -62,7 +74,7 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	 * 
 	 * @return The model
 	 */
-	protected org.savara.tools.bpmn.generation.BPMN2ModelFactory getModelFactory() {
+	protected org.savara.bpmn2.generation.process.BPMN2ModelFactory getModelFactory() {
 		return(m_modelFactory);
 	}
 	
@@ -71,7 +83,7 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	 * 
 	 * @return The notation factory
 	 */
-	protected org.savara.tools.bpmn.generation.BPMN2NotationFactory getNotationFactory() {
+	protected org.savara.bpmn2.generation.process.BPMN2NotationFactory getNotationFactory() {
 		return(m_notationFactory);
 	}
 	
@@ -89,7 +101,7 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	 * 
 	 * @return The child states
 	 */
-	protected java.util.Vector getChildStates() {
+	protected java.util.List<Object> getChildStates() {
 		return(m_childStates);
 	}
 	
@@ -209,17 +221,16 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 			Object endNode=v1.getEndNode();
 			
 			if (v1.canDeleteEndNode() &&
-					(getModelFactory().isJoin(endNode) || // instanceof org.eclipse.uml2.uml.MergeNode ||
-					getModelFactory().isTerminal(endNode))) { // instanceof org.eclipse.uml2.uml.FlowFinalNode) {
+					(getModelFactory().isJoin(endNode) ||
+					getModelFactory().isTerminal(endNode))) {
 
 				// Move the incoming transitions from the junction
 				// to the next state
-				java.util.List list=getModelFactory().getInboundControlLinks(endNode);
+				java.util.List<Object> list=getModelFactory().getInboundControlLinks(endNode);
 				for (int j=list.size()-1; j >= 0; j--) {
 					Object transition=list.get(j);
 					
 					getModelFactory().setTarget(transition, v2.getStartNode());
-					//transition.setTarget(v2.getStartNode());
 				}
 				
 				// Remove Junction
@@ -230,12 +241,8 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 			}
 		}
 		
-		//height += VERTICAL_GAP; // Gap
-		
 		setWidth(width);
 		setHeight(height);
-//System.out.println("THIS: children="+m_childStates.size()+
-//		" this="+this+" width="+width+" height="+height);		
 	}
 	
 	public int getX() {
@@ -243,7 +250,6 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	}
 	
 	public void setX(int x) {
-//System.out.println("SETX: this="+this+" x="+x);		
 		m_x = x;
 	}
 
@@ -252,7 +258,6 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	}
 	
 	public void setY(int y) {
-//System.out.println("SETY: this="+this+" y="+y);		
 		m_y = y;
 	}
 
@@ -274,8 +279,6 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 
 	public void adjustWidth(int width) {
 		float percentChange=width/getWidth();
-		
-		//setWidth(width);
 		
 		for (int i=0; i < getChildStates().size(); i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
@@ -303,15 +306,4 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 		return(true);
 	}
 	
-	public static final int VERTICAL_GAP = 40;
-	public static final int HORIZONTAL_GAP = 50;
-	
-	private BPMNActivity m_parent=null;
-	private org.savara.tools.bpmn.generation.BPMN2ModelFactory m_modelFactory=null;
-	private org.savara.tools.bpmn.generation.BPMN2NotationFactory m_notationFactory=null;
-	private java.util.Vector m_childStates=new java.util.Vector();
-	private int m_x=0;
-	private int m_y=0;
-	private int m_width=0;
-	private int m_height=0;
 }

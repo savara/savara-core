@@ -17,10 +17,10 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation.components;
+package org.savara.bpmn2.internal.generation.process.components;
 
-import org.pi4soa.service.behavior.Choice;
-import org.savara.tools.bpmn.generation.*;
+import org.savara.bpmn2.generation.process.*;
+import org.scribble.protocol.model.Choice;
 
 /**
  * This class represents a selection of states within a
@@ -37,8 +37,8 @@ public class ChoiceActivity extends AbstractBPMNActivity {
 	 * @param model The BPMN model
 	 */
 	public ChoiceActivity(Choice choice, BPMNActivity parent,
-			org.savara.BPMN2ModelFactory.bpmn.generation.BPMNModelFactory model,
-			org.savara.BPMN2NotationFactory.bpmn.generation.BPMNNotationFactory notation)
+			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation)
 						throws BPMN2GenerationException {
 		super(parent, model, notation);
 		
@@ -54,81 +54,14 @@ public class ChoiceActivity extends AbstractBPMNActivity {
 	 */
 	protected void initialize(Choice elem) throws BPMN2GenerationException {
 		
-		// Get region
-		//Activity region=getTopLevelActivity();
-	
-		// Determine if choice is event based, or data based
-		boolean dataBased=true;
-		
-		java.util.List children=elem.getActivityTypes();
-		for (int i=0; i < children.size(); i++) {
-			org.pi4soa.service.behavior.ActivityType act=
-				(org.pi4soa.service.behavior.ActivityType)children.get(i);
-			
-			if (act instanceof org.pi4soa.service.behavior.StructuralType) {
-				org.pi4soa.service.behavior.StructuralType st=
-					(org.pi4soa.service.behavior.StructuralType)act;
-				
-				if ((st.isConditionalGroupingConstruct() == false ||
-						(st.isConditionalGroupingConstruct() &&
-						st.isConditionObservable() == false)) &&
-						st.isPredicateExtensionRequired() == false) {
-					dataBased = false;
-				}
-				
-				/*
-				String expr=null;
-				
-				if (st instanceof org.pi4soa.service.behavior.Conditional) {
-					expr = ((org.pi4soa.service.behavior.Conditional)st).getExpression();
-				} else if (st instanceof org.pi4soa.service.behavior.While) {
-					expr = ((org.pi4soa.service.behavior.While)st).getExpression();
-				} else if (st instanceof org.pi4soa.service.behavior.When) {
-					expr = ((org.pi4soa.service.behavior.When)st).getExpression();
-				}
-				
-				if (expr != null && expr.trim().length() == 0) {
-					expr = "";
-				}
-				
-				m_expressions.add(expr);
-				*/
-			}
-		}
-		
-		// If not data-based, then clear list of expressions
-		/*
-		if (dataBased == false) {
-			m_expressions.clear();
-		}
-		*/
-		
 		// Create choice state
-		Object choiceState=null;
-		
-		if (dataBased) {
-			choiceState=getModelFactory().createDataBasedXORGateway(getContainer());
-		} else {
-			choiceState=getModelFactory().createEventBasedXORGateway(getContainer());
-		}
-		
-			//region.createNode(null, UMLPackage.eINSTANCE.getDecisionNode());
-		//choiceState.getInPartitions().add(getActivityPartition());
+		Object choiceState=getModelFactory().createEventBasedXORGateway(getContainer());
 		
 		m_choiceState = new JunctionActivity(choiceState, this,
 				getModelFactory(), getNotationFactory());
 		
 		// Create junction state
-		Object junctionState=null;
-		
-		if (dataBased) {
-			junctionState=getModelFactory().createDataBasedXORGateway(getContainer());
-		} else {
-			junctionState=getModelFactory().createEventBasedXORGateway(getContainer());
-		}
-
-		//region.createNode(null, UMLPackage.eINSTANCE.getMergeNode());
-		//junctionState.getInPartitions().add(getActivityPartition());
+		Object junctionState=getModelFactory().createEventBasedXORGateway(getContainer());
 
 		m_junctionState = new JunctionActivity(junctionState, this,
 				getModelFactory(), getNotationFactory());

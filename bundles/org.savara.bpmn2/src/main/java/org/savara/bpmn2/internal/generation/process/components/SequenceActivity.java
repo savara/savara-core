@@ -17,9 +17,9 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation.components;
+package org.savara.bpmn2.internal.generation.process.components;
 
-//import org.pi4soa.service.behavior.Sequence;
+import org.scribble.protocol.model.Activity;
 
 /**
  * This class represents a sequence of states within a
@@ -35,10 +35,9 @@ public class SequenceActivity extends AbstractBPMNActivity {
 	 * @param parent The parent BPMN state
 	 * @param model The BPMN model
 	 */
-	public SequenceActivity(org.pi4soa.service.behavior.ActivityType sequence, 
-			BPMNActivity parent,
-			org.savara.BPMN2ModelFactory.bpmn.generation.BPMNModelFactory model,
-			org.savara.BPMN2NotationFactory.bpmn.generation.BPMNNotationFactory notation) {
+	public SequenceActivity(Activity sequence, BPMNActivity parent,
+			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
 		//addChildState(new SimpleState(null, this));

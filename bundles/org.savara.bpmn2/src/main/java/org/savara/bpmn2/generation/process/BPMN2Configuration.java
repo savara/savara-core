@@ -17,7 +17,7 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation;
+package org.savara.bpmn2.generation.process;
 
 /**
  * This interface represents the configuration information used
@@ -27,13 +27,4 @@ package org.savara.bpmn2.generation;
  */
 public interface BPMN2Configuration {
 
-	/**
-	 * This method returns the UML export format to be used. The list
-	 * of valid export formats is available using the
-	 * #UMLGenerator.getExportFormats() method.
-	 * 
-	 * @return The export format, or null if the default is being used.
-	 */
-	public String getExportFormat();
-	
 }

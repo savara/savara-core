@@ -17,14 +17,17 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation.components;
+package org.savara.bpmn2.internal.generation.process.components;
 
-import org.pi4soa.common.util.NamesUtil;
-import org.pi4soa.service.behavior.BehaviorDescription;
-import org.pi4soa.service.behavior.BehaviorType;
-import org.pi4soa.service.behavior.CompletionHandler;
-import org.pi4soa.service.behavior.ExceptionHandler;
-import org.savara.tools.bpmn.generation.BPMNGenerationException;
+import org.savara.bpmn2.generation.process.BPMN2GenerationException;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.scribble.protocol.model.Activity;
+import org.scribble.protocol.model.Interaction;
+import org.scribble.protocol.model.ModelObject;
+import org.scribble.protocol.model.Protocol;
+import org.scribble.protocol.model.ProtocolModel;
+import org.scribble.protocol.model.Run;
 
 /**
  * This class represents the state information associated with
@@ -33,6 +36,21 @@ import org.savara.tools.bpmn.generation.BPMNGenerationException;
  */
 public class BPMNDiagram extends AbstractBPMNActivity {
 
+	private String m_name=null;
+	private Object m_diagram=null;
+	private String m_folder=null;
+	private Object m_container=null;
+    private java.util.Map<String,BPMNActivity> m_sendActivities=new java.util.HashMap<String,BPMNActivity>();
+    private java.util.Map<String,BPMNActivity> m_receiveActivities=new java.util.HashMap<String,BPMNActivity>();
+    private java.util.Map<String,BPMNActivity> m_initiatingPerforms=new java.util.HashMap<String,BPMNActivity>();
+    private java.util.Map<String,BPMNActivity> m_initiatedPerforms=new java.util.HashMap<String,BPMNActivity>();
+    
+    private java.util.Map<String,BPMNPool> m_pools=new java.util.HashMap<String,BPMNPool>();
+    private java.util.List<BPMNPool> m_duplicatePools=new java.util.Vector<BPMNPool>();
+    
+    private boolean m_sendReceiveAsControlLink=true;
+    private boolean m_controlFromSendOnly=false;
+    
 	/**
 	 * This is the constructor for the activity model.
 	 * 
@@ -45,8 +63,8 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 */
 	public BPMNDiagram(String choreoName, String diagramName,
 			BPMNActivity parent,
-			org.savara.BPMN2ModelFactory.bpmn.generation.BPMNModelFactory model,
-			org.savara.BPMN2NotationFactory.bpmn.generation.BPMNNotationFactory notation,
+			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation,
 			String folder) throws BPMN2GenerationException {
 		super(parent, model, notation);
 		
@@ -92,34 +110,15 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 * @param elem The behavior type
 	 * @return The name
 	 */
-	public static String getName(BehaviorType elem) {
-		String ret=elem.getName();
+	public static String getName(Activity elem) {
+		String ret="<unknown>";
 		
-		if (elem instanceof BehaviorDescription) {
-			ret = ((BehaviorDescription)elem).getName();
+		if (elem instanceof Protocol) {
+			ret = ((Protocol)elem).getName();
 			
-			if (org.pi4soa.common.util.NamesUtil.isSet(
-					((BehaviorDescription)elem).getParticipant()) &&
-				ret.endsWith("_"+((BehaviorDescription)elem).getParticipant())) {
-				
-				ret = ret.substring(0, ret.length()-
-						((BehaviorDescription)elem).getParticipant().length()-1);
+			if (((Protocol)elem).getRole() != null) {
+				ret += "_"+((Protocol)elem).getRole().getName();
 			}
-
-		} else if (elem instanceof CompletionHandler) {
-			ret = getName(((CompletionHandler)elem).
-					getEnclosingBehaviorDescription())+"["+
-					ret+"]";
-
-		} else if (elem instanceof ExceptionHandler) {
-			String excType=((ExceptionHandler)elem).getExceptionType();
-			if (NamesUtil.isSet(excType) == false) {
-				excType = "default";
-			}
-			
-			ret = getName(((ExceptionHandler)elem).
-					getEnclosingBehaviorDescription())+"[exception="+
-					excType+"]";
 		}
 		
 		return(ret);
@@ -133,11 +132,11 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 * @param elem The behavior type
 	 * @return Whether it is a root
 	 */
-	protected boolean isRoot(BehaviorType elem) {
+	protected boolean isRoot(Activity elem) {
 		boolean ret=false;
 		
-		if (elem instanceof BehaviorDescription &&
-				((BehaviorDescription)elem).isRoot()) {
+		if (elem instanceof Protocol &&
+				((Protocol)elem).getParent() instanceof ProtocolModel) {
 			ret = true;
 		}
 		
@@ -199,10 +198,16 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 * @param send The send activity
 	 * @param activity The BPMN representation
 	 */
-	public void registerSendActivity(org.pi4soa.service.behavior.Send send,
+	public void registerSendActivity(Interaction send,
 						BPMNActivity activity) {
 		if (isPoolDuplicate(activity) == false) {
-			m_sendActivities.put(send, activity);
+			Annotation ann=AnnotationDefinitions.getAnnotation(send.getAnnotations(),
+					AnnotationDefinitions.SOURCE_COMPONENT);
+			
+			if (ann != null && ann.getProperties().containsKey(AnnotationDefinitions.ID_PROPERTY)) {
+				m_sendActivities.put((String)ann.getProperties().get(AnnotationDefinitions.ID_PROPERTY),
+										activity);
+			}
 		}
 	}
 		
@@ -212,10 +217,16 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 * @param recv The receive activity
 	 * @param activity The BPMN representation
 	 */
-	public void registerReceiveActivity(org.pi4soa.service.behavior.Receive recv,
+	public void registerReceiveActivity(Interaction recv,
 						BPMNActivity activity) {
 		if (isPoolDuplicate(activity) == false) {
-			m_receiveActivities.put(recv.getGlobalDescriptionURI(), activity);
+			Annotation ann=AnnotationDefinitions.getAnnotation(recv.getAnnotations(),
+					AnnotationDefinitions.SOURCE_COMPONENT);
+			
+			if (ann != null && ann.getProperties().containsKey(AnnotationDefinitions.ID_PROPERTY)) {
+				m_receiveActivities.put((String)ann.getProperties().get(AnnotationDefinitions.ID_PROPERTY),
+										activity);
+			}
 		}
 	}
 	
@@ -226,9 +237,15 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 * @param perform The perform activity
 	 * @param activity The BPMN representation
 	 */
-	public void registerInitiatingPerform(org.pi4soa.service.behavior.Perform perform,
+	public void registerInitiatingPerform(Run perform,
 						BPMNActivity activity) {
-		m_initiatingPerforms.put(perform.getGlobalDescriptionURI(), activity);
+		Annotation ann=AnnotationDefinitions.getAnnotation(perform.getAnnotations(),
+				AnnotationDefinitions.SOURCE_COMPONENT);
+		
+		if (ann != null && ann.getProperties().containsKey(AnnotationDefinitions.ID_PROPERTY)) {
+			m_initiatingPerforms.put((String)ann.getProperties().get(AnnotationDefinitions.ID_PROPERTY),
+									activity);
+		}
 	}
 		
 	/**
@@ -238,9 +255,15 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 * @param perform The perform activity
 	 * @param activity The BPMN representation
 	 */
-	public void registerInitiatedPerform(org.pi4soa.service.behavior.Perform perform,
+	public void registerInitiatedPerform(Run perform,
 						BPMNActivity activity) {
-		m_initiatedPerforms.put(perform.getGlobalDescriptionURI(), activity);
+		Annotation ann=AnnotationDefinitions.getAnnotation(perform.getAnnotations(),
+				AnnotationDefinitions.SOURCE_COMPONENT);
+		
+		if (ann != null && ann.getProperties().containsKey(AnnotationDefinitions.ID_PROPERTY)) {
+			m_initiatedPerforms.put((String)ann.getProperties().get(AnnotationDefinitions.ID_PROPERTY),
+									activity);
+		}
 	}
 	
 	/**
@@ -271,17 +294,15 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 *
 	 */
 	public void completeModel() throws BPMN2GenerationException {
-		java.util.Enumeration iter=m_sendActivities.keys();
-		java.util.Vector messageLinks=new java.util.Vector();
+		java.util.Iterator<String> iter=m_sendActivities.keySet().iterator();
+		java.util.List<Object> messageLinks=new java.util.ArrayList<Object>();
 		
-		while (iter.hasMoreElements()) {
-			org.pi4soa.service.behavior.Send send=
-				(org.pi4soa.service.behavior.Send)iter.nextElement();
-
+		while (iter.hasNext()) {
+			String sendId=iter.next();
 			BPMNActivity sendActivity=(BPMNActivity)
-							m_sendActivities.get(send);
+							m_sendActivities.get(sendId);
 			ReceiveActivity receiveActivity=(ReceiveActivity)
-							m_receiveActivities.get(send.getGlobalDescriptionURI());
+							m_receiveActivities.get(sendId);
 			
 			if (sendActivity != null && receiveActivity != null) {
 				
@@ -440,26 +461,4 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 		}
 	}
 		
-	//private boolean m_completed=false;
-	private String m_name=null;
-	private Object m_diagram=null;
-	private String m_folder=null;
-	private Object m_container=null;
-	//private java.util.Hashtable m_pools=new java.util.Hashtable();
-    //private BPMNActivity m_initialState=null;
-    //private BPMNActivity m_finalState=null;
-    private java.util.Hashtable m_sendActivities=new java.util.Hashtable();
-    private java.util.Hashtable m_receiveActivities=new java.util.Hashtable();
-    private java.util.Hashtable m_initiatingPerforms=new java.util.Hashtable();
-    private java.util.Hashtable m_initiatedPerforms=new java.util.Hashtable();
-    
-    private java.util.Hashtable m_pools=new java.util.Hashtable();
-    private java.util.Vector m_duplicatePools=new java.util.Vector();
-    
-    private boolean m_sendReceiveAsControlLink=true;
-    private boolean m_controlFromSendOnly=false;
-    
-    //private boolean m_performedAsControlLink=true;
-    //private boolean m_performedAsDependencyLink=false;
-    //private boolean m_controlFromInitiatingPerformOnly=false;
 }

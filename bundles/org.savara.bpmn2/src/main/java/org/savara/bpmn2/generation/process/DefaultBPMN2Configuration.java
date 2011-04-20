@@ -17,7 +17,7 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation;
+package org.savara.bpmn2.generation.process;
 
 /**
  * This class provides the default implementation for the
@@ -33,25 +33,4 @@ public class DefaultBPMN2Configuration implements BPMN2Configuration {
 	public DefaultBPMN2Configuration() {
 	}
 	
-	/**
-	 * This method returns the UML export format to be used. The list
-	 * of valid export formats is available using the
-	 * #UMLGenerator.getExportFormats() method.
-	 * 
-	 * @return The export format, or null if the default is being used.
-	 */
-	public String getExportFormat() {
-		return(m_exportFormat);
-	}
-	
-	/**
-	 * This method sets the export format.
-	 * 
-	 * @param format The export format
-	 */
-	public void setExportFormat(String format) {
-		m_exportFormat = format;
-	}
-	
-	private String m_exportFormat=null;
 }

@@ -17,9 +17,10 @@
  * Change History:
  * 26 Jan 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation;
+package org.savara.bpmn2.generation.process;
 
-import org.pi4soa.service.behavior.ActivityType;
+import org.scribble.protocol.model.Activity;
+import org.scribble.protocol.model.Interaction;
 
 public interface BPMN2ModelFactory {
 
@@ -34,7 +35,7 @@ public interface BPMN2ModelFactory {
 	
 	public Object createInitialNode(Object container);
 	
-	public Object createSimpleTask(Object container, ActivityType activity);
+	public Object createSimpleTask(Object container, Activity activity);
 	
 	public Object createDataBasedXORGateway(Object container);
 	
@@ -49,8 +50,7 @@ public interface BPMN2ModelFactory {
 			String conditionalExpression);
 	
 	public Object createMessageLink(Object container,
-			Object fromNode, Object toNode,
-			org.pi4soa.service.behavior.Receive receive);
+			Object fromNode, Object toNode,	Interaction receive);
 	
 	public Object setLinkExpression(Object link, String expression);
 	
@@ -82,13 +82,13 @@ public interface BPMN2ModelFactory {
 	
 	public void setTarget(Object link, Object node);
 	
-	public java.util.List getInboundControlLinks(Object node);
+	public java.util.List<Object> getInboundControlLinks(Object node);
 	
-	public java.util.List getOutboundControlLinks(Object node);
+	public java.util.List<Object> getOutboundControlLinks(Object node);
 	
-	public java.util.List getInboundMessageLinks(Object node);
+	public java.util.List<Object> getInboundMessageLinks(Object node);
 	
-	public java.util.List getOutboundMessageLinks(Object node);
+	public java.util.List<Object> getOutboundMessageLinks(Object node);
 	
 	public void delete(Object entity);
 	

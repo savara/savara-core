@@ -17,7 +17,7 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation;
+package org.savara.bpmn2.generation.process;
 
 /**
  * This class represents a BPMN generation exception.

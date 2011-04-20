@@ -17,10 +17,10 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation.components;
+package org.savara.bpmn2.internal.generation.process.components;
 
-import org.pi4soa.service.behavior.Parallel;
-import org.savara.tools.bpmn.generation.BPMNGenerationException;
+import org.savara.bpmn2.generation.process.BPMN2GenerationException;
+import org.scribble.protocol.model.Parallel;
 
 /**
  * This class represents a parallel grouping of states within a
@@ -37,8 +37,8 @@ public class ParallelActivity extends AbstractBPMNActivity {
 	 * @param model The BPMN model
 	 */
 	public ParallelActivity(Parallel parallel, BPMNActivity parent,
-			org.savara.BPMN2ModelFactory.bpmn.generation.BPMNModelFactory model,
-			org.savara.BPMN2NotationFactory.bpmn.generation.BPMNNotationFactory notation)
+			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation)
 						throws BPMN2GenerationException {
 		super(parent, model, notation);
 		

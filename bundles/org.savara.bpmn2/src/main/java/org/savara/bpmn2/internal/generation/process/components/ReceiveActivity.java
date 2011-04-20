@@ -17,13 +17,17 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation.components;
+package org.savara.bpmn2.internal.generation.process.components;
+
+import org.scribble.protocol.model.Interaction;
 
 /**
- * This class represents the BPMN activity node for a Perform activity.
+ * This class represents the UML activity node for a Receive activity.
  * 
  */
-public class PerformActivity extends SimpleActivity {
+public class ReceiveActivity extends SimpleActivity {
+	
+	private Interaction m_receive=null;
 
 	/**
 	 * This constructor initializes the receive state.
@@ -32,11 +36,21 @@ public class PerformActivity extends SimpleActivity {
 	 * @param parent The parent BPMN state
 	 * @param model The BPMN model
 	 */
-	public PerformActivity(org.pi4soa.service.behavior.ActivityType act,
-			BPMNActivity parent,
-			org.savara.BPMN2ModelFactory.bpmn.generation.BPMNModelFactory model,
-			org.savara.BPMN2NotationFactory.bpmn.generation.BPMNNotationFactory notation) {
+	public ReceiveActivity(Interaction act,
+			BPMNActivity parent, org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
 		super(act, parent, model, notation);
+		
+		m_receive = act;
+	}
+	
+	/**
+	 * This method returns the behavioral receive activity.
+	 * 
+	 * @return The receive activity
+	 */
+	public Interaction getReceive() {
+		return(m_receive);
 	}
 	
 	/**
@@ -49,7 +63,7 @@ public class PerformActivity extends SimpleActivity {
 	public void breakLinks() {
 		Object node=getStartNode();
 		
-		java.util.List list=getModelFactory().getInboundControlLinks(node);
+		java.util.List<Object> list=getModelFactory().getInboundControlLinks(node);
 		
 		for (int i=list.size()-1; i >= 0; i--) {
 			Object edge=list.get(i);

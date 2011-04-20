@@ -17,7 +17,7 @@
  * Change History:
  * 30 Jan 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.generation;
+package org.savara.bpmn2.generation.process;
 
 
 public interface BPMN2NotationFactory {
