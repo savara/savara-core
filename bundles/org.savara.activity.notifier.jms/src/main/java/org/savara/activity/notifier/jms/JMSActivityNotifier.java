@@ -199,7 +199,7 @@ public class JMSActivityNotifier implements ActivityNotifier {
 	public void publish(Activity activity) {
 		
 		if (m_initialized == false) {
-			
+			initialize();
 		}
 		
 		if (m_producer != null) {
