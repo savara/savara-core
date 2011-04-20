@@ -21,6 +21,7 @@
 
 	<modules>
 		<module>org.savara.activity</module>
+                <module>org.savara.activity.astore.rdbms</module>
 		<module>org.savara.activity.notifier.jms</module>
 		<module>org.savara.activity.validator.cdm</module>
 		<module>org.savara.bpel</module>

@@ -36,7 +36,7 @@ public class InMemorySessionStore implements SessionStore {
 	 *  @param config The configuration
 	 *  @throws IOException Failed to initialize session store
 	 */
-	public void initialize(Configuration config){
+	public void setConfiguration(Configuration config){
 	}
 	
 	/**

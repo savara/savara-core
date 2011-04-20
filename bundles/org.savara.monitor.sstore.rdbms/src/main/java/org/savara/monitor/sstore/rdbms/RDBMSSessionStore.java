@@ -70,7 +70,7 @@ public class RDBMSSessionStore implements SessionStore {
 	 * (non-Javadoc)
 	 * @see org.savara.monitor.SessionStore#initialize(org.savara.common.config.Configuration)
 	 */
-	public void initialize(Configuration config){
+	public void setConfiguration(Configuration config){
 		if (emf == null) {
 			Map<String, String> props = new HashMap<String, String>();
 			//TODO: convert some of configuration properties into props map.

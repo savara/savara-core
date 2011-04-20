@@ -199,7 +199,7 @@ public class DefaultActivityProcessorTest {
 		
 		private java.util.List<Activity> m_store=new java.util.Vector<Activity>();
 
-		public void setConfiguration(Configuration config) {
+		public void initialize(Configuration config) {
 		}
 
 		public void store(Activity activity) {

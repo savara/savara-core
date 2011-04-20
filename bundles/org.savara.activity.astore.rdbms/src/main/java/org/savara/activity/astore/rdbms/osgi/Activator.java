@@ -15,45 +15,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.activity;
+package org.savara.activity.astore.rdbms.osgi;
 
-import org.savara.activity.model.Activity;
-import org.savara.common.config.Configuration;
+import java.util.Properties;
 
-/**
- * This interface represents the activity store 
- * used to log activity events in a persistence store
- * and provide a query mechanism.
- *
- */
-public interface ActivityStore {
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 
-	/**
-	 * This method initializes the log service using
-	 * the supplied configuration.
-	 * 
-	 * @param config
+public class Activator implements BundleActivator {
+
+	private static BundleContext context;
+
+	static BundleContext getContext() {
+		return context;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public void initialize(Configuration config);
-	
-	/**
-	 * This method logs the activity record.
-	 * 
-	 * @param activity The activity
+	public void start(BundleContext bundleContext) throws Exception {
+		Activator.context = bundleContext;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
-	public void store(Activity activity);
-	
-	/**
-	 * This method retrieves the activity record
-	 * associated with the supplied id.
-	 * 
-	 * @param id The activity id, or null if not found
-	 */
-	public Activity queryById(String id);
-	
-	/**
-	 * This method closes the log service.
-	 */
-	public void close();
-	
+	public void stop(BundleContext bundleContext) throws Exception {
+		Activator.context = null;
+	}
+
 }
