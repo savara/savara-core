@@ -43,15 +43,12 @@ public abstract class ActivityEntity {
     @Column(name="ACT_MODEL")
     private String activityModel;
 
-    @Basic
     @Column(name="CONTEXT")
     private String properties;
 
-    @Basic
     @Column(name="ACT_ID")
     private String actId;
 
-    @Basic
     @Column(name="TIMESTAMP")
     private Date timestamp;
 

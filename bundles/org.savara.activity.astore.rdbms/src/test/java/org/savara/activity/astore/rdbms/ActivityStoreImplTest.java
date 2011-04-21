@@ -20,6 +20,7 @@ package org.savara.activity.astore.rdbms;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.savara.activity.astore.rdbms.model.CorrelationIDEntity;
 
 import java.sql.DriverManager;
 
@@ -30,16 +31,21 @@ import java.sql.DriverManager;
 public class ActivityStoreImplTest extends Assert {
 
 
+    private static ActivityStoreImpl activityStore;
+
     @BeforeClass
     public static void setUp() throws Exception {
        	Class.forName("org.h2.Driver");
 		DriverManager.getConnection("jdbc:h2:target/db/h2", "sa", "");
 
+        activityStore = new ActivityStoreImpl();
     }
 
 
     @Test
     public void saveCorrelationIDEntity() throws Exception {
-
+        CorrelationIDEntity entity = new CorrelationIDEntity();
+        entity.setValue("theValue");
+        activityStore.saveCorrelationIDEntity(entity);
     }
 }

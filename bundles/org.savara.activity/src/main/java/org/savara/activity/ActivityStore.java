@@ -29,12 +29,10 @@ import org.savara.common.config.Configuration;
 public interface ActivityStore {
 
 	/**
-	 * This method initializes the log service using
-	 * the supplied configuration.
-	 * 
+     * This method pass the configuratioin object in.
 	 * @param config
 	 */
-	public void initialize(Configuration config);
+	public void setConfiguration(Configuration config);
 	
 	/**
 	 * This method logs the activity record.

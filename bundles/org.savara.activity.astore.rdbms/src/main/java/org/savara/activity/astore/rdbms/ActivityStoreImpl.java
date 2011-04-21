@@ -18,11 +18,19 @@
 package org.savara.activity.astore.rdbms;
 
 import org.savara.activity.ActivityStore;
+import org.savara.activity.astore.rdbms.model.CorrelationIDEntity;
 import org.savara.activity.model.Activity;
 import org.savara.common.config.Configuration;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.transaction.TransactionManager;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -35,20 +43,67 @@ public class ActivityStoreImpl implements ActivityStore {
 
 	private static final Logger logger = Logger.getLogger(ActivityStoreImpl.class.toString());
 
-    private TransactionManager txMgr;
+    private TransactionManager txManager;
 
     private static EntityManagerFactory emf;
+
+    private EntityManager entityManager;
+
+    private boolean isInitialized = false;
+
+    private Configuration configuration;
+
+    private TxContext txContext;
 
     public  ActivityStoreImpl() {
 
     }
 
     public ActivityStoreImpl(TransactionManager manager) {
-        this.txMgr = manager;
+        this.txManager = manager;
     }
 
-    public void initialize(Configuration config) {
 
+    protected void saveCorrelationIDEntity(CorrelationIDEntity entity) {
+
+    }
+
+
+    private void initialize() {
+		if (emf == null) {
+			Map<String, String> props = new HashMap<String, String>();
+			//TODO: convert some of configuration properties into props map.
+			emf = Persistence.createEntityManagerFactory("activity-store-unit", props);
+		}
+		if (entityManager == null || !entityManager.isOpen()) {
+			entityManager = emf.createEntityManager();
+		}
+
+		if (configuration != null) {
+			String txManagerJndiName = configuration.getProperty(TRANSACTION_MANAGER_JNDI_NAME);
+			if (txManagerJndiName != null) {
+				getTransactionManagerFromJNDI(txManagerJndiName);
+			}
+		}
+		if (txManager != null) {
+			txContext = new JPAJTAContext(txManager, entityManager);
+		} else {
+			txContext = new JPANonTxContext(entityManager);
+		}
+        this.isInitialized = true;
+    }
+
+    private void getTransactionManagerFromJNDI(String txManagerJndiName) {
+		try {
+			txManager = (TransactionManager) InitialContext.doLookup(txManagerJndiName);
+		} catch (NamingException e) {
+			logger.log(Level.SEVERE, "Error in getting Transaction Manager from JNDI: " + txManagerJndiName);
+			throw new RuntimeException(e);
+		}
+	}
+
+    public void setConfiguration(Configuration config) {
+        this.configuration = config;
     }
 
     public void store(Activity activity) {

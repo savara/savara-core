@@ -19,6 +19,7 @@ package org.savara.activity.astore.rdbms.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -38,10 +39,11 @@ public class CorrelationIDEntity implements Serializable{
     @Column(name="VALUE")
     private String value;
 
-
+    @ManyToOne
     private CorrelationIDEntity parent;
 
-    private Collection<CorrelationIDEntity> child;
+    @OneToMany
+    private Collection<CorrelationIDEntity> child = new ArrayList<CorrelationIDEntity>();
 
     @ManyToMany
     private Collection<ActivityEntity> activities;
@@ -76,5 +78,17 @@ public class CorrelationIDEntity implements Serializable{
 
     public void setActivities(Collection<ActivityEntity> activities) {
         this.activities = activities;
+    }
+
+    public Collection<CorrelationIDEntity> getChild() {
+        return child;
+    }
+
+    public void setChild(Collection<CorrelationIDEntity> child) {
+        this.child = child;
+    }
+
+    public void addChild(CorrelationIDEntity entity) {
+        this.child.add(entity);
     }
 }
