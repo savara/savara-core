@@ -31,8 +31,8 @@ public class BPMNPool extends AbstractBPMNActivity {
 	 */
 	public BPMNPool(Object diagram, String name,
 			BPMNActivity parent,
-			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
 		initialize(diagram, name);

@@ -20,6 +20,7 @@
 package org.savara.bpmn2.internal.generation.process.components;
 
 import org.savara.bpmn2.generation.process.*;
+import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
 import org.scribble.protocol.model.Choice;
 
 /**
@@ -37,8 +38,8 @@ public class ChoiceActivity extends AbstractBPMNActivity {
 	 * @param model The BPMN model
 	 */
 	public ChoiceActivity(Choice choice, BPMNActivity parent,
-			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation)
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation)
 						throws BPMN2GenerationException {
 		super(parent, model, notation);
 		

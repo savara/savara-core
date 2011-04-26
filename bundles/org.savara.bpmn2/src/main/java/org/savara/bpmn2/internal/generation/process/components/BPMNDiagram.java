@@ -19,15 +19,13 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
-import org.savara.bpmn2.generation.process.BPMN2GenerationException;
+import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Interaction;
-import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.ProtocolModel;
-import org.scribble.protocol.model.Run;
 
 /**
  * This class represents the state information associated with
@@ -36,14 +34,10 @@ import org.scribble.protocol.model.Run;
  */
 public class BPMNDiagram extends AbstractBPMNActivity {
 
-	private String m_name=null;
 	private Object m_diagram=null;
-	private String m_folder=null;
 	private Object m_container=null;
     private java.util.Map<String,BPMNActivity> m_sendActivities=new java.util.HashMap<String,BPMNActivity>();
     private java.util.Map<String,BPMNActivity> m_receiveActivities=new java.util.HashMap<String,BPMNActivity>();
-    private java.util.Map<String,BPMNActivity> m_initiatingPerforms=new java.util.HashMap<String,BPMNActivity>();
-    private java.util.Map<String,BPMNActivity> m_initiatedPerforms=new java.util.HashMap<String,BPMNActivity>();
     
     private java.util.Map<String,BPMNPool> m_pools=new java.util.HashMap<String,BPMNPool>();
     private java.util.List<BPMNPool> m_duplicatePools=new java.util.Vector<BPMNPool>();
@@ -63,15 +57,12 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 */
 	public BPMNDiagram(String choreoName, String diagramName,
 			BPMNActivity parent,
-			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation,
-			String folder) throws BPMN2GenerationException {
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation)
+							throws BPMN2GenerationException {
 		super(parent, model, notation);
 		
-		m_name = choreoName+"_"+diagramName;
-		
 		m_diagram = model.createDiagram();
-		m_folder = folder;
 	}
 	
 	/**
@@ -231,42 +222,6 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	}
 	
 	/**
-	 * This method registers an initiating perform activity
-	 * against the BPMN representation.
-	 * 
-	 * @param perform The perform activity
-	 * @param activity The BPMN representation
-	 */
-	public void registerInitiatingPerform(Run perform,
-						BPMNActivity activity) {
-		Annotation ann=AnnotationDefinitions.getAnnotation(perform.getAnnotations(),
-				AnnotationDefinitions.SOURCE_COMPONENT);
-		
-		if (ann != null && ann.getProperties().containsKey(AnnotationDefinitions.ID_PROPERTY)) {
-			m_initiatingPerforms.put((String)ann.getProperties().get(AnnotationDefinitions.ID_PROPERTY),
-									activity);
-		}
-	}
-		
-	/**
-	 * This method registers an initiated perform activity
-	 * against the BPMN representation.
-	 * 
-	 * @param perform The perform activity
-	 * @param activity The BPMN representation
-	 */
-	public void registerInitiatedPerform(Run perform,
-						BPMNActivity activity) {
-		Annotation ann=AnnotationDefinitions.getAnnotation(perform.getAnnotations(),
-				AnnotationDefinitions.SOURCE_COMPONENT);
-		
-		if (ann != null && ann.getProperties().containsKey(AnnotationDefinitions.ID_PROPERTY)) {
-			m_initiatedPerforms.put((String)ann.getProperties().get(AnnotationDefinitions.ID_PROPERTY),
-									activity);
-		}
-	}
-	
-	/**
 	 * This method determines if the supplied activity is
 	 * associated with a duplicate pool that will be deleted.
 	 * 
@@ -315,16 +270,6 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 					}
 					
 					// Create control flow between the activities
-					/*
-					Activity activity=getTopLevelActivity();
-					ActivityEdge ret=(ActivityEdge)
-							activity.createEdge(null, UMLPackage.eINSTANCE.getControlFlow());
-					
-					ret.setSource(sendActivity.getEndNode());
-					ret.setTarget(receiveActivity.getStartNode());
-					
-					ret.setName(send.getOperationName());
-					*/
 					messageLinks.add(getModelFactory().
 							createMessageLink(m_diagram,
 							sendActivity.getEndNode(),
@@ -337,51 +282,6 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 				}
 			}
 		}
-		
-		// Process initiating and initiated performs
-		/* GPB: COMMENT OUT PERFORM LINKS FOR NOW
-		iter = m_initiatingPerforms.keys();
-		
-		while (iter.hasMoreElements()) {
-			String key=(String)iter.nextElement();
-
-			PerformActivity initiatingPerform=(PerformActivity)
-					m_initiatingPerforms.get(key);
-			PerformActivity initiatedPerform=(PerformActivity)
-					m_initiatedPerforms.get(key);
-			
-			if (initiatingPerform != null && initiatedPerform != null) {
-				
-				if (m_performedAsControlLink) {
-					
-					if (m_controlFromInitiatingPerformOnly) {
-						// Break links to the receive node, as control will
-						// be from the initiating participant
-						initiatedPerform.breakLinks();
-					}
-					
-					// Create control flow between the activities
-					Activity activity=getTopLevelActivity();
-					
-					ActivityEdge ret=(ActivityEdge)
-							activity.createEdge(null, UMLPackage.eINSTANCE.getControlFlow());
-					
-					ret.setSource(initiatingPerform.getEndNode());
-					ret.setTarget(initiatedPerform.getStartNode());
-					
-					// Check if the initiating and initiated performs have a link to the
-					// same node, in which case remove the link from the initiating/
-					checkForRedundantTargetLinks(initiatingPerform, initiatedPerform);
-					
-				}
-				
-				if (m_performedAsDependencyLink) {
-					initiatingPerform.getEndNode().createDependency(
-							initiatedPerform.getStartNode());
-				}
-			}
-		}		
-		*/
 		
 		// Delete duplicate pools
 		for (int i=0; i < m_duplicatePools.size(); i++) {
@@ -401,9 +301,9 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 			cury += (pool.getHeight()+100);
 		}
 		
-		getModelFactory().saveModel(m_folder+
-				java.io.File.separator+m_name+"."+
-				getModelFactory().getFileExtension(), m_diagram);
+		//getModelFactory().saveModel(m_folder+
+		//		java.io.File.separator+m_name+"."+
+		//		getModelFactory().getFileExtension(), m_diagram);
 		
 		// Construct notation
 		Object diagramNotation=getNotationFactory().createDiagram(getModelFactory(), m_diagram,
@@ -429,11 +329,11 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 		}
 		*/
 
-		getNotationFactory().saveNotation(m_folder+
-				java.io.File.separator+m_name+"."+
-				getModelFactory().getFileExtension(), m_diagram,
-				m_folder+java.io.File.separator+m_name+"."+
-				getNotationFactory().getFileExtension(), diagramNotation);
+		//getNotationFactory().saveNotation(m_folder+
+		//		java.io.File.separator+m_name+"."+
+		//		getModelFactory().getFileExtension(), m_diagram,
+		//		m_folder+java.io.File.separator+m_name+"."+
+		//		getNotationFactory().getFileExtension(), diagramNotation);
 	}
 	
 	protected void checkForRedundantTargetLinks(BPMNActivity source, BPMNActivity target) {

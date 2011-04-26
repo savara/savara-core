@@ -19,7 +19,7 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
-import org.savara.bpmn2.generation.process.BPMN2GenerationException;
+import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
 import org.scribble.protocol.model.Repeat;
 
 /**
@@ -43,8 +43,8 @@ public class RepeatActivity extends AbstractBPMNActivity {
 	 * @param model The BPMN model
 	 */
 	public RepeatActivity(Repeat repeat, BPMNActivity parent,
-			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation)
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation)
 					throws BPMN2GenerationException {
 		super(parent, model, notation);
 		
@@ -98,7 +98,8 @@ public class RepeatActivity extends AbstractBPMNActivity {
 			transitionSequentialNodes();
 			
 			if (m_initialChoiceState != null) {
-				java.util.List list=getModelFactory().getOutboundControlLinks(m_initialChoiceState.getEndNode());
+				java.util.List<Object> list=
+							getModelFactory().getOutboundControlLinks(m_initialChoiceState.getEndNode());
 	
 				if (list.size() > 0) {
 					Object outgoing=list.get(0);
@@ -117,8 +118,8 @@ public class RepeatActivity extends AbstractBPMNActivity {
 			// so that it is not sequentially transitioned - only transition
 			// to the junction state based on an appropriate condition
 			// evaluation
-			BPMNActivity lastState=(BPMNActivity)getChildStates().
-								get(getChildStates().size()-1);
+			//BPMNActivity lastState=(BPMNActivity)getChildStates().
+			//					get(getChildStates().size()-1);
 			
 			if (junctionRemoved) {
 				getChildStates().add(m_junctionState);				
@@ -164,7 +165,7 @@ public class RepeatActivity extends AbstractBPMNActivity {
 	public void calculatePosition(int x, int y) {
 		int junctionY=y+getHeight()-VERTICAL_GAP;
 		
-		int extraY=0;
+		//int extraY=0;
 		
 		m_initialChoiceState.calculatePosition(x, junctionY-
 				(m_initialChoiceState.getHeight()/2));

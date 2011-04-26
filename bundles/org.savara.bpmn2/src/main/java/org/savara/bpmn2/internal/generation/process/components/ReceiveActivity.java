@@ -37,8 +37,8 @@ public class ReceiveActivity extends SimpleActivity {
 	 * @param model The BPMN model
 	 */
 	public ReceiveActivity(Interaction act,
-			BPMNActivity parent, org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
+			BPMNActivity parent, org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(act, parent, model, notation);
 		
 		m_receive = act;

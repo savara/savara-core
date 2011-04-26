@@ -36,8 +36,8 @@ public class SequenceActivity extends AbstractBPMNActivity {
 	 * @param model The BPMN model
 	 */
 	public SequenceActivity(Activity sequence, BPMNActivity parent,
-			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
 		//addChildState(new SimpleState(null, this));

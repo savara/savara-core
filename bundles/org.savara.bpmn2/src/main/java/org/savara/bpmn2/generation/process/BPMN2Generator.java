@@ -21,15 +21,21 @@ package org.savara.bpmn2.generation.process;
 
 import java.util.logging.Logger;
 
+import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
+import org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory;
+import org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory;
 import org.savara.bpmn2.internal.generation.process.components.*;
 import org.savara.common.model.generator.ModelGenerator;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.resources.ResourceLocator;
 import org.scribble.protocol.ProtocolDefinitions;
+import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Choice;
+import org.scribble.protocol.model.DefaultVisitor;
 import org.scribble.protocol.model.Interaction;
 import org.scribble.protocol.model.Parallel;
 import org.scribble.protocol.model.Protocol;
+import org.scribble.protocol.model.Repeat;
 import org.scribble.protocol.model.Run;
 import org.scribble.protocol.model.Visitor;
 
@@ -172,8 +178,8 @@ public class BPMN2Generator implements ModelGenerator {
 		}
 
 		// Create the model
-		org.savara.bpmn2.generation.process.BPMN2ModelFactory model=null;
-		org.savara.bpmn2.generation.process.BPMN2NotationFactory notation=null;
+		org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model=null;
+		org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation=null;
 		
 		try {
 			model = new org.savara.tools.bpmn.generation.stp.STPBPMNModelFactoryImpl();
@@ -278,15 +284,13 @@ public class BPMN2Generator implements ModelGenerator {
 		}
 	}
 	
-    // NOTE: Currently uses the Activity Model constructs
-	public class BPMN2ModelVisitor implements Visitor {
+	public class BPMN2ModelVisitor extends DefaultVisitor {
 			
 		private BPMN2ModelFactory m_modelFactory=null;
 		private BPMN2NotationFactory m_notationFactory=null;
-		private String m_folder=null;
 		private String m_choreoName=null;
 		private String m_role=null;
-	    private java.util.Vector m_umlActivityStack=new java.util.Vector();
+	    private java.util.List<BPMNActivity> m_bpmnActivityStack=new java.util.ArrayList<BPMNActivity>();
 	    private java.util.Map<String,BPMNDiagram> m_activityModels=
 	    				new java.util.HashMap<String,BPMNDiagram>();
 
@@ -295,12 +299,10 @@ public class BPMN2Generator implements ModelGenerator {
 		 * 
 		 */
 		public BPMN2ModelVisitor(String choreoName,
-				BPMN2ModelFactory model, BPMN2NotationFactory notation,
-					String folder) {
+				BPMN2ModelFactory model, BPMN2NotationFactory notation) {
 			m_choreoName = choreoName;
 			m_modelFactory = model;
 			m_notationFactory = notation;
-			m_folder = folder;
 		}
 		
 		/**
@@ -321,7 +323,7 @@ public class BPMN2Generator implements ModelGenerator {
 		public boolean start(Protocol elem) {
 			
 			try {
-				BPMNDiagram diagram=getBPMNModel(elem, m_folder);
+				BPMNDiagram diagram=getBPMNModel(elem);
 				
 				String role=m_role;
 				
@@ -355,7 +357,7 @@ public class BPMN2Generator implements ModelGenerator {
 				umls.childrenComplete();
 			}
 
-			popUMLActivity();
+			popBPMNActivity();
 		}
 		
 		/**
@@ -383,7 +385,7 @@ public class BPMN2Generator implements ModelGenerator {
 		 */
 		public void end(Choice elem) {
 			
-			popUMLActivity();
+			popBPMNActivity();
 		}
 		
 		/**
@@ -411,7 +413,7 @@ public class BPMN2Generator implements ModelGenerator {
 		 */
 		public void end(Parallel elem) {
 			
-			popUMLActivity();
+			popBPMNActivity();
 		}
 		
 		/**
@@ -456,6 +458,8 @@ public class BPMN2Generator implements ModelGenerator {
 				}
 				*/
 			}
+			
+			return(true);
 		}
 		
 		/**
@@ -497,7 +501,7 @@ public class BPMN2Generator implements ModelGenerator {
 		 * 
 		 * @param elem The sequence
 		 */
-		public void sequenceStart(Sequence elem) {
+		public boolean start(Block elem) {
 			
 			try {
 				pushBPMNActivity(new SequenceActivity(elem,
@@ -506,6 +510,8 @@ public class BPMN2Generator implements ModelGenerator {
 			} catch(Exception e) {
 				logger.severe("Failed to create sequence state: "+e);
 			}
+			
+			return(true);
 		}
 		
 		/**
@@ -513,129 +519,17 @@ public class BPMN2Generator implements ModelGenerator {
 		 * 
 		 * @param elem The sequence
 		 */
-		public void sequenceEnd(Sequence elem) {
+		public void end(Block elem) {
 			
-			popUMLActivity();
+			popBPMNActivity();
 		}
 		
-		/**
-		 * This method starts visiting the service description element.
-		 * 
-		 * @param elem The service description
-		 */
-		public void serviceDescriptionStart(ServiceDescription elem) {
-			
-		}
-		
-		/**
-		 * This method ends visiting the service description element.
-		 * 
-		 * @param elem The service description
-		 */
-		public void serviceDescriptionEnd(ServiceDescription elem) {
-			
-		}
-		
-		/**
-		 * This method starts visiting the structural type abstract element.
-		 * 
-		 * @param elem The structural type
-		 */
-		public void structuralTypeStart(StructuralType elem) {
-			
-		}
-		
-		/**
-		 * This method ends visiting the structural type abstract element.
-		 * 
-		 * @param elem The structural type
-		 */
-		public void structuralTypeEnd(StructuralType elem) {
-			
-			/*
-			BPMNActivity umls=getBPMNActivity();
-			
-			if (umls != null) {
-				umls.childrenComplete();
-			}
-			*/
-		}
-		
-		/**
-		 * This method starts visiting the timed unit element.
-		 * 
-		 * @param elem The timed unit
-		 */
-		public void timedUnitStart(TimedUnit elem) {
-			
-		}
-		
-		/**
-		 * This method ends visiting the timed unit element.
-		 * 
-		 * @param elem The timed unit
-		 */
-		public void timedUnitEnd(TimedUnit elem) {
-			
-		}
-		
-		/**
-		 * This method visits the unobservable activity.
-		 * 
-		 * @param elem The unobservable
-		 */
-		public void unobservable(Unobservable elem) {
-			
-			BPMNActivity umls=getBPMNActivity();
-			if (umls != null) {
-				new SimpleActivity(elem, umls, m_modelFactory, m_notationFactory);
-			}
-		}
-		
-		/**
-		 * This method visits the variable declaration activity.
-		 * 
-		 * @param elem The variable declaration
-		 */
-		public void variableDeclaration(VariableDeclaration elem) {
-			
-		}
-		
-		/**
-		 * This method starts visiting the when element.
-		 * 
-		 * @param elem The when
-		 */
-		public void whenStart(When elem) {
-			
-			try {
-				pushBPMNActivity(new WhenActivity(elem,
-						getBPMNActivity(), m_modelFactory, m_notationFactory));
-					
-				pushBPMNActivity(new SequenceActivity(elem,
-						getBPMNActivity(), m_modelFactory, m_notationFactory));
-			} catch(Exception e) {
-				logger.severe("Failed to create when Activity: "+e);
-			}
-		}
-		
-		/**
-		 * This method ends visiting the when element.
-		 * 
-		 * @param elem The when
-		 */
-		public void whenEnd(When elem) {
-			
-			popUMLActivity();
-			popUMLActivity();
-		}
-
 		/**
 		 * This method starts visiting the while element.
 		 * 
 		 * @param elem The while
 		 */
-		public void whileStart(While elem) {
+		public boolean start(Repeat elem) {
 			
 			try {
 				pushBPMNActivity(new RepeatActivity(elem,
@@ -647,6 +541,8 @@ public class BPMN2Generator implements ModelGenerator {
 			} catch(Exception e) {
 				logger.severe("Failed to create while Activity: "+e);
 			}
+			
+			return(true);
 		}
 		
 		/**
@@ -654,23 +550,14 @@ public class BPMN2Generator implements ModelGenerator {
 		 * 
 		 * @param elem The while
 		 */
-		public void whileEnd(While elem) {
+		public void end(Repeat elem) {
 			
-			popUMLActivity();
+			popBPMNActivity();
 			
-			popUMLActivity();
+			popBPMNActivity();
 		}
 		
-		/**
-		 * This method returns a Activity machine Activity for the supplied
-		 * behavior type. If one already exists, then it will be
-		 * returned, otherwise one will be created.
-		 * 
-		 * @param elem The behavior type
-		 * @return The Activity machine state
-		 */
-		protected BPMNDiagram getBPMNModel(
-					Protocol elem, String folder) throws BPMN2GenerationException {
+		protected BPMNDiagram getBPMNModel(Protocol elem) throws BPMN2GenerationException {
 			String name=BPMNDiagram.getName(elem);
 			
 			BPMNDiagram ret=(BPMNDiagram)
@@ -678,7 +565,7 @@ public class BPMN2Generator implements ModelGenerator {
 			
 			if (ret == null) {
 				ret = new BPMNDiagram(m_choreoName, name,
-						null, m_modelFactory, m_notationFactory, folder);
+						null, m_modelFactory, m_notationFactory);
 				
 				m_activityModels.put(name, ret);
 			}
@@ -690,10 +577,10 @@ public class BPMN2Generator implements ModelGenerator {
 		 * This method pushes the supplied UML activity
 		 * onto a stack.
 		 * 
-		 * @param sms The activity
+		 * @param act The activity
 		 */
-		protected void pushBPMNActivity(BPMNActivity umls) {
-			m_umlActivityStack.insertElementAt(umls, 0);
+		protected void pushBPMNActivity(BPMNActivity act) {
+			m_bpmnActivityStack.add(0, act);
 		}
 		
 		/**
@@ -705,8 +592,8 @@ public class BPMN2Generator implements ModelGenerator {
 		protected BPMNActivity getBPMNActivity() {
 			BPMNActivity ret=null;
 			
-			if (m_umlActivityStack.size() > 0) {
-				ret = (BPMNActivity)m_umlActivityStack.get(0);
+			if (m_bpmnActivityStack.size() > 0) {
+				ret = (BPMNActivity)m_bpmnActivityStack.get(0);
 			}
 			
 			return(ret);
@@ -717,15 +604,15 @@ public class BPMN2Generator implements ModelGenerator {
 		 * top of the stack.
 		 *
 		 */
-		protected void popUMLActivity() {
+		protected void popBPMNActivity() {
 			BPMNActivity umls=getBPMNActivity();
 			
 			if (umls != null) {
 				umls.childrenComplete();
 			}
 			
-			if (m_umlActivityStack.size() > 0) {
-				m_umlActivityStack.remove(0);
+			if (m_bpmnActivityStack.size() > 0) {
+				m_bpmnActivityStack.remove(0);
 			}
 		}
 		
@@ -735,10 +622,10 @@ public class BPMN2Generator implements ModelGenerator {
 		 *
 		 */
 		public void completeModels() throws BPMN2GenerationException {
-			java.util.Enumeration iter=m_activityModels.elements();
+			java.util.Iterator<BPMNDiagram> iter=m_activityModels.values().iterator();
 			
-			while (iter.hasMoreElements()) {
-				BPMNDiagram amodel=(BPMNDiagram)iter.nextElement();
+			while (iter.hasNext()) {
+				BPMNDiagram amodel=iter.next();
 				
 				amodel.completeModel();
 			}

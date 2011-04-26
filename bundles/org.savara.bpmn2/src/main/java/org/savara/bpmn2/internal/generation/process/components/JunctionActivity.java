@@ -34,8 +34,8 @@ public class JunctionActivity extends AbstractBPMNActivity {
 	 * @param model The BPMN model
 	 */
 	public JunctionActivity(Object node,
-			BPMNActivity parent, org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
+			BPMNActivity parent, org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
 		m_node = node;

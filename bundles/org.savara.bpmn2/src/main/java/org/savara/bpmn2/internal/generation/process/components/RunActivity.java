@@ -35,8 +35,8 @@ public class RunActivity extends SimpleActivity {
 	 * @param model The BPMN model
 	 */
 	public RunActivity(Activity act, BPMNActivity parent,
-			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(act, parent, model, notation);
 	}
 	

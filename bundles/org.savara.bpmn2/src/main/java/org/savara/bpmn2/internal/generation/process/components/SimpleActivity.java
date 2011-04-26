@@ -36,8 +36,8 @@ public class SimpleActivity extends AbstractBPMNActivity {
 	 * @param model The BPMN model
 	 */
 	public SimpleActivity(Activity act, BPMNActivity parent,
-			org.savara.bpmn2.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.generation.process.BPMN2NotationFactory notation) {
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
 		// Create a state
