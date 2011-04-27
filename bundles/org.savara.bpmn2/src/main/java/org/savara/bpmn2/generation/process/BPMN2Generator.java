@@ -19,15 +19,20 @@
  */
 package org.savara.bpmn2.generation.process;
 
+import java.net.URI;
 import java.util.logging.Logger;
 
 import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
 import org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory;
 import org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory;
 import org.savara.bpmn2.internal.generation.process.components.*;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.generator.ModelGenerator;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.resources.ResourceLocator;
+import org.savara.protocol.util.JournalProxy;
+import org.savara.protocol.util.ProtocolServices;
+import org.scribble.protocol.DefaultProtocolContext;
 import org.scribble.protocol.ProtocolDefinitions;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Choice;
@@ -35,9 +40,10 @@ import org.scribble.protocol.model.DefaultVisitor;
 import org.scribble.protocol.model.Interaction;
 import org.scribble.protocol.model.Parallel;
 import org.scribble.protocol.model.Protocol;
+import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Repeat;
+import org.scribble.protocol.model.Role;
 import org.scribble.protocol.model.Run;
-import org.scribble.protocol.model.Visitor;
 
 /**
  * This class provides the functionality for converting a
@@ -141,147 +147,63 @@ public class BPMN2Generator implements ModelGenerator {
 	 * @return The target model
 	 */
 	public Object generate(Object source, FeedbackHandler handler,
-							ResourceLocator locator) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	/**
-	 * This method generates the UML representation for the
-	 * supplied choreography. If the optional participant
-	 * is specified, then only the UML representation for
-	 * that participant will be generated, otherwise all
-	 * participants associated with the choreography will be
-	 * generated.
-	 * 
-	 * @param choreography The choreography
-	 * @param participants The optional participant names
-	 * @param folder The folder where the model/diagrams will
-	 * 					be stored
-	 * @param config The UML configuration
-	 * @exception BPMN2GenerationException Failed to generate
-	 */
-	public void generate(org.pi4soa.cdl.Package choreography,
-					String[] participants, String folder,
-					BPMN2Configuration config) throws BPMN2GenerationException {
-	
-		if (participants == null) {
-			java.util.List pTypes=
-				choreography.getTypeDefinitions().getParticipantTypes();
-			
-			participants = new String[pTypes.size()];
-			
-			for (int i=0; i < pTypes.size(); i++) {
-				participants[i] = ((org.pi4soa.cdl.ParticipantType)pTypes.
-							get(i)).getName();
-			}
-		}
+							final ResourceLocator locator) {
+		Object ret=null;
 
-		// Create the model
-		org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model=null;
-		org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation=null;
-		
-		try {
-			model = new org.savara.tools.bpmn.generation.stp.STPBPMNModelFactoryImpl();
-			notation = new org.savara.tools.bpmn.generation.gmf.GMFBPMNNotationFactoryImpl();
+		if (source instanceof ProtocolModel) {
+			ProtocolModel pm=(ProtocolModel)source;
 			
-			generateModel(model, notation, choreography, config, folder);
-
-		} catch(Exception e) {
-			throw new BPMN2GenerationException("Failed to generate UML model", e);
-		}
-		
-		/*
-		if (diagrams.size() > 0) {
-			Object diagram=diagrams.get(0);
-			
-			try {
-				
-				// Output the UML2 model to the supplied stream
-				final org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl xmi =
-					new org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl();
-				xmi.getContents().add(diagram);
-				
-				xmi.doSave(ostream, xmi.getDefaultLoadOptions());
-				
-				ostream.close();
-				
-			} catch(Exception e) {
-				throw new BPMNGenerationException("Failed to convert to XMI", e);
-			}
-		}
-		*/
-		// Just need to store as EMF based file
-		/*
-		try {
-			java.io.ByteArrayOutputStream bs=new java.io.ByteArrayOutputStream();
-			
-			// Output the UML2 model to the supplied stream
-			final org.eclipse.emf.ecore.xmi.impl.EMOFResourceImpl xmi =
-				new org.eclipse.emf.ecore.xmi.impl.EMOFResourceImpl();
-			xmi.getContents().add(model);
-			
-			xmi.doSave(bs, xmi.getDefaultLoadOptions());
-			
-			bs.close();
-			
-			UMLExportFormatter formatter=getExportFormatter(config.getExportFormat());
-			if (formatter != null) {
-				formatter.export(bs, ostream);
-			} else {
-				throw new UMLException("Unable to find UML export formatter for '"+
-						config.getExportFormat()+"'");
-			}
-				
-		} catch(UMLException UMLex) {
-			throw UMLex;
-			
-		} catch(Exception e) {
-			throw new UMLException("Failed to convert to XMI", e);
-		}
-		*/
-	}
-	
-	/**
-	 * This method generates the model information associated
-	 * with the supplied choreography description.
-	 * 
-	 * @param model The model
-	 * @param cdlpack The choreography description
-	 * @param config The MDA configuration
-	 * @return The list of diagrams
-	 * @throws BPMN2GenerationException Failed to generate model
-	 */
-	public void generateModel(BPMN2ModelFactory model, 
-			BPMN2NotationFactory notation, org.pi4soa.cdl.Package cdlpack,
-					BPMN2Configuration config, String folder) throws BPMN2GenerationException {
-		try {
-			java.util.List participants=cdlpack.getTypeDefinitions().getParticipantTypes();
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model=null;
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation=null;
 			
 			BPMN2ModelVisitor visitor=
-				new BPMN2ModelVisitor(org.pi4soa.common.xml.XMLUtils.getLocalname(
-						cdlpack.getName()),
-						model, notation, folder);
+				new BPMN2ModelVisitor(pm.getProtocol().getName(),
+						model, notation);
 			
-			for (int i=0; i < participants.size(); i++) {
-				org.pi4soa.cdl.ParticipantType partType=
-							(org.pi4soa.cdl.ParticipantType)
-							cdlpack.getTypeDefinitions().getParticipantTypes().get(i);
-					
-				org.pi4soa.service.behavior.ServiceDescription sdesc=
-					BehaviorProjection.projectServiceDescription(cdlpack,
-							partType, null);
-			
-				visitor.setRole(partType.getName());
+			if (pm.getProtocol().getRole() == null) {
+				// Global (choreography) model
+				java.util.List<Role> roles=pm.getProtocol().getRoles();
 				
-				sdesc.visit(visitor);
+				for (Role role : roles) {
+					DefaultProtocolContext context=
+							new DefaultProtocolContext(ProtocolServices.getParserManager(),
+											new org.scribble.common.resource.ResourceLocator() {
+						public URI getResourceURI(String uri) throws Exception {
+							return(locator.getResourceURI(uri));
+						}
+					});
+	
+					ProtocolModel local=ProtocolServices.getProtocolProjector().project(pm,
+									role, new JournalProxy(handler), context);
+	
+					if (local != null) {
+						// TODO: SAVARA-167 - issue when projection is based on a sub-protocol
+						if (AnnotationDefinitions.getAnnotation(local.getProtocol().getAnnotations(),
+										AnnotationDefinitions.TYPE) == null &&
+								AnnotationDefinitions.getAnnotation(pm.getProtocol().getAnnotations(),
+												AnnotationDefinitions.TYPE) != null) {				
+							AnnotationDefinitions.copyAnnotations(pm.getProtocol().getAnnotations(),
+									local.getProtocol().getAnnotations(), AnnotationDefinitions.TYPE);
+						}
+						
+						generateProcess(local, visitor, handler, locator);
+					}
+				}
+			} else {
+				generateProcess(pm, visitor, handler, locator);
 			}
 			
 			visitor.completeModels();
-			
-		} catch(Exception e) {
-			throw new BPMN2GenerationException("Failed to generate BPMN model", e);
 		}
+		
+		return(ret);
+	}
+	
+	protected void generateProcess(ProtocolModel local, BPMN2ModelVisitor visitor,
+					FeedbackHandler handler, ResourceLocator locator) {
+		
+		local.visit(visitor);
+		
 	}
 	
 	public class BPMN2ModelVisitor extends DefaultVisitor {
@@ -289,7 +211,6 @@ public class BPMN2Generator implements ModelGenerator {
 		private BPMN2ModelFactory m_modelFactory=null;
 		private BPMN2NotationFactory m_notationFactory=null;
 		private String m_choreoName=null;
-		private String m_role=null;
 	    private java.util.List<BPMNActivity> m_bpmnActivityStack=new java.util.ArrayList<BPMNActivity>();
 	    private java.util.Map<String,BPMNDiagram> m_activityModels=
 	    				new java.util.HashMap<String,BPMNDiagram>();
@@ -306,16 +227,6 @@ public class BPMN2Generator implements ModelGenerator {
 		}
 		
 		/**
-		 * This method sets the name associated with the role
-		 * being projected.
-		 * 
-		 * @param role The role
-		 */
-		public void setRole(String role) {
-			m_role = role;
-		}
-		
-		/**
 		 * This method starts visiting the behavior description element.
 		 * 
 		 * @param elem The behavior description
@@ -325,13 +236,7 @@ public class BPMN2Generator implements ModelGenerator {
 			try {
 				BPMNDiagram diagram=getBPMNModel(elem);
 				
-				String role=m_role;
-				
-				if (elem.getRole() != null) {
-					role += " ["+elem.getRole().getName()+"]";
-				}
-				
-				BPMNPool pool=diagram.createPool(role);
+				BPMNPool pool=diagram.createPool(elem.getRole().getName());
 				
 				//diagram.initialize(elem);
 				
@@ -621,7 +526,7 @@ public class BPMN2Generator implements ModelGenerator {
 		 * models.
 		 *
 		 */
-		public void completeModels() throws BPMN2GenerationException {
+		public void completeModels() {
 			java.util.Iterator<BPMNDiagram> iter=m_activityModels.values().iterator();
 			
 			while (iter.hasNext()) {

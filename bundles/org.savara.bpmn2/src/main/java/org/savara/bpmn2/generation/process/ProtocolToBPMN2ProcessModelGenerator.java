@@ -19,6 +19,7 @@
  */
 package org.savara.bpmn2.generation.process;
 
+import java.net.URI;
 import java.util.logging.Logger;
 
 import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
@@ -34,10 +35,13 @@ import org.savara.bpmn2.internal.generation.process.components.RepeatActivity;
 import org.savara.bpmn2.internal.generation.process.components.RunActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
 import org.savara.bpmn2.internal.generation.process.components.SimpleActivity;
-import org.savara.bpmn2.model.TDefinitions;
 import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.generator.ModelGenerator;
 import org.savara.common.resources.ResourceLocator;
+import org.savara.protocol.util.JournalProxy;
+import org.savara.protocol.util.ProtocolServices;
+import org.scribble.protocol.DefaultProtocolContext;
 import org.scribble.protocol.ProtocolDefinitions;
 import org.scribble.protocol.model.*;
 
@@ -49,28 +53,90 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 
 	private static final Logger logger=Logger.getLogger(ProtocolToBPMN2ProcessModelGenerator.class.getName());
 	
+	/**
+	 * This method determines whether the generator is appropriate for
+	 * the specified source and target types.
+	 * 
+	 * @param sourceType The source type
+	 * @param targetType The target type
+	 * @return Whether the specified types are supported
+	 */
 	public boolean isSupported(String sourceType, String targetType) {
 		return(sourceType.equals(ProtocolDefinitions.PROTOCOL_TYPE) &&
 				(targetType.equals("bpmn2") || targetType.equals("bpmn")));
 	}
 
-	public Object generate(Object source, FeedbackHandler handler, ResourceLocator locator) {
-		ProtocolModel pm=(ProtocolModel)source;
+	/**
+	 * This method generates the contents of the target
+	 * model using information in the source model.
+	 * 
+	 * @param source The source model
+	 * @param handler The feedback handler
+	 * @param locator The resource locator
+	 * @return The target model
+	 */
+	public Object generate(Object source, FeedbackHandler handler,
+							final ResourceLocator locator) {
+		Object ret=null;
+
+		if (source instanceof ProtocolModel) {
+			ProtocolModel pm=(ProtocolModel)source;
+			
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model=null;
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation=null;
+			
+			BPMN2ModelVisitor visitor=
+				new BPMN2ModelVisitor(pm.getProtocol().getName(),
+						model, notation);
+			
+			if (pm.getProtocol().getRole() == null) {
+				// Global (choreography) model
+				java.util.List<Role> roles=pm.getProtocol().getRoles();
+				
+				for (Role role : roles) {
+					DefaultProtocolContext context=
+							new DefaultProtocolContext(ProtocolServices.getParserManager(),
+											new org.scribble.common.resource.ResourceLocator() {
+						public URI getResourceURI(String uri) throws Exception {
+							return(locator.getResourceURI(uri));
+						}
+					});
+	
+					ProtocolModel local=ProtocolServices.getProtocolProjector().project(pm,
+									role, new JournalProxy(handler), context);
+	
+					if (local != null) {
+						// TODO: SAVARA-167 - issue when projection is based on a sub-protocol
+						if (AnnotationDefinitions.getAnnotation(local.getProtocol().getAnnotations(),
+										AnnotationDefinitions.TYPE) == null &&
+								AnnotationDefinitions.getAnnotation(pm.getProtocol().getAnnotations(),
+												AnnotationDefinitions.TYPE) != null) {				
+							AnnotationDefinitions.copyAnnotations(pm.getProtocol().getAnnotations(),
+									local.getProtocol().getAnnotations(), AnnotationDefinitions.TYPE);
+						}
+						
+						generateProcess(local, visitor, handler, locator);
+					}
+				}
+			} else {
+				generateProcess(pm, visitor, handler, locator);
+			}
+			
+			visitor.completeModels();
+		}
 		
-		TDefinitions defns=new TDefinitions();
-		
-		BPMN2ModelVisitor visitor=new BPMN2ModeVisitor("choreoName",
-					new BPMN2ModelFactory(defns), new BPMN2NotationFactory(defns));
-		
-		return(defns);
+		return(ret);
 	}
 	
-	protected class BPMN2ModelVisitor extends DefaultVisitor {
+	protected void generateProcess(ProtocolModel local, BPMN2ModelVisitor visitor,
+					FeedbackHandler handler, ResourceLocator locator) {		local.visit(visitor);
+	}
+	
+	public class BPMN2ModelVisitor extends DefaultVisitor {
 		
 		private BPMN2ModelFactory m_modelFactory=null;
 		private BPMN2NotationFactory m_notationFactory=null;
 		private String m_choreoName=null;
-		private String m_role=null;
 	    private java.util.List<BPMNActivity> m_bpmnActivityStack=new java.util.ArrayList<BPMNActivity>();
 	    private java.util.Map<String,BPMNDiagram> m_activityModels=
 	    				new java.util.HashMap<String,BPMNDiagram>();
@@ -87,16 +153,6 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		}
 		
 		/**
-		 * This method sets the name associated with the role
-		 * being projected.
-		 * 
-		 * @param role The role
-		 */
-		public void setRole(String role) {
-			m_role = role;
-		}
-		
-		/**
 		 * This method starts visiting the behavior description element.
 		 * 
 		 * @param elem The behavior description
@@ -106,13 +162,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			try {
 				BPMNDiagram diagram=getBPMNModel(elem);
 				
-				String role=m_role;
-				
-				if (elem.getRole() != null) {
-					role += " ["+elem.getRole().getName()+"]";
-				}
-				
-				BPMNPool pool=diagram.createPool(role);
+				BPMNPool pool=diagram.createPool(elem.getRole().getName());
 				
 				//diagram.initialize(elem);
 				
@@ -402,7 +452,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * models.
 		 *
 		 */
-		public void completeModels() throws BPMN2GenerationException {
+		public void completeModels() {
 			java.util.Iterator<BPMNDiagram> iter=m_activityModels.values().iterator();
 			
 			while (iter.hasNext()) {

@@ -248,7 +248,7 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 * This method completes the generation of the model.
 	 *
 	 */
-	public void completeModel() throws BPMN2GenerationException {
+	public void completeModel() {
 		java.util.Iterator<String> iter=m_sendActivities.keySet().iterator();
 		java.util.List<Object> messageLinks=new java.util.ArrayList<Object>();
 		
@@ -340,12 +340,12 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 		
 		// Check if the target and source activities have a link to the
 		// same node, in which case remove the link from the source
-		java.util.List outgoing1=getModelFactory().getOutboundControlLinks(target.getStartNode());
+		java.util.List<Object> outgoing1=getModelFactory().getOutboundControlLinks(target.getStartNode());
 		
 		for (int i=0; i < outgoing1.size(); i++) {
 			Object ae1=outgoing1.get(i);
 			
-			java.util.List outgoing2=getModelFactory().getOutboundControlLinks(source.getStartNode());
+			java.util.List<Object> outgoing2=getModelFactory().getOutboundControlLinks(source.getStartNode());
 			boolean f_found=false;
 			
 			for (int j=0; f_found==false && j < outgoing2.size(); j++){ 
