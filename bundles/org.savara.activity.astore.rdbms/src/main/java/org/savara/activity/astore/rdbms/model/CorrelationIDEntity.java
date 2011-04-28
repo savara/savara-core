@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
+ *
  * Author: Jeff Yu
  * Date: 19/04/11
  */
@@ -42,11 +43,11 @@ public class CorrelationIDEntity implements Serializable{
     @ManyToOne
     private CorrelationIDEntity parent;
 
-    @OneToMany
-    private Collection<CorrelationIDEntity> child = new ArrayList<CorrelationIDEntity>();
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private Collection<CorrelationIDEntity> children = new ArrayList<CorrelationIDEntity>();
 
     @ManyToMany
-    private Collection<ActivityEntity> activities;
+    private Collection<ActivityEntity> activities = new ArrayList<ActivityEntity>();
 
     public long getId() {
         return id;
@@ -80,15 +81,16 @@ public class CorrelationIDEntity implements Serializable{
         this.activities = activities;
     }
 
-    public Collection<CorrelationIDEntity> getChild() {
-        return child;
+    public void addChild(CorrelationIDEntity child) {
+        this.children.add(child);
+        child.setParent(this);
     }
 
-    public void setChild(Collection<CorrelationIDEntity> child) {
-        this.child = child;
+    public Collection<CorrelationIDEntity> getChildren() {
+        return children;
     }
 
-    public void addChild(CorrelationIDEntity entity) {
-        this.child.add(entity);
+    public void setChildren(Collection<CorrelationIDEntity> children) {
+        this.children = children;
     }
 }

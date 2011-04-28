@@ -17,12 +17,20 @@
  */
 package org.savara.activity.astore.rdbms;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.savara.activity.astore.rdbms.model.CorrelationIDEntity;
+import org.savara.activity.model.Activity;
+import org.savara.activity.model.Context;
+import org.savara.activity.model.InteractionActivity;
+import org.savara.activity.util.ActivityModelUtil;
 
+import java.io.InputStream;
 import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: Jeff Yu
@@ -33,19 +41,64 @@ public class ActivityStoreImplTest extends Assert {
 
     private static ActivityStoreImpl activityStore;
 
+    private static Activity activity;
+
     @BeforeClass
     public static void setUp() throws Exception {
        	Class.forName("org.h2.Driver");
 		DriverManager.getConnection("jdbc:h2:target/db/h2", "sa", "");
 
         activityStore = new ActivityStoreImpl();
+
+        InputStream is = ActivityStoreImplTest.class.getResourceAsStream("/interactionActivity.xml");
+        activity = ActivityModelUtil.deserialize(is);
+    }
+
+    @Test
+    public void testSaveCorrelationIDEntity() throws Exception {
+        List<CorrelationIDEntity> entities = activityStore.saveCorrelationIDEntity(activity.getCorrelation());
+        assertEquals(1, entities.size());
+        assertEquals("OrderId=1", entities.get(0).getValue());
     }
 
 
     @Test
-    public void saveCorrelationIDEntity() throws Exception {
-        CorrelationIDEntity entity = new CorrelationIDEntity();
-        entity.setValue("theValue");
-        activityStore.saveCorrelationIDEntity(entity);
+    public void testSaveInteractionActivity() throws Exception {
+        activityStore.save(activity);
+
+        Activity theAct = activityStore.find(activity.getId());
+        assertEquals(2, theAct.getContext().size());
+        assertTrue(theAct instanceof InteractionActivity);
+
+        List<Activity> acts = activityStore.findByCorrelation(activity.getCorrelation().get(0));
+        assertEquals("Activity-persistence-1", acts.get(0).getId());
+
+        List<Activity> actContexts = activityStore.findByContext(activity.getContext());
+        assertEquals("Activity-persistence-1", actContexts.get(0).getId());
+
+        List<Context> condition = new ArrayList<Context>();
+        condition.add(activity.getContext().get(0));
+
+        List<Activity> result = activityStore.findByContext(condition);
+        assertEquals("Activity-persistence-1", actContexts.get(0).getId());
     }
+
+
+
+    @Test
+    public void testFindByContext() throws Exception {
+        InputStream is = getClass().getResourceAsStream("/interactionActivity2.xml");
+        Activity theAct = ActivityModelUtil.deserialize(is);
+        activityStore.save(theAct);
+
+        List<Activity> result = activityStore.findByContext(theAct.getContext());
+        assertTrue(result.size() >= 1);
+    }
+
+
+    @AfterClass
+    public static void tearDown() throws Exception {
+        activityStore.close();
+    }
+
 }

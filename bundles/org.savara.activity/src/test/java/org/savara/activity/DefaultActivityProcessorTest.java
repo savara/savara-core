@@ -23,7 +23,11 @@ import org.savara.activity.ActivityProcessor;
 import org.savara.activity.ActivityValidator;
 import org.savara.activity.DefaultActivityProcessor;
 import org.savara.activity.model.Activity;
+import org.savara.activity.model.Context;
+import org.savara.activity.model.Correlation;
 import org.savara.common.config.Configuration;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -202,7 +206,7 @@ public class DefaultActivityProcessorTest {
 		public void setConfiguration(Configuration config) {
 		}
 
-		public void store(Activity activity) {
+		public void save(Activity activity) {
 			m_store.add(activity);
 		}
 		
@@ -210,11 +214,19 @@ public class DefaultActivityProcessorTest {
 			return(m_store);
 		}
 
-		public Activity queryById(String id) {
+		public Activity find(String id) {
 			return(null);
 		}
 
-		public void close() {
+        public List<Activity> findByCorrelation(Correlation correlation) {
+            return null;
+        }
+
+        public List<Activity> findByContext(List<Context> contexts) {
+            return null;
+        }
+
+        public void close() {
 		}		
 	}
 

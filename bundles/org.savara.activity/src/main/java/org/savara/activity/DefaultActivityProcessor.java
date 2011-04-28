@@ -172,7 +172,7 @@ public class DefaultActivityProcessor implements ActivityProcessor {
 			
 			// Store the activity
 			for (ActivityStore as : getStores()) {
-				as.store(activity);
+				as.save(activity);
 			}
 			
 			for (ActivityNotifier an : getNotifiers()) {

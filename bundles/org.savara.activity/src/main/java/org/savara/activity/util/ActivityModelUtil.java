@@ -18,6 +18,8 @@
 package org.savara.activity.util;
 
 import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -50,6 +52,30 @@ public class ActivityModelUtil {
 		
 		return(ret);
 	}
+
+    public static Activity deserialize(String activity) throws IOException {
+		Activity ret=null;
+
+		try {
+			JAXBContext context = JAXBContext.newInstance("org.savara.activity.model",
+					ActivityModelUtil.class.getClassLoader());
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+
+			//note: setting schema to null will turn validator off
+			//unmarshaller.setSchema(null);
+            StringReader reader = new StringReader(activity);
+			Object xmlObject = unmarshaller.unmarshal(reader);
+
+			if (xmlObject instanceof JAXBElement) {
+				ret = (Activity)((JAXBElement<?>)xmlObject).getValue();
+			}
+
+		} catch(Exception e) {
+			throw new IOException("Failed to deserialize activity", e);
+		}
+
+		return(ret);
+	}
 	
 	public static void serialize(Activity activity, java.io.OutputStream os) throws IOException {
 		
@@ -66,4 +92,22 @@ public class ActivityModelUtil {
 			throw new IOException("Failed to serialize activity", e);
 		}
 	}
+
+
+    public static String serialize(Activity activity) throws IOException{
+		try {
+			org.savara.activity.model.ObjectFactory factory=
+						new org.savara.activity.model.ObjectFactory();
+
+			JAXBContext context = JAXBContext.newInstance(Activity.class);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+            StringWriter writer = new StringWriter();
+			marshaller.marshal(factory.createActivity(activity), writer);
+            return writer.toString();
+		} catch(Exception e) {
+			throw new IOException("Failed to serialize activity", e);
+		}
+    }
 }

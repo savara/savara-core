@@ -18,18 +18,22 @@
 package org.savara.activity;
 
 import org.savara.activity.model.Activity;
+import org.savara.activity.model.Context;
+import org.savara.activity.model.Correlation;
 import org.savara.common.config.Configuration;
 
+import java.util.List;
+
 /**
- * This interface represents the activity store 
- * used to log activity events in a persistence store
+ * This interface represents the activity save
+ * used to log activity events in a persistence save
  * and provide a query mechanism.
  *
  */
 public interface ActivityStore {
 
 	/**
-     * This method pass the configuratioin object in.
+     * This method pass the configuration object in.
 	 * @param config
 	 */
 	public void setConfiguration(Configuration config);
@@ -39,15 +43,32 @@ public interface ActivityStore {
 	 * 
 	 * @param activity The activity
 	 */
-	public void store(Activity activity);
-	
+	public void save(Activity activity);
+
+
 	/**
 	 * This method retrieves the activity record
 	 * associated with the supplied id.
 	 * 
 	 * @param id The activity id, or null if not found
 	 */
-	public Activity queryById(String id);
+	public Activity find(String id);
+
+
+    /**
+     * Find all activities that are associated with the correlations.
+     * @param correlation
+     * @return
+     */
+    public List<Activity> findByCorrelation(Correlation correlation);
+
+
+    /**
+     * Find all activities that have the context.
+     * @param contexts
+     * @return
+     */
+    public List<Activity> findByContext(List<Context> contexts);
 	
 	/**
 	 * This method closes the log service.

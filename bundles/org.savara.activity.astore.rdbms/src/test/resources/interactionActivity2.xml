@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity xmlns="http://www.savara.org/activity" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="InteractionActivity"
+          timestamp="2001-10-26T21:32:52" id="Activity-persistence-2"
+          outbound="false" operationName="requestForQuote" destinationAddress="Supplier2EPR">
+    <correlation>
+        <key name="OrderId" value="1"/>
+        <key name="SupplierId" value="2"/>
+    </correlation>
+    <context value="101" name="TradeID"/>
+    <parameter type="{http://example.org/types}SupplierRFQ">
+        <SupplierRFQ xmlns="http://example.org/types" id="1" supplierId="2" product="ABC"/>
+    </parameter>
+</activity>

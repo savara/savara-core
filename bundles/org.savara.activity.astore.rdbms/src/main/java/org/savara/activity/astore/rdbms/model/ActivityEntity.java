@@ -18,6 +18,7 @@
 package org.savara.activity.astore.rdbms.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -34,10 +35,11 @@ public abstract class ActivityEntity {
 
     @Id
     @GeneratedValue
+    @Column(name="ID")
     private long id;
 
-    @ManyToMany(mappedBy="SAVARA_ACT_CORRELATION")
-    private Collection<CorrelationIDEntity> correlationIds;
+    @ManyToMany(mappedBy = "activities")
+    private Collection<CorrelationIDEntity> correlationIds = new ArrayList<CorrelationIDEntity>();
 
     @Lob
     @Column(name="ACT_MODEL")
@@ -98,6 +100,9 @@ public abstract class ActivityEntity {
     }
 
     public void setCorrelationIds(Collection<CorrelationIDEntity> correlationIds) {
+        for (CorrelationIDEntity id : correlationIds) {
+            id.getActivities().add(this);
+        }
         this.correlationIds = correlationIds;
     }
 }
