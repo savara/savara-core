@@ -19,6 +19,7 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
+import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Interaction;
 
 /**
@@ -42,6 +43,10 @@ public class ReceiveActivity extends SimpleActivity {
 		super(act, parent, model, notation);
 		
 		m_receive = act;
+	}
+	
+	protected Object createNode(Activity act) {
+		return(getModelFactory().createReceiveTask(getContainer(), act));
 	}
 	
 	/**

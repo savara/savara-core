@@ -66,6 +66,9 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	 * @return The container
 	 */
 	public Object getContainer() {
+		if (m_parent == null) {
+			return(null);
+		}
 		return(m_parent.getContainer());
 	}
 	

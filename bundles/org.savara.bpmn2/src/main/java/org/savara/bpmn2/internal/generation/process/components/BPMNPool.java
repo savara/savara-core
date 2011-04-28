@@ -21,6 +21,11 @@ package org.savara.bpmn2.internal.generation.process.components;
 
 public class BPMNPool extends AbstractBPMNActivity {
 
+	private boolean m_completed=false;
+	private Object m_pool=null;
+	private BPMNActivity m_initialState=null;
+	private BPMNActivity m_finalState=null;
+	
 	/**
 	 * This constructor initializes the pool state.
 	 * 
@@ -58,24 +63,10 @@ public class BPMNPool extends AbstractBPMNActivity {
 		*/
 
 		// Create initial state
-		/*
-		org.eclipse.uml2.uml.InitialNode initialState=
-				(org.eclipse.uml2.uml.InitialNode)
-				m_activityModel.createNode(null, UMLPackage.eINSTANCE.getInitialNode());
-		
-		m_initialState = new SimpleActivity(initialState, this);
-		*/
 		m_initialState = new JunctionActivity(getModelFactory().createInitialNode(getContainer()),
 				this, getModelFactory(), getNotationFactory());
 		
 		// Create final state
-		/*
-		org.eclipse.uml2.uml.FlowFinalNode finalState=
-					(org.eclipse.uml2.uml.FlowFinalNode)
-				m_activityModel.createNode(null, UMLPackage.eINSTANCE.getFlowFinalNode());
-		
-		m_finalState = new SimpleActivity(finalState, this);
-		*/
 		m_finalState = new JunctionActivity(getModelFactory().createFinalNode(getContainer()),
 				this, getModelFactory(), getNotationFactory());
 		
@@ -142,7 +133,7 @@ public class BPMNPool extends AbstractBPMNActivity {
 	}
 	
 	public void calculatePosition(int x, int y) {
-		int curx=0;
+		int curx=HORIZONTAL_GAP;
 		int midy=(getHeight()/2);
 		
 		setX(x);
@@ -151,7 +142,7 @@ public class BPMNPool extends AbstractBPMNActivity {
 		for (int i=0; i < getChildStates().size(); i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			
-			act.calculatePosition(curx, midy-(act.getHeight()/2));
+			act.calculatePosition(curx, y + (midy-(act.getHeight()/2)));
 			
 			curx += (act.getWidth()+HORIZONTAL_GAP);
 		}
@@ -160,7 +151,7 @@ public class BPMNPool extends AbstractBPMNActivity {
 	public void draw(Object parent) {
 		
 		// Construct notation
-		Object notation=getNotationFactory().createPool(getModelFactory(), m_pool,
+		getNotationFactory().createPool(getModelFactory(), m_pool,
 				parent, getX(), getY(), getWidth(), getHeight());
 		
 		//m_initialState.draw(notation);
@@ -169,12 +160,15 @@ public class BPMNPool extends AbstractBPMNActivity {
 		for (int i=0; i < getChildStates().size(); i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			
-			act.draw(notation);
+			act.draw(parent);
 		}
+
+		// Create diagram sequence flows
+		java.util.List<Object> seqflows=getModelFactory().getControlLinks(getContainer());
+		
+		for (Object seqflow : seqflows) {
+			getNotationFactory().createSequenceLink(getModelFactory(), seqflow, parent);
+		}
+		
 	}
-	
-	private boolean m_completed=false;
-	private Object m_pool=null;
-	private BPMNActivity m_initialState=null;
-	private BPMNActivity m_finalState=null;
 }

@@ -33,8 +33,10 @@ import org.savara.bpmn2.internal.generation.process.components.ParallelActivity;
 import org.savara.bpmn2.internal.generation.process.components.ReceiveActivity;
 import org.savara.bpmn2.internal.generation.process.components.RepeatActivity;
 import org.savara.bpmn2.internal.generation.process.components.RunActivity;
+import org.savara.bpmn2.internal.generation.process.components.SendActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
 import org.savara.bpmn2.internal.generation.process.components.SimpleActivity;
+import org.savara.bpmn2.model.TDefinitions;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.generator.ModelGenerator;
@@ -82,8 +84,12 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		if (source instanceof ProtocolModel) {
 			ProtocolModel pm=(ProtocolModel)source;
 			
-			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model=null;
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation=null;
+			TDefinitions defns=new TDefinitions();
+			
+			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model=
+				new org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory(defns);
+			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation=
+					new org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory(defns);
 			
 			BPMN2ModelVisitor visitor=
 				new BPMN2ModelVisitor(pm.getProtocol().getName(),
@@ -123,6 +129,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			}
 			
 			visitor.completeModels();
+			
+			ret = defns;
 		}
 		
 		return(ret);
@@ -220,6 +228,27 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		}
 		
 		/**
+		 * This method indicates the start of a
+		 * when block.
+		 * 
+		 * @param elem The when block
+		 * @return Whether to process the contents
+		 */
+		public boolean start(When elem) {
+			
+			return(true);
+		}
+		
+		/**
+		 * This method indicates the end of a
+		 * when block.
+		 * 
+		 * @param elem The when block
+		 */
+		public void end(When elem) {
+		}
+
+		/**
 		 * This method starts visiting the parallel element.
 		 * 
 		 * @param elem The parallel
@@ -301,7 +330,20 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		public void accept(Interaction elem) {
 			
 			// Check if a receive
-			if (elem.getToRoles().contains(elem.enclosingProtocol().getRole())) {
+			if (elem.getFromRole() == null ||
+					elem.getFromRole().equals(elem.enclosingProtocol().getRole())) {
+				
+				BPMNActivity umls=getBPMNActivity();
+				if (umls != null) {
+					SimpleActivity sa=
+						new SendActivity(elem, umls, m_modelFactory, m_notationFactory);
+					
+					// Register the send to enable links to be established
+					// with an appropriate receive
+					BPMNDiagram amodel=umls.getBPMNDiagram();		
+					amodel.registerSendActivity(elem, sa);
+				}
+			} else {
 				BPMNActivity umls=getBPMNActivity();
 				if (umls != null) {
 					ReceiveActivity sa=
@@ -311,18 +353,6 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 					// with an appropriate send
 					BPMNDiagram amodel=umls.getBPMNDiagram();		
 					amodel.registerReceiveActivity(elem, sa);
-				}
-			} else {
-				
-				BPMNActivity umls=getBPMNActivity();
-				if (umls != null) {
-					SimpleActivity sa=
-						new SimpleActivity(elem, umls, m_modelFactory, m_notationFactory);
-					
-					// Register the send to enable links to be established
-					// with an appropriate receive
-					BPMNDiagram amodel=umls.getBPMNDiagram();		
-					amodel.registerSendActivity(elem, sa);
 				}
 			}
 		}
@@ -337,6 +367,52 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			try {
 				pushBPMNActivity(new SequenceActivity(elem,
 						getBPMNActivity(), m_modelFactory, m_notationFactory));
+				
+				if (elem.getParent() instanceof When &&
+						elem.getParent().getParent() instanceof Choice) {
+					When parent=(When)elem.getParent();
+					Choice choice=(Choice)elem.getParent().getParent();
+					
+					Interaction interaction=new Interaction();
+					interaction.getAnnotations().addAll(parent.getAnnotations());
+					
+					interaction.setFromRole(choice.getFromRole());
+					
+					if (choice.getToRole() != null) {
+						interaction.getToRoles().add(choice.getToRole());
+					}
+					
+					interaction.setMessageSignature(new MessageSignature(parent.getMessageSignature()));
+		
+					// Check if a receive
+					if (choice.getToRole() == null ||
+								choice.getToRole().equals(elem.enclosingProtocol().getRole())) {
+						BPMNActivity umls=getBPMNActivity();
+						
+						if (umls != null) {
+							ReceiveActivity sa=
+								new ReceiveActivity(interaction, umls, m_modelFactory, m_notationFactory);
+							
+							// Register the receive to enable links to be established
+							// with an appropriate send
+							BPMNDiagram amodel=umls.getBPMNDiagram();		
+							amodel.registerReceiveActivity(interaction, sa);
+						}
+					} else {
+						
+						BPMNActivity umls=getBPMNActivity();
+						if (umls != null) {
+							SimpleActivity sa=
+								new SendActivity(interaction, umls, m_modelFactory, m_notationFactory);
+							
+							// Register the send to enable links to be established
+							// with an appropriate receive
+							BPMNDiagram amodel=umls.getBPMNDiagram();		
+							amodel.registerSendActivity(interaction, sa);
+						}
+					}
+
+				}
 				
 			} catch(Exception e) {
 				logger.severe("Failed to create sequence state: "+e);

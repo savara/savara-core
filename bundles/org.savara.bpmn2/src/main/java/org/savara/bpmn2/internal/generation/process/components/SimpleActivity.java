@@ -27,6 +27,9 @@ import org.scribble.protocol.model.Activity;
  *
  */
 public class SimpleActivity extends AbstractBPMNActivity {
+	
+	private Object m_node=null;
+	private int m_width=110;
 
 	/**
 	 * This constructor initializes the simple activity.
@@ -40,22 +43,11 @@ public class SimpleActivity extends AbstractBPMNActivity {
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
-		// Create a state
-		/*
-		Activity region=getTopLevelActivity();
-		
-		if (region != null) {
-			m_node = (ActivityNode)
-				region.createNode(null, UMLPackage.eINSTANCE.getCallBehaviorAction());
-			m_node.getInPartitions().add(getActivityPartition());
-			
-			if (label != null) {
-				m_node.setName(label);
-			}
-		}
-		*/
-		m_node = model.createSimpleTask(getContainer(), act);
-		
+		m_node = createNode(act);
+	}
+	
+	protected Object createNode(Activity act) {
+		return(getModelFactory().createSimpleTask(getContainer(), act));
 	}
 	
 	/**
@@ -139,7 +131,4 @@ public class SimpleActivity extends AbstractBPMNActivity {
 		getNotationFactory().createTask(getModelFactory(),
 				m_node, parent, getX(), getY(), getWidth(), getHeight());
 	}
-	
-	private Object m_node=null;
-	private int m_width=110;
 }

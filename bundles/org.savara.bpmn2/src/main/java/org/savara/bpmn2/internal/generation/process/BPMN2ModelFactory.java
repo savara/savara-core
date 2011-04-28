@@ -21,6 +21,7 @@ package org.savara.bpmn2.internal.generation.process;
 
 import java.util.UUID;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.savara.bpmn2.model.ObjectFactory;
@@ -37,6 +38,8 @@ import org.savara.bpmn2.model.TMessageFlow;
 import org.savara.bpmn2.model.TParallelGateway;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TProcess;
+import org.savara.bpmn2.model.TReceiveTask;
+import org.savara.bpmn2.model.TSendTask;
 import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TTask;
@@ -106,6 +109,32 @@ public class BPMN2ModelFactory {
 		return(task);
 	}
 	
+	public Object createSendTask(Object container, Activity activity) {
+		TSendTask task=new TSendTask();
+		task.setId(UUID.randomUUID().toString());
+		
+		task.setName("task: "+activity);
+		
+		if (container instanceof TProcess) {
+			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
+		}
+
+		return(task);
+	}
+	
+	public Object createReceiveTask(Object container, Activity activity) {
+		TReceiveTask task=new TReceiveTask();
+		task.setId(UUID.randomUUID().toString());
+		
+		task.setName("task: "+activity);
+		
+		if (container instanceof TProcess) {
+			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
+		}
+
+		return(task);
+	}
+	
 	//public Object createDataBasedXORGateway(Object container);
 	
 	public Object createEventBasedXORGateway(Object container) {
@@ -162,6 +191,14 @@ public class BPMN2ModelFactory {
 		link.setTargetRef(toNode);
 		
 		link.setName(conditionalExpression);
+		
+		if (fromNode instanceof TFlowNode) {
+			((TFlowNode)fromNode).getOutgoing().add(new QName(link.getId()));
+		}
+		
+		if (toNode instanceof TFlowNode) {
+			((TFlowNode)toNode).getIncoming().add(new QName(link.getId()));
+		}
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createSequenceFlow(link));
@@ -275,6 +312,23 @@ public class BPMN2ModelFactory {
 		if (link instanceof TSequenceFlow) {
 			((TSequenceFlow)link).setTargetRef(node);
 		}
+	}
+	
+	public java.util.List<Object> getControlLinks(Object node) {
+		java.util.List<Object> ret=new java.util.Vector<Object>();
+		
+		if (node instanceof TProcess) {
+			for (JAXBElement<? extends TFlowElement> jbfe : ((TProcess)node).getFlowElement()) {
+				TFlowElement fe=jbfe.getValue();
+				
+				if (fe instanceof TSequenceFlow) {
+					ret.add(fe);
+				}
+			}
+			
+		}
+		
+		return(ret);
 	}
 	
 	public java.util.List<Object> getInboundControlLinks(Object node) {

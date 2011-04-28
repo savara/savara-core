@@ -107,9 +107,11 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 		if (elem instanceof Protocol) {
 			ret = ((Protocol)elem).getName();
 			
+			/* Causes multiple diagrams to be created
 			if (((Protocol)elem).getRole() != null) {
 				ret += "_"+((Protocol)elem).getRole().getName();
 			}
+			*/
 		}
 		
 		return(ret);
@@ -321,6 +323,7 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 		 * the label incorrectly. If using the default message
 		 * link is an issue, then need to investigate how to
 		 * get label positioned correctly.
+		 * 
 		for (int i=0; i < messageLinks.size(); i++) {
 			Object mesglink=messageLinks.get(i);
 			
