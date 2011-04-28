@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity xmlns="http://www.savara.org/activity" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="InteractionActivity"
+          timestamp="2011-04-21T18:07:40.391+10:00" id="Activity-persistence-1"
+          outbound="true" operationName="requestForQuote" destinationAddress="BrokerEPR">
+    <correlation>
+        <key value="1" name="OrderId"/>
+    </correlation>
+    <context value="101" name="TradeID"/>
+    <context value="13245" name="ISBN" />
+    <parameter type="{http://example.org/types}RequestForQuote">
+        <RequestForQuote xmlns="http://example.org/types" id="1" product="ABC"/>
+    </parameter>
+</activity>

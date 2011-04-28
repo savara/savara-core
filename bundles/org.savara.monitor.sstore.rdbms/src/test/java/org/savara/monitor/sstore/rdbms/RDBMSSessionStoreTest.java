@@ -48,7 +48,7 @@ public class RDBMSSessionStoreTest extends Assert{
 		DriverManager.getConnection("jdbc:h2:target/db/h2", "sa", "");
 				
 		store = new RDBMSSessionStore();		
-		store.initialize(null);
+		store.setConfiguration(null);
 		
 		pid = new ProtocolId("name", "role");
 		
