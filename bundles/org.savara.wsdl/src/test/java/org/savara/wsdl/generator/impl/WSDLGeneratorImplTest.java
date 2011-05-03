@@ -799,7 +799,8 @@ public class WSDLGeneratorImplTest extends TestCase {
 			fail("Issue is not an error");
 		}
 		
-		String mesg=MessageFormatter.format("org.savara.wsdl",
+		String mesg=MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+				"org.savara.wsdl.Messages"),
 					"SAVARA-WSDL-00001", wsdlBinding.getName(), qname.toString());
 		
 		if (issue.getMessage().equals(mesg) == false) {

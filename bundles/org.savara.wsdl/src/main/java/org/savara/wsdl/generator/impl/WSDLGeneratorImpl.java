@@ -559,7 +559,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 			
 			if (!wsdlBinding.isXSDTypeMessagePartSupported()) {
 				// Raise error
-				handler.error(MessageFormatter.format("org.savara.wsdl",
+				handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+						"org.savara.wsdl.Messages"),
 							"SAVARA-WSDL-00001", wsdlBinding.getName(), qname.toString()), null);
 			}
 		}
