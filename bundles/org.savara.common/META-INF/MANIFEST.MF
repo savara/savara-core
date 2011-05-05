@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Common
 Bundle-SymbolicName: org.savara.common;singleton:=true
-Bundle-Version: 2.0.0.20110505-M3
+Bundle-Version: 2.0.0.SNAPSHOT
 Bundle-Activator: org.savara.common.osgi.Activator
 Bundle-Vendor: www.savara.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
