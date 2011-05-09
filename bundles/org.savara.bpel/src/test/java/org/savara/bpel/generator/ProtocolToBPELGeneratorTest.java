@@ -46,9 +46,14 @@ public class ProtocolToBPELGeneratorTest {
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "CreditAgency"));
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierQuoteEngine"));
         
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods", "Buyer"));
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods", "CreditAgency"));
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods", "Store"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "Buyer"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "CreditAgency"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "Store"));
+        
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Buyer"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "CreditAgency"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Store"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Logistics"));
         
         suite.addTest(new ProtocolToBPELTester("ReqRespFault", "Buyer"));
         suite.addTest(new ProtocolToBPELTester("ReqRespFault", "Seller"));

@@ -268,6 +268,36 @@ public class ProtocolParserRule implements ParserRule {
 			}
 		}
 		
+		// SAVARA-214 - check if declared roles should be moved to inner blocks
+		if (ret.getBlock().get(0) instanceof RoleList) {
+			RoleList rl=(RoleList)ret.getBlock().get(0);
+			
+			for (int i=rl.getRoles().size()-1; i >= 0; i--) {
+				Role r=rl.getRoles().get(i);
+				Block b=CDMProtocolParserUtil.getEnclosingBlock(ret, r);
+				
+				if (b == null) {
+					// Report error
+				} else if (b != ret.getBlock()){
+					RoleList innerrl=null;
+					
+					if (b.size() > 0 && b.get(0) instanceof RoleList) {
+						innerrl = (RoleList)b.get(0);
+					} else {
+						innerrl = new RoleList();
+						b.getContents().add(0, innerrl);
+					}
+					
+					rl.getRoles().remove(r);
+					innerrl.getRoles().add(r);
+				}
+			}
+			
+			if (rl.getRoles().size() == 0) {
+				ret.getBlock().remove(rl);
+			}
+		}
+		
 		context.popScope();
 		
 		return(ret);
