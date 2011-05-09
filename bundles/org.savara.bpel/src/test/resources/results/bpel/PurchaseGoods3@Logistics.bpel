@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ca="http://www.jboss.org/examples/creditAgency" xmlns:lg="http://www.jboss.org/examples/logistics" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PurchaseGoodsProcess_Logistics" targetNamespace="http://www.jboss.org/examples/logistics">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_Logistics.wsdl" namespace="http://www.jboss.org/examples/logistics"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_LogisticsArtifacts.wsdl" namespace="http://www.jboss.org/examples/logistics"/>
+    <partnerLinks>
+        <partnerLink myRole="LogisticsInterface" name="StoreToLogistics" partnerLinkType="lg:StoreToLogisticsServiceLT"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="lg:deliverRequest" name="deliverRequestVar"/>
+        <variable messageType="lg:deliverResponse" name="deliverResponseVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_DeliveryRequest" operation="deliver" partnerLink="StoreToLogistics" portType="lg:LogisticsInterface" variable="deliverRequestVar"/>
+        <reply name="Send_DeliveryConfirmed" operation="deliver" partnerLink="StoreToLogistics" portType="lg:LogisticsInterface" variable="deliverResponseVar"/>
+    </sequence>
+</process>

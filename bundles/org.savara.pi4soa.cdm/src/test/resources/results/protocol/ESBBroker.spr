@@ -14,7 +14,7 @@ import xsd "bookingReference" as BookingReference, "buy" as Buy, "cancel" as Can
 [[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierTxnProcessor) ]]
 [[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierQuoteEngine) ]]
 protocol ESBBrokerProcess {
-	role Broker, Buyer, CreditAgency, Supplier;
+	role Broker, Buyer, Supplier;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
 	[[ Correlation(request=makeEnquiry) ]]
@@ -34,7 +34,7 @@ protocol ESBBrokerProcess {
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
 		buy(Buy):
-			role SupplierTxnProcessor;
+			role SupplierTxnProcessor, CreditAgency;
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.1/@exchangeDetails.0) ]]
 			[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
 			[[ Correlation(request=checkCredit) ]]
@@ -79,7 +79,6 @@ protocol ESBBrokerProcess {
 	[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0) ]]
 	[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierTxnProcessor) ]]
 	protocol CompleteTransaction(role Buyer, role Broker, role CreditAgency) {
-		role SupplierTxnProcessor;
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
 		[[ Correlation(request=buy) ]]
@@ -94,6 +93,7 @@ protocol ESBBrokerProcess {
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.0/@exchangeDetails.0) ]]
 			[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
 			checkCredit(CreditValid):
+				role SupplierTxnProcessor;
 				[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.0) ]]
 				[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
 				[[ Correlation(request=confirm) ]]
