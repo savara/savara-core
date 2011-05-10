@@ -71,12 +71,13 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 	 * This method determines whether the generator is appropriate for
 	 * the specified source and target types.
 	 * 
-	 * @param sourceType The source type
+	 * @param source The source
 	 * @param targetType The target type
 	 * @return Whether the specified types are supported
 	 */
-	public boolean isSupported(String sourceType, String targetType) {
-		return(sourceType.equals(ProtocolDefinitions.PROTOCOL_TYPE) &&
+	public boolean isSupported(Object source, String targetType) {
+		return(source instanceof ProtocolModel &&
+				((ProtocolModel)source).isLocated() &&
 				(targetType.equals("bpmn2") || targetType.equals("bpmn")));
 	}
 
@@ -110,6 +111,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				new BPMN2ModelVisitor(pm.getProtocol().getName(),
 						model, notation);
 			
+			/*
 			if (pm.getProtocol().getRole() == null) {
 				// Global (choreography) model
 				java.util.List<Role> roles=pm.getProtocol().getRoles();
@@ -140,8 +142,9 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 					}
 				}
 			} else {
+			*/
 				generateProcess(pm, visitor, handler, locator);
-			}
+			//}
 			
 			visitor.completeModels();
 			
@@ -152,7 +155,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 	}
 	
 	protected void generateProcess(ProtocolModel local, BPMN2ModelVisitor visitor,
-					FeedbackHandler handler, ResourceLocator locator) {		local.visit(visitor);
+					FeedbackHandler handler, ResourceLocator locator) {
+		local.visit(visitor);
 	}
 	
 	public class BPMN2ModelVisitor extends DefaultVisitor {

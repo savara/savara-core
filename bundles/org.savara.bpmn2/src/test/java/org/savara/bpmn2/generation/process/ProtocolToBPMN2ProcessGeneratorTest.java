@@ -17,6 +17,8 @@
  */
 package org.savara.bpmn2.generation.process;
 
+import java.net.URI;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
@@ -28,10 +30,14 @@ import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.util.JournalProxy;
+import org.savara.protocol.util.ProtocolServices;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.Content;
 import org.scribble.common.resource.ResourceContent;
+import org.scribble.protocol.DefaultProtocolContext;
+import org.scribble.protocol.model.ProtocolModel;
+import org.scribble.protocol.model.Role;
 import org.scribble.protocol.parser.antlr.ANTLRProtocolParser;
 
 public class ProtocolToBPMN2ProcessGeneratorTest {
@@ -97,49 +103,77 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     			if (model == null) {
     				result.addError(this, new Throwable("Model is null"));
     			} else {
-    				ProtocolToBPMN2ProcessModelGenerator generator=
-    								new ProtocolToBPMN2ProcessModelGenerator();
-    				generator.setUseConsecutiveIds(true);
+    				java.util.List<Role> roles=model.getProtocol().getRoles();
     				
-    				Object target=generator.generate(model, handler, null);
-    				
-    				if (target instanceof TDefinitions) {
-    					TDefinitions defns=(TDefinitions)target;
-    					
-						// Obtain any namespace prefix map
-						java.util.Map<String, String> prefixes=
-								new java.util.HashMap<String, String>();
-						
-						java.util.List<Annotation> list=
-							AnnotationDefinitions.getAnnotations(model.getProtocol().getAnnotations(),
-									AnnotationDefinitions.TYPE);
-						
-						for (Annotation annotation : list) {
-							if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-									annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-								prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-										(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-							}
-						}
+    				for (Role role : roles) {
+    					DefaultProtocolContext context=
+    							new DefaultProtocolContext(ProtocolServices.getParserManager(),
+    									null);
+    					/*
+    											new org.scribble.common.resource.ResourceLocator() {
+    						public URI getResourceURI(String uri) throws Exception {
+    							return(locator.getResourceURI(uri));
+    						}
+    					});
+    					*/
+    	
+    					ProtocolModel local=ProtocolServices.getProtocolProjector().project(model,
+    									role, new JournalProxy(handler), context);
+    	
+    					if (local != null) {
+    						// TODO: SAVARA-167 - issue when projection is based on a sub-protocol
+    						if (AnnotationDefinitions.getAnnotation(local.getProtocol().getAnnotations(),
+    										AnnotationDefinitions.TYPE) == null &&
+    								AnnotationDefinitions.getAnnotation(model.getProtocol().getAnnotations(),
+    												AnnotationDefinitions.TYPE) != null) {				
+    							AnnotationDefinitions.copyAnnotations(model.getProtocol().getAnnotations(),
+    									local.getProtocol().getAnnotations(), AnnotationDefinitions.TYPE);
+    						}   						
+    		   				
+    	    				ProtocolToBPMN2ProcessModelGenerator generator=
+    	    								new ProtocolToBPMN2ProcessModelGenerator();
+    	    				generator.setUseConsecutiveIds(true);
+    	    				
+    	    				Object target=generator.generate(local, handler, null);
+    	    				
+    	    				if (target instanceof TDefinitions) {
+    	    					
+    							// Obtain any namespace prefix map
+    							java.util.Map<String, String> prefixes=
+    									new java.util.HashMap<String, String>();
+    							
+    							java.util.List<Annotation> list=
+    								AnnotationDefinitions.getAnnotations(model.getProtocol().getAnnotations(),
+    										AnnotationDefinitions.TYPE);
+    							
+    							for (Annotation annotation : list) {
+    								if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
+    										annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
+    									prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
+    											(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
+    								}
+    							}
 
-						try {
-							java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-							
-							BPMN2ModelUtil.serialize((TDefinitions)target, baos, prefixes);
-							
-							baos.close();
-							
-							String text=new String(baos.toByteArray());
-							
-							checkResults(result, text);
-						} catch(Exception e) {
-							result.addError(this, e);
-						}
-					} else {
-						result.addError(this,
-								new Throwable("No BPMN2 generated"));						
+    							try {
+    								java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+    								
+    								BPMN2ModelUtil.serialize((TDefinitions)target, baos, prefixes);
+    								
+    								baos.close();
+    								
+    								String text=new String(baos.toByteArray());
+    								
+    								checkResults(result, local.getProtocol().getRole(), text);
+    							} catch(Exception e) {
+    								result.addError(this, e);
+    							}
+    						} else {
+    							result.addError(this,
+    									new Throwable("No BPMN2 generated"));						
+    	    				}
+    					}
     				}
-    			}
+     			}
     		}
     		
     		result.endTest(this);
@@ -150,12 +184,13 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     	 * previously stored correct version.
     	 * 
     	 * @param result The test result
+    	 * @param role The role
     	 * @param protocol The protocol
     	 */
-    	protected void checkResults(TestResult result, String protocol) {
+    	protected void checkResults(TestResult result, Role role, String protocol) {
     		boolean f_valid=false;
 
-    		String filename="results/bpmn2/"+m_name+".bpmn2";
+    		String filename="results/bpmn2/"+m_name+"@"+role.getName()+".bpmn2";
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);
@@ -219,7 +254,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     					}
     					
     					java.io.File resultFile=new java.io.File(resultsDir,
-    										m_name+".generated");
+    										m_name+"@"+role.getName()+".generated");
     					
     					if (resultFile.exists() == false) {
     						try {
@@ -239,7 +274,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     					}
     				} else {
     					result.addError(this, new Throwable("Unable to obtain URL for BPMN2 model source '"+
-    							m_name+"': "+url));
+    							m_name+"' role "+role.getName()+": "+url));
     				}
     			}
     		}
