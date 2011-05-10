@@ -67,7 +67,8 @@ public class DefaultScenarioSimulator implements ScenarioSimulator {
 			if (context != null) {
 				sim.onEvent(context, event, handler);
 			} else {
-				handler.error(MessageFormatter.format("org.savara.scenario", "SAVARA-SCENARIO-00001",
+				handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+						"org.savara.scenario.Messages"), "SAVARA-SCENARIO-00001",
 							role.getName()), event, null);
 			}
 		} else {

@@ -111,6 +111,19 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 					 (org.scribble.protocol.model.Choice)mobj;
 		java.util.List<When> paths=elem.getWhens();
 		
+		// SAVARA-215 - ignore choice if only labels and no path contents
+		boolean f_emptyPaths=true;
+		for (When when : paths) {
+			if (when.getMessageSignature().getTypeReferences().size() > 0 ||
+					when.getBlock().size() > 0) {
+				f_emptyPaths = false;
+				break;
+			}
+		}
+		if (f_emptyPaths) {
+			return(true);
+		}
+		
 		Role role=null;
 		//String roleNamespace=null;
 	

@@ -30,14 +30,13 @@ public class MessageFormatter {
 	 * This method formats a text message based on the supplied module and code
 	 * ids, with optional arguments.
 	 * 
-	 * @param module The module id
+	 * @param bundle The bundle
 	 * @param code The message's code
 	 * @param args The optional list of arguments for inclusion in the message
 	 * @return The formatted text
 	 */
-	public static String format(String module, String code, Object... args) {
-		String ret=MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-				module+".Messages").getString(code), args);
+	public static String format(java.util.ResourceBundle bundle, String code, Object... args) {
+		String ret=MessageFormat.format(bundle.getString(code), args);
 		
 		if (ret != null) {
 			ret += " ["+code+"]";

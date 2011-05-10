@@ -21,7 +21,6 @@
  */
 package org.savara.protocol.contract.generator.impl;
 
-import java.text.MessageFormat;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
@@ -203,7 +202,8 @@ public class ContractIntrospector extends DefaultVisitor {
 		
 		if (m_protocol == null) {
 			throw new IllegalStateException(MessageFormatter.format(
-					"org.savara.contract", "SAVARA-CONTRACT-00001"));
+					java.util.PropertyResourceBundle.getBundle(
+							"org.savara.contract.Messages"), "SAVARA-CONTRACT-00001"));
 		}
 		
 		m_protocol.visit(this);

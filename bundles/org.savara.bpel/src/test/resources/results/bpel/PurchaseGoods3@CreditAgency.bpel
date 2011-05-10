@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ca="http://www.jboss.org/examples/creditAgency" xmlns:lg="http://www.jboss.org/examples/logistics" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PurchaseGoodsProcess_CreditAgency" targetNamespace="http://www.jboss.org/examples/creditAgency">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_CreditAgency.wsdl" namespace="http://www.jboss.org/examples/creditAgency"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_CreditAgencyArtifacts.wsdl" namespace="http://www.jboss.org/examples/creditAgency"/>
+    <partnerLinks>
+        <partnerLink myRole="CreditAgencyInterface" name="StoreToCreditAgency" partnerLinkType="ca:StoreToCreditAgencyServiceLT"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="ca:checkCreditRequest" name="checkCreditRequestVar"/>
+        <variable messageType="ca:checkCreditResponse" name="checkCreditResponseVar"/>
+        <variable messageType="ca:CustomerUnknownFault" name="CustomerUnknownFaultVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_CreditCheckRequest" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="ca:CreditAgencyInterface" variable="checkCreditRequestVar"/>
+        <if>
+            <sequence>
+                <reply name="Send_CreditRating" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="ca:CreditAgencyInterface" variable="checkCreditResponseVar"/>
+            </sequence>
+            <else>
+                <sequence>
+                    <reply faultName="ca:CustomerUnknown" name="Send_CustomerUnknown" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="ca:CreditAgencyInterface" variable="CustomerUnknownFaultVar"/>
+                </sequence>
+            </else>
+        </if>
+    </sequence>
+</process>

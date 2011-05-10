@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ca="http://www.jboss.org/examples/creditAgency" xmlns:lg="http://www.jboss.org/examples/logistics" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PurchaseGoodsProcess_Store" targetNamespace="http://www.jboss.org/examples/store">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_Store.wsdl" namespace="http://www.jboss.org/examples/store"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_CreditAgency.wsdl" namespace="http://www.jboss.org/examples/creditAgency"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_Logistics.wsdl" namespace="http://www.jboss.org/examples/logistics"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_StoreArtifacts.wsdl" namespace="http://www.jboss.org/examples/store"/>
+    <partnerLinks>
+        <partnerLink myRole="StoreInterface" name="BuyerToStore" partnerLinkType="sto:BuyerToStoreServiceLT"/>
+        <partnerLink name="StoreToCreditAgency" partnerLinkType="sto:StoreToCreditAgencyLT" partnerRole="CreditAgencyRequester"/>
+        <partnerLink name="StoreToLogistics" partnerLinkType="sto:StoreToLogisticsLT" partnerRole="LogisticsRequester"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="sto:buyRequest" name="buyRequestVar"/>
+        <variable messageType="ca:checkCreditRequest" name="checkCreditRequestVar"/>
+        <variable messageType="ca:checkCreditResponse" name="checkCreditResponseVar"/>
+        <variable messageType="lg:deliverRequest" name="deliverRequestVar"/>
+        <variable messageType="lg:deliverResponse" name="deliverResponseVar"/>
+        <variable messageType="sto:buyResponse" name="buyResponseVar"/>
+        <variable messageType="sto:BuyFailedFault" name="BuyFailedFaultVar"/>
+        <variable messageType="sto:AccountNotFoundFault" name="AccountNotFoundFaultVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_BuyRequest" operation="buy" partnerLink="BuyerToStore" portType="sto:StoreInterface" variable="buyRequestVar"/>
+        <scope>
+            <faultHandlers>
+                <catch faultMessageType="ca:CustomerUnknownFault" faultName="ca:CustomerUnknown" faultVariable="CustomerUnknownFaultVar">
+                    <sequence>
+                        <reply faultName="sto:AccountNotFound" name="Send_AccountNotFound" operation="buy" partnerLink="BuyerToStore" portType="sto:StoreInterface" variable="AccountNotFoundFaultVar"/>
+                    </sequence>
+                </catch>
+            </faultHandlers>
+            <sequence>
+                <invoke inputVariable="checkCreditRequestVar" name="Send_CreditCheckRequest" operation="checkCredit" outputVariable="checkCreditResponseVar" partnerLink="StoreToCreditAgency" portType="ca:CreditAgencyInterface"/>
+                <if>
+                    <sequence>
+                        <invoke inputVariable="deliverRequestVar" name="Send_DeliveryRequest" operation="deliver" outputVariable="deliverResponseVar" partnerLink="StoreToLogistics" portType="lg:LogisticsInterface"/>
+                        <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="sto:StoreInterface" variable="buyResponseVar"/>
+                    </sequence>
+                    <else>
+                        <sequence>
+                            <reply faultName="sto:BuyFailed" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="sto:StoreInterface" variable="BuyFailedFaultVar"/>
+                        </sequence>
+                    </else>
+                </if>
+            </sequence>
+        </scope>
+    </sequence>
+</process>
