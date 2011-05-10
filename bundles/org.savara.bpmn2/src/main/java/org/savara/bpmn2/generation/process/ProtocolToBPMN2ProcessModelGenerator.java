@@ -53,7 +53,19 @@ import org.scribble.protocol.model.*;
  */
 public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 
+	private boolean m_consecutiveIds=false;
+	
 	private static final Logger logger=Logger.getLogger(ProtocolToBPMN2ProcessModelGenerator.class.getName());
+	
+	/**
+	 * This method determines whether consecutive ids should be used in the model and
+	 * notation. If false (default), then random unique ids will be used.
+	 * 
+	 * @param b Whether to use consecutive ids
+	 */
+	public void setUseConsecutiveIds(boolean b) {
+		m_consecutiveIds = b;
+	}
 	
 	/**
 	 * This method determines whether the generator is appropriate for
@@ -89,7 +101,10 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model=
 				new org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory(defns);
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation=
-					new org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory(defns);
+					new org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory(model);
+			
+			model.setUseConsecutiveIds(m_consecutiveIds);
+			notation.setUseConsecutiveIds(m_consecutiveIds);
 			
 			BPMN2ModelVisitor visitor=
 				new BPMN2ModelVisitor(pm.getProtocol().getName(),

@@ -137,7 +137,7 @@ public class BPMNPool extends AbstractBPMNActivity {
 		int midy=(getHeight()/2);
 		
 		setX(x);
-		setY(y+VERTICAL_GAP);
+		setY(y); //+VERTICAL_GAP);
 		
 		for (int i=0; i < getChildStates().size(); i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);

@@ -35,26 +35,41 @@ import org.savara.bpmn2.model.Point;
 import org.savara.bpmn2.model.TBaseElement;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TGateway;
+import org.savara.bpmn2.model.TParticipant;
+import org.savara.bpmn2.model.TProcess;
 import org.savara.bpmn2.model.TSequenceFlow;
 
 
 
 public class BPMN2NotationFactory {
 
-	private TDefinitions m_definitions=null;
+	private BPMN2ModelFactory m_modelFactory=null;
 	private BPMNPlane m_plane=null;
 	private ObjectFactory m_factory=new ObjectFactory();
+	private boolean m_consecutiveIds=false;
+	private int m_id=1;
 	
-	public BPMN2NotationFactory(TDefinitions defns) {
-		m_definitions = defns;
+	public BPMN2NotationFactory(BPMN2ModelFactory modelFactory) {
+		m_modelFactory = modelFactory;
 	}
 	
+	public void setUseConsecutiveIds(boolean b) {
+		m_consecutiveIds = b;
+	}
+	
+	protected String createId() {
+		if (m_consecutiveIds) {
+			return("NID"+(m_id++));
+		}
+		return(UUID.randomUUID().toString());
+	}
+
 	public Object createDiagram(BPMN2ModelFactory factory,
 			Object diagramModel, int x, int y, int width, int height) {
 		BPMNDiagram ret=new BPMNDiagram();
-		ret.setId(UUID.randomUUID().toString());
+		ret.setId(createId());
 		
-		m_definitions.getBPMNDiagram().add(ret);
+		m_modelFactory.getDefinitions().getBPMNDiagram().add(ret);
 		
 		m_plane = new BPMNPlane();
 		ret.setBPMNPlane(m_plane);
@@ -70,12 +85,24 @@ public class BPMN2NotationFactory {
 				Object poolModel, Object diagramNotation,
 				int x, int y, int width, int height) {
 		BPMNShape shape=new BPMNShape();
-		shape.setId(UUID.randomUUID().toString());
+		shape.setId(createId());
 		
-		if (poolModel instanceof TBaseElement) {
-			TBaseElement base=(TBaseElement)poolModel;
+		if (poolModel instanceof TProcess) {
+			TProcess base=(TProcess)poolModel;
 			
-			shape.setBpmnElement(new QName(base.getId()));
+			// Find participant for this pool
+			TParticipant participant=null;
+			
+			for (TParticipant p : m_modelFactory.getCollaboration().getParticipant()) {
+				if (p.getName().equals(base.getName())) {
+					participant = p;
+					break;
+				}
+			}
+			
+			if (participant != null) {
+				shape.setBpmnElement(new QName(participant.getId()));
+			}
 		}
 		
 		Bounds b=new Bounds();
@@ -84,7 +111,7 @@ public class BPMN2NotationFactory {
 		b.setWidth(width);
 		b.setHeight(height);
 		
-		shape.setBounds(b);
+		shape.setBounds(b);		
 		
 		if (diagramNotation instanceof BPMNPlane) {
 			BPMNPlane plane=(BPMNPlane)diagramNotation;
@@ -99,7 +126,7 @@ public class BPMN2NotationFactory {
 			Object taskModel, Object parentNotation,
 					int x, int y, int width, int height) {
 		BPMNShape shape=new BPMNShape();
-		shape.setId(UUID.randomUUID().toString());
+		shape.setId(createId());
 		
 		if (taskModel instanceof TBaseElement) {
 			TBaseElement base=(TBaseElement)taskModel;
@@ -128,7 +155,7 @@ public class BPMN2NotationFactory {
 			Object junctionModel, Object parentNotation,
 					int x, int y, int width, int height) {
 		BPMNShape shape=new BPMNShape();
-		shape.setId(UUID.randomUUID().toString());
+		shape.setId(createId());
 		
 		int extra=0;
 		
@@ -162,7 +189,7 @@ public class BPMN2NotationFactory {
 	public Object createSequenceLink(BPMN2ModelFactory factory,
 			Object linkModel, Object diagramNotation) {
 		BPMNEdge edge=new BPMNEdge();
-		edge.setId(UUID.randomUUID().toString());
+		edge.setId(createId());
 		BPMNShape source=null;
 		BPMNShape target=null;
 		int extrax=0;
@@ -242,7 +269,7 @@ public class BPMN2NotationFactory {
 	public Object createMessageLink(BPMN2ModelFactory factory,
 			Object linkModel, Object diagramNotation) {
 		BPMNEdge edge=new BPMNEdge();
-		edge.setId(UUID.randomUUID().toString());
+		edge.setId(createId());
 		
 		return(edge);
 	}

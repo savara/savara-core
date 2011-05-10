@@ -51,23 +51,46 @@ public class BPMN2ModelFactory {
 	private TDefinitions m_definitions=null;
 	private TCollaboration m_collaboration=null;
 	private ObjectFactory m_factory=new ObjectFactory();
+	private boolean m_consecutiveIds=false;
+	private int m_id=1;
 	
 	public BPMN2ModelFactory(TDefinitions defns) {
 		m_definitions = defns;
+	}
+	
+	public void setUseConsecutiveIds(boolean b) {
+		m_consecutiveIds = b;
+	}
+	
+	protected String createId() {
+		if (m_consecutiveIds) {
+			return("MID"+(m_id++));
+		}
+		return(UUID.randomUUID().toString());
 	}
 
 	public Object createDiagram() {
 		
 		// Create collaboration
 		m_collaboration = new TCollaboration();
-		m_collaboration.setId(UUID.randomUUID().toString());
+		m_collaboration.setId(createId());
+		
+		m_definitions.getRootElement().add(m_factory.createCollaboration(m_collaboration));
 		
 		return(m_definitions);
 	}
 	
+	public TDefinitions getDefinitions() {
+		return(m_definitions);
+	}
+	
+	public TCollaboration getCollaboration() {
+		return(m_collaboration);
+	}
+	
 	public Object createPool(Object diagram, String name) {
 		TProcess process=new TProcess();
-		process.setId(UUID.randomUUID().toString());
+		process.setId(createId());
 		
 		process.setName(name);
 		
@@ -75,10 +98,10 @@ public class BPMN2ModelFactory {
 		
 		// Create participant in collaboration and point to process
 		TParticipant participant=new TParticipant();
-		participant.setId(UUID.randomUUID().toString());
+		participant.setId(createId());
+		participant.setName(name);
 		
-		// TODO: Not sure how process reference is supposed to be specified
-		//participant.setProcessRef(process.getId());
+		participant.setProcessRef(new QName(process.getId()));
 		
 		m_collaboration.getParticipant().add(participant);
 
@@ -87,7 +110,7 @@ public class BPMN2ModelFactory {
 	
 	public Object createInitialNode(Object container) {
 		TStartEvent startEvent=new TStartEvent();
-		startEvent.setId(UUID.randomUUID().toString());
+		startEvent.setId(createId());
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
@@ -98,7 +121,7 @@ public class BPMN2ModelFactory {
 	
 	public Object createSimpleTask(Object container, Activity activity) {
 		TTask task=new TTask();
-		task.setId(UUID.randomUUID().toString());
+		task.setId(createId());
 		
 		task.setName("task: "+activity);
 		
@@ -111,7 +134,7 @@ public class BPMN2ModelFactory {
 	
 	public Object createSendTask(Object container, Activity activity) {
 		TSendTask task=new TSendTask();
-		task.setId(UUID.randomUUID().toString());
+		task.setId(createId());
 		
 		task.setName("task: "+activity);
 		
@@ -124,7 +147,7 @@ public class BPMN2ModelFactory {
 	
 	public Object createReceiveTask(Object container, Activity activity) {
 		TReceiveTask task=new TReceiveTask();
-		task.setId(UUID.randomUUID().toString());
+		task.setId(createId());
 		
 		task.setName("task: "+activity);
 		
@@ -139,7 +162,7 @@ public class BPMN2ModelFactory {
 	
 	public Object createEventBasedXORGateway(Object container) {
 		TExclusiveGateway gateway=new TExclusiveGateway();
-		gateway.setId(UUID.randomUUID().toString());
+		gateway.setId(createId());
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
@@ -150,7 +173,7 @@ public class BPMN2ModelFactory {
 	
 	public Object createANDGateway(Object container) {
 		TParallelGateway gateway=new TParallelGateway();
-		gateway.setId(UUID.randomUUID().toString());
+		gateway.setId(createId());
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
@@ -161,7 +184,7 @@ public class BPMN2ModelFactory {
 	
 	public Object createDataBasedXORGateway(Object container) {
 		TInclusiveGateway gateway=new TInclusiveGateway();
-		gateway.setId(UUID.randomUUID().toString());
+		gateway.setId(createId());
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
@@ -172,7 +195,7 @@ public class BPMN2ModelFactory {
 	
 	public Object createFinalNode(Object container) {
 		TEndEvent endEvent=new TEndEvent();
-		endEvent.setId(UUID.randomUUID().toString());
+		endEvent.setId(createId());
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
@@ -185,7 +208,7 @@ public class BPMN2ModelFactory {
 			Object fromNode, Object toNode,
 			String conditionalExpression) {
 		TSequenceFlow link=new TSequenceFlow();
-		link.setId(UUID.randomUUID().toString());
+		link.setId(createId());
 		
 		link.setSourceRef(fromNode);
 		link.setTargetRef(toNode);
@@ -211,7 +234,7 @@ public class BPMN2ModelFactory {
 			Object fromNode, Object toNode,	Interaction receive) {
 		TMessageFlow link=new TMessageFlow();
 		
-		link.setId(UUID.randomUUID().toString());
+		link.setId(createId());
 		
 		if (fromNode instanceof TBaseElement) {
 			link.setSourceRef(new QName(((TBaseElement)fromNode).getId()));
