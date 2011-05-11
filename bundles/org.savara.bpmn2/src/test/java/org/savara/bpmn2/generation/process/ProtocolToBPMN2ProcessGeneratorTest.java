@@ -17,8 +17,6 @@
  */
 package org.savara.bpmn2.generation.process;
 
-import java.net.URI;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
@@ -31,7 +29,6 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
-import org.scribble.common.logging.CachedJournal;
 import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.Content;
 import org.scribble.common.resource.ResourceContent;
@@ -46,6 +43,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
         TestSuite suite = new TestSuite("Protocol->BPMN2 Generator Tests");
 
         suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition1"));
         
         return suite;
     }

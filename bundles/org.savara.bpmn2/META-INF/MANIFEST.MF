@@ -7,4 +7,9 @@ Bundle-Activator: org.savara.bpmn2.osgi.Activator
 Bundle-Vendor: www.savara.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.framework;version="1.3.0"
-Require-Bundle: org.savara.common
+Require-Bundle: org.savara.common,
+ org.scribble.common,
+ org.scribble.protocol
+Export-Package: org.savara.bpmn2.generation.process,
+ org.savara.bpmn2.model,
+ org.savara.bpmn2.util

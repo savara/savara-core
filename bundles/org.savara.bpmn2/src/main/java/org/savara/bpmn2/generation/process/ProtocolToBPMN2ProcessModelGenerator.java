@@ -354,7 +354,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				
 				BPMNActivity umls=getBPMNActivity();
 				if (umls != null) {
-					SimpleActivity sa=
+					SendActivity sa=
 						new SendActivity(elem, umls, m_modelFactory, m_notationFactory);
 					
 					// Register the send to enable links to be established
@@ -388,6 +388,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						getBPMNActivity(), m_modelFactory, m_notationFactory));
 				
 				if (elem.getParent() instanceof When &&
+						((When)elem.getParent()).getMessageSignature().getTypeReferences().size() > 0 &&
 						elem.getParent().getParent() instanceof Choice) {
 					When parent=(When)elem.getParent();
 					Choice choice=(Choice)elem.getParent().getParent();
@@ -421,7 +422,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						
 						BPMNActivity umls=getBPMNActivity();
 						if (umls != null) {
-							SimpleActivity sa=
+							SendActivity sa=
 								new SendActivity(interaction, umls, m_modelFactory, m_notationFactory);
 							
 							// Register the send to enable links to be established
