@@ -29,7 +29,6 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.generator.ModelGenerator;
 import org.savara.common.resources.ResourceLocator;
-import org.scribble.protocol.ProtocolDefinitions;
 import org.scribble.protocol.model.*;
 
 /**
@@ -38,8 +37,17 @@ import org.scribble.protocol.model.*;
  */
 public class ProtocolToBPELModelGenerator implements ModelGenerator {
 
-	public boolean isSupported(String sourceType, String targetType) {
-		return(sourceType.equals(ProtocolDefinitions.PROTOCOL_TYPE) &&
+	/**
+	 * This method determines whether the generator is appropriate for
+	 * the specified source and target types.
+	 * 
+	 * @param source The source
+	 * @param targetType The target type
+	 * @return Whether the specified types are supported
+	 */
+	public boolean isSupported(Object source, String targetType) {
+		return(source instanceof ProtocolModel &&
+				((ProtocolModel)source).isLocated() &&
 							targetType.equals(BPELDefinitions.BPEL_TYPE));
 	}
 

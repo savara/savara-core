@@ -25,6 +25,7 @@ import org.pi4soa.common.util.NamesUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
+import org.scribble.protocol.util.RoleUtil;
 
 public class ProtocolParserRule implements ParserRule {
 
@@ -274,7 +275,7 @@ public class ProtocolParserRule implements ParserRule {
 			
 			for (int i=rl.getRoles().size()-1; i >= 0; i--) {
 				Role r=rl.getRoles().get(i);
-				Block b=CDMProtocolParserUtil.getEnclosingBlock(ret, r);
+				Block b=RoleUtil.getEnclosingBlock(ret, r);
 				
 				if (b == null) {
 					// Report error

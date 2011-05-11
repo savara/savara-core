@@ -31,11 +31,11 @@ public interface ModelGenerator {
 	 * This method determines whether the generator is appropriate for
 	 * the specified source and target types.
 	 * 
-	 * @param sourceType The source type
+	 * @param source The source
 	 * @param targetType The target type
 	 * @return Whether the specified types are supported
 	 */
-	public boolean isSupported(String sourceType, String targetType);
+	public boolean isSupported(Object source, String targetType);
 
 	/**
 	 * This method generates the contents of the target
