@@ -113,11 +113,12 @@ public class ChoiceActivity extends AbstractBPMNActivity {
 				}
 				*/
 				
+				/*
 				umls.transitionFrom(m_choiceState, null);
 				
 				// Check if state is a junction
 				Object endNode=umls.getEndNode();
-				
+				*/
 				/*
 				if (umls.getEndState().canDeleteEndNode() &&
 						(getModelFactory().isJoin(endNode) || // instanceof org.eclipse.uml2.uml.MergeNode ||
@@ -138,7 +139,7 @@ public class ChoiceActivity extends AbstractBPMNActivity {
 					getModelFactory().delete(endNode);
 				} else {
 				*/
-					m_junctionState.transitionFrom(umls, null);
+					//m_junctionState.transitionFrom(umls, null);
 				//}
 			}
 			
@@ -245,7 +246,27 @@ public class ChoiceActivity extends AbstractBPMNActivity {
 			
 			act.draw(parent);
 		}
+	
+		// Construct sequence links
+		for (int i=1; i < getChildStates().size(); i++) {
+			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
+			if (act != m_junctionState) {
+				getStartState().transitionTo(act, null, parent);
+				act.getEndState().transitionTo(m_junctionState, null, parent);
+			}
+		}
 	}
+	
+	/*
+	public void transitionTo(BPMNActivity toNode, String expression, Object parent) {
+		for (Object act : getChildStates()) {
+			Object link=getModelFactory().createControlLink(getContainer(),
+					((BPMNActivity)act).getEndNode(), toNode.getStartNode(), expression);
+			
+			getNotationFactory().createSequenceLink(getModelFactory(), link, parent);
+		}
+	}
+	*/
 	
 	private boolean m_completed=false;
     private BPMNActivity m_choiceState=null;

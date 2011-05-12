@@ -19,6 +19,9 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
+import org.savara.bpmn2.model.BPMNEdge;
+import org.savara.bpmn2.model.Point;
+
 public abstract class AbstractBPMNActivity implements BPMNActivity {
 
 	public static final int VERTICAL_GAP = 40;
@@ -192,6 +195,35 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 		*/
 		
 		return(ret);
+	}
+	
+	public void transitionTo(BPMNActivity toNode, String expression, Object parent) {
+		Object ret=getModelFactory().createControlLink(getContainer(),
+				getEndNode(), toNode.getStartNode(), expression);
+		
+		BPMNEdge edge=(BPMNEdge)getNotationFactory().createSequenceLink(getModelFactory(), ret, parent);
+		
+		if (edge.getWaypoint().size() > 0 &&
+					edge.getWaypoint().get(0).getY() != edge.getWaypoint().get(1).getY()) {
+			
+			double midx=edge.getWaypoint().get(0).getX()+
+						(edge.getWaypoint().get(1).getX()-edge.getWaypoint().get(0).getX())/2.0;
+			
+			if (edge.getWaypoint().get(1).getX() - midx > 50) {
+				midx = edge.getWaypoint().get(1).getX()-50;
+			}
+			
+			Point p1=new Point();
+			p1.setY(edge.getWaypoint().get(0).getY());
+			p1.setX(midx);
+			
+			Point p2=new Point();
+			p2.setY(edge.getWaypoint().get(1).getY());
+			p2.setX(p1.getX());
+			
+			edge.getWaypoint().add(1, p1);
+			edge.getWaypoint().add(2, p2);			
+		}
 	}
 	
 	/**

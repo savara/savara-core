@@ -231,9 +231,9 @@ public class ParallelActivity extends AbstractBPMNActivity {
 			cury += (act.getHeight()+VERTICAL_GAP);
 		}
 		
-		m_forkState.calculatePosition(x, midy);
+		m_forkState.calculatePosition(x, midy-(m_forkState.getHeight()/2));
 		m_joinState.calculatePosition(x+getWidth()-
-				m_joinState.getWidth(), midy);
+				m_joinState.getWidth(), midy-(m_joinState.getHeight()/2));		
 	}
 	
 	public void draw(Object parent) {
@@ -244,8 +244,28 @@ public class ParallelActivity extends AbstractBPMNActivity {
 			
 			act.draw(parent);
 		}
+		
+		// Construct sequence links
+		for (int i=1; i < getChildStates().size(); i++) {
+			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
+			if (act != m_joinState) {
+				getStartState().transitionTo(act, null, parent);
+				act.getEndState().transitionTo(m_joinState, null, parent);
+			}
+		}
 	}
 
+	/*
+	public void transitionTo(BPMNActivity toNode, String expression, Object parent) {
+		for (Object act : getChildStates()) {
+			Object link=getModelFactory().createControlLink(getContainer(),
+					getEndNode(), toNode.getStartNode(), expression);
+			
+			getNotationFactory().createSequenceLink(getModelFactory(), link, parent);
+		}
+	}
+	*/
+	
 	private boolean m_completed=false;
     private BPMNActivity m_forkState=null;
     private BPMNActivity m_joinState=null;

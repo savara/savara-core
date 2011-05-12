@@ -45,6 +45,7 @@ import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TTask;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Interaction;
+import org.scribble.protocol.util.InteractionUtil;
 
 public class BPMN2ModelFactory {
 	
@@ -136,7 +137,8 @@ public class BPMN2ModelFactory {
 		TSendTask task=new TSendTask();
 		task.setId(createId());
 		
-		task.setName("task: "+activity);
+		task.setName("Send: "+InteractionUtil.getMessageSignature(activity)+
+				" to "+InteractionUtil.getToRole(activity));
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
@@ -149,7 +151,8 @@ public class BPMN2ModelFactory {
 		TReceiveTask task=new TReceiveTask();
 		task.setId(createId());
 		
-		task.setName("task: "+activity);
+		task.setName("Receive: "+InteractionUtil.getMessageSignature(activity)+
+				" from "+InteractionUtil.getFromRole(activity));
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
