@@ -178,8 +178,24 @@ public class SequenceActivity extends AbstractBPMNActivity {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			
 			act.draw(parent);
+			
+			if (i > 0) {
+				BPMNActivity prev=(BPMNActivity)getChildStates().get(i-1);
+				
+				prev.transitionTo(act, null, parent);
+			}
 		}
 	}
 	
+	/*
+	public void transitionTo(BPMNActivity toNode, String expression, Object parent) {
+		if (getChildStates().size() == 0) {
+			super.transitionTo(toNode, expression, parent);
+		} else {
+			((BPMNActivity)getChildStates().get(getChildStates().size()-1)).transitionTo(toNode, expression, parent);
+		}
+	}
+	*/
+
 	private boolean m_completed=false;
 }

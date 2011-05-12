@@ -44,6 +44,8 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
 
         suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3"));
         suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition1"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition2"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Parallel1"));
         
         return suite;
     }

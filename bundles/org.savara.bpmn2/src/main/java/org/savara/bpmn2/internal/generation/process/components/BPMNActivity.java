@@ -111,6 +111,8 @@ public interface BPMNActivity {
 	 */
 	public Object transitionFrom(BPMNActivity fromNode, String expression);
 	
+	public void transitionTo(BPMNActivity fromNode, String expression, Object parent);
+
 	public int getX();
 	
 	public void setX(int x);

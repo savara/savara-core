@@ -20,6 +20,8 @@
 package org.savara.bpmn2.internal.generation.process.components;
 
 import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
+import org.savara.bpmn2.model.BPMNEdge;
+import org.savara.bpmn2.model.Point;
 import org.scribble.protocol.model.Repeat;
 
 /**
@@ -32,8 +34,8 @@ public class RepeatActivity extends AbstractBPMNActivity {
 	private boolean m_completed=false;
 	
     private BPMNActivity m_initialChoiceState=null;
-    private BPMNActivity m_endChoiceState=null;
-    private BPMNActivity m_junctionState=null;
+    //private BPMNActivity m_endChoiceState=null;
+    //private BPMNActivity m_junctionState=null;
 
     /**
 	 * This constructor initializes the while state.
@@ -63,7 +65,8 @@ public class RepeatActivity extends AbstractBPMNActivity {
 		
 		m_initialChoiceState = new JunctionActivity(choiceState, this,
 				getModelFactory(), getNotationFactory());
-				
+		
+		/*
 		Object endChoiceState=getModelFactory().createDataBasedXORGateway(getContainer());
 		
 		m_endChoiceState = new JunctionActivity(endChoiceState, this,
@@ -73,6 +76,7 @@ public class RepeatActivity extends AbstractBPMNActivity {
 		
 		m_junctionState = new JunctionActivity(junctionState, this,
 				getModelFactory(), getNotationFactory());
+		*/
 	}
 	
 	/**
@@ -84,14 +88,18 @@ public class RepeatActivity extends AbstractBPMNActivity {
 		
 		if (m_completed == false) {
 			
+			/*
 			// Move the end choice state to the end of the list
 			if (m_endChoiceState != null &&
 					getChildStates().remove(m_endChoiceState)) {
 				getChildStates().add(m_endChoiceState);
 			}
+			*/
 			
+			/*
 			// Move the junction state to the end of the list
 			boolean junctionRemoved=getChildStates().remove(m_junctionState);
+			*/
 			
 			// Join the child state vertex with transitions
 			// Don't join the endChoice and junction states here
@@ -121,12 +129,14 @@ public class RepeatActivity extends AbstractBPMNActivity {
 			//BPMNActivity lastState=(BPMNActivity)getChildStates().
 			//					get(getChildStates().size()-1);
 			
+			/*
 			if (junctionRemoved) {
 				getChildStates().add(m_junctionState);				
 			}
 
 			m_junctionState.transitionFrom(m_initialChoiceState,
 						"false()");
+			
 			
 			getStartState().transitionFrom(m_endChoiceState,
 						//m_repeatExpression != null?
@@ -135,25 +145,30 @@ public class RepeatActivity extends AbstractBPMNActivity {
 				
 			m_junctionState.transitionFrom(m_endChoiceState,
 					"false()");
+			*/
 			
 			int width=0;
 			int height=0;
 			
 			// Calculate extra width
-			width = m_initialChoiceState.getWidth()+HORIZONTAL_GAP+
-					m_junctionState.getWidth()+HORIZONTAL_GAP;
+			width = m_initialChoiceState.getWidth()+HORIZONTAL_GAP; //+
+					//m_junctionState.getWidth()+HORIZONTAL_GAP;
 			
 			height = m_initialChoiceState.getHeight();
 			
+			/*
 			if (height < m_junctionState.getHeight()) {
 				height = m_junctionState.getHeight();
 			}
+			*/
 			
 			height += (VERTICAL_GAP*2);
 			
+			/*
 			if (m_endChoiceState != null) {
 				height += m_endChoiceState.getHeight()+VERTICAL_GAP;
 			}
+			*/
 			
 			setWidth(getWidth()+width);
 			setHeight(getHeight()+height);
@@ -169,6 +184,8 @@ public class RepeatActivity extends AbstractBPMNActivity {
 		
 		m_initialChoiceState.calculatePosition(x, junctionY-
 				(m_initialChoiceState.getHeight()/2));
+		
+		/*
 		m_junctionState.calculatePosition(x+getWidth()-
 				m_junctionState.getWidth(), junctionY-
 				(m_junctionState.getHeight()/2));
@@ -181,6 +198,7 @@ public class RepeatActivity extends AbstractBPMNActivity {
 				(VERTICAL_GAP/2));
 			//extraY = m_endChoiceState.getHeight()+VERTICAL_GAP;
 		}
+		*/
 		
 		SequenceActivity seq=null;
 		
@@ -195,9 +213,11 @@ public class RepeatActivity extends AbstractBPMNActivity {
 				//		HORIZONTAL_GAP, y+extraY);
 				int gap=(VERTICAL_GAP/4);
 				
+				/*
 				if (m_endChoiceState != null) {
 					gap = VERTICAL_GAP;
 				}
+				*/
 				
 				act.calculatePosition(x+
 						m_initialChoiceState.getWidth()+
@@ -206,6 +226,7 @@ public class RepeatActivity extends AbstractBPMNActivity {
 			}
 		}
 		
+		/*
 		// If a normal expression, then move the end
 		// node of the last child, to help with layout
 		if (m_endChoiceState == null && seq.getChildStates().size() > 0) {
@@ -217,6 +238,7 @@ public class RepeatActivity extends AbstractBPMNActivity {
 					junctionY-lastState.getHeight()-
 					(VERTICAL_GAP/2));
 		}
+		*/
 
 	}
 	
@@ -227,9 +249,62 @@ public class RepeatActivity extends AbstractBPMNActivity {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			
 			act.draw(parent);
+			
+			if (i > 0) {
+				BPMNActivity prev=(BPMNActivity)getChildStates().get(i-1);
+				
+				prev.transitionTo(act, null, parent);
+			}
+		}
+		
+		if (getChildStates().size() > 0) {
+			BPMNActivity act=(BPMNActivity)getChildStates().get(getChildStates().size()-1);
+			
+			Object link=getModelFactory().createControlLink(getContainer(),
+					act.getEndNode(), getStartNode(), null);
+			
+			BPMNEdge edge=(BPMNEdge)getNotationFactory().createSequenceLink(getModelFactory(), link, parent);
+
+			Point p1=new Point();
+			p1.setY(edge.getWaypoint().get(0).getY());
+			p1.setX(edge.getWaypoint().get(0).getX()+40);
+			
+			Point p2=new Point();
+			p2.setY(act.getY()-20);
+			p2.setX(edge.getWaypoint().get(0).getX()+40);
+			
+			Point p3=new Point();
+			p3.setY(act.getY()-20);
+			p3.setX(edge.getWaypoint().get(1).getX()+22);
+			
+			edge.getWaypoint().get(1).setX(edge.getWaypoint().get(1).getX()+22);
+			edge.getWaypoint().get(1).setY(edge.getWaypoint().get(1).getY()-22);
+			
+			edge.getWaypoint().add(1, p1);
+			edge.getWaypoint().add(2, p2);
+			edge.getWaypoint().add(3, p3);
+
 		}
 	}
 
+	public void transitionTo(BPMNActivity toNode, String expression, Object parent) {
+		Object ret=getModelFactory().createControlLink(getContainer(),
+				getEndNode(), toNode.getStartNode(), expression);
+		
+		BPMNEdge edge=(BPMNEdge)getNotationFactory().createSequenceLink(getModelFactory(), ret, parent);
+		
+		Point p1=new Point();
+		p1.setY(edge.getWaypoint().get(0).getY());
+		p1.setX(edge.getWaypoint().get(1).getX()-40);
+		
+		Point p2=new Point();
+		p2.setY(edge.getWaypoint().get(1).getY());
+		p2.setX(edge.getWaypoint().get(1).getX()-40);
+		
+		edge.getWaypoint().add(1, p1);
+		edge.getWaypoint().add(2, p2);
+	}
+	
 	/**
 	 * This method returns the start node for the activites
 	 * represented by this UML activity implementation.
@@ -262,7 +337,7 @@ public class RepeatActivity extends AbstractBPMNActivity {
 	 * @return The end state
 	 */
 	public BPMNActivity getEndState() {
-		return(m_junctionState);
+		return(m_initialChoiceState);
 	}
 	
 	/**
@@ -272,7 +347,7 @@ public class RepeatActivity extends AbstractBPMNActivity {
 	 * @return The ending node
 	 */
 	public Object getEndNode() {
-		return(m_junctionState.getEndNode());
+		return(m_initialChoiceState.getEndNode());
 	}
 	
 	public boolean canDeleteEndNode() {

@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ca="http://www.jboss.org/examples/creditAgency" xmlns:lg="http://www.jboss.org/examples/logistics" xmlns:ns2="http://www.omg.org/spec/DD/20100524/DI" xmlns:ns3="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ns2="http://www.omg.org/spec/DD/20100524/DI" xmlns:ns3="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/BPMN/20100524/DI">
     <collaboration id="MID1">
-        <ns5:participant xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" id="MID3" name="CreditAgency" processRef="MID2"/>
+        <ns5:participant xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" id="MID3" name="Buyer" processRef="MID2"/>
     </collaboration>
-    <process id="MID2" name="CreditAgency">
+    <process id="MID2" name="Buyer">
         <startEvent id="MID4">
             <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID9</ns5:outgoing>
             <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID12</ns5:outgoing>
@@ -11,13 +11,13 @@
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID10</ns5:incoming>
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID13</ns5:incoming>
         </endEvent>
-        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: checkCredit(CreditCheckRequest) from Store" xsi:type="tReceiveTask">
+        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Send: buy(BuyRequest) to Store" xsi:type="tSendTask">
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID9</ns6:incoming>
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID12</ns6:incoming>
             <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID8</ns6:outgoing>
             <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID11</ns6:outgoing>
         </task>
-        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Send: checkCredit(CreditRating) to Store" xsi:type="tSendTask">
+        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Receive: buy(BuyConfirmed) from Store" xsi:type="tReceiveTask">
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID8</ns6:incoming>
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID11</ns6:incoming>
             <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID10</ns6:outgoing>

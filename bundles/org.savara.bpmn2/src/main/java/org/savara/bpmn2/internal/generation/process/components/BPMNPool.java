@@ -127,6 +127,7 @@ public class BPMNPool extends AbstractBPMNActivity {
 			
 			// Add padding
 			setHeight(getHeight()+(VERTICAL_GAP*2));
+			setWidth(getWidth()+(HORIZONTAL_GAP*2));
 			
 			m_completed = true;
 		}
@@ -161,14 +162,22 @@ public class BPMNPool extends AbstractBPMNActivity {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			
 			act.draw(parent);
+			
+			if (i > 0) {
+				BPMNActivity prev=(BPMNActivity)getChildStates().get(i-1);
+				
+				prev.transitionTo(act, null, parent);
+			}
 		}
 
 		// Create diagram sequence flows
+		/*
 		java.util.List<Object> seqflows=getModelFactory().getControlLinks(getContainer());
 		
 		for (Object seqflow : seqflows) {
 			getNotationFactory().createSequenceLink(getModelFactory(), seqflow, parent);
 		}
+		*/
 		
 	}
 }
