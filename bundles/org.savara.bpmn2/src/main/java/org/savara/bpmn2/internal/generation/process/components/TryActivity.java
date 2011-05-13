@@ -19,6 +19,11 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
+import javax.xml.namespace.QName;
+
+import org.savara.bpmn2.model.BPMNEdge;
+import org.savara.bpmn2.model.Point;
+import org.savara.bpmn2.model.TBoundaryEvent;
 import org.savara.bpmn2.model.TSubProcess;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Try;
@@ -103,14 +108,38 @@ public class TryActivity extends AbstractBPMNActivity {
 	}
 	
 	public void draw(Object parent) {
+		TryBlockActivity tryblock=(TryBlockActivity)getChildStates().get(0);
 		
-		for (int i=0; i < getChildStates().size(); i++) {
+		tryblock.draw(parent);
+		
+		for (int i=1; i < getChildStates().size(); i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			
 			act.draw(parent);
 			
 			if (i > 0) {
+				TBoundaryEvent boundaryEvent=(TBoundaryEvent)getModelFactory().createBoundaryEvent(getContainer());
+				
+				boundaryEvent.setAttachedToRef(new QName(tryblock.getSubProcess().getId()));
+				
+				getNotationFactory().createEvent(getModelFactory(), boundaryEvent,
+						parent, tryblock.getX()+((getChildStates().size()-i-1)*CATCH_OFFSET),
+						tryblock.getY()+tryblock.getHeight()-15, 30, 30);
+				
 				// Draw throw event to this catch block
+				Object link=getModelFactory().createControlLink(getContainer(),
+						boundaryEvent, act.getStartNode(), null);
+				
+				BPMNEdge edge=(BPMNEdge)getNotationFactory().createSequenceLink(getModelFactory(), link, parent);
+
+				edge.getWaypoint().get(0).setX(edge.getWaypoint().get(0).getX()-15);
+				edge.getWaypoint().get(0).setY(edge.getWaypoint().get(0).getY()+15);
+				
+				Point p1=new Point();
+				p1.setY(edge.getWaypoint().get(1).getY());
+				p1.setX(edge.getWaypoint().get(0).getX());
+
+				edge.getWaypoint().add(1, p1);
 			}
 		}
 	}

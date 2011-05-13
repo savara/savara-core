@@ -33,6 +33,7 @@ import org.savara.bpmn2.model.DiagramElement;
 import org.savara.bpmn2.model.ObjectFactory;
 import org.savara.bpmn2.model.Point;
 import org.savara.bpmn2.model.TBaseElement;
+import org.savara.bpmn2.model.TBoundaryEvent;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TGateway;
 import org.savara.bpmn2.model.TParticipant;
@@ -134,6 +135,35 @@ public class BPMN2NotationFactory {
 			shape.setBpmnElement(new QName(base.getId()));
 		}
 		
+		Bounds b=new Bounds();
+		b.setX(x);
+		b.setY(y);
+		b.setWidth(width);
+		b.setHeight(height);
+		
+		shape.setBounds(b);
+		
+		if (parentNotation instanceof BPMNPlane) {
+			BPMNPlane plane=(BPMNPlane)parentNotation;
+			
+			plane.getDiagramElement().add(m_factory.createBPMNShape(shape));
+		}
+		
+		return(shape);
+	}
+	
+	public Object createEvent(BPMN2ModelFactory factory,
+			Object eventModel, Object parentNotation,
+					int x, int y, int width, int height) {
+		BPMNShape shape=new BPMNShape();
+		shape.setId(createId());
+		
+		if (eventModel instanceof TBaseElement) {
+			TBaseElement base=(TBaseElement)eventModel;
+			
+			shape.setBpmnElement(new QName(base.getId()));
+		}
+
 		Bounds b=new Bounds();
 		b.setX(x);
 		b.setY(y);

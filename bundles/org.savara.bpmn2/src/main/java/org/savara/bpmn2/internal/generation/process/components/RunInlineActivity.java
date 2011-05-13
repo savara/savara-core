@@ -61,6 +61,10 @@ public class RunInlineActivity extends AbstractBPMNActivity {
 		m_finalState = new JunctionActivity(getModelFactory().createFinalNode(getContainer()),
 				this, getModelFactory(), getNotationFactory());
 	}
+	
+	public TSubProcess getSubProcess() {
+		return(m_subProcess);
+	}
 
 	/**
 	 * This method indicates that the BPMN state for the
