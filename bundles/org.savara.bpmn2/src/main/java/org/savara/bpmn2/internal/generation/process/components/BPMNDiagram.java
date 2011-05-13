@@ -95,29 +95,6 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	}
 	
 	/**
-	 * This method returns the state machine name to be used for the
-	 * supplied behavior type.
-	 * 
-	 * @param elem The behavior type
-	 * @return The name
-	 */
-	public static String getName(Activity elem) {
-		String ret="<unknown>";
-		
-		if (elem instanceof Protocol) {
-			ret = ((Protocol)elem).getName();
-			
-			/* Causes multiple diagrams to be created
-			if (((Protocol)elem).getRole() != null) {
-				ret += "_"+((Protocol)elem).getRole().getName();
-			}
-			*/
-		}
-		
-		return(ret);
-	}
-	
-	/**
 	 * This method determines whether the supplied behavior type
 	 * should result in a root entry/exit point from the
 	 * state machine.

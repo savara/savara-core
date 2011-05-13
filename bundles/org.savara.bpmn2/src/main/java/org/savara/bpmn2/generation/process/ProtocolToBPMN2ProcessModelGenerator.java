@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
 import org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory;
 import org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory;
+import org.savara.bpmn2.internal.generation.process.components.AbstractBPMNActivity;
 import org.savara.bpmn2.internal.generation.process.components.BPMNActivity;
 import org.savara.bpmn2.internal.generation.process.components.BPMNDiagram;
 import org.savara.bpmn2.internal.generation.process.components.BPMNPool;
@@ -33,6 +34,7 @@ import org.savara.bpmn2.internal.generation.process.components.ParallelActivity;
 import org.savara.bpmn2.internal.generation.process.components.ReceiveActivity;
 import org.savara.bpmn2.internal.generation.process.components.RepeatActivity;
 import org.savara.bpmn2.internal.generation.process.components.RunActivity;
+import org.savara.bpmn2.internal.generation.process.components.RunInlineActivity;
 import org.savara.bpmn2.internal.generation.process.components.SendActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
 import org.savara.bpmn2.internal.generation.process.components.SimpleActivity;
@@ -189,7 +191,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			try {
 				BPMNDiagram diagram=getBPMNModel(elem);
 				
-				BPMNPool pool=diagram.createPool(elem.getRole().getName());
+				BPMNPool pool=diagram.createPool(getPoolName(elem));
 				
 				//diagram.initialize(elem);
 				
@@ -200,6 +202,14 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			}
 			
 			return(true);
+		}
+		
+		protected String getPoolName(Protocol elem) {
+			if (elem.getParent() instanceof ProtocolModel) {
+				return(elem.getRole().getName());
+			} else {
+				return(elem.getName()+"_"+elem.getRole().getName());
+			}
 		}
 		
 		/**
@@ -301,11 +311,19 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * @param elem The perform
 		 */
 		public boolean start(Run elem) {
+			AbstractBPMNActivity state=null;
 			
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
-				RunActivity state=new RunActivity(elem,
+				if (elem.isInline()) {
+					state = new RunInlineActivity(elem,
 						umls, m_modelFactory, m_notationFactory);
+				
+					pushBPMNActivity(state);
+				} else {
+					state = new RunActivity(elem,
+							umls, m_modelFactory, m_notationFactory);					
+				}
 				
 				/* TODO: See if possible to determine who is the initiating party
 				 * in the performed protocol, to establish a link
@@ -339,6 +357,18 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			}
 			
 			return(true);
+		}
+		
+		/**
+		 * This method ends visiting the run element.
+		 * 
+		 * @param elem The run
+		 */
+		public void end(Run elem) {
+			
+			if (elem.isInline()) {
+				popBPMNActivity();
+			}
 		}
 		
 		/**
@@ -485,7 +515,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		}
 		
 		protected BPMNDiagram getBPMNModel(Protocol elem) throws BPMN2GenerationException {
-			String name=BPMNDiagram.getName(elem);
+			Protocol main=elem.getTopLevelProtocol();
+			String name=main.getName();
 			
 			BPMNDiagram ret=(BPMNDiagram)
 						m_activityModels.get(name);

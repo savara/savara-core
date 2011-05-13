@@ -46,6 +46,8 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
         suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition1"));
         suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition2"));
         suite.addTest(new ProtocolToBPMN2GeneratorTester("Parallel1"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Run1"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Run2"));
         
         return suite;
     }
@@ -103,7 +105,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     			if (model == null) {
     				result.addError(this, new Throwable("Model is null"));
     			} else {
-    				java.util.List<Role> roles=model.getProtocol().getRoles();
+    				java.util.List<Role> roles=model.getRoles();
     				
     				for (Role role : roles) {
     					DefaultProtocolContext context=

@@ -25,7 +25,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.savara.bpmn2.model.ObjectFactory;
+import org.savara.bpmn2.model.TActivity;
 import org.savara.bpmn2.model.TBaseElement;
+import org.savara.bpmn2.model.TCallActivity;
 import org.savara.bpmn2.model.TCollaboration;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TEndEvent;
@@ -42,8 +44,10 @@ import org.savara.bpmn2.model.TReceiveTask;
 import org.savara.bpmn2.model.TSendTask;
 import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
+import org.savara.bpmn2.model.TSubProcess;
 import org.savara.bpmn2.model.TTask;
 import org.scribble.protocol.model.Activity;
+import org.scribble.protocol.model.Run;
 import org.scribble.protocol.model.Interaction;
 import org.scribble.protocol.util.InteractionUtil;
 
@@ -115,6 +119,8 @@ public class BPMN2ModelFactory {
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
 		}
 		
 		return(startEvent);
@@ -128,7 +134,40 @@ public class BPMN2ModelFactory {
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createTask(task));
 		}
+
+		return(task);
+	}
+	
+	public Object createCallActivity(Object container, Run run) {
+		TCallActivity task=new TCallActivity();
+			
+		task.setName("Call: "+run.getProtocolReference().getName()+"_"+
+				run.getProtocolReference().getRole());
+		
+		if (container instanceof TProcess) {
+			((TProcess)container).getFlowElement().add(m_factory.createCallActivity((TCallActivity)task));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createCallActivity((TCallActivity)task));
+		}
+
+		task.setId(createId());
+
+		return(task);
+	}
+	
+	public Object createSubProcess(Object container, Run run) {
+		TSubProcess task=new TSubProcess();
+			
+		if (container instanceof TProcess) {
+			((TProcess)container).getFlowElement().add(m_factory.createSubProcess((TSubProcess)task));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createSubProcess((TSubProcess)task));
+		}
+
+		task.setId(createId());
 
 		return(task);
 	}
@@ -142,6 +181,8 @@ public class BPMN2ModelFactory {
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createTask(task));
 		}
 
 		return(task);
@@ -156,6 +197,8 @@ public class BPMN2ModelFactory {
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createTask(task));
 		}
 
 		return(task);
@@ -169,6 +212,8 @@ public class BPMN2ModelFactory {
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
 		}
 
 		return(gateway);
@@ -180,6 +225,8 @@ public class BPMN2ModelFactory {
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
 		}
 
 		return(gateway);
@@ -191,6 +238,8 @@ public class BPMN2ModelFactory {
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
 		}
 
 		return(gateway);
@@ -202,6 +251,8 @@ public class BPMN2ModelFactory {
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
 		}
 		
 		return(endEvent);
@@ -228,6 +279,8 @@ public class BPMN2ModelFactory {
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createSequenceFlow(link));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createSequenceFlow(link));
 		}
 		
 		return(link);
@@ -343,8 +396,16 @@ public class BPMN2ModelFactory {
 	public java.util.List<Object> getControlLinks(Object node) {
 		java.util.List<Object> ret=new java.util.Vector<Object>();
 		
+		java.util.List<JAXBElement<? extends TFlowElement>> list=null;
+		
 		if (node instanceof TProcess) {
-			for (JAXBElement<? extends TFlowElement> jbfe : ((TProcess)node).getFlowElement()) {
+			list = ((TProcess)node).getFlowElement();
+		} else if (node instanceof TSubProcess) {
+			list = ((TSubProcess)node).getFlowElement();
+		}
+		
+		if (list != null) {
+			for (JAXBElement<? extends TFlowElement> jbfe : list) {
 				TFlowElement fe=jbfe.getValue();
 				
 				if (fe instanceof TSequenceFlow) {
