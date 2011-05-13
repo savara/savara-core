@@ -20,6 +20,7 @@
 package org.savara.bpmn2.internal.generation.process.components;
 
 import org.scribble.protocol.model.Activity;
+import org.scribble.protocol.model.Run;
 
 /**
  * This class represents the BPMN activity node for a Perform activity.
@@ -38,6 +39,10 @@ public class RunActivity extends SimpleActivity {
 			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(act, parent, model, notation);
+	}
+	
+	protected Object createNode(Activity act) {
+		return(getModelFactory().createCallActivity(getContainer(), (Run)act));
 	}
 	
 	/**

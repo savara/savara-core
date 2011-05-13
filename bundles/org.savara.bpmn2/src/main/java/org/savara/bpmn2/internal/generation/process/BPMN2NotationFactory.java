@@ -210,7 +210,7 @@ public class BPMN2NotationFactory {
 				for (JAXBElement<? extends DiagramElement> jbde : plane.getDiagramElement()) {
 					DiagramElement de=jbde.getValue();
 					
-					if (de instanceof BPMNShape) {
+					if (de instanceof BPMNShape && ((BPMNShape)de).getBpmnElement() != null) {
 						if (((BPMNShape)de).getBpmnElement().getLocalPart().equals(
 									((TBaseElement)seqflow.getSourceRef()).getId())) {
 							source = (BPMNShape)de;
