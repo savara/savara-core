@@ -39,6 +39,10 @@ public class CDMToProtocolParserTest {
         suite.addTest(new ChoreographyToProtocolTester("PurchaseGoods3")); // separate fault responses
         suite.addTest(new ChoreographyToProtocolTester("ReqRespFault"));
         
+        /* SAVARA-221
+        suite.addTest(new ChoreographyToProtocolTester("PurchaseGoodsWithException"));
+        */
+        
         return suite;
     }
     

@@ -38,6 +38,8 @@ import org.savara.bpmn2.internal.generation.process.components.RunInlineActivity
 import org.savara.bpmn2.internal.generation.process.components.SendActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
 import org.savara.bpmn2.internal.generation.process.components.SimpleActivity;
+import org.savara.bpmn2.internal.generation.process.components.TryActivity;
+import org.savara.bpmn2.internal.generation.process.components.TryBlockActivity;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
@@ -316,8 +318,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
 				if (elem.isInline()) {
-					state = new RunInlineActivity(elem,
-						umls, m_modelFactory, m_notationFactory);
+					state = new RunInlineActivity(umls, m_modelFactory, m_notationFactory);
 				
 					pushBPMNActivity(state);
 				} else {
@@ -372,6 +373,71 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		}
 		
 		/**
+		 * This method indicates the start of a
+		 * try escape.
+		 * 
+		 * @param elem The try escape
+		 * @return Whether to process the contents
+		 */
+		public boolean start(Try elem) {
+			AbstractBPMNActivity state=null;
+			
+			BPMNActivity umls=getBPMNActivity();
+			if (umls != null) {
+				state = new TryActivity(elem,
+					umls, m_modelFactory, m_notationFactory);
+			
+				pushBPMNActivity(state);
+				
+				TryBlockActivity inline=new TryBlockActivity(state, m_modelFactory, m_notationFactory);
+				
+				pushBPMNActivity(inline);
+			}
+			
+			return(true);
+		}
+		
+		/**
+		 * This method indicates the end of a
+		 * try escape.
+		 * 
+		 * @param elem The try escape
+		 */
+		public void end(Try elem) {
+			
+			if (getBPMNActivity() instanceof TryBlockActivity) {				
+				popBPMNActivity();
+			}
+			
+			popBPMNActivity();
+		}
+		
+		/**
+		 * This method indicates the start of a
+		 * catch block.
+		 * 
+		 * @param elem The catch block
+		 * @return Whether to process the contents
+		 */
+		public boolean start(Catch elem) {
+			if (getBPMNActivity() instanceof TryBlockActivity) {				
+				popBPMNActivity();
+			}
+			
+			return(true);
+		}
+		
+		/**
+		 * This method indicates the end of a
+		 * catch block.
+		 * 
+		 * @param elem The catch block
+		 */
+		public void end(Catch elem) {
+			//popBPMNActivity();
+		}
+
+		/**
 		 * This method visits the receive activity.
 		 * 
 		 * @param elem The receive
@@ -414,8 +480,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		public boolean start(Block elem) {
 			
 			try {
-				pushBPMNActivity(new SequenceActivity(elem,
-						getBPMNActivity(), m_modelFactory, m_notationFactory));
+				pushBPMNActivity(new SequenceActivity(getBPMNActivity(), m_modelFactory, m_notationFactory));
 				
 				if (elem.getParent() instanceof When &&
 						((When)elem.getParent()).getMessageSignature().getTypeReferences().size() > 0 &&
@@ -462,6 +527,11 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						}
 					}
 
+				} else if (elem.getParent() instanceof Catch) {
+					
+					for (Interaction interaction : ((Catch)elem.getParent()).getInteractions()) {
+						accept(interaction);
+					}
 				}
 				
 			} catch(Exception e) {
@@ -492,8 +562,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				pushBPMNActivity(new RepeatActivity(elem,
 						getBPMNActivity(), m_modelFactory, m_notationFactory));
 				
-				pushBPMNActivity(new SequenceActivity(elem,
-						getBPMNActivity(), m_modelFactory, m_notationFactory));
+				pushBPMNActivity(new SequenceActivity(getBPMNActivity(), m_modelFactory, m_notationFactory));
 				
 			} catch(Exception e) {
 				logger.severe("Failed to create while Activity: "+e);

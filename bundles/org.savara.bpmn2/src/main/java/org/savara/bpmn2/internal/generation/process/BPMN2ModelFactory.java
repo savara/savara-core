@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
 import org.savara.bpmn2.model.ObjectFactory;
 import org.savara.bpmn2.model.TActivity;
 import org.savara.bpmn2.model.TBaseElement;
+import org.savara.bpmn2.model.TBoundaryEvent;
 import org.savara.bpmn2.model.TCallActivity;
 import org.savara.bpmn2.model.TCollaboration;
 import org.savara.bpmn2.model.TDefinitions;
@@ -46,6 +47,7 @@ import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TSubProcess;
 import org.savara.bpmn2.model.TTask;
+import org.savara.bpmn2.model.TThrowEvent;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Run;
 import org.scribble.protocol.model.Interaction;
@@ -158,7 +160,7 @@ public class BPMN2ModelFactory {
 		return(task);
 	}
 	
-	public Object createSubProcess(Object container, Run run) {
+	public Object createSubProcess(Object container) {
 		TSubProcess task=new TSubProcess();
 			
 		if (container instanceof TProcess) {
@@ -256,6 +258,19 @@ public class BPMN2ModelFactory {
 		}
 		
 		return(endEvent);
+	}
+	
+	public Object createBoundaryEvent(Object container) {
+		TBoundaryEvent event=new TBoundaryEvent();
+		event.setId(createId());
+		
+		if (container instanceof TProcess) {
+			((TProcess)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
+		}
+		
+		return(event);
 	}
 	
 	public Object createControlLink(Object container,
