@@ -158,7 +158,7 @@ public class BPMN2ModelFactory {
 		return(task);
 	}
 	
-	public Object createSubProcess(Object container, Run run) {
+	public Object createSubProcess(Object container) {
 		TSubProcess task=new TSubProcess();
 			
 		if (container instanceof TProcess) {

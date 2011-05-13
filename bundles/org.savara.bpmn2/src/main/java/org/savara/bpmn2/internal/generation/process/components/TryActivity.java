@@ -21,15 +21,15 @@ package org.savara.bpmn2.internal.generation.process.components;
 
 import org.savara.bpmn2.model.TSubProcess;
 import org.scribble.protocol.model.Activity;
-import org.scribble.protocol.model.Run;
+import org.scribble.protocol.model.Try;
 
 /**
  * This class represents the BPMN activity node for a Perform activity.
  * 
  */
-public class RunInlineActivity extends AbstractBPMNActivity {
+public class TryActivity extends AbstractBPMNActivity {
 
-	private Run m_run=null;
+	private Try m_try=null;
 	private boolean m_completed=false;
 	private BPMNActivity m_initialState=null;
 	private BPMNActivity m_finalState=null;
@@ -42,12 +42,12 @@ public class RunInlineActivity extends AbstractBPMNActivity {
 	 * @param parent The parent BPMN state
 	 * @param model The BPMN model
 	 */
-	public RunInlineActivity(Activity act, BPMNActivity parent,
+	public TryActivity(Activity act, BPMNActivity parent,
 			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
-		m_run = (Run)act;
+		m_try = (Try)act;
 		
 		initialize(parent);
 	}
@@ -73,7 +73,6 @@ public class RunInlineActivity extends AbstractBPMNActivity {
 	public void childrenComplete() {
 		
 		if (m_completed == false) {
-			
 			// Move the final state to the end of the list
 			if (getChildStates().remove(m_finalState)) {
 				getChildStates().add(m_finalState);

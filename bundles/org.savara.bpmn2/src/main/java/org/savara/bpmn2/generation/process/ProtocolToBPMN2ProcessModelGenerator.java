@@ -38,6 +38,7 @@ import org.savara.bpmn2.internal.generation.process.components.RunInlineActivity
 import org.savara.bpmn2.internal.generation.process.components.SendActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
 import org.savara.bpmn2.internal.generation.process.components.SimpleActivity;
+import org.savara.bpmn2.internal.generation.process.components.TryActivity;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
@@ -371,6 +372,57 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			}
 		}
 		
+		/**
+		 * This method indicates the start of a
+		 * try escape.
+		 * 
+		 * @param elem The try escape
+		 * @return Whether to process the contents
+		 */
+		public boolean start(Try elem) {
+			AbstractBPMNActivity state=null;
+			
+			BPMNActivity umls=getBPMNActivity();
+			if (umls != null) {
+				state = new TryActivity(elem,
+					umls, m_modelFactory, m_notationFactory);
+			
+				pushBPMNActivity(state);
+			}
+			
+			return(true);
+		}
+		
+		/**
+		 * This method indicates the end of a
+		 * try escape.
+		 * 
+		 * @param elem The try escape
+		 */
+		public void end(Try elem) {
+			popBPMNActivity();
+		}
+		
+		/**
+		 * This method indicates the start of a
+		 * catch block.
+		 * 
+		 * @param elem The catch block
+		 * @return Whether to process the contents
+		 */
+		public boolean start(Catch elem) {
+			return(true);
+		}
+		
+		/**
+		 * This method indicates the end of a
+		 * catch block.
+		 * 
+		 * @param elem The catch block
+		 */
+		public void end(Catch elem) {
+		}
+
 		/**
 		 * This method visits the receive activity.
 		 * 
