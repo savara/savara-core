@@ -29,11 +29,9 @@ import org.scribble.protocol.model.Try;
  */
 public class TryActivity extends AbstractBPMNActivity {
 
-	private Try m_try=null;
 	private boolean m_completed=false;
-	private BPMNActivity m_initialState=null;
-	private BPMNActivity m_finalState=null;
-	private TSubProcess m_subProcess=null;
+	
+	private static final int CATCH_OFFSET=50;
 	
 	/**
 	 * This constructor initializes the receive state.
@@ -46,25 +44,8 @@ public class TryActivity extends AbstractBPMNActivity {
 			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
-		
-		m_try = (Try)act;
-		
-		initialize(parent);
 	}
 	
-	protected void initialize(BPMNActivity parent) {
-		
-		m_subProcess = (TSubProcess)getModelFactory().createSubProcess(parent.getContainer());
-		
-		// Create initial state
-		m_initialState = new JunctionActivity(getModelFactory().createInitialNode(getContainer()),
-				this, getModelFactory(), getNotationFactory());
-		
-		// Create final state
-		m_finalState = new JunctionActivity(getModelFactory().createFinalNode(getContainer()),
-				this, getModelFactory(), getNotationFactory());
-	}
-
 	/**
 	 * This method indicates that the BPMN state for the
 	 * child nodes is complete.
@@ -73,17 +54,27 @@ public class TryActivity extends AbstractBPMNActivity {
 	public void childrenComplete() {
 		
 		if (m_completed == false) {
-			// Move the final state to the end of the list
-			if (getChildStates().remove(m_finalState)) {
-				getChildStates().add(m_finalState);
+			int height=0;
+			int maxwidth=0;
+			
+			for (int i=0; i < getChildStates().size(); i++) {
+				BPMNActivity act=(BPMNActivity)getChildStates().get(i);
+				int width=act.getWidth();
+				
+				if (i > 0) {
+					width += (getChildStates().size()-i) * CATCH_OFFSET;
+				}
+				
+				if (width > maxwidth) {
+					maxwidth = width;
+				}
+				
+				height += act.getHeight()+VERTICAL_GAP;
 			}
 			
-			// Join the child state vertex with transitions
-			transitionSequentialNodes();
-			
 			// Add padding
-			setHeight(getHeight()+(VERTICAL_GAP*2));
-			setWidth(getWidth()+(HORIZONTAL_GAP*2));
+			setHeight(height-VERTICAL_GAP);
+			setWidth(maxwidth+(HORIZONTAL_GAP*2));
 			
 			m_completed = true;
 		}
@@ -91,7 +82,7 @@ public class TryActivity extends AbstractBPMNActivity {
 	
 	public void calculatePosition(int x, int y) {
 		int curx=x+HORIZONTAL_GAP;
-		int midy=(getHeight()/2);
+		int cury=y;
 		
 		setX(x);
 		setY(y); //+VERTICAL_GAP);
@@ -99,20 +90,19 @@ public class TryActivity extends AbstractBPMNActivity {
 		for (int i=0; i < getChildStates().size(); i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			
-			act.calculatePosition(curx, y + (midy-(act.getHeight()/2)));
+			int newx=curx;
 			
-			curx += (act.getWidth()+HORIZONTAL_GAP);
+			if (i > 0) {
+				newx += (getChildStates().size()-i) * CATCH_OFFSET;
+			}
+			
+			act.calculatePosition(newx, cury);
+			
+			cury += act.getHeight()+VERTICAL_GAP;
 		}
 	}
 	
 	public void draw(Object parent) {
-		
-		// Construct notation
-		getNotationFactory().createTask(getModelFactory(), m_subProcess,
-				parent, getX(), getY(), getWidth(), getHeight());
-		
-		//m_initialState.draw(notation);
-		//m_finalState.draw(notation);
 		
 		for (int i=0; i < getChildStates().size(); i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
@@ -120,21 +110,9 @@ public class TryActivity extends AbstractBPMNActivity {
 			act.draw(parent);
 			
 			if (i > 0) {
-				BPMNActivity prev=(BPMNActivity)getChildStates().get(i-1);
-				
-				prev.transitionTo(act, null, parent);
+				// Draw throw event to this catch block
 			}
 		}
-
-		// Create diagram sequence flows
-		/*
-		java.util.List<Object> seqflows=getModelFactory().getControlLinks(getContainer());
-		
-		for (Object seqflow : seqflows) {
-			getNotationFactory().createSequenceLink(getModelFactory(), seqflow, parent);
-		}
-		*/
-		
 	}
 
 	/**
@@ -187,23 +165,15 @@ public class TryActivity extends AbstractBPMNActivity {
 			getModelFactory().delete(sourceNode);
 		}
 	}
-
-	/**
-	 * This method returns the container associated with the
-	 * activity.
-	 * 
-	 * @return The container
-	 */
-	public Object getContainer() {
-		return(m_subProcess);
-	}
 		
 	public Object getStartNode() {
-		return(m_subProcess);
+		BPMNActivity act=(BPMNActivity)getChildStates().get(0);
+		return(act.getStartNode());
 	}
 	
 	public Object getEndNode() {
-		return(m_subProcess);
+		BPMNActivity act=(BPMNActivity)getChildStates().get(0);
+		return(act.getEndNode());
 	}
 	
 	/**

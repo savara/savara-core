@@ -22,5 +22,7 @@ protocol PurchaseGoodsWithCancel {
 		}
 	} catch (cancel(CancelOrder) from Buyer to Store) {
 	
+	} catch (cancel(OtherRequest) from Buyer to Store) {
+		OtherResponse from Store to Buyer;
 	}
 }

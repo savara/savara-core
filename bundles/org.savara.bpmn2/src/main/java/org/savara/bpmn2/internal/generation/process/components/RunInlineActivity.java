@@ -29,7 +29,6 @@ import org.scribble.protocol.model.Run;
  */
 public class RunInlineActivity extends AbstractBPMNActivity {
 
-	private Run m_run=null;
 	private boolean m_completed=false;
 	private BPMNActivity m_initialState=null;
 	private BPMNActivity m_finalState=null;
@@ -42,12 +41,10 @@ public class RunInlineActivity extends AbstractBPMNActivity {
 	 * @param parent The parent BPMN state
 	 * @param model The BPMN model
 	 */
-	public RunInlineActivity(Activity act, BPMNActivity parent,
+	public RunInlineActivity(BPMNActivity parent,
 			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
-		
-		m_run = (Run)act;
 		
 		initialize(parent);
 	}
