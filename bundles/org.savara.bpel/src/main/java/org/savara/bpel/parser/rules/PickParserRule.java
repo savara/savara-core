@@ -56,9 +56,9 @@ public class PickParserRule implements ProtocolParserRule {
 		for (int i=0; i < pick.getOnMessage().size(); i++) {
 			TOnMessage onMessageElem=pick.getOnMessage().get(i);
 			
-			When cb = new When();
+			Block cb = new Block();
 			
-			context.parse(onMessageElem, cb.getBlock().getContents(), handler);
+			context.parse(onMessageElem, cb.getContents(), handler);
 			
 			String fromRoleName=PartnerLinkUtil.getServerPartnerRole(onMessageElem.getPartnerLink());
 			
@@ -76,7 +76,7 @@ public class PickParserRule implements ProtocolParserRule {
 				}
 			}
 			
-			elem.setFromRole(fromRole);
+			elem.setRole(fromRole);
 
 			TVariable var=context.getVariable(onMessageElem.getVariable());
 			
@@ -89,16 +89,23 @@ public class PickParserRule implements ProtocolParserRule {
 			ms.setOperation(onMessageElem.getOperation());
 			ms.getTypeReferences().add(tref);
 			
-			cb.setMessageSignature(ms);
+			Interaction interaction=new Interaction();
+			interaction.setMessageSignature(ms);
+			
+			if (fromRole != null) {
+				interaction.setFromRole(new Role(fromRole));
+			}
+			
+			cb.add(interaction);
 			
 			// Process the contained activities
 			TActivity act=ActivityUtil.getActivity(onMessageElem);
 			
 			if (act != null) {
-				context.parse(act, cb.getBlock().getContents(), handler);
+				context.parse(act, cb.getContents(), handler);
 			}
 
-			elem.getWhens().add(cb);
+			elem.getBlocks().add(cb);
 		}
 		
 		// TODO: If alarms defined, then model these using a

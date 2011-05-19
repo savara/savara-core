@@ -40,7 +40,6 @@ import org.savara.contract.model.OneWayRequestMEP;
 import org.savara.contract.model.RequestResponseMEP;
 import org.savara.contract.model.Type;
 import org.savara.contract.model.TypeDefinition;
-import org.scribble.protocol.model.Choice;
 import org.scribble.protocol.model.DefaultVisitor;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.Interaction;
@@ -50,7 +49,6 @@ import org.scribble.protocol.model.Role;
 import org.scribble.protocol.model.TypeImport;
 import org.scribble.protocol.model.TypeImportList;
 import org.scribble.protocol.model.TypeReference;
-import org.scribble.protocol.model.When;
 import org.scribble.protocol.util.RunUtil;
 import org.scribble.protocol.util.TypesUtil;
 
@@ -413,6 +411,7 @@ public class ContractIntrospector extends DefaultVisitor {
 	 * 
 	 * @param interaction The interaction
 	 */
+	/*
 	public boolean start(When when) {	
 		
 		// Check if interaction is relevant for the server role 
@@ -496,54 +495,10 @@ public class ContractIntrospector extends DefaultVisitor {
 				}
 			}
 		}
-
-		/*
-		Choice choice=(Choice)when.getParent();
-		
-		// Check if the interacton is being received
-		if (choice.getFromRole() != null &&
-				choice.getFromRole().equals(m_role) == false) {
-			
-			// Received by the role, but need to check if its replyTo
-			// has been set, indicating it is receiving a response
-			if (InteractionUtil.getReplyToLabel(when) == null ||
-					InteractionUtil.getReplyToLabel(when).trim().length() == 0) {
-				
-				// Receiving a request - so record this in the contract
-				Interface intf=getInterface();
-				
-				if (when.getMessageSignature().getOperation() != null) {
-					
-					// Check if message exchange pattern exists for operation
-					MessageExchangePattern mep=intf.getMessageExchangePatternForOperation(
-							when.getMessageSignature().getOperation());
-					
-					if (mep == null) {
-						// Create new MEP
-						if (InteractionUtil.getRequestLabel(when) != null) {
-							mep = new RequestResponseMEP();
-						} else {
-							mep = new OneWayRequestMEP();
-						}
-						
-						mep.setOperation(when.getMessageSignature().getOperation());
-						
-						for (int i=0; i < when.getMessageSignature().getTypeReferences().size(); i++) {
-							mep.getTypes().add(convertType(when.getMessageSignature().getTypeReferences().get(i)));
-						}
-						
-						intf.getMessageExchangePatterns().add(mep);
-					}
-				}
-
-			} else {
-				
-			}
-		}
-		*/
 		
 		return(true);
 	}
+	*/
 	
 	/**
 	 * This method converts a protocol type reference into a contract model type.

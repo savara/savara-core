@@ -178,6 +178,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		Contract c=new Contract();
 		c.setNamespace(TEST_NAME_SPACE);
+		c.setName(TEST_NAME);
 
 		Interface i1=new Interface();
 		i1.setName("I1");
@@ -569,6 +570,7 @@ public class WSDLGeneratorImplTest extends TestCase {
 		
 		Contract c=new Contract();
 		c.setNamespace(TEST_NAME_SPACE);
+		c.setName(TEST_NAME);
 
 		Interface i1=new Interface();
 		i1.setName("I1");

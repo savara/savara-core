@@ -98,6 +98,7 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 			//context.insert(model, elem.getProtocol(), ref);
 			
 			// Create a scope
+			/*
 			TScope scope=new TScope();
 			TSequence seq=new TSequence();
 
@@ -112,20 +113,21 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 			scope.setSequence(seq);
 			
 			context.getProperties().put(BPELDefinitions.BPEL_SCOPE_PROPERTY, scope);
+			*/
 
 			// Process the activities within the conversation
 			java.util.List<Activity> acts=defn.getBlock().getContents();
 			
 			Object parent=context.getParent();
 			
-			context.setParent(seq);
+			//context.setParent(seq);
 			
 			for (int i=0; i < acts.size(); i++) {
 				context.insert(model, acts.get(i), null);
 			}
 			
 			// Reset old parent
-			context.setParent(parent);
+			//context.setParent(parent);
 
 			// Pop details related to sub-choreo
 			//ModelChangeUtils.removeContracts(context, elem.getProtocol(), false);

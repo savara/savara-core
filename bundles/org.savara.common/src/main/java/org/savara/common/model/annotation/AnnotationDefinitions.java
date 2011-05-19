@@ -62,7 +62,12 @@ public class AnnotationDefinitions {
 	// Source Component annotation (uses id property)
 	public static final String SOURCE_COMPONENT="SourceComponent";
 
+	// Assertion
+	public static final String ASSERTION="Assertion";
 	
+	public static final String EXPRESSION_PROPERTY="expression";
+	public static final String LANGUAGE_PROPERTY="language";
+
 	/**
 	 * This method returns the annotation, from the supplied list, with the
 	 * supplied name.

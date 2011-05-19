@@ -49,9 +49,9 @@ public class ProtocolToWSDLGeneratorTest {
         suite.addTest(new ProtocolToWSDLTester("ESBBroker", "CreditAgency"));
         suite.addTest(new ProtocolToWSDLTester("ESBBroker", "SupplierQuoteEngine"));
         
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods", "Buyer"));
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods", "CreditAgency"));
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods", "Store"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods1", "Buyer"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods1", "CreditAgency"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods1", "Store"));
         
         suite.addTest(new ProtocolToWSDLTester("ReqRespFault", "Buyer"));
         suite.addTest(new ProtocolToWSDLTester("ReqRespFault", "Seller"));

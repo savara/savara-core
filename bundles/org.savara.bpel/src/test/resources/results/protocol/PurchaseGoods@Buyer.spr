@@ -1,9 +1,8 @@
 protocol PurchaseGoodsProcess_Buyer @ Buyer {
 	buy(BuyRequest) to Store;
-	choice from Store {
-		buy(BuyConfirmed):
-
-		buy(BuyFailed):
-
+	choice at Store {
+		buy(BuyConfirmed) from Store;
+	} or {
+		buy(BuyFailed) from Store;
 	}
 }

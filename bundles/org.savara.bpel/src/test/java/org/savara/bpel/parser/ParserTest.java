@@ -219,9 +219,9 @@ public class ParserTest extends TestCase {
 					}
 					
 					if (f != null && f.exists()) {
-						f = f.getParentFile().getParentFile();
+						f = f.getParentFile().getParentFile().getParentFile();
 						
-						java.io.File resultsDir=new java.io.File(f, "results");
+						java.io.File resultsDir=new java.io.File(f, "results/protocol");
 						
 						if (resultsDir.exists() == false) {
 							resultsDir.mkdirs();

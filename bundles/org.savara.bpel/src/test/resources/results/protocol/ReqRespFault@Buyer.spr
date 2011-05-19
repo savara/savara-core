@@ -1,9 +1,8 @@
 protocol ReqRespFaultProcess_Buyer {
 	checkCredit(CreditCheckRequest) to Seller;
-	choice from Seller {
-		checkCredit(CreditCheckOk):
-
-		checkCredit(CreditCheckInvalid):
-
+	choice at Seller {
+		checkCredit(CreditCheckOk) from Seller;
+	} or {
+		checkCredit(CreditCheckInvalid) from Seller;
 	}
 }

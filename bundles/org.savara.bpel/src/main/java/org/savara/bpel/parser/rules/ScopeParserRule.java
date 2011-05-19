@@ -76,34 +76,31 @@ public class ScopeParserRule implements ProtocolParserRule {
 			// Create choice with normal response and fault paths
 			org.scribble.protocol.model.Choice choice=new org.scribble.protocol.model.Choice();
 			
-			When cb=new When();
+			Block cb=new Block();
 			
-			InvokeParserRule.convertResponse(invoke, cb.getBlock().getContents(), context);
+			InvokeParserRule.convertResponse(invoke, cb.getContents(), context);
 			
-			if (cb.getBlock().getContents().size() > 0) {
-				Interaction resp=(Interaction)cb.getBlock().getContents().get(0);
-				cb.getBlock().getContents().remove(resp);
+			if (cb.getContents().size() > 0) {
+				Interaction resp=(Interaction)cb.getContents().get(0);
 				
-				cb.setMessageSignature(resp.getMessageSignature());
-				
-				choice.setFromRole(resp.getFromRole());
+				choice.setRole(resp.getFromRole());
 			}
 			
 			// Include remaining activities
 			if (scope.getSequence() != null) {
 				for (int i=1; i < ((TSequence)scope.getSequence()).getActivity().size(); i++) {
 					context.parse(((TSequence)scope.getSequence()).getActivity().get(i),
-									cb.getBlock().getContents(), handler);
+									cb.getContents(), handler);
 				}
 			}
 			
-			choice.getWhens().add(cb);
+			choice.getBlocks().add(cb);
 			
 			// Process fault handlers
 			for (int i=0; i < scope.getFaultHandlers().getCatch().size(); i++) {
 				TCatch catchBlock=scope.getFaultHandlers().getCatch().get(i);
 				
-				When fcb=new When();
+				Block fcb=new Block();
 				
 				QName mesgType=catchBlock.getFaultMessageType();
 				
@@ -121,19 +118,19 @@ public class ScopeParserRule implements ProtocolParserRule {
 					context.addVariable(faultVar);
 				}
 				
-				InvokeParserRule.convertFaultResponse(invoke, fcb.getBlock().getContents(),
+				InvokeParserRule.convertFaultResponse(invoke, fcb.getContents(),
 							catchBlock.getFaultVariable(), mesgType, context);
 
-				if (fcb.getBlock().getContents().size() > 0) {
-					Interaction resp=(Interaction)fcb.getBlock().getContents().get(0);
-					fcb.getBlock().getContents().remove(resp);
+				if (fcb.getContents().size() > 0) {
+					Interaction resp=(Interaction)fcb.getContents().get(0);
+					//fcb.getBlock().getContents().remove(resp);
 					
-					fcb.setMessageSignature(resp.getMessageSignature());
+					//fcb.setMessageSignature(resp.getMessageSignature());
 					
 					// Validate from role
 					if (resp.getFromRole() != null &&
-							choice.getFromRole() != null &&
-							resp.getFromRole().equals(choice.getFromRole()) == false) {
+							choice.getRole() != null &&
+							resp.getFromRole().equals(choice.getRole()) == false) {
 						handler.error("Fault handler 'from role' not same as normal response", null);
 					}
 				}
@@ -141,10 +138,10 @@ public class ScopeParserRule implements ProtocolParserRule {
 				TActivity act=ActivityUtil.getActivity(catchBlock);
 				
 				if (act != null) {
-					context.parse(act, fcb.getBlock().getContents(), handler);
+					context.parse(act, fcb.getContents(), handler);
 				}
 				
-				choice.getWhens().add(fcb);
+				choice.getBlocks().add(fcb);
 				
 				if (faultVar != null) {
 					context.removeVariable(faultVar);
