@@ -17,6 +17,9 @@
  */
 package org.savara.bpel.model.change;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.scribble.protocol.util.ActivityUtil;
 import org.scribble.protocol.util.RunUtil;
 import org.savara.protocol.model.util.InteractionUtil;
@@ -27,6 +30,8 @@ import org.scribble.protocol.model.*;
  * patterns related to interactions.
  */
 public class InteractionPatterns {
+	
+	private static final Logger logger=Logger.getLogger(InteractionPatterns.class.getName());
 
 	/**
 	 * This method checks whether the supplied interaction
@@ -64,25 +69,19 @@ public class InteractionPatterns {
 						org.scribble.protocol.model.Choice choice=
 							(org.scribble.protocol.model.Choice)act;
 						
-						if (choice.getWhens().size() > 0) {
+						if (choice.getBlocks().size() > 0) {
 							ret = true;							
 						}
 						
 						for (int i=0; ret &&
-								i < choice.getWhens().size(); i++) {
+								i < choice.getBlocks().size(); i++) {
 							
-							ret = !InteractionUtil.isRequest(choice.getWhens().get(i));
-							/*
-							org.scribble.protocol.model.Block path=
-								choice.getPaths().get(i);
-							
-							if (path.getContents().size() == 0 ||
-									(path.getContents().get(0) instanceof Interaction) == false ||
-									InteractionUtil.isRequest((Interaction)
-											path.getContents().get(0))) {
-								ret = false;
-							}
-							*/
+							// Get initial interaction
+							Interaction intn=getFirstInteraction(choice.getBlocks().get(0));
+
+							if (intn != null) {
+								ret = !InteractionUtil.isRequest(intn);
+							}							
 						}
 					}
 				}
@@ -100,76 +99,37 @@ public class InteractionPatterns {
 	// to use for subsequent activities.
 	
 	public static boolean isResponseAndFaultHandler(Choice choice) {
-		boolean ret=choice.getWhens().size() > 0;
+		boolean ret=choice.getBlocks().size() > 0;
 		
 		// Check if all paths are responses with same reply label
 		String label=null;
 		
-		for (int i=0; ret && i < choice.getWhens().size(); i++) {
-			When path=choice.getWhens().get(i);
+		for (int i=0; ret && i < choice.getBlocks().size(); i++) {
+			Block path=choice.getBlocks().get(i);
 			
-			if (i == 0) {
-				label = InteractionUtil.getReplyToLabel(path);
-				
-				if (label == null || InteractionUtil.isRequest(path)
-						|| InteractionUtil.isSend(path)) {
-					ret = false;
-				}
-			} else {
-				String replyTo=InteractionUtil.getReplyToLabel(path);
-				
-				if (replyTo == null ||
-						replyTo.equals(label) == false ||
-						InteractionUtil.isRequest(path) ||
-						InteractionUtil.isSend(path)) {
-					ret = false;
-				}
-			}
-		}
-		
-		/*
-		
-		// Obtain interaction prior to 'If'
-		if (choice.getPaths().size() > 0 &&
-				choice.getParent() instanceof
-				org.scribble.protocol.model.Block) {
-			org.scribble.protocol.model.Block block=
-				(org.scribble.protocol.model.Block)choice.getParent();
-		
-			int pos=block.getContents().indexOf(choice);
-		
-			if (pos != -1 && pos > 0) {
-				org.scribble.protocol.model.Activity act=
-					block.getContents().get(pos-1);
-			
-				if (act instanceof Interaction &&
-						InteractionUtil.isSend((Interaction)act) &&
-						InteractionUtil.isRequest((Interaction)act) &&
-						getRequestLabel((Interaction)act) != null) {
+			// Get initial interaction
+			Interaction interaction=getFirstInteraction(path);
+
+			if (interaction != null) {
+				if (i == 0) {
+					label = InteractionUtil.getReplyToLabel(interaction);
 					
-					// Check if each path has a response/fault associated
-					// with the preceding request
-					String requestLabel=getRequestLabel((Interaction)act);
-					
-					java.util.List<When> paths=choice.getWhens();
-					int matched=0;
-					
-					for (int i=0; i < paths.size(); i++) {
-						When when=paths.get(i);
-						
-						if (InteractionUtil.isResponse(when) &&
-								getReplyToLabel(when).equals(requestLabel)) {
-							matched++;
-						}
+					if (label == null || InteractionUtil.isRequest(interaction)
+							|| InteractionUtil.isSend(interaction)) {
+						ret = false;
 					}
+				} else {
+					String replyTo=InteractionUtil.getReplyToLabel(interaction);
 					
-					if (matched == paths.size()) {
-						ret = true;
+					if (replyTo == null ||
+							replyTo.equals(label) == false ||
+							InteractionUtil.isRequest(interaction) ||
+							InteractionUtil.isSend(interaction)) {
+						ret = false;
 					}
 				}
 			}
-		}
-		*/
+		}		
 
 		return(ret);
 	}
@@ -259,32 +219,10 @@ public class InteractionPatterns {
 		
 		// For a choice to be considered a 'switch', it only needs
 		// to be a receiver
-		if (choice.getFromRole() != null && choice.getToRole() == null) {
+		if (choice.getRole() == null || !choice.getRole().equals(choice.enclosingProtocol().getRole())) {
 			ret = true;
 		}
 		
-		/*
-		if (choice.getPaths().size() > 0) {
-			java.util.List<When> paths=choice.getWhens();
-			int matched=0;
-			
-			for (int i=0; i < paths.size(); i++) {
-				if (paths.get(i).getContents().size() > 0) {
-					Interaction in=getPickPathInteraction(paths.get(i));
-					
-					if (in != null &&
-							InteractionUtil.isSend(in) == false) {
-						matched++;
-					}
-				}
-			}
-			
-			if (matched == paths.size()) {
-				ret = true;
-			}
-		}
-		*/
-
 		return(ret);
 	}
 	
@@ -330,42 +268,7 @@ public class InteractionPatterns {
 	public static boolean isResponseInFaultHandler(Interaction interaction) {
 		return(getRequestForResponseInFaultHandler(interaction) != null);
 	}
-	
-	/*
-	public static String getMessageTypeLocalPart(Interaction interaction) {
-		return((String)interaction.
-			getMessageSignature().getProperties().get(MESSAGE_TYPE_LOCALPART));
-	}
-	
-	public static String getMessageTypeNameSpace(Interaction interaction) {
-		return((String)interaction.
-			getMessageSignature().getProperties().get(MESSAGE_TYPE_NAMESPACE));
-	}
-	*/
-	
-	/*
-	public static String getVariableName(Interaction interaction) {
-		String varName=getMessageTypeLocalPart(interaction);
 		
-		if (varName != null) {
-			int ind=varName.lastIndexOf('}');
-		
-			if (ind != -1) {
-				varName = varName.substring(ind+1);
-			}
-			
-			varName += "Var";
-			
-			if (Character.isLowerCase(varName.charAt(0)) == false) {
-				varName = Character.toLowerCase(varName.charAt(0))+
-							varName.substring(1);
-			}
-		}
-		
-		return(varName);
-	}
-	*/
-	
 	public static boolean isSyncNormalResponse(Interaction interaction) {
 		boolean ret=false;
 
@@ -394,6 +297,32 @@ public class InteractionPatterns {
 				InteractionUtil.getReplyToLabel(resp).equals(
 						InteractionUtil.getRequestLabel(req))) {
 			ret = true;
+		}
+		
+		return(ret);
+	}
+	
+	public static Interaction getFirstInteraction(Block path) {
+		Interaction ret=null;
+		
+		// Get initial interactions
+		java.util.List<ModelObject> interactions=
+				org.scribble.protocol.util.InteractionUtil.getInitialInteractions(path);
+		
+		if (interactions.size() != 1) {
+			// Either no interations, or more than one. Cannot
+			// handle either case.
+			if (logger.isLoggable(Level.FINEST)) {
+				logger.finest("Path has "+interactions.size()+" interactions");
+			}
+			
+		} else if ((interactions.get(0) instanceof Interaction) == false) {
+			
+			if (logger.isLoggable(Level.FINEST)) {
+				logger.finest("Path 'interaction' is not of type Interaction");
+			}
+		} else {
+			ret=(Interaction)interactions.get(0);
 		}
 		
 		return(ret);

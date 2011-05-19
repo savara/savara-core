@@ -29,7 +29,6 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.model.Choice;
-import org.scribble.protocol.model.When;
 
 public class ChoiceParserRule implements ParserRule {
 
@@ -61,12 +60,12 @@ public class ChoiceParserRule implements ParserRule {
 			Class<?> scribbleType, CDLType cdlType) {
 		org.scribble.protocol.model.Activity ret=null;
 		org.pi4soa.cdl.Choice cdl=(org.pi4soa.cdl.Choice)cdlType;
-		java.util.List<When> blocks=new java.util.Vector<When>();
+		java.util.List<Block> blocks=new java.util.Vector<Block>();
 		Role fromRole=null;
 		java.util.List<Role> toRoles=new java.util.Vector<Role>();
 		
 		// Check if all paths are associated with the same from and to role
-		boolean f_sameRoles=isSameRoles(context, cdl);
+		//boolean f_sameRoles=isSameRoles(context, cdl);
 		
 		// Process all of the activities within the
 		// choreography
@@ -82,6 +81,7 @@ public class ChoiceParserRule implements ParserRule {
 				
 				context.pushState();
 				
+				/*
 				// Find exchange details for this path
 				InteractionLocator locator=new InteractionLocator(act);
 				
@@ -93,6 +93,7 @@ public class ChoiceParserRule implements ParserRule {
 						locator.getInteraction().getExchangeDetails().size() > 0) {
 					context.ignore(locator.getInteraction().getExchangeDetails().get(0));
 				}
+				*/
 				
 				org.scribble.protocol.model.Activity activity=
 					(org.scribble.protocol.model.Activity)
@@ -103,6 +104,7 @@ public class ChoiceParserRule implements ParserRule {
 					/* TODO: Consider whether collapsing choices is appropriate?
 					 * possibly if same from/to roles.
 					 */
+					/*
 					if (activity instanceof Choice) {
 						
 						if (f_sameRoles) {
@@ -207,44 +209,55 @@ public class ChoiceParserRule implements ParserRule {
 								}
 							}
 						}
+						*/
+					
+					if (activity instanceof Choice && act instanceof Conditional) {
+						// Extract block from choice, as nested choice is not required
+						// for conditional path
+						java.util.List<org.scribble.common.model.Annotation> annotations=
+												activity.getAnnotations();
 						
-						if (activity instanceof Block) {
-							block.getBlock().getContents().addAll(((Block)activity).getContents());
-						} else {
-							block.getBlock().add(activity);							
+						activity = ((Choice)activity).getBlocks().get(0);
+						
+						activity.getAnnotations().addAll(annotations);
+					}
+					
+					Block block=null;
+					
+					if (activity instanceof Block) {
+						block = (Block)activity;
+					} else {
+						block = new Block();
+						block.add(activity);							
+					}
+					
+					blocks.add(block);
+					//}
+					
+					// Identify 'from' role
+					if (fromRole == null) {
+						java.util.List<ModelObject> list=org.scribble.protocol.util.InteractionUtil.getInitialInteractions(block);
+					
+						for (ModelObject mo : list) {
+							if (mo instanceof org.scribble.protocol.model.Interaction) {
+								fromRole = ((org.scribble.protocol.model.Interaction)mo).getFromRole();
+								
+								if (fromRole != null) {
+									break;
+								}
+							}
 						}
-						
-						blocks.add(block);
 					}
 				}
 				
 				context.popState();
 			}
 		}
-		
-		// Build up initiator role list
-		//java.util.List<Role> roles=null;
-		
+
+		/*
 		for (int i=0; i < blocks.size(); i++) {
 			When b=blocks.get(i);
-			
-			/*
-			java.util.List<Role> blockRoles=
-					b.getBlock().initiatorRoles();
-				
-			if (blockRoles != null) {
-				if (roles == null) {
-					roles = blockRoles;
-				} else {
-					for (int j=0; j < blockRoles.size(); j++) {
-						if (roles.contains(blockRoles.get(j)) == false) {
-							roles.add(blockRoles.get(j));
-						}
-					}
-				}
-			}
-			*/
-			
+						
 			if (b.getMessageSignature() == null) {
 				// Create label
 				MessageSignature ms=new MessageSignature();
@@ -252,51 +265,17 @@ public class ChoiceParserRule implements ParserRule {
 				b.setMessageSignature(ms);
 			}
 		}
-		
-		/*
-		if (f_when) {
-			ret = new org.scribble.conversation.model.When();
-			((org.scribble.conversation.model.When)ret).
-					getConditionalBlocks().addAll(blocks);
-			
-			if (roles != null) {
-				((org.scribble.conversation.model.When)ret).
-						getRoles().addAll(roles);
-			}
-		} else {
 		*/
-			ret = new org.scribble.protocol.model.Choice();
+		
+		ret = new org.scribble.protocol.model.Choice();
+		
+		((org.scribble.protocol.model.Choice)ret).
+				getBlocks().addAll(blocks);
+		
+		if (fromRole != null) {
 			((org.scribble.protocol.model.Choice)ret).
-					getWhens().addAll(blocks);
-			
-			if (fromRole != null) {
-				((org.scribble.protocol.model.Choice)ret).
-							setFromRole(new Role(fromRole));
-			}
-			
-			if (toRoles.size() == 1) {
-				((org.scribble.protocol.model.Choice)ret).setToRole(new Role(toRoles.get(0)));
-			} else if (toRoles.size() == 0) {
-				// TODO: Report no to roles
-			} else {
-				// TODO: Report too many roles
-			}
-			
-			/*
-			if (roles != null) {
-				
-				if (roles.size() > 0) {
-					((org.scribble.protocol.model.Choice)ret).
-							setFromRole(roles.get(0));
-					
-					if (roles.size() > 1) {
-						// TODO: Need to decide what to do with multiple roles
-						// TODO: What about 'to' roles on the choice?
-					}
-				}
-			}
-			*/
-		//}
+						setRole(new Role(fromRole));
+		}
 		
 		if (ret != null) {
 			Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
@@ -309,6 +288,7 @@ public class ChoiceParserRule implements ParserRule {
 		return(ret);
 	}
 	
+	/*
 	protected boolean isSameRoles(ParserContext context, org.pi4soa.cdl.Choice cdl) {
 		boolean ret=true;
 		Role fromRole=null;
@@ -389,6 +369,7 @@ public class ChoiceParserRule implements ParserRule {
 		
 		return(ret);
 	}
+	
 	
 	public static class InteractionLocator implements CDLVisitor {
 
@@ -548,4 +529,5 @@ public class ChoiceParserRule implements ParserRule {
 		
 		
 	}
+	*/
 }

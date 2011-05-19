@@ -20,13 +20,7 @@ package org.savara.pi4soa.cdm.parser.rules;
 import static org.junit.Assert.*;
 
 import org.pi4soa.cdl.CDLManager;
-import org.scribble.protocol.model.Block;
-import org.scribble.protocol.model.Choice;
-import org.scribble.protocol.model.Interaction;
-import org.scribble.protocol.model.Parallel;
-import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.Role;
-import org.scribble.protocol.model.When;
 
 public class CDMProtocolParserUtilTest {
 

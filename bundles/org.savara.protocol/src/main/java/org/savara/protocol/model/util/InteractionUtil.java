@@ -49,28 +49,6 @@ public class InteractionUtil {
 	}
 	
 	/**
-	 * This method returns the name associated with the interaction.
-	 * 
-	 * @param when The when
-	 * @return The name
-	 */
-	public static String getName(When when) {
-		String ret=null;
-		
-		if (isSend(when)) {
-			ret = "Send";
-		} else {
-			ret = "Receive";
-		}
-		
-		for (TypeReference ref : when.getMessageSignature().getTypeReferences()) {
-			ret += "_"+ref.getName();
-		}
-
-		return(ret);
-	}
-	
-	/**
 	 * This method determines whether the supplied interaction,
 	 * within a located protocol, is a send.
 	 * 
@@ -110,46 +88,6 @@ public class InteractionUtil {
 		return(ret);
 	}
 	
-	/**
-	 * This method determines whether the supplied interaction
-	 * is a send.
-	 * 
-	 * @param interaction The interaction
-	 * @return Whether the interaction is a send
-	 */
-	public static boolean isSend(When when) {		
-		Role role=null;
-		
-		if (((Choice)when.getParent()).enclosingProtocol() != null) {
-			role = ((Choice)when.getParent()).enclosingProtocol().getRole();
-		}
-		
-		return(isSend(when, role));
-	}
-	
-	/**
-	 * This method determines whether the supplied interaction
-	 * is a send.
-	 * 
-	 * @param interaction The interaction
-	 * @param role The located role
-	 * @return Whether the interaction is a send
-	 */
-	public static boolean isSend(When when, Role role) {
-		boolean ret=false;
-		
-		if (role != null && ((((Choice)when.getParent()).getFromRole() != null &&
-				((Choice)when.getParent()).getFromRole().equals(
-						role)) ||
-					(((Choice)when.getParent()).getToRole() != null &&
-					((Choice)when.getParent()).getToRole().equals(
-						role) == false))) {
-			ret = true;
-		}
-		
-		return(ret);
-	}
-	
 	public static String getRequestLabel(Interaction interaction) {
 		String ret=null;
 		Annotation annotation=AnnotationDefinitions.getAnnotation(interaction.getAnnotations(),
@@ -170,26 +108,6 @@ public class InteractionUtil {
 		return(ret);
 	}
 	
-	public static String getRequestLabel(When interaction) {
-		String ret=null;
-		Annotation annotation=AnnotationDefinitions.getAnnotation(interaction.getAnnotations(),
-				AnnotationDefinitions.CORRELATION);
-		if (annotation != null) {
-			ret = (String)annotation.getProperties().get(AnnotationDefinitions.REQUEST_PROPERTY);
-		}
-		return(ret);
-	}
-	
-	public static String getReplyToLabel(When interaction) {
-		String ret=null;
-		Annotation annotation=AnnotationDefinitions.getAnnotation(interaction.getAnnotations(),
-				AnnotationDefinitions.CORRELATION);
-		if (annotation != null) {
-			ret = (String)annotation.getProperties().get(AnnotationDefinitions.REPLY_TO_PROPERTY);
-		}
-		return(ret);
-	}
-
 	/**
 	 * This method determines whether the supplied interaction
 	 * is a request.
@@ -210,47 +128,12 @@ public class InteractionUtil {
 	
 	/**
 	 * This method determines whether the supplied interaction
-	 * is a request.
-	 * 
-	 * @param interaction The interaction
-	 * @return Whether the interaction is a request
-	 */
-	public static boolean isRequest(When interaction) {
-		boolean ret=false;
-
-		if (getRequestLabel(interaction) != null ||
-				getReplyToLabel(interaction) == null) {
-			ret = true;
-		}
-		
-		return(ret);
-	}
-	
-	/**
-	 * This method determines whether the supplied interaction
 	 * is a response.
 	 * 
 	 * @param interaction The interaction
 	 * @return Whether the interaction is a response
 	 */
 	public static boolean isResponse(Interaction interaction) {
-		boolean ret=false;
-
-		if (getReplyToLabel(interaction) != null) {
-			ret = true;
-		}
-		
-		return(ret);
-	}
-	
-	/**
-	 * This method determines whether the supplied interaction
-	 * is a response.
-	 * 
-	 * @param interaction The interaction
-	 * @return Whether the interaction is a response
-	 */
-	public static boolean isResponse(When interaction) {
 		boolean ret=false;
 
 		if (getReplyToLabel(interaction) != null) {
@@ -280,25 +163,6 @@ public class InteractionUtil {
 	}
 	
 	/**
-	 * This method determines if the supplied interaction is a fault
-	 * response.
-	 * 
-	 * @param interaction The interaction
-	 * @return Whether the interaction is a fault response
-	 */
-	public static boolean isFaultResponse(When interaction) {
-		boolean ret=false;
-		
-		if (InteractionUtil.isResponse(interaction) &&
-				AnnotationDefinitions.getAnnotation(interaction.getAnnotations(),
-						AnnotationDefinitions.FAULT) != null) {
-			ret = true;
-		}
-
-		return(ret);
-	}
-	
-	/**
 	 * This method returns the fault name associated with the supplied
 	 * interaction.
 	 * 
@@ -309,25 +173,6 @@ public class InteractionUtil {
 		String ret=null;
 		Annotation annotation=AnnotationDefinitions.getAnnotation(interaction.getAnnotations(),
 							AnnotationDefinitions.FAULT);
-		
-		if (annotation != null) {
-			ret = (String)annotation.getProperties().get(AnnotationDefinitions.NAME_PROPERTY);
-		}
-		
-		return(ret);
-	}
-	
-	/**
-	 * This method returns the fault name associated with the supplied
-	 * interaction.
-	 * 
-	 * @param interaction The interaction
-	 * @return The fault name, or null if not found
-	 */
-	public static String getFaultName(When interaction) {
-		String ret=null;
-		Annotation annotation=AnnotationDefinitions.getAnnotation(interaction.getAnnotations(),
-				AnnotationDefinitions.FAULT);
 		
 		if (annotation != null) {
 			ret = (String)annotation.getProperties().get(AnnotationDefinitions.NAME_PROPERTY);

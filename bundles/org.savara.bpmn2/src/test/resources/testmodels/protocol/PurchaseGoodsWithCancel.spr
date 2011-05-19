@@ -11,14 +11,12 @@ protocol PurchaseGoodsWithCancel {
 	try {
 		checkCredit(CreditCheckRequest) from Store to CreditAgency;
 	
-		choice from CreditAgency to Store {
-	
-			checkCredit(CreditRating):
-				buy(BuyConfirmed) from Store to Buyer;
-	
-			checkCredit(CustomerUnknown):
-				buy(AccountNotFound) from Store to Buyer;
-	
+		choice at CreditAgency {
+			checkCredit(CreditRating) from CreditAgency to Store;
+			buy(BuyConfirmed) from Store to Buyer;
+		} or {
+			checkCredit(CustomerUnknown) from CreditAgency to Store;
+			buy(AccountNotFound) from Store to Buyer;
 		}
 	} catch (cancel(CancelOrder) from Buyer to Store) {
 	

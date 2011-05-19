@@ -41,8 +41,6 @@ import org.savara.protocol.model.change.ModelChangeContext;
 import org.savara.protocol.model.change.ModelChangeUtils;
 import org.savara.protocol.model.util.InteractionUtil;
 import org.savara.protocol.util.ProtocolUtils;
-import org.savara.common.model.annotation.Annotation;
-import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.Interface;
 import org.savara.wsdl.util.WSDLGeneratorUtil;
@@ -109,7 +107,9 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 		TProcess bpelModel=getBPELModel(model);
 		org.scribble.protocol.model.Choice elem=
 					 (org.scribble.protocol.model.Choice)mobj;
-		java.util.List<When> paths=elem.getWhens();
+		java.util.List<Block> paths=elem.getBlocks();
+		
+		/*
 		
 		// SAVARA-215 - ignore choice if only labels and no path contents
 		boolean f_emptyPaths=true;
@@ -123,6 +123,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 		if (f_emptyPaths) {
 			return(true);
 		}
+		*/
 		
 		Role role=null;
 		//String roleNamespace=null;
@@ -179,18 +180,20 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 				TFaultHandlers fh=scope.getFaultHandlers();
 				
 				for (int i=0; i < paths.size(); i++) {
-					When path=paths.get(i);
+					Block path=paths.get(i);
+					
+					Interaction interaction=InteractionPatterns.getFirstInteraction(path);
 					
 					//if (path.getBlock().getContents().size() > 0) {
 					//	Activity act=path.getBlock().getContents().get(0);
 						TSequence subseq=null;
 						
-						if (//act instanceof Interaction &&
-								InteractionUtil.isFaultResponse(path)) {
-							String faultName=InteractionUtil.getFaultName(path);
+						if (interaction instanceof Interaction &&
+								InteractionUtil.isFaultResponse(interaction)) {
+							String faultName=InteractionUtil.getFaultName(interaction);
 							
 							Contract fromContract = ModelChangeUtils.getContract(context,
-										(elem.getFromRole()==null?role:elem.getFromRole()));
+										(interaction.getFromRole()==null?role:interaction.getFromRole()));
 							
 							// Define fault message type
 							QName qname= WSDLGeneratorUtil.getFaultMessageType(fromContract.getNamespace(),
@@ -231,23 +234,23 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 							java.util.List<Object> acts=
 								((TSequence)context.getParent()).getActivity();
 							
-							if (acts.size() > 0 && //act instanceof Interaction &&
+							if (acts.size() > 0 && interaction instanceof Interaction &&
 									acts.get(acts.size()-1) instanceof TInvoke) {
 								Contract fromContract = ModelChangeUtils.getContract(context,
-										elem.getFromRole());
+										interaction.getFromRole());
 							
 								QName qname=null;
-								if (InteractionUtil.isRequest(path)) {
+								if (InteractionUtil.isRequest(interaction)) {
 									qname = WSDLGeneratorUtil.getRequestMessageType(fromContract.getNamespace(),
-											path.getMessageSignature().getOperation(),
+											interaction.getMessageSignature().getOperation(),
 											ProtocolUtils.getNamespacePrefix(elem.getModel(), fromContract.getNamespace()));
-								} else if (InteractionUtil.isFaultResponse(path)) {
+								} else if (InteractionUtil.isFaultResponse(interaction)) {
 									qname = WSDLGeneratorUtil.getFaultMessageType(fromContract.getNamespace(),
-											InteractionUtil.getFaultName(path),
+											InteractionUtil.getFaultName(interaction),
 											ProtocolUtils.getNamespacePrefix(elem.getModel(), fromContract.getNamespace()));
 								} else {
 									qname = WSDLGeneratorUtil.getResponseMessageType(fromContract.getNamespace(),
-														path.getMessageSignature().getOperation(),
+											interaction.getMessageSignature().getOperation(),
 														ProtocolUtils.getNamespacePrefix(elem.getModel(), fromContract.getNamespace()));
 								}
 
@@ -258,7 +261,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 
 								// Create variable
 								if (varName != null) {
-									createVariable(context, varName, path, bpelModel);
+									createVariable(context, varName, interaction, bpelModel);
 								}
 							}
 						}
@@ -267,8 +270,8 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 						
 						context.setParent(subseq);
 						
-						for (int j=0; j < path.getBlock().getContents().size(); j++) {
-							context.insert(model, path.getBlock().getContents().get(j), null);
+						for (int j=0; j < path.getContents().size(); j++) {
+							context.insert(model, path.getContents().get(j), null);
 						}
 						
 						context.setParent(parent);
@@ -285,171 +288,176 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 			}
 			
 			for (int i=0; i < paths.size(); i++) {
-				When path=paths.get(i);
+				Block path=paths.get(i);
 				
 				TSequence seq=new TSequence();
-				
-				// Process the activities within the conversation
-				java.util.List<Activity> acts=path.getBlock().getContents();
-							
-				Object parent=context.getParent();
-				
-				context.setParent(seq);
-				
-				for (int j=0; j < acts.size(); j++) {
-					context.insert(model, acts.get(j), null);
-				}
-				
-				context.setParent(parent);
-				
-				//Interaction recv=InteractionPatterns.getPickPathInteraction(path);
-				
-				TOnMessage onm=new TOnMessage();
-				onm.setSequence(seq);
-				
-				TPartnerLink pl=new TPartnerLink();
-				String portType=null;
-				String namespace=null;
-				
-				String prevPLName=role.getName()+"To"+elem.getFromRole().getName();
-				
-				//String mainPrefix=null;
-				
-				/* TODO: namespace issue
-				if (contract != null) {
-					mainPrefix = bpelModel.addNamespace(contract.getNamespace());
-				}
-				*/
-				
-				// Check if partner link already exists in
-				// other direction
-				TPartnerLink prev=
-					PartnerLinkUtil.getPartnerLink(bpelModel, prevPLName);
-				
-				Contract contract=null;
 
-				if (InteractionUtil.isRequest(path) && prev == null) {
+				Interaction interaction=InteractionPatterns.getFirstInteraction(path);
+				
+				if (interaction != null) {
 					
-					pl.setMyRole(role.getName()+"Service");
-					//pl.setPartnerRole(interaction.getToRole().getName());
-					pl.setName(elem.getFromRole().getName()+"To"+role.getName());
+					// Process the activities within the conversation
+					java.util.List<Activity> acts=path.getContents();
+								
+					Object parent=context.getParent();
 					
-					String plt=elem.getFromRole().getName()+"To"+role.getName()+"Service"+"LT";
-										
-					contract = ModelChangeUtils.getContract(context, role);
+					context.setParent(seq);
 					
+					for (int j=0; j < acts.size(); j++) {
+						context.insert(model, acts.get(j), null);
+					}
+					
+					context.setParent(parent);
+					
+					//Interaction recv=InteractionPatterns.getPickPathInteraction(path);
+					
+					TOnMessage onm=new TOnMessage();
+					onm.setSequence(seq);
+					
+					TPartnerLink pl=new TPartnerLink();
+					String portType=null;
+					String namespace=null;
+					
+					String prevPLName=role.getName()+"To"+interaction.getFromRole().getName();
+					
+					//String mainPrefix=null;
+					
+					/* TODO: namespace issue
 					if (contract != null) {
-						pl.setPartnerLinkType(new QName(contract.getNamespace(), plt,
-								ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace())));
+						mainPrefix = bpelModel.addNamespace(contract.getNamespace());
+					}
+					*/
+					
+					// Check if partner link already exists in
+					// other direction
+					TPartnerLink prev=
+						PartnerLinkUtil.getPartnerLink(bpelModel, prevPLName);
+					
+					Contract contract=null;
+	
+					if (interaction != null && InteractionUtil.isRequest(interaction) && prev == null) {
 						
-						if (contract.getInterfaces().size() > 0) {
-							Interface intf = contract.getInterfaces().iterator().next();
+						pl.setMyRole(role.getName()+"Service");
+						//pl.setPartnerRole(interaction.getToRole().getName());
+						pl.setName(interaction.getFromRole().getName()+"To"+role.getName());
+						
+						String plt=interaction.getFromRole().getName()+"To"+role.getName()+"Service"+"LT";
+											
+						contract = ModelChangeUtils.getContract(context, role);
+						
+						if (contract != null) {
+							pl.setPartnerLinkType(new QName(contract.getNamespace(), plt,
+									ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace())));
 							
-							portType = intf.getName();
-							namespace = intf.getNamespace();
-							
-							/* TODO: namespace issue
-							String prefix = bpelModel.addNamespace(intf.getNamespace());
-							
-							if (prefix != null) {
-								portType = prefix+":"+portType;
+							if (contract.getInterfaces().size() > 0) {
+								Interface intf = contract.getInterfaces().iterator().next();
+								
+								portType = intf.getName();
+								namespace = intf.getNamespace();
+								
+								/* TODO: namespace issue
+								String prefix = bpelModel.addNamespace(intf.getNamespace());
+								
+								if (prefix != null) {
+									portType = prefix+":"+portType;
+								}
+								*/
 							}
-							*/
+						}
+					} else {
+						pl.setMyRole(role.getName()+"Requester");
+						pl.setPartnerRole(elem.getRole().getName()+"Service");
+						pl.setName(role.getName()+"To"+elem.getRole().getName());
+						
+						String plt=role.getName()+"To"+elem.getRole().getName()+"Requester"+"LT";
+						
+	
+						//portType = role.getName()+
+						//		recv.getFromRole().getName()+"CallbackPT";				
+	
+						contract = ModelChangeUtils.getContract(context, elem.getRole());
+						
+						if (contract != null) {
+							pl.setPartnerLinkType(new QName(contract.getNamespace(), plt,
+									ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace())));
+	
+							if (contract.getInterfaces().size() > 0) {
+								Interface intf = contract.getInterfaces().iterator().next();
+								
+								portType = intf.getName();
+								namespace = intf.getNamespace();
+								
+								/* TODO: Namespace issue
+								String prefix = bpelModel.addNamespace(intf.getNamespace());
+								
+								if (prefix != null) {
+									portType = prefix+":"+portType;
+								}
+								*/
+							}
 						}
 					}
-				} else {
-					pl.setMyRole(role.getName()+"Requester");
-					pl.setPartnerRole(elem.getFromRole().getName()+"Service");
-					pl.setName(role.getName()+"To"+elem.getFromRole().getName());
+				
+					QName qname=null;
+					if (InteractionUtil.isRequest(interaction)) {
+						qname = WSDLGeneratorUtil.getRequestMessageType(contract.getNamespace(),
+								interaction.getMessageSignature().getOperation(),
+								ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
+					} else if (InteractionUtil.isFaultResponse(interaction)) {
+						qname = WSDLGeneratorUtil.getFaultMessageType(contract.getNamespace(),
+								InteractionUtil.getFaultName(interaction),
+								ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
+					} else {
+						qname = WSDLGeneratorUtil.getResponseMessageType(contract.getNamespace(),
+								interaction.getMessageSignature().getOperation(),
+								ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
+					}
+	
+					String varName=qname.getLocalPart()+"Var"; //InteractionPatterns.getVariableName(recv);
 					
-					String plt=role.getName()+"To"+elem.getFromRole().getName()+"Requester"+"LT";
+					if (varName != null) {
+						onm.setVariable(varName);
+					}
 					
-
-					//portType = role.getName()+
-					//		recv.getFromRole().getName()+"CallbackPT";				
-
-					contract = ModelChangeUtils.getContract(context, elem.getFromRole());
-					
-					if (contract != null) {
-						pl.setPartnerLinkType(new QName(contract.getNamespace(), plt,
-								ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace())));
-
-						if (contract.getInterfaces().size() > 0) {
-							Interface intf = contract.getInterfaces().iterator().next();
-							
-							portType = intf.getName();
-							namespace = intf.getNamespace();
-							
-							/* TODO: Namespace issue
-							String prefix = bpelModel.addNamespace(intf.getNamespace());
-							
-							if (prefix != null) {
-								portType = prefix+":"+portType;
-							}
-							*/
+					// Create partner link
+					TPartnerLink other=
+						PartnerLinkUtil.getPartnerLink(bpelModel, pl.getName());
+	
+					if (other == null) {
+						bpelModel.getPartnerLinks().getPartnerLink().add(pl);
+					} else {
+						if (other.getPartnerRole() == null &&
+								pl.getPartnerRole() != null) {
+							other.setPartnerRole(pl.getPartnerRole());
+						}
+						if (other.getMyRole() == null &&
+								pl.getMyRole() != null) {
+							other.setMyRole(pl.getMyRole());
 						}
 					}
-				}
-				
-				QName qname=null;
-				if (InteractionUtil.isRequest(path)) {
-					qname = WSDLGeneratorUtil.getRequestMessageType(contract.getNamespace(),
-							path.getMessageSignature().getOperation(),
-							ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
-				} else if (InteractionUtil.isFaultResponse(path)) {
-					qname = WSDLGeneratorUtil.getFaultMessageType(contract.getNamespace(),
-							InteractionUtil.getFaultName(path),
-							ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
-				} else {
-					qname = WSDLGeneratorUtil.getResponseMessageType(contract.getNamespace(),
-							path.getMessageSignature().getOperation(),
-							ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
-				}
-
-				String varName=qname.getLocalPart()+"Var"; //InteractionPatterns.getVariableName(recv);
-				
-				if (varName != null) {
-					onm.setVariable(varName);
-				}
-				
-				// Create partner link
-				TPartnerLink other=
-					PartnerLinkUtil.getPartnerLink(bpelModel, pl.getName());
-
-				if (other == null) {
-					bpelModel.getPartnerLinks().getPartnerLink().add(pl);
-				} else {
-					if (other.getPartnerRole() == null &&
-							pl.getPartnerRole() != null) {
-						other.setPartnerRole(pl.getPartnerRole());
+					
+					// Create variable
+					if (varName != null) {
+						createVariable(context, varName, interaction, bpelModel);
 					}
-					if (other.getMyRole() == null &&
-							pl.getMyRole() != null) {
-						other.setMyRole(pl.getMyRole());
+				
+					// Check if create instance
+					if (org.scribble.protocol.util.InteractionUtil.isInitialInteraction(elem.getModel(), path)) {
+						act.setCreateInstance(TBoolean.YES);
 					}
+					
+					// Set details on interaction
+					onm.setPartnerLink(pl.getName());
+					onm.setPortType(new QName(namespace, portType,
+							ProtocolUtils.getNamespacePrefix(elem.getModel(), namespace)));
+	
+					MessageSignature ms=interaction.getMessageSignature();
+					if (ms.getOperation() != null) {
+						onm.setOperation(ms.getOperation());
+					}
+					
+					act.getOnMessage().add(onm);
 				}
-				
-				// Create variable
-				if (varName != null) {
-					createVariable(context, varName, path, bpelModel);
-				}
-				
-				// Check if create instance
-				if (org.scribble.protocol.util.InteractionUtil.isInitialInteraction(elem.getModel(), path)) {
-					act.setCreateInstance(TBoolean.YES);
-				}
-				
-				// Set details on interaction
-				onm.setPartnerLink(pl.getName());
-				onm.setPortType(new QName(namespace, portType,
-						ProtocolUtils.getNamespacePrefix(elem.getModel(), namespace)));
-
-				MessageSignature ms=path.getMessageSignature();
-				if (ms.getOperation() != null) {
-					onm.setOperation(ms.getOperation());
-				}
-				
-				act.getOnMessage().add(onm);
 			}
 			
 		} else {
@@ -460,36 +468,39 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 			}
 			
 			for (int i=0; i < paths.size(); i++) {
-				When path=paths.get(i);
-				
+				Block path=paths.get(i);
+								
 				TSequence seq=new TSequence();
 				
-				if (path.getMessageSignature().getTypeReferences().size() > 0) {
+				/*
+				Interaction interaction=InteractionPatterns.getFirstInteraction(path);
+				
+				if (interaction != null && interaction.getMessageSignature().getTypeReferences().size() > 0) {
 					Contract contract=null;
 					
-					if ((InteractionUtil.isRequest(path) && !InteractionUtil.isSend(path)) ||
-							(InteractionUtil.isResponse(path) && InteractionUtil.isSend(path))) {
+					if ((InteractionUtil.isRequest(interaction) && !InteractionUtil.isSend(interaction)) ||
+							(InteractionUtil.isResponse(interaction) && InteractionUtil.isSend(interaction))) {
 						contract = ModelChangeUtils.getContract(context, role);
-					} else if (InteractionUtil.isRequest(path)) {
-						contract = ModelChangeUtils.getContract(context, elem.getToRole());
+					} else if (InteractionUtil.isRequest(interaction)) {
+						contract = ModelChangeUtils.getContract(context, interaction.getToRoles().get(0));
 					} else {
-						contract = ModelChangeUtils.getContract(context, elem.getFromRole());
+						contract = ModelChangeUtils.getContract(context, interaction.getFromRole());
 					}
 					
 					// Handle when message signature
-					if (InteractionUtil.isResponse(path)) {
+					if (InteractionUtil.isResponse(interaction)) {
 						QName qname=null;
-						if (InteractionUtil.isRequest(path)) {
+						if (InteractionUtil.isRequest(interaction)) {
 							qname = WSDLGeneratorUtil.getRequestMessageType(contract.getNamespace(),
-									path.getMessageSignature().getOperation(),
+									interaction.getMessageSignature().getOperation(),
 									ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
-						} else if (InteractionUtil.isFaultResponse(path)) {
+						} else if (InteractionUtil.isFaultResponse(interaction)) {
 							qname = WSDLGeneratorUtil.getFaultMessageType(contract.getNamespace(),
-									InteractionUtil.getFaultName(path),
+									InteractionUtil.getFaultName(interaction),
 									ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
 						} else {
 							qname = WSDLGeneratorUtil.getResponseMessageType(contract.getNamespace(),
-									path.getMessageSignature().getOperation(),
+									interaction.getMessageSignature().getOperation(),
 									ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
 						}
 						
@@ -513,17 +524,17 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 						TPartnerLink pl=new TPartnerLink();
 	
 						pl.setMyRole(role.getName()+"Service");
-						pl.setName(elem.getToRole().getName()+"To"+role.getName());
+						pl.setName(interaction.getToRoles().get(0).getName()+"To"+role.getName());
 						
-						String plt=elem.getToRole().getName()+"To"+role.getName()+"Service"+"LT";
+						String plt=interaction.getToRoles().get(0).getName()+"To"+role.getName()+"Service"+"LT";
 						
 						pl.setPartnerLinkType(new QName(contract.getNamespace(), plt,
 								ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace())));
 		
 						//portType = role.getName()+"PT";
 						
-						if (InteractionUtil.isFaultResponse(path)) {
-							String faultName=InteractionUtil.getFaultName(path);
+						if (InteractionUtil.isFaultResponse(interaction)) {
+							String faultName=InteractionUtil.getFaultName(interaction);
 							
 							// TODO: Not sure what to do about namespace here?
 							reply.setFaultName(new QName(contract.getNamespace(), faultName,
@@ -559,24 +570,24 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 						reply.setPartnerLink(pl.getName());			
 						reply.setPortType(new QName(contract.getNamespace(),portType,
 								ProtocolUtils.getNamespacePrefix(elem.getModel(),contract.getNamespace())));	
-						if (path.getMessageSignature() != null) {
-							reply.setOperation(path.getMessageSignature().getOperation());
+						if (interaction.getMessageSignature() != null) {
+							reply.setOperation(interaction.getMessageSignature().getOperation());
 						}
 	
-						reply.setName(InteractionUtil.getName(path));
+						reply.setName(InteractionUtil.getName(interaction));
 					} else {
 						QName qname=null;
-						if (InteractionUtil.isRequest(path)) {
+						if (InteractionUtil.isRequest(interaction)) {
 							qname = WSDLGeneratorUtil.getRequestMessageType(contract.getNamespace(),
-									path.getMessageSignature().getOperation(),
+									interaction.getMessageSignature().getOperation(),
 									ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
-						} else if (InteractionUtil.isFaultResponse(path)) {
+						} else if (InteractionUtil.isFaultResponse(interaction)) {
 							qname = WSDLGeneratorUtil.getFaultMessageType(contract.getNamespace(),
-									InteractionUtil.getFaultName(path),
+									InteractionUtil.getFaultName(interaction),
 									ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
 						} else {
 							qname = WSDLGeneratorUtil.getResponseMessageType(contract.getNamespace(),
-									path.getMessageSignature().getOperation(),
+									interaction.getMessageSignature().getOperation(),
 									ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace()));
 						}
 						
@@ -603,11 +614,11 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 						// TODO: What about if multiple 'to' roles
 						TPartnerLink pl=new TPartnerLink();
 	
-						if (role != null && elem.getToRole() != null) {
-							pl.setPartnerRole(elem.getToRole().getName()+"Requester");
-							pl.setName(role.getName()+"To"+elem.getToRole().getName());
+						if (role != null && interaction.getToRoles().size() > 0) {
+							pl.setPartnerRole(interaction.getToRoles().get(0).getName()+"Requester");
+							pl.setName(role.getName()+"To"+interaction.getToRoles().get(0).getName());
 							
-							String plt=role.getName()+"To"+elem.getToRole().getName()+"LT";
+							String plt=role.getName()+"To"+interaction.getToRoles().get(0).getName()+"LT";
 							
 							pl.setPartnerLinkType(new QName(contract.getNamespace(), plt,
 									ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace())));
@@ -638,16 +649,17 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 						invoke.setPartnerLink(pl.getName());			
 						invoke.setPortType(new QName(contract.getNamespace(),portType,
 								ProtocolUtils.getNamespacePrefix(elem.getModel(), contract.getNamespace())));	
-						if (path.getMessageSignature() != null) {
-							invoke.setOperation(path.getMessageSignature().getOperation());
+						if (interaction.getMessageSignature() != null) {
+							invoke.setOperation(interaction.getMessageSignature().getOperation());
 						}
 	
-						invoke.setName(InteractionUtil.getName(path));
+						invoke.setName(InteractionUtil.getName(interaction));
 					}
 				}
+				*/
 				
 				// Process the activities within the conversation
-				java.util.List<Activity> acts=path.getBlock().getContents();
+				java.util.List<Activity> acts=path.getContents();
 							
 				Object parent=context.getParent();
 				
@@ -661,7 +673,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 	
 				if (i == 0) {
 					act.setSequence(seq);
-				} else if (i == elem.getWhens().size()-1) {
+				} else if (i == elem.getBlocks().size()-1) {
 					TActivityContainer construct=new TActivityContainer();
 					construct.setSequence(seq);
 					
@@ -715,79 +727,6 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 				}
 			} else {
 				roleType = interaction.getFromRole();
-				if (roleType == null) {
-					roleType = role;
-				}
-			}
-			
-			if (roleType != null) {
-				contract = ModelChangeUtils.getContract(context, roleType);
-			}
-
-			QName qname=null;
-			if (InteractionUtil.isRequest(interaction)) {
-				qname = WSDLGeneratorUtil.getRequestMessageType(contract.getNamespace(),
-									interaction.getMessageSignature().getOperation(),
-									ProtocolUtils.getNamespacePrefix(interaction.getModel(), contract.getNamespace()));
-			} else {
-				qname = WSDLGeneratorUtil.getResponseMessageType(contract.getNamespace(),
-									interaction.getMessageSignature().getOperation(),
-									ProtocolUtils.getNamespacePrefix(interaction.getModel(), contract.getNamespace()));
-			}
-
-			/*
-			String mesgType=qname.getLocalPart();
-			
-			// Find namespace prefix
-			if (qname.getNamespaceURI() != null) {
-				String pfix=bpelModel.getBPELProcess().addNamespace(qname.getNamespaceURI());
-				
-				if (pfix != null) {
-					mesgType = pfix+":"+mesgType;
-				}
-			}
-			*/
-			
-			var.setMessageType(qname);
-			
-			bpelModel.getVariables().getVariable().add(var);
-		}
-	}
-	
-	/**
-	 * This method creates a variable, if one does not already exist for the
-	 * supplied name, with the message type associated with the supplied
-	 * interaction.
-	 * 
-	 * @param varName The variable name
-	 * @param interaction The interaction associated with the variable
-	 * @param bpelModel The BPEL model
-	 */
-	protected void createVariable(ModelChangeContext context, String varName,
-						When interaction, TProcess bpelModel) {
-		TVariable var=VariableUtil.getVariable(bpelModel, varName);
-		Choice  choice=(Choice)interaction.getParent();
-		
-		if (var == null) {
-			Role role=null;
-			
-			if (choice.enclosingProtocol() != null) {
-				role = choice.enclosingProtocol().getRole();
-			}
-
-			var = new TVariable();
-			var.setName(varName);
-			
-			Role roleType=null;
-			Contract contract=null;
-			
-			if (InteractionUtil.isRequest(interaction)) {
-				roleType = choice.getToRole();
-				if (roleType == null) {
-					roleType = role;
-				}
-			} else {
-				roleType = choice.getFromRole();
 				if (roleType == null) {
 					roleType = role;
 				}

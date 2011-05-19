@@ -27,7 +27,6 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.model.Choice;
-import org.scribble.protocol.model.When;
 import org.pi4soa.cdl.util.*;
 import org.pi4soa.common.util.NamesUtil;
 import org.pi4soa.common.xml.NameSpaceUtil;
@@ -141,17 +140,19 @@ public class InteractionParserRule implements ParserRule {
 		
 		java.util.Iterator<ExchangeDetails> iter=
 					cdl.getExchangeDetails().iterator();
-		java.util.List<When> cbs=
-					new java.util.Vector<When>();
+		java.util.List<Block> cbs=
+					new java.util.Vector<Block>();
 				
 		while (iter.hasNext()) {
 			ExchangeDetails details=iter.next();
 			
+			/*
 			if (context.shouldIgnore(details)) {
 				continue;
 			}
+			*/
 			
-			When cb=new When();
+			Block cb=new Block();
 			
 			// Convert 'before' send and receive record details
 			/*
@@ -342,7 +343,7 @@ public class InteractionParserRule implements ParserRule {
 			
 			interaction.setMessageSignature(ms);
 						
-			cb.getBlock().add(interaction);
+			cb.add(interaction);
 
 			// Set interface name
 			if (cdl.getToRoleType() != null) {
@@ -610,23 +611,23 @@ public class InteractionParserRule implements ParserRule {
 		}
 		
 		if (cbs.size() > 2) {
-			block.getContents().addAll(cbs.remove(0).getBlock().getContents());
+			block.getContents().addAll(cbs.remove(0).getContents());
 			
 			Choice choice=new Choice();
 			
 			//choice.getRoles().add(new Role(toRole.getName()));
 			
 			for (int i=0; i < cbs.size(); i++) {
-				When cb=cbs.get(i);
+				Block cb=cbs.get(i);
 				
-				choice.getWhens().add(cb);
+				choice.getBlocks().add(cb);
 			}
 			
 			block.getContents().add(choice);			
 		} else {
 			for (int i=0; i < cbs.size(); i++) {
-				When cb=cbs.get(i);
-				block.getContents().addAll(cb.getBlock().getContents());
+				Block cb=cbs.get(i);
+				block.getContents().addAll(cb.getContents());
 			}
 		}
 

@@ -21,12 +21,9 @@ package org.savara.pi4soa.cdm.parser.rules;
 
 import org.pi4soa.cdl.*;
 import org.pi4soa.cdl.util.CDLTypeUtil;
-import org.pi4soa.cdl.util.InteractionUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.savara.pi4soa.cdm.parser.rules.ChoiceParserRule.InteractionLocator;
 import org.scribble.protocol.model.*;
-import org.scribble.protocol.model.When;
 
 public class ConditionalParserRule implements ParserRule {
 
@@ -60,6 +57,7 @@ public class ConditionalParserRule implements ParserRule {
 				new org.scribble.protocol.model.Choice();
 		org.pi4soa.cdl.Conditional cdl=(org.pi4soa.cdl.Conditional)cdlType;
 		
+		/*
 		// Find exchange details for this path
 		InteractionLocator locator=new InteractionLocator(cdl);
 		
@@ -71,6 +69,7 @@ public class ConditionalParserRule implements ParserRule {
 				locator.getInteraction().getExchangeDetails().size() > 0) {
 			context.ignore(locator.getInteraction().getExchangeDetails().get(0));
 		}
+		*/
 
 		//ret.getSource().setComponentURI(
 		Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
@@ -80,9 +79,10 @@ public class ConditionalParserRule implements ParserRule {
 		ret.getAnnotations().add(scannotation);
 
 	
-		When block=new When();
-		ret.getWhens().add(block);
+		Block block=new Block();
+		ret.getBlocks().add(block);
 		
+		/*
 		if (locator.getInteraction() != null &&
 				locator.getInteraction().getExchangeDetails().size() > 0) {
 			
@@ -137,6 +137,7 @@ public class ConditionalParserRule implements ParserRule {
 				}
 			}
 		}
+		*/
 
 		context.pushState();
 		
@@ -147,7 +148,16 @@ public class ConditionalParserRule implements ParserRule {
 			//exp.setQuery(cdl.getExpression());
 		
 			//block.setExpression(exp);
-			block.getProperties().put("Expression", cdl.getExpression());
+			//block.getProperties().put("Expression", cdl.getExpression());
+			
+			Annotation assertion=new Annotation(AnnotationDefinitions.ASSERTION);
+			
+			assertion.getProperties().put(AnnotationDefinitions.EXPRESSION_PROPERTY,
+					cdl.getExpression());
+			assertion.getProperties().put(AnnotationDefinitions.LANGUAGE_PROPERTY,
+									"xpath");
+			
+			ret.getAnnotations().add(assertion);
 		}
 		
 		// Process all of the activities within the
@@ -168,9 +178,9 @@ public class ConditionalParserRule implements ParserRule {
 				
 				if (activity != null) {
 					if (activity instanceof Block) {
-						block.getBlock().getContents().addAll(((Block)activity).getContents());
+						block.getContents().addAll(((Block)activity).getContents());
 					} else {
-						block.getBlock().add(activity);
+						block.add(activity);
 					}
 				}
 			}

@@ -1,9 +1,8 @@
 protocol ESBBrokerProcess_CreditAgency @ CreditAgency {
 	checkCredit(CreditCheckRequest) from Broker;
-	choice to Broker {
-		checkCredit(CreditCheckOk):
-
-		checkCredit(CreditCheckInvalid):
-
+	choice {
+		checkCredit(CreditCheckOk) to Broker;
+	} or {
+		checkCredit(CreditCheckInvalid) to Broker;
 	}
 }

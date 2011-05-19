@@ -14,7 +14,7 @@ import xsd "bookingReference" as BookingReference, "buy" as Buy, "cancel" as Can
 [[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierTxnProcessor) ]]
 [[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierQuoteEngine) ]]
 protocol ESBBrokerProcess {
-	role Broker, Buyer, Supplier;
+	role Broker, Buyer, CreditAgency, Supplier;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
 	[[ Correlation(request=makeEnquiry) ]]
@@ -29,52 +29,13 @@ protocol ESBBrokerProcess {
 	[[ Correlation(replyTo=makeEnquiry) ]]
 	makeEnquiry(QuoteList) from Broker to Buyer;
 	[[ SourceComponent(id=//@choreographies.0/@activities.3) ]]
-	choice from Buyer to Broker {
-		[[ Correlation(request=buy) ]]
-		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.0/@exchangeDetails.0) ]]
-		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
-		buy(Buy):
-			role SupplierTxnProcessor, CreditAgency;
-			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.1/@exchangeDetails.0) ]]
-			[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
-			[[ Correlation(request=checkCredit) ]]
-			checkCredit(CreditInformation) from Broker to CreditAgency;
-			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2) ]]
-			choice from CreditAgency to Broker {
-				[[ Correlation(replyTo=checkCredit) ]]
-				[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.0/@exchangeDetails.0) ]]
-				[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
-				checkCredit(CreditValid):
-					[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.0) ]]
-					[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
-					[[ Correlation(request=confirm) ]]
-					confirm(OrderConfirmed) from Broker to SupplierTxnProcessor;
-					[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.1) ]]
-					[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
-					[[ Correlation(replyTo=confirm) ]]
-					confirm(BookingReference) from SupplierTxnProcessor to Broker;
-					[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.2/@exchangeDetails.0) ]]
-					[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
-					[[ Correlation(replyTo=buy) ]]
-					buy(BookingReference) from Broker to Buyer;
-
-				[[ Fault(name=invalidCredit) ]]
-				[[ Correlation(replyTo=checkCredit) ]]
-				[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.1/@activities.0/@exchangeDetails.0) ]]
-				[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
-				checkCredit(CreditInvalid):
-					[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.1/@activities.1/@exchangeDetails.0) ]]
-					[[ Fault(name=rejected) ]]
-					[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
-					[[ Correlation(replyTo=buy) ]]
-					buy(OrderRejected) from Broker to Buyer;
-
-			}
-
+	choice at Buyer {
+		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.0/@activities.0) ]]
+		run CompleteTransaction(Buyer, Broker, CreditAgency);
+	} or {
 		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.1/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
-		cancel(Cancel):
-
+		cancel(Cancel) from Buyer to Broker;
 	}
 	[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0) ]]
 	[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierTxnProcessor) ]]
@@ -88,36 +49,35 @@ protocol ESBBrokerProcess {
 		[[ Correlation(request=checkCredit) ]]
 		checkCredit(CreditInformation) from Broker to CreditAgency;
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2) ]]
-		choice from CreditAgency to Broker {
-			[[ Correlation(replyTo=checkCredit) ]]
+		choice at CreditAgency {
+			role SupplierTxnProcessor;
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.0/@exchangeDetails.0) ]]
 			[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
-			checkCredit(CreditValid):
-				role SupplierTxnProcessor;
-				[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.0) ]]
-				[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
-				[[ Correlation(request=confirm) ]]
-				confirm(OrderConfirmed) from Broker to SupplierTxnProcessor;
-				[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.1) ]]
-				[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
-				[[ Correlation(replyTo=confirm) ]]
-				confirm(BookingReference) from SupplierTxnProcessor to Broker;
-				[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.2/@exchangeDetails.0) ]]
-				[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
-				[[ Correlation(replyTo=buy) ]]
-				buy(BookingReference) from Broker to Buyer;
-
-			[[ Fault(name=invalidCredit) ]]
 			[[ Correlation(replyTo=checkCredit) ]]
+			checkCredit(CreditValid) from CreditAgency to Broker;
+			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.0) ]]
+			[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
+			[[ Correlation(request=confirm) ]]
+			confirm(OrderConfirmed) from Broker to SupplierTxnProcessor;
+			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.1) ]]
+			[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
+			[[ Correlation(replyTo=confirm) ]]
+			confirm(BookingReference) from SupplierTxnProcessor to Broker;
+			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.2/@exchangeDetails.0) ]]
+			[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
+			[[ Correlation(replyTo=buy) ]]
+			buy(BookingReference) from Broker to Buyer;
+		} or {
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.1/@activities.0/@exchangeDetails.0) ]]
+			[[ Fault(name=invalidCredit) ]]
 			[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
-			checkCredit(CreditInvalid):
-				[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.1/@activities.1/@exchangeDetails.0) ]]
-				[[ Fault(name=rejected) ]]
-				[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
-				[[ Correlation(replyTo=buy) ]]
-				buy(OrderRejected) from Broker to Buyer;
-
+			[[ Correlation(replyTo=checkCredit) ]]
+			checkCredit(CreditInvalid) from CreditAgency to Broker;
+			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.1/@activities.1/@exchangeDetails.0) ]]
+			[[ Fault(name=rejected) ]]
+			[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
+			[[ Correlation(replyTo=buy) ]]
+			buy(OrderRejected) from Broker to Buyer;
 		}
 	}
 	[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.1) ]]

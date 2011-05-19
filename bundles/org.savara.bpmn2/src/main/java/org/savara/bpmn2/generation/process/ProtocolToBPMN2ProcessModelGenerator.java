@@ -19,7 +19,6 @@
  */
 package org.savara.bpmn2.generation.process;
 
-import java.net.URI;
 import java.util.logging.Logger;
 
 import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
@@ -37,18 +36,12 @@ import org.savara.bpmn2.internal.generation.process.components.RunActivity;
 import org.savara.bpmn2.internal.generation.process.components.RunInlineActivity;
 import org.savara.bpmn2.internal.generation.process.components.SendActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
-import org.savara.bpmn2.internal.generation.process.components.SimpleActivity;
 import org.savara.bpmn2.internal.generation.process.components.TryActivity;
 import org.savara.bpmn2.internal.generation.process.components.TryBlockActivity;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.common.logging.FeedbackHandler;
-import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.generator.ModelGenerator;
 import org.savara.common.resources.ResourceLocator;
-import org.savara.protocol.util.JournalProxy;
-import org.savara.protocol.util.ProtocolServices;
-import org.scribble.protocol.DefaultProtocolContext;
-import org.scribble.protocol.ProtocolDefinitions;
 import org.scribble.protocol.model.*;
 
 /**
@@ -259,27 +252,6 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		}
 		
 		/**
-		 * This method indicates the start of a
-		 * when block.
-		 * 
-		 * @param elem The when block
-		 * @return Whether to process the contents
-		 */
-		public boolean start(When elem) {
-			
-			return(true);
-		}
-		
-		/**
-		 * This method indicates the end of a
-		 * when block.
-		 * 
-		 * @param elem The when block
-		 */
-		public void end(When elem) {
-		}
-
-		/**
 		 * This method starts visiting the parallel element.
 		 * 
 		 * @param elem The parallel
@@ -482,6 +454,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			try {
 				pushBPMNActivity(new SequenceActivity(getBPMNActivity(), m_modelFactory, m_notationFactory));
 				
+				/*
 				if (elem.getParent() instanceof When &&
 						((When)elem.getParent()).getMessageSignature().getTypeReferences().size() > 0 &&
 						elem.getParent().getParent() instanceof Choice) {
@@ -527,7 +500,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						}
 					}
 
-				} else if (elem.getParent() instanceof Catch) {
+				} else */
+				if (elem.getParent() instanceof Catch) {
 					
 					for (Interaction interaction : ((Catch)elem.getParent()).getInteractions()) {
 						accept(interaction);

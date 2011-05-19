@@ -64,17 +64,17 @@ public class InvokeParserRule implements ProtocolParserRule {
 			
 			activities.add(te);
 			
-			org.scribble.protocol.model.When when=
-						new org.scribble.protocol.model.When();
-			te.getWhens().add(when);
+			org.scribble.protocol.model.Block when=
+						new org.scribble.protocol.model.Block();
+			te.getBlocks().add(when);
 			
-			activities = when.getBlock().getContents();
+			activities = when.getContents();
 			
 			for (int i=0; i < scope.getFaultHandlers().getCatch().size(); i++) {
 				TCatch catchBlock=scope.getFaultHandlers().getCatch().get(i);
 
-				org.scribble.protocol.model.When fcb=
-					new org.scribble.protocol.model.When();
+				org.scribble.protocol.model.Block fcb=
+					new org.scribble.protocol.model.Block();
 				
 				QName mesgType=catchBlock.getFaultMessageType();
 				
@@ -92,7 +92,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 					context.addVariable(faultVar);
 				}
 				
-				convertFaultResponse(invoke, fcb.getBlock().getContents(), catchBlock.getFaultVariable(),
+				convertFaultResponse(invoke, fcb.getContents(), catchBlock.getFaultVariable(),
 									mesgType, context);
 				
 				org.scribble.protocol.model.Raise raise=
@@ -102,9 +102,9 @@ public class InvokeParserRule implements ProtocolParserRule {
 				tref.setName(catchBlock.getFaultName().getLocalPart());
 				raise.setType(tref);
 				
-				fcb.getBlock().add(raise);
+				fcb.add(raise);
 				
-				te.getWhens().add(fcb);
+				te.getBlocks().add(fcb);
 				
 				if (faultVar != null) {
 					context.removeVariable(faultVar);

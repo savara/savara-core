@@ -1,9 +1,8 @@
 protocol PurchaseGoodsProcess_CreditAgency @ CreditAgencyInterface {
 	checkCredit(CreditCheckRequest) from Store;
-	choice to Store {
-		checkCredit(CreditCheckOk):
-
-		checkCredit(CreditCheckInvalid):
-
+	choice {
+		checkCredit(CreditCheckOk) to Store;
+	} or {
+		checkCredit(CreditCheckInvalid) to Store;
 	}
 }

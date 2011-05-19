@@ -73,25 +73,25 @@ public class ProcessParserRule implements ProtocolParserRule {
 			// Create choice with normal response and fault paths
 			org.scribble.protocol.model.Choice choice=new org.scribble.protocol.model.Choice();
 			
-			When cb=new When();
+			Block cb=new Block();
 			
-			InvokeParserRule.convertResponse(invoke, cb.getBlock().getContents(), context);
+			InvokeParserRule.convertResponse(invoke, cb.getContents(), context);
 			
 			// Include remaining activities
 			if (act instanceof TSequence) {
 				for (int i=1; i < ((TSequence)act).getActivity().size(); i++) {
-					context.parse(((TSequence)act).getActivity().get(i), cb.getBlock().getContents(),
+					context.parse(((TSequence)act).getActivity().get(i), cb.getContents(),
 										handler);
 				}
 			}
 			
-			choice.getWhens().add(cb);
+			choice.getBlocks().add(cb);
 			
 			// Process fault handlers
 			for (int i=0; i < process.getFaultHandlers().getCatch().size(); i++) {
 				TCatch catchBlock=process.getFaultHandlers().getCatch().get(i);
 				
-				When fcb=new When();
+				Block fcb=new Block();
 				
 				QName mesgType=catchBlock.getFaultMessageType();
 				
@@ -110,16 +110,16 @@ public class ProcessParserRule implements ProtocolParserRule {
 				}
 				
 				InvokeParserRule.convertFaultResponse(invoke,
-						fcb.getBlock().getContents(), catchBlock.getFaultVariable(),
+						fcb.getContents(), catchBlock.getFaultVariable(),
 									mesgType, context);
 				
 				TActivity cbact=ActivityUtil.getActivity(catchBlock);
 				
 				if (cbact != null) {
-					context.parse(cbact, fcb.getBlock().getContents(), handler);
+					context.parse(cbact, fcb.getContents(), handler);
 				}
 				
-				choice.getWhens().add(fcb);
+				choice.getBlocks().add(fcb);
 				
 				if (faultVar != null) {
 					context.removeVariable(faultVar);

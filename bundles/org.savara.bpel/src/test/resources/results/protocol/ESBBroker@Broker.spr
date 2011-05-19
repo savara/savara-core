@@ -5,21 +5,19 @@ protocol ESBBrokerProcess_Broker @ BrokerBehavior {
 		getQuote(quote) from SupplierQuoteEngine;
 	}
 	makeEnquiry(quoteList) to Buyer;
-	choice from Buyer {
-		buy(buy):
-			checkCredit(CreditCheckRequest) to CreditAgency;
-			choice from CreditAgency {
-				checkCredit(CreditCheckOk):
-					confirm(orderConfirmed) to SupplierTxnProcessor;
-					confirm(bookingReference) from SupplierTxnProcessor;
-					buy(bookingReference) to Buyer;
-
-				checkCredit(CreditCheckInvalid):
-					buy(orderRejected) to Buyer;
-
-			}
-
-		cancel(cancel):
-
+	choice at Buyer {
+		buy(buy) from Buyer;
+		checkCredit(CreditCheckRequest) to CreditAgency;
+		choice at CreditAgency {
+			checkCredit(CreditCheckOk) from CreditAgency;
+			confirm(orderConfirmed) to SupplierTxnProcessor;
+			confirm(bookingReference) from SupplierTxnProcessor;
+			buy(bookingReference) to Buyer;
+		} or {
+			checkCredit(CreditCheckInvalid) from CreditAgency;
+			buy(orderRejected) to Buyer;
+		}
+	} or {
+		cancel(cancel) from Buyer;
 	}
 }

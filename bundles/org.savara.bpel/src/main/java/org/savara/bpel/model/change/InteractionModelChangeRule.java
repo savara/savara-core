@@ -218,33 +218,13 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 			
 			varName = qname.getLocalPart()+"Var";
 
-			TVariable var=VariableUtil.getVariable(bpelModel, varName);
-
-			if (var == null) {
-				var = new TVariable();
-				var.setName(varName);
-				
-				//String mesgType=qname.getLocalPart();
-				
-				// Find namespace prefix
-				/* TODO: Namespace issue
-				if (qname.getNamespaceURI() != null) {
-					String pfix=bpelModel.getBPELProcess().addNamespace(qname.getNamespaceURI());
-					
-					if (pfix != null) {
-						mesgType = pfix+":"+mesgType;
-					}
-				}
-				*/
-				
-				var.setMessageType(qname);
-				
-				bpelModel.getVariables().getVariable().add(var);
-			}
 		//}
 
 		// Check if send or receive
 		if (InteractionUtil.isSend(interaction)) {
+			
+			// Make sure variable exists
+			getVariable(bpelModel, varName, qname);
 			
 			// TODO: Record variables against relevant interaction
 			// based activity - probably only mechanism for
@@ -327,6 +307,9 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 				}
 			}
 		} else if (InteractionPatterns.isResponseInFaultHandler(interaction) == false) {
+			
+			// Make sure variable exists
+			getVariable(bpelModel, varName, qname);
 			
 			if (InteractionPatterns.isSyncNormalResponse(interaction)) {
 				
@@ -522,5 +505,33 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 		}
 		
 		return(ret);
+	}
+	
+	protected TVariable getVariable(TProcess bpelModel, String varName, QName qname) {
+		TVariable var=VariableUtil.getVariable(bpelModel, varName);
+
+		if (var == null) {
+			var = new TVariable();
+			var.setName(varName);
+			
+			//String mesgType=qname.getLocalPart();
+			
+			// Find namespace prefix
+			/* TODO: Namespace issue
+			if (qname.getNamespaceURI() != null) {
+				String pfix=bpelModel.getBPELProcess().addNamespace(qname.getNamespaceURI());
+				
+				if (pfix != null) {
+					mesgType = pfix+":"+mesgType;
+				}
+			}
+			*/
+			
+			var.setMessageType(qname);
+			
+			bpelModel.getVariables().getVariable().add(var);
+		}
+	
+		return(var);
 	}
 }

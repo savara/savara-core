@@ -45,101 +45,38 @@ public class IfParserRule implements ProtocolParserRule {
 		org.scribble.protocol.model.Choice elem=
 					new org.scribble.protocol.model.Choice();
 		
-		When cb=new When();
+		Block cb=new Block();
 		
 		// TODO: Convert the conditional expression
 		
 		TActivity act=ActivityUtil.getActivity(bpelElem);
 		
 		if (act != null) {
-			context.parse(act, cb.getBlock().getContents(), handler);
-			
-			// Check if first activity is interaction
-			if (cb.getBlock().getContents().size() > 0 &&
-					cb.getBlock().getContents().get(0) instanceof Interaction) {
-				Interaction interaction=(Interaction)cb.getBlock().getContents().get(0);
-				
-				cb.getBlock().getContents().remove(0);
-				
-				cb.derivedFrom(interaction);
-				
-				cb.setMessageSignature(interaction.getMessageSignature());
-				
-				elem.setFromRole(interaction.getFromRole());
-				
-				if (interaction.getToRoles().size() > 0) {
-					elem.setToRole(interaction.getToRoles().get(0));
-				}
-			} else {
-				handler.error("Main block of if does not contain an initial interaction", null);
-			}
+			context.parse(act, cb.getContents(), handler);
 		}
 		
-		elem.getWhens().add(cb);
+		elem.getBlocks().add(cb);
 		
 		// Convert 'else if' paths
 		for (int i=0; i < bpelElem.getElseif().size(); i++) {
 			TElseif elseIfElem=bpelElem.getElseif().get(i);
 			
-			cb = new When();
+			cb = new Block();
 			
-			context.parse(elseIfElem, cb.getBlock().getContents(), handler);
+			context.parse(elseIfElem, cb.getContents(), handler);
 			
-			setupWhenMs(elem, cb, handler);
-
-			elem.getWhens().add(cb);
+			elem.getBlocks().add(cb);
 		}
 		
 		// Convert 'else' path
 		if (bpelElem.getElse() != null) {
-			cb = new When();
+			cb = new Block();
 			
-			context.parse(bpelElem.getElse(), cb.getBlock().getContents(), handler);
+			context.parse(bpelElem.getElse(), cb.getContents(), handler);
 			
-			setupWhenMs(elem, cb, handler);
-			
-			elem.getWhens().add(cb);
+			elem.getBlocks().add(cb);
 		}
 		
 		activities.add(elem);
-	}
-	
-	protected void setupWhenMs(Choice elem, When cb, FeedbackHandler handler) {
-		
-		// Check if first activity is interaction
-		if (cb.getBlock().getContents().size() > 0 &&
-				cb.getBlock().getContents().get(0) instanceof Interaction) {
-			Interaction interaction=(Interaction)cb.getBlock().getContents().get(0);
-			
-			cb.getBlock().getContents().remove(0);
-			
-			cb.derivedFrom(interaction);
-			
-			cb.setMessageSignature(interaction.getMessageSignature());
-			
-			// Verify from/to roles
-			if (elem.getFromRole() != null) {
-				if (interaction.getFromRole() != null) {
-					if (elem.getFromRole().equals(interaction.getFromRole()) == false) {
-						handler.error("ElseIf path has interaction with incompatible 'from' role", null);
-					}
-				} else {
-					handler.error("ElseIf path does not contain a required 'from' role", null);
-				}
-			}
-			elem.setFromRole(interaction.getFromRole());
-			
-			if (elem.getToRole() != null) {
-				if (interaction.getToRoles().size() > 0) {
-					if (elem.getToRole().equals(interaction.getToRoles().get(0)) == false) {
-						handler.error("ElseIf path has interaction with incompatible 'to' role", null);
-					}
-				} else {
-					handler.error("ElseIf path does not contain a required 'to' role", null);
-				}
-			}
-		} else {
-			handler.error("Main block of if does not contain an initial interaction", null);
-		}
 	}
 }

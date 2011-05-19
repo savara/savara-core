@@ -14,17 +14,16 @@ protocol ReqRespFaultProcess {
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditInformation) from Buyer to Seller;
 	[[ SourceComponent(id=//@choreographies.0/@activities.1) ]]
-	choice from Seller to Buyer {
-		[[ Correlation(replyTo=checkCredit) ]]
+	choice at Seller {
 		[[ SourceComponent(id=//@choreographies.0/@activities.1/@activities.0/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={http://www.pi4soa.org/ReqRespFault/Seller}SellerBehavior) ]]
-		checkCredit(CreditValid):
-
-		[[ Fault(name=insufficientCredit) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
+		checkCredit(CreditValid) from Seller to Buyer;
+	} or {
 		[[ SourceComponent(id=//@choreographies.0/@activities.1/@activities.1/@activities.0/@exchangeDetails.0) ]]
+		[[ Fault(name=insufficientCredit) ]]
 		[[ Interface(name={http://www.pi4soa.org/ReqRespFault/Seller}SellerBehavior) ]]
-		checkCredit(CreditInvalid):
-
+		[[ Correlation(replyTo=checkCredit) ]]
+		checkCredit(CreditInvalid) from Seller to Buyer;
 	}
 }

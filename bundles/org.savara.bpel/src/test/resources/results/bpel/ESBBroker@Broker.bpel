@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ESBBrokerProcess_Broker" targetNamespace="http://www.pi4soa.org/ESBBroker/Broker">
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_Broker.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Broker"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_CreditAgency.wsdl" namespace="http://www.pi4soa.org/ESBBroker/CreditAgency"/>
-    <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_SupplierTxnProcessor.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_BrokerArtifacts.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Broker"/>
     <partnerLinks>
         <partnerLink myRole="BrokerBehavior" name="BuyerToBroker" partnerLinkType="brk:BuyerToBrokerServiceLT"/>
@@ -14,24 +13,20 @@
         <variable messageType="spr:getQuoteRequest" name="getQuoteRequestVar"/>
         <variable messageType="spr:getQuoteResponse" name="getQuoteResponseVar"/>
         <variable messageType="brk:makeEnquiryResponse" name="makeEnquiryResponseVar"/>
+        <variable messageType="brk:buyRequest" name="buyRequestVar"/>
         <variable messageType="cay:checkCreditRequest" name="checkCreditRequestVar"/>
         <variable messageType="cay:checkCreditResponse" name="checkCreditResponseVar"/>
         <variable messageType="spr:confirmRequest" name="confirmRequestVar"/>
         <variable messageType="spr:confirmResponse" name="confirmResponseVar"/>
         <variable messageType="brk:buyResponse" name="buyResponseVar"/>
         <variable messageType="brk:rejectedFault" name="rejectedFaultVar"/>
-        <variable messageType="brk:buyRequest" name="buyRequestVar"/>
         <variable messageType="brk:cancelRequest" name="cancelRequestVar"/>
     </variables>
     <sequence>
         <receive createInstance="yes" name="Receive_Enquiry" operation="makeEnquiry" partnerLink="BuyerToBroker" portType="brk:BrokerBehavior" variable="makeEnquiryRequestVar"/>
         <while>
             <sequence>
-                <scope>
-                    <sequence>
-                        <invoke inputVariable="getQuoteRequestVar" name="Send_RequestForQuote" operation="getQuote" outputVariable="getQuoteResponseVar" partnerLink="BrokerToSupplierQuoteEngine" portType="spr:SupplierBehavior"/>
-                    </sequence>
-                </scope>
+                <invoke inputVariable="getQuoteRequestVar" name="Send_RequestForQuote" operation="getQuote" outputVariable="getQuoteResponseVar" partnerLink="BrokerToSupplierQuoteEngine" portType="spr:SupplierBehavior"/>
             </sequence>
         </while>
         <reply name="Send_QuoteList" operation="makeEnquiry" partnerLink="BuyerToBroker" portType="brk:BrokerBehavior" variable="makeEnquiryResponseVar"/>
