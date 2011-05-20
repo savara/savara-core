@@ -39,7 +39,7 @@
 
 	<properties>
 		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
-		<scribble.version>2.0.0.M5-SNAPSHOT</scribble.version>
+		<scribble.version>2.0.0-SNAPSHOT</scribble.version>
 		<pi4soa.version>3.1.1-SNAPSHOT</pi4soa.version>
 		<junit.version>4.4</junit.version>
 		<rosetta.version>4.7</rosetta.version>
@@ -127,9 +127,9 @@
 	
 	<repositories>
 	    <repository>
-	        <id>jboss-public-repository-group</id>
-	        <name>JBoss Public Maven Repository Group</name>
-		<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+	        <id>jboss-developer-repository-group</id>
+	        <name>JBoss Developer Maven Repository Group</name>
+		<url>https://repository.jboss.org/nexus/content/groups/developer/</url>
 		<releases>
 		  <enabled>true</enabled>
 		  <updatePolicy>never</updatePolicy>
