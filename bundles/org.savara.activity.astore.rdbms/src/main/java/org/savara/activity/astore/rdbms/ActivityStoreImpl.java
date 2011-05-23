@@ -121,7 +121,7 @@ public class ActivityStoreImpl implements ActivityStore {
        try {
 
            entity.setActId(activity.getId());
-           entity.setTimestamp(activity.getTimestamp().toGregorianCalendar().getTime());
+           entity.setTimestamp(activity.getTimestamp());
            entity.setActivityModel(ActivityModelUtil.serialize(activity));
            entity.setProperties(getContextValue(activity.getContext()));
            List<CorrelationIDEntity> ids = saveCorrelationIDEntity(activity.getCorrelation());
