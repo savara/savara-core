@@ -95,6 +95,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 				convertFaultResponse(invoke, fcb.getContents(), catchBlock.getFaultVariable(),
 									mesgType, context);
 				
+				/* TODO: What to do about raise?
 				org.scribble.protocol.model.Raise raise=
 							new org.scribble.protocol.model.Raise();
 				
@@ -103,6 +104,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 				raise.setType(tref);
 				
 				fcb.add(raise);
+				*/
 				
 				te.getBlocks().add(fcb);
 				
