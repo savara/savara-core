@@ -9,6 +9,7 @@
 package org.savara.activity.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -19,7 +20,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
@@ -67,7 +67,7 @@ public class Activity {
     protected String id;
     @XmlAttribute
     @XmlSchemaType(name = "dateTime")
-    protected XMLGregorianCalendar timestamp;
+    protected Date timestamp;
 
     /**
      * Gets the value of the analysis property.
@@ -185,10 +185,10 @@ public class Activity {
      * 
      * @return
      *     possible object is
-     *     {@link XMLGregorianCalendar }
+     *     {@link Date }
      *     
      */
-    public XMLGregorianCalendar getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
@@ -197,10 +197,10 @@ public class Activity {
      * 
      * @param value
      *     allowed object is
-     *     {@link XMLGregorianCalendar }
+     *     {@link Date }
      *     
      */
-    public void setTimestamp(XMLGregorianCalendar value) {
+    public void setTimestamp(Date value) {
         this.timestamp = value;
     }
 
