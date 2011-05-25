@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.savara.org/activity" xmlns:tns="http://www.savara.org/activity" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" targetNamespace="http://www.savara.org/activity" xmlns:tns="http://www.savara.org/activity" elementFormDefault="qualified">
+   <annotation>
+      <appinfo>
+        <jaxb:globalBindings>
+        <jaxb:javaType name="java.util.Date" xmlType="dateTime"
+        parseMethod="org.savara.activity.util.DateAdapter.parseDate"
+        printMethod="org.savara.activity.util.DateAdapter.printDate"/>
+        </jaxb:globalBindings>
+      </appinfo>
+   </annotation>
+
 
     <complexType name="Activity">
     	<sequence>
