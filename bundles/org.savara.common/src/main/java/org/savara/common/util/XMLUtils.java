@@ -185,6 +185,8 @@ public final class XMLUtils {
 		DocumentBuilder builder=fact.newDocumentBuilder();
 		org.w3c.dom.Document doc=builder.parse(xmlstr);
 		
+		xmlstr.close();
+		
 		ret = doc.getDocumentElement();
 
 		return(ret);
