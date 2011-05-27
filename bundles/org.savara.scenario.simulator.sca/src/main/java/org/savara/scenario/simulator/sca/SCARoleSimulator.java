@@ -42,18 +42,15 @@ public class SCARoleSimulator implements RoleSimulator {
 
 	private static final Logger logger=Logger.getLogger(SCARoleSimulator.class.getName());
 
-	@Override
 	public String getName() {
 		return SCA_SIMULATOR;
 	}
 
-	@Override
 	public void initialize(SimulationContext context) throws Exception {
 		System.out.println("CONTEXT="+context);
 		System.out.println("MODEL="+context.getModel());
 	}
 
-	@Override
 	public Object getSupportedModel(SimulationModel model) {
 		Object ret=null;
 		
@@ -78,17 +75,14 @@ public class SCARoleSimulator implements RoleSimulator {
 		return(ret);
 	}
 
-	@Override
 	public List<Role> getModelRoles(Object model) {
 		return(java.util.Collections.emptyList());
 	}
 
-	@Override
 	public Object getModelForRole(Object model, Role role) {
 		return null;
 	}
 
-	@Override
 	public void onEvent(SimulationContext context, Event event,
 			SimulationHandler handler) {
 		System.out.println("EVENT="+event);
