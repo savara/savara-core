@@ -15,25 +15,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca.binding.ws.runtime;
+package org.savara.scenario.simulator.sca;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.tuscany.sca.invocation.Message;
+import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
 
-public class WSServiceStore {
+public interface ServiceInvoker {
+
+    public RuntimeEndpoint getEndpoint();
     
-    private static Map<String, WSServiceInvoker> services = new HashMap<String, WSServiceInvoker>();
+    public Message invokeService(Message msg);
     
-    public static void addService(String uri, WSServiceInvoker SampleServiceInvoker) {
-        services.put(uri, SampleServiceInvoker);
-    }
-
-    public static WSServiceInvoker getService(String uri) {
-        return services.get(uri);
-    }
-
-    public static void removeService(String uri) {
-        services.remove(uri);
-    }
-
 }

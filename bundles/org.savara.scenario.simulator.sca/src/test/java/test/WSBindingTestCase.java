@@ -29,7 +29,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.savara.scenario.simulator.sca.binding.ws.runtime.WSServiceStore;
+import org.savara.scenario.simulator.sca.ServiceInvoker;
+import org.savara.scenario.simulator.sca.ServiceStore;
 
 import simsample.test.service.TestService;
 
@@ -39,8 +40,7 @@ public class WSBindingTestCase {
     
     @Test
     public void testDynamicInvoke() {    	
-		org.savara.scenario.simulator.sca.binding.ws.runtime.WSServiceInvoker invoker=
-					WSServiceStore.getService("http://localhost:8080/TestServiceComponent");
+		ServiceInvoker invoker=ServiceStore.getService("http://localhost:8080/TestServiceComponent");
 	
 		if (invoker == null) {
 			Assert.fail("Failed to get invoker");

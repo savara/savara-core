@@ -15,13 +15,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package test;
+package org.savara.scenario.simulator.sca;
 
 import static org.junit.Assert.*;
 
 import org.apache.tuscany.sca.node.Node;
 import org.junit.Test;
+import org.savara.scenario.model.Parameter;
+import org.savara.scenario.model.ReceiveEvent;
 import org.savara.scenario.model.Role;
+import org.savara.scenario.model.SendEvent;
+import org.savara.scenario.simulation.DefaultSimulationContext;
 import org.savara.scenario.simulation.SimulationModel;
 import org.savara.scenario.simulator.sca.SCARoleSimulator;
 
@@ -69,4 +73,58 @@ public class SCARoleSimulatorTest {
 		}
 	}
 
+	@Test
+	public void testOnEvent() {
+		SCARoleSimulator sim=new SCARoleSimulator();
+		
+		try {
+			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
+			
+			Object model=sim.getSupportedModel(simmodel);
+			
+			if (model == null) {
+				fail("Model is null");
+			}
+
+			DefaultSimulationContext context=new DefaultSimulationContext(null);
+			context.setModel(model);
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			Parameter param=new Parameter();
+			param.setValue("something");
+
+			ReceiveEvent event1=new ReceiveEvent();
+			event1.setOperationName("call");
+			event1.getParameter().add(param);
+			
+			sim.onEvent(context, event1, handler);
+
+			SendEvent event2=new SendEvent();
+			event2.setOperationName("callOut");
+			event2.getParameter().add(param);
+			
+			sim.onEvent(context, event2, handler);
+
+			Parameter resp=new Parameter();
+			resp.setValue("hello");
+
+			ReceiveEvent event3=new ReceiveEvent();
+			event3.setOperationName("callOut");
+			event3.getParameter().add(resp);
+			
+			sim.onEvent(context, event3, handler);
+
+			SendEvent event4=new SendEvent();
+			event4.setOperationName("call");
+			event4.getParameter().add(resp);
+			
+			sim.onEvent(context, event4, handler);
+
+			sim.close(context);
+			
+		} catch(Exception e) {
+			fail("Exception occurred: "+e);
+		}
+	}
 }
