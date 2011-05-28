@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.tuscany.sca.node.NodeFactory;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.Role;
 import org.savara.scenario.simulation.RoleSimulator;
@@ -56,6 +57,8 @@ public class SCARoleSimulator implements RoleSimulator {
 		
 		if (model.getName().endsWith(SCA_COMPOSITE_FILE_EXTENSION)) {
 			try {
+		        ret = NodeFactory.newInstance().createNode(model.getName()).start();
+				/*
 				DocumentBuilderFactory fact=DocumentBuilderFactory.newInstance();
 				fact.setNamespaceAware(true);
 				
@@ -67,6 +70,7 @@ public class SCARoleSimulator implements RoleSimulator {
 				is.close();
 				
 				ret = doc.getDocumentElement();
+				*/
 			} catch(Exception e) {
 				logger.log(Level.SEVERE, "Failed to load SCA composite model", e);
 			}
