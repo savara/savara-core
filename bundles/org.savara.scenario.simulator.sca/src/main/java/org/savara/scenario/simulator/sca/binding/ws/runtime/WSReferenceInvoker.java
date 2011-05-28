@@ -21,6 +21,7 @@ import org.apache.tuscany.sca.assembly.EndpointReference;
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.Invoker;
 import org.apache.tuscany.sca.invocation.Message;
+import org.savara.scenario.simulator.sca.MessageStore;
 
 public class WSReferenceInvoker implements Invoker {
     
@@ -34,25 +35,15 @@ public class WSReferenceInvoker implements Invoker {
 
     public Message invoke(Message msg) {
         try {
-
-            //return doInvoke(msg);
+        	MessageStore.waitForSendEvent(msg);
         	
-    		org.apache.tuscany.sca.core.invocation.impl.MessageImpl resp=new org.apache.tuscany.sca.core.invocation.impl.MessageImpl();
-
-    		resp.setOperation(operation);
-    		resp.setBody("hello");
-    		
+        	// TODO: Need to check if should wait for a response
+        	Message resp = MessageStore.waitForReceiveEvent(operation);
+        	
     		return(resp);
             
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public Message doInvoke(Message msg) {
-        // Add some code here to make an invocation over the Sample binding protocol
-        // For this sample we'll just get it from the static stash
-        WSServiceInvoker fi = WSServiceStore.getService(endpoint.getBinding().getURI());
-        return fi.invokeService(msg);
     }
 }
