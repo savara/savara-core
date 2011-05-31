@@ -18,21 +18,14 @@
 package org.savara.scenario.simulator.sca;
 
 import java.util.List;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import junit.framework.Assert;
 
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.InvocationChain;
 import org.apache.tuscany.sca.invocation.Message;
 import org.apache.tuscany.sca.node.Node;
 import org.apache.tuscany.sca.node.NodeFactory;
-import org.apache.tuscany.sca.node.impl.NodeImpl;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.Parameter;
 import org.savara.scenario.model.ReceiveEvent;
@@ -51,6 +44,8 @@ public class SCARoleSimulator implements RoleSimulator {
 
 	private static final String SCA_SIMULATOR = "SCA simulator";
 	private static final String SCA_COMPOSITE_FILE_EXTENSION = ".composite";
+	
+	private int m_eventCounter=0;
 	
 	private static final Logger logger=Logger.getLogger(SCARoleSimulator.class.getName());
 
@@ -87,9 +82,16 @@ public class SCARoleSimulator implements RoleSimulator {
 
 	public void onEvent(SimulationContext context, final Event event,
 					final SimulationHandler handler) {
+		
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("onEvent "+event);
+		}
+		
 		if (event instanceof ReceiveEvent) {
 			ReceiveEvent recv=(ReceiveEvent)event;
 			boolean handled=false;
+			
+			incrementEventCounter();
 			
 			// Should dispatch a received event immediately if service request.
 			// If response, then should cache awaiting the reference service invoke.
@@ -122,7 +124,7 @@ public class SCARoleSimulator implements RoleSimulator {
 		        			handler.processed(event);
 
 		        			try {
-			        			Message resp=invoker.invokeService(msg);
+			        			Message resp=invoker.invoke(msg);
 							
 			        			if (resp != null) {
 			        				MessageStore.waitForSendEvent(resp);
@@ -130,6 +132,8 @@ public class SCARoleSimulator implements RoleSimulator {
 			        		} catch(Throwable t){
 			        			handler.error("Failed to handle receive event", event, t);
 			        		}
+		        			
+		        			decrementEventCounter();
 			        	}
 			        }).start();
 			        
@@ -140,15 +144,47 @@ public class SCARoleSimulator implements RoleSimulator {
 			}
 			
 			if (handled == false) {
-				// Assume is receiving a response
-				try {
-					MessageStore.handleReceiveEvent(recv, handler);
-				} catch(Throwable t) {
-	    			handler.error("Failed to handle receive event", event, t);
+				
+				java.util.Collection<ReferenceInvoker> refInvokers=
+						ServiceStore.getReferences();
+		
+				for (final ReferenceInvoker refInvoker : refInvokers) {
+					String opName=recv.getOperationName();
+					
+			        Operation operation = null;
+			        for (Operation op : refInvoker.getEndpointReference().getComponentReferenceInterfaceContract().getInterface().getOperations()) {
+			            if (opName.equals(op.getName())) {
+			                operation = op;
+			                break;
+			            }
+			        }
+					
+			        if (operation != null) {
+				
+						// Assume is receiving a response
+						try {
+							MessageStore.handleReceiveEvent(recv, handler);
+						} catch(Throwable t) {
+			    			handler.error("Failed to handle receive event", event, t);
+						}
+				
+						decrementEventCounter();
+						
+						handled = true;
+						break;
+			        }
+				}
+				
+				if (handled == false) {
+					handler.unexpected(event);
+					
+					decrementEventCounter();
 				}
 			}
 		} else if (event instanceof SendEvent) {
 			SendEvent send=(SendEvent)event;
+			
+			incrementEventCounter();
 			
 			// Should block waiting for sent event
 			try {
@@ -157,6 +193,30 @@ public class SCARoleSimulator implements RoleSimulator {
 			} catch(Throwable t) {
     			handler.error("Failed to handle send event", event, t);
 			}
+			
+			decrementEventCounter();
+		}
+	}
+	
+	protected void incrementEventCounter() {
+		synchronized(this) {
+			m_eventCounter++;
+			
+			if (logger.isLoggable(Level.FINEST)) {
+				logger.finest("Increment event counter: "+m_eventCounter);
+			}	
+		}
+	}
+
+	protected void decrementEventCounter() {
+		synchronized(this) {
+			m_eventCounter--;
+			
+			if (logger.isLoggable(Level.FINEST)) {
+				logger.finest("Decrement event counter: "+m_eventCounter);
+			}	
+			
+			this.notifyAll();
 		}
 	}
 
@@ -171,6 +231,14 @@ public class SCARoleSimulator implements RoleSimulator {
 	}
 	
 	public void close(SimulationContext context) throws Exception {
+		
+		// Delay until all events handled
+		synchronized(this) {
+			while (m_eventCounter > 0) {
+				wait(5000);
+			}
+		}
+		
 		if (context.getModel() instanceof Node) {
 			((Node)context.getModel()).stop();
 		}

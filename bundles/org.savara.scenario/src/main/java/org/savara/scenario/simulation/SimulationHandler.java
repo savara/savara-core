@@ -22,6 +22,10 @@ import org.savara.scenario.model.Event;
 /**
  * This interface represents the callback handler for results from
  * simulating a scenario.
+ * 
+ * Each event will result in exactly one
+ * and only one of these methods being invoked, to represent the
+ * outcome of simulating the particular event.
  *
  */
 public interface SimulationHandler {
