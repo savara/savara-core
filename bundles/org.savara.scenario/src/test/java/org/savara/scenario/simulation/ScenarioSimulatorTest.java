@@ -57,7 +57,11 @@ public class ScenarioSimulatorTest {
 		contexts.put(r1, new DefaultSimulationContext(null));
 		contexts.put(r2, new DefaultSimulationContext(null));
 		
-		sim.simulate(scenario, roleSim, contexts, handler);
+		try {
+			sim.simulate(scenario, roleSim, contexts, handler);
+		} catch(Exception e) {
+			fail("Failed to simulate: "+e);
+		}
 		
 		if (handler.getProcessedEvents().size() != 2) {
 			fail("Expecting 2 'processed' events");
@@ -100,7 +104,11 @@ public class ScenarioSimulatorTest {
 		roleSim.put(r1, new TestRoleSimulator("r1sim", false));
 		contexts.put(r1, new DefaultSimulationContext(null));
 		
-		sim.simulate(scenario, roleSim, contexts, handler);
+		try {
+			sim.simulate(scenario, roleSim, contexts, handler);
+		} catch(Exception e) {
+			fail("Failed to simulate: "+e);
+		}
 		
 		if (handler.getNoSimulatorEvents().size() != 1) {
 			fail("Expecting 1 'no simulator' event");
@@ -138,7 +146,11 @@ public class ScenarioSimulatorTest {
 		
 		roleSim.put(r1, new TestRoleSimulator("r1sim", false));
 		
-		sim.simulate(scenario, roleSim, contexts, handler);
+		try {
+			sim.simulate(scenario, roleSim, contexts, handler);
+		} catch(Exception e) {
+			fail("Failed to simulate: "+e);
+		}
 		
 		if (handler.getErrorEvents().size() != 1) {
 			fail("Expecting 1 'exception' event");

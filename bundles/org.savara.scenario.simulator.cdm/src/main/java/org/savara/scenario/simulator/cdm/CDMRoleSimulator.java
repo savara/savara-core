@@ -294,6 +294,15 @@ public class CDMRoleSimulator implements RoleSimulator {
 		}
 	}
 
+	/**
+	 * This method closes the role simulator.
+	 * 
+	 * @param context The context
+	 * @throws Exception Failed to close the role simulator
+	 */
+	public void close(SimulationContext context) throws Exception {
+	}
+
 	public static class SimulationHandlerProxy implements ServiceTracker {
 
 		private SimulationHandler m_handler=null;
@@ -327,7 +336,7 @@ public class CDMRoleSimulator implements RoleSimulator {
 			if (!m_event.isErrorExpected()) {
 				m_handler.processed(m_event);
 			} else {
-				m_handler.error("Error was expected", m_event, null);
+				m_handler.error("Error was expected but did not occur", m_event, null);
 			}
 		}
 
@@ -336,7 +345,7 @@ public class CDMRoleSimulator implements RoleSimulator {
 			if (!m_event.isErrorExpected()) {
 				m_handler.processed(m_event);
 			} else {
-				m_handler.error("Error was expected", m_event, null);
+				m_handler.error("Error was expected but did not occur", m_event, null);
 			}
 		}
 
@@ -344,7 +353,7 @@ public class CDMRoleSimulator implements RoleSimulator {
 			if (!m_event.isErrorExpected()) {
 				m_handler.processed(m_event);
 			} else {
-				m_handler.error("Error was expected", m_event, null);
+				m_handler.error("Error was expected but did not occur", m_event, null);
 			}
 		}
 
@@ -353,7 +362,7 @@ public class CDMRoleSimulator implements RoleSimulator {
 			if (!m_event.isErrorExpected()) {
 				m_handler.processed(m_event);
 			} else {
-				m_handler.error("Error was expected", m_event, null);
+				m_handler.error("Error was expected but did not occur", m_event, null);
 			}
 		}
 

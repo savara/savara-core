@@ -17,6 +17,7 @@
  */
 package org.savara.scenario.simulation;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.savara.scenario.model.Event;
@@ -26,6 +27,9 @@ public class TestRoleSimulator implements RoleSimulator {
 
 	private String m_name=null;
 	private boolean m_unexpected=false;
+	
+	public TestRoleSimulator() {
+	}
 	
 	public TestRoleSimulator(String name, boolean unexpected) {
 		m_name = name;
@@ -37,13 +41,24 @@ public class TestRoleSimulator implements RoleSimulator {
 	}
 
 	public Object getSupportedModel(SimulationModel model) {
-		// TODO Auto-generated method stub
-		return null;
+		java.io.InputStream is=model.getContents();
+	
+		byte[] b=null;
+		
+		try {
+			b = new byte[is.available()];
+			is.read(b);	
+			is.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return(b);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Role> getModelRoles(Object model) {
-		// TODO Auto-generated method stub
-		return null;
+		return (List<Role>)Collections.EMPTY_LIST;
 	}
 
 	public void onEvent(SimulationContext context, Event event,
@@ -62,4 +77,6 @@ public class TestRoleSimulator implements RoleSimulator {
 		return null;
 	}
 
+	public void close(SimulationContext context) throws Exception {
+	}
 }

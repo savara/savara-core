@@ -39,9 +39,18 @@ public class DefaultScenarioSimulator implements ScenarioSimulator {
 	 * @param roleSimulators The simulators for the relevant roles in the scenario
 	 * @oaram contexts The simulation contexts for each role being simulated
 	 * @param handler The callback to notify of the simulation results
+	 * @throws Exception Failed to simulate
 	 */
 	public void simulate(Scenario scenario, java.util.Map<Role,RoleSimulator> roleSimulators,
-			java.util.Map<Role,SimulationContext> contexts, SimulationHandler handler) {
+			java.util.Map<Role,SimulationContext> contexts, SimulationHandler handler) throws Exception {
+		
+		// Initialize the simulation contexts against the appropriate simulators
+		for (Role role : contexts.keySet()) {
+			RoleSimulator rsim=roleSimulators.get(role);	
+			if (rsim != null) {
+				rsim.initialize(contexts.get(role));
+			}
+		}
 		
 		for (Event event : scenario.getEvent()) {
 			
@@ -55,6 +64,15 @@ public class DefaultScenarioSimulator implements ScenarioSimulator {
 				}
 			}
 		}
+		
+		// Close the simulation contexts against the appropriate simulators
+		for (Role role : contexts.keySet()) {
+			RoleSimulator rsim=roleSimulators.get(role);	
+			if (rsim != null) {
+				rsim.close(contexts.get(role));
+			}
+		}
+		
 	}
 	
 	protected void simulateAtRole(Role role, Event event, java.util.Map<Role,RoleSimulator> roleSimulators,

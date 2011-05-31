@@ -84,4 +84,12 @@ public interface RoleSimulator {
 	 */
 	public void onEvent(SimulationContext context, Event event, SimulationHandler handler);
 	
+	/**
+	 * This method closes the role simulator.
+	 * 
+	 * @param context The context
+	 * @throws Exception Failed to close the role simulator
+	 */
+	public void close(SimulationContext context) throws Exception;
+
 }
