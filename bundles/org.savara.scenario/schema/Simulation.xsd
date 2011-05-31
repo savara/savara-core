@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.savara.org/scenario/simulation" xmlns:tns="http://www.savara.org/scenario/simulation" elementFormDefault="qualified">
+
+    <element name="simulation" type="tns:Simulation"></element>
+
+    <complexType name="Simulation">
+    	<sequence>
+    		<element name="roles" type="tns:RoleDetails"
+    			maxOccurs="unbounded" minOccurs="1">
+    		</element>
+    		<element name="simulators" type="tns:SimulatorDetails" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    	<attribute name="scenario" type="string"></attribute>
+    </complexType>
+    
+    <complexType name="RoleDetails">
+    	<attribute name="role" type="string"></attribute>
+    	<attribute name="model" type="string"></attribute>
+    	<attribute name="simulator" type="string"></attribute>
+    </complexType>
+
+    <complexType name="SimulatorDetails">
+    	<sequence>
+    		<element name="className" type="string"></element>
+    	</sequence>
+    	<attribute name="name" type="string"></attribute>
+    </complexType>
+    
+</schema>

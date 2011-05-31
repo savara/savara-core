@@ -35,8 +35,9 @@ public interface ScenarioSimulator {
 	 * @param roleSimulators The simulators for the relevant roles in the scenario
 	 * @oaram contexts The simulation contexts for each role being simulated
 	 * @param handler The callback to notify of the simulation results
+	 * @throws Exception Failed to simulate
 	 */
 	public void simulate(Scenario scenario, java.util.Map<Role,RoleSimulator> roleSimulators,
-			java.util.Map<Role,SimulationContext> contexts, SimulationHandler handler);
+			java.util.Map<Role,SimulationContext> contexts, SimulationHandler handler) throws Exception;
 	
 }
