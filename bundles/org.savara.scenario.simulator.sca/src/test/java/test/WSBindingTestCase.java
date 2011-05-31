@@ -64,7 +64,7 @@ public class WSBindingTestCase {
         msg.setOperation(operation);
         msg.setBody(new Object[]{"something"});
 		
-		Message resp=invoker.invokeService(msg);
+		Message resp=invoker.invoke(msg);
 		
 		if (resp == null) {
 			Assert.fail("Response is null");

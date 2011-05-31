@@ -19,11 +19,11 @@ package org.savara.scenario.simulator.sca.binding.ws.runtime;
 
 import org.apache.tuscany.sca.assembly.EndpointReference;
 import org.apache.tuscany.sca.interfacedef.Operation;
-import org.apache.tuscany.sca.invocation.Invoker;
 import org.apache.tuscany.sca.invocation.Message;
 import org.savara.scenario.simulator.sca.MessageStore;
+import org.savara.scenario.simulator.sca.ReferenceInvoker;
 
-public class WSReferenceInvoker implements Invoker {
+public class WSReferenceInvoker implements ReferenceInvoker {
     
     protected Operation operation;
     protected EndpointReference endpoint;
@@ -31,6 +31,10 @@ public class WSReferenceInvoker implements Invoker {
     public WSReferenceInvoker(Operation operation, EndpointReference endpoint) {
         this.operation = operation;
         this.endpoint = endpoint;
+    }
+
+    public EndpointReference getEndpointReference() {
+    	return(endpoint);
     }
 
     public Message invoke(Message msg) {

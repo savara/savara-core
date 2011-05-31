@@ -36,7 +36,7 @@ public class WSServiceInvoker implements ServiceInvoker {
     /**
      * Send the request down the wire to invoke the service 
      */
-    public Message invokeService(Message msg) {
+    public Message invoke(Message msg) {
         return wire.invoke(msg);
     }
     

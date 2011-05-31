@@ -22,6 +22,7 @@ import org.apache.tuscany.sca.interfacedef.InterfaceContract;
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.Invoker;
 import org.apache.tuscany.sca.provider.ReferenceBindingProvider;
+import org.savara.scenario.simulator.sca.ServiceStore;
 
 public class WSReferenceBindingProvider implements ReferenceBindingProvider {
 
@@ -33,7 +34,11 @@ public class WSReferenceBindingProvider implements ReferenceBindingProvider {
     }
     
     public Invoker createInvoker(Operation operation) {
-        return new WSReferenceInvoker(operation, endpoint);
+    	WSReferenceInvoker ret=new WSReferenceInvoker(operation, endpoint);
+    	
+        ServiceStore.addReference(endpoint.getBinding().getURI(), ret);
+
+        return(ret);
     }
 
     public void start() {

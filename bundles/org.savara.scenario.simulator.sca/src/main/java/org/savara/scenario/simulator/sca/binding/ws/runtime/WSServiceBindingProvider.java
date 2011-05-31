@@ -21,7 +21,6 @@ import org.apache.tuscany.sca.interfacedef.InterfaceContract;
 import org.apache.tuscany.sca.provider.ServiceBindingProvider;
 import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
 import org.savara.scenario.simulator.sca.ServiceStore;
-import org.savara.scenario.simulator.sca.binding.ws.WSBinding;
 
 public class WSServiceBindingProvider implements ServiceBindingProvider {
 
@@ -33,13 +32,8 @@ public class WSServiceBindingProvider implements ServiceBindingProvider {
     }
 
     public void start() {
-        // add some code here to start the service
-
         // For this sample we'll just share it in a static
         ServiceStore.addService(endpoint.getBinding().getURI(), new WSServiceInvoker(endpoint));
-        
-        System.out.println("URI="+endpoint.getBinding().getURI());
-        System.out.println("someAttr=" + ((WSBinding)endpoint.getBinding()).getSomeAttr());
     }
 
     public void stop() {

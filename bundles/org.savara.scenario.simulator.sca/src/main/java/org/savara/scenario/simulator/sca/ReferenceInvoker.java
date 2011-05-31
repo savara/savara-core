@@ -17,11 +17,11 @@
  */
 package org.savara.scenario.simulator.sca;
 
+import org.apache.tuscany.sca.assembly.EndpointReference;
 import org.apache.tuscany.sca.invocation.Invoker;
-import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
 
-public interface ServiceInvoker extends Invoker {
+public interface ReferenceInvoker extends Invoker {
 
-    public RuntimeEndpoint getEndpoint();
+    public EndpointReference getEndpointReference();
     
 }
