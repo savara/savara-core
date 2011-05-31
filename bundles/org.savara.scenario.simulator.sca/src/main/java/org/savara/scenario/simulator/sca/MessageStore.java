@@ -64,19 +64,23 @@ public class MessageStore {
 	protected static boolean isValidMessage(MessageEvent event, Message mesg) {
 		boolean ret=false;
 		
-		if (mesg.getBody() instanceof Object[]) {
-			// Multiple parameters
-			Object[] params=(Object[])mesg.getBody();
-			
-			if (event.getParameter().size() == params.length) {
-				// Validate the message bodies
-				ret = true;
-				for (int i=0; ret && i < event.getParameter().size(); i++) {
-					ret = isValidParameter(event.getParameter().get(i), params[i]);
+		// Check the operation names
+		if (event.getOperationName().equals(mesg.getOperation().getName())) {
+
+			if (mesg.getBody() instanceof Object[]) {
+				// Multiple parameters
+				Object[] params=(Object[])mesg.getBody();
+				
+				if (event.getParameter().size() == params.length) {
+					// Validate the message bodies
+					ret = true;
+					for (int i=0; ret && i < event.getParameter().size(); i++) {
+						ret = isValidParameter(event.getParameter().get(i), params[i]);
+					}
 				}
+			} else if (event.getParameter().size() == 1) {
+				ret = isValidParameter(event.getParameter().get(0), mesg.getBody());
 			}
-		} else if (event.getParameter().size() == 1) {
-			ret = isValidParameter(event.getParameter().get(0), mesg.getBody());
 		}
 		
 		return(ret);
@@ -129,6 +133,7 @@ public class MessageStore {
 		
 		synchronized(m_receiveEvents) {
 			boolean f_found=false;
+			long endtime=System.currentTimeMillis()+5000;
 			
 			do {
 				for (ReceiveEvent receive : m_receiveEvents) {
@@ -159,7 +164,12 @@ public class MessageStore {
 				}
 				
 				if (!f_found) {
-					m_receiveEvents.wait();
+					long delay=endtime-System.currentTimeMillis();
+					if (delay <= 0) {
+						f_found = true;
+					} else {
+						m_receiveEvents.wait(delay);
+					}
 				}
 				
 			} while (!f_found);

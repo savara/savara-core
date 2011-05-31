@@ -246,12 +246,6 @@ public class SCARoleSimulatorTest {
 			
 			sim.onEvent(context, event1, handler);
 
-			SendEvent event2=new SendEvent();
-			event2.setOperationName("callOut");
-			event2.getParameter().add(param);
-			
-			sim.onEvent(context, event2, handler);
-
 			sim.close(context);
 			
 			if (handler.getErrorEvents().size() > 0) {
@@ -268,6 +262,62 @@ public class SCARoleSimulatorTest {
 
 			if (handler.getProcessedEvents().size() > 0) {
 				fail("Should be 0 processed events");
+			}
+
+		} catch(Exception e) {
+			fail("Exception occurred: "+e);
+		}
+	}
+	
+	@Test
+	public void testOnEventExternalRequestOperationUnexpected() {
+		SCARoleSimulator sim=new SCARoleSimulator();
+		
+		try {
+			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
+			
+			Object model=sim.getSupportedModel(simmodel);
+			
+			if (model == null) {
+				fail("Model is null");
+			}
+
+			DefaultSimulationContext context=new DefaultSimulationContext(null);
+			context.setModel(model);
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			Parameter param=new Parameter();
+			param.setValue("something");
+
+			ReceiveEvent event1=new ReceiveEvent();
+			event1.setOperationName("call");
+			event1.getParameter().add(param);
+			
+			sim.onEvent(context, event1, handler);
+
+			SendEvent event2=new SendEvent();
+			event2.setOperationName("callOutX");
+			event2.getParameter().add(param);
+			
+			sim.onEvent(context, event2, handler);
+
+			sim.close(context);
+			
+			if (handler.getErrorEvents().size() != 1) {
+				fail("Should be 1 errors");
+			}
+			
+			if (handler.getUnexpectedEvents().size() != 1) {
+				fail("Should be 1 unexpected events");
+			}
+			
+			if (handler.getNoSimulatorEvents().size() > 0) {
+				fail("Should be no 'no simulator' events");
+			}
+
+			if (handler.getProcessedEvents().size() != 1) {
+				fail("Should be 1 processed events");
 			}
 
 		} catch(Exception e) {
