@@ -31,6 +31,14 @@ import org.savara.scenario.model.Event;
 public interface SimulationHandler {
 
 	/**
+	 * This method is called to indicate that the event has started
+	 * simulation.
+	 * 
+	 * @param event The event
+	 */
+	public void start(Event event);
+	
+	/**
 	 * This method is called to indicate that there was no appropriate
 	 * simulator for the supplied event.
 	 * 
@@ -62,5 +70,13 @@ public interface SimulationHandler {
 	 * @param e The exception
 	 */
 	public void error(String mesg, Event event, Throwable e);
+	
+	/**
+	 * This method is called to indicate that the event has completed
+	 * simulation.
+	 * 
+	 * @param event The event
+	 */
+	public void end(Event event);
 	
 }

@@ -40,7 +40,7 @@ public class ScenarioSimulatorMain {
 
 	public static void main(String[] args) {
 		
-		if (args.length == 1) {
+		if (args.length != 1) {
 			System.err.println("Usage: ScenarioSimulatorMain simulation");
 			System.exit(1);
 		}
@@ -50,8 +50,17 @@ public class ScenarioSimulatorMain {
 		try {
 			java.io.InputStream is=ClassLoader.getSystemResourceAsStream(args[0]);
 			
+			if (is == null) {
+				java.io.File f=new java.io.File(args[0]);
+				if (f.exists()) {
+					is = new java.io.FileInputStream(f);
+				}
+			}
+			
 			if (is != null) {
 				simulation = SimulationModelUtil.deserialize(is);
+				
+				System.err.println("SIMULATION="+simulation);
 				
 				is.close();
 			}
@@ -59,9 +68,13 @@ public class ScenarioSimulatorMain {
 			logger.log(Level.SEVERE, "Failed to load scenario simulation '"+args[0]+"'", e);
 		}
 		
-		ScenarioSimulatorMain simulator=new ScenarioSimulatorMain();
-		
-		System.exit(simulator.simulate(simulation));
+		if (simulation != null) {
+			ScenarioSimulatorMain simulator=new ScenarioSimulatorMain();
+			
+			System.exit(simulator.simulate(simulation));
+		} else {
+			System.exit(1);
+		}
 	}
 	
 	/**
@@ -114,6 +127,10 @@ public class ScenarioSimulatorMain {
 			}
 		}
 	
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("Simulation completed with code: "+ret);
+		}
+		
 		return(ret);
 	}
 	
@@ -168,6 +185,13 @@ public class ScenarioSimulatorMain {
 					try {
 						java.io.InputStream is=ClassLoader.getSystemResourceAsStream(details.getModel());
 						
+						if (is == null) {
+							java.io.File f=new java.io.File(details.getModel());
+							if (f.exists()) {
+								is = new java.io.FileInputStream(f);
+							}
+						}
+						
 						if (is != null) {
 							
 							// Get context
@@ -179,6 +203,8 @@ public class ScenarioSimulatorMain {
 							}
 							
 							is.close();
+						} else {
+							logger.severe("Failed to find model '"+details.getModel()+"'");
 						}
 					} catch(Exception e) {
 						logger.log(Level.SEVERE, 
@@ -198,10 +224,19 @@ public class ScenarioSimulatorMain {
 		try {
 			java.io.InputStream is=ClassLoader.getSystemResourceAsStream(simulation.getScenario());
 			
+			if (is == null) {
+				java.io.File f=new java.io.File(simulation.getScenario());
+				if (f.exists()) {
+					is = new java.io.FileInputStream(f);
+				}
+			}
+			
 			if (is != null) {
 				scenario = ScenarioModelUtil.deserialize(is);
 				
 				is.close();
+			} else {
+				logger.severe("Failed to find scenario '"+simulation.getScenario()+"'");
 			}
 		} catch(Exception e) {
 			logger.log(Level.SEVERE, "Failed to load scenario '"+simulation.getScenario()+"'", e);
@@ -217,40 +252,62 @@ public class ScenarioSimulatorMain {
 		try {
 			java.net.URL url=ClassLoader.getSystemResource(simulation.getScenario());
 			
+			java.io.File f=null;
+			
 			if (url != null) {
-				java.io.File f=new java.io.File(url.getFile());
+				f = new java.io.File(url.getFile());
+			} else {
+				f = new java.io.File(simulation.getScenario());
 				
-				ret = new DefaultSimulationContext(f);	
+				if (f.exists() == false) {
+					f = null;
+				}
 			}
 			
-			url = ClassLoader.getSystemResource(details.getModel());
-			
-			if (url != null) {
-				java.io.InputStream is=url.openStream();
+			if (f != null) {
+				ret = new DefaultSimulationContext(f);	
+
+				java.io.InputStream is=null;
+				java.io.File modelFile=null;
 				
-				java.io.File f=new java.io.File(url.getFile());
+				url = ClassLoader.getSystemResource(details.getModel());
 				
-				Object model=rsim.getSupportedModel(new SimulationModel(f.getName(), is));
-				
-				// Check if model should be projected to a particular role
-				if (rsim.getModelRoles(model).size() == 0) {
-					ret.setModel(model);
+				if (url != null) {
+					is=url.openStream();
+					modelFile = new java.io.File(url.getFile());
 				} else {
-					Role localRole=role;
-					
-					if (details.getModelRole() != null) {
-						localRole = new Role();
-						localRole.setName(details.getModelRole());
+					modelFile = new java.io.File(details.getModel());
+					if (modelFile.exists()) {
+						is = new java.io.FileInputStream(modelFile);
+					} else {
+						modelFile = null;
 					}
-					
-					model = rsim.getModelForRole(model, localRole);
-					ret.setModel(model);
 				}
 				
-				is.close();
-			} else {
-				ret = null;
+				if (modelFile != null && is != null) {
+					Object model=rsim.getSupportedModel(new SimulationModel(modelFile.getName(), is));
+					
+					// Check if model should be projected to a particular role
+					if (rsim.getModelRoles(model).size() == 0) {
+						ret.setModel(model);
+					} else {
+						Role localRole=role;
+						
+						if (details.getModelRole() != null) {
+							localRole = new Role();
+							localRole.setName(details.getModelRole());
+						}
+						
+						model = rsim.getModelForRole(model, localRole);
+						ret.setModel(model);
+					}
+					
+					is.close();
+				} else {
+					ret = null;
+				}
 			}
+			
 		} catch(Exception e) {
 			logger.log(Level.SEVERE, "Failed to load simulation context '"+details.getModel()+"'", e);
 		}
@@ -262,6 +319,12 @@ public class ScenarioSimulatorMain {
 		
 		private boolean m_failed=false;
 		
+		public void start(Event event) {
+		}
+
+		public void end(Event event) {
+		}
+
 		public void noSimulator(Event event) {
 		}
 
@@ -287,6 +350,16 @@ public class ScenarioSimulatorMain {
 	
 	public class ConsoleSimulationHandler extends SimulationHandlerBase {
 
+		public void start(Event event) {
+			super.start(event);
+			System.err.println(">>> START [ID="+event.getId()+"]");
+		}
+
+		public void end(Event event) {
+			super.end(event);
+			System.err.println(">>> END [ID="+event.getId()+"]");
+		}
+
 		public void noSimulator(Event event) {
 			super.noSimulator(event);
 		}
@@ -307,11 +380,11 @@ public class ScenarioSimulatorMain {
 		}
 		
 		protected void success(Event event, String mesg) {
-			System.out.println(">>> SUCCESS [ID="+event.getId()+"] "+mesg);
+			System.err.println(">>> SUCCESS [ID="+event.getId()+"] "+mesg);
 		}
 		
 		protected void failure(Event event, String mesg) {
-			System.out.println(">>> FAIL [ID="+event.getId()+"] "+mesg);
+			System.err.println(">>> FAIL [ID="+event.getId()+"] "+mesg);
 		}
 		
 		protected String printable(Event event) {
@@ -347,6 +420,16 @@ public class ScenarioSimulatorMain {
 			m_handler = handler;
 		}
 		
+		public void start(Event event) {
+			super.start(event);
+			m_handler.start(event);
+		}
+
+		public void end(Event event) {
+			super.end(event);
+			m_handler.end(event);
+		}
+
 		public void noSimulator(Event event) {
 			super.noSimulator(event);
 			m_handler.noSimulator(event);
