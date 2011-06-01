@@ -35,8 +35,8 @@
 		<module>org.savara.protocol</module>
 		<module>org.savara.scenario</module>
 		<module>org.savara.scenario.simulator.cdm</module>
-<!--
 		<module>org.savara.scenario.simulator.sca</module>
+<!--
 		<module>org.savara.scenario.simulator.scribble</module>
 -->
 		<module>org.savara.wsdl</module>
@@ -73,6 +73,7 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
 
 </project>
 

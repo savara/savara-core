@@ -46,8 +46,7 @@ public class MessageStore {
 		return(ret);
 	}
 	
-	public static boolean waitForSendEvent(Message mesg) throws Exception {
-		boolean f_found=false;
+	public static void waitForSendEvent(Message mesg) throws Exception {
 
 		SendEvent send=m_sendEvents.take();
 		
@@ -58,7 +57,6 @@ public class MessageStore {
 			m_handler.unexpected(send);
 		}
 		
-		return(f_found);
 	}
 	
 	protected static boolean isValidMessage(MessageEvent event, Message mesg) {
