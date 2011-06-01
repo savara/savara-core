@@ -33,6 +33,14 @@ public class TestSimulationHandler implements SimulationHandler {
 	private java.util.List<Event> m_unexpected=new java.util.Vector<Event>();
 	private java.util.List<Event> m_error=new java.util.Vector<Event>();
 	
+	public void start(Event event) {
+		logger.info("GTART: "+printable(event));
+	}
+
+	public void end(Event event) {
+		logger.info("END: "+printable(event));
+	}
+
 	public void noSimulator(Event event) {
 		m_noSimulator.add(event);
 		logger.info("NO SIMULATOR: "+printable(event));

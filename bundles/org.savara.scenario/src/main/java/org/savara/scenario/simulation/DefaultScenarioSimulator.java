@@ -54,6 +54,8 @@ public class DefaultScenarioSimulator implements ScenarioSimulator {
 		
 		for (Event event : scenario.getEvent()) {
 			
+			handler.start(event);
+			
 			if (event instanceof RoleEvent) {
 				simulateAtRole((Role)((RoleEvent)event).getRole(), event,
 								roleSimulators, contexts, handler);
@@ -63,6 +65,8 @@ public class DefaultScenarioSimulator implements ScenarioSimulator {
 					simulateAtRole(role, event, roleSimulators, contexts, handler);
 				}
 			}
+			
+			handler.end(event);
 		}
 		
 		// Close the simulation contexts against the appropriate simulators

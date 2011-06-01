@@ -44,6 +44,12 @@ public class TestSimulationHandler implements SimulationHandler {
 		return(m_errorEvents);
 	}
 	
+	public void start(Event event) {
+	}
+	
+	public void end(Event event) {
+	}
+	
 	public void noSimulator(Event event) {
 		m_noSimulatorEvents.add(event);
 	}
