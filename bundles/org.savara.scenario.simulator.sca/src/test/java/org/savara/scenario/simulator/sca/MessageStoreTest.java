@@ -32,7 +32,7 @@ public class MessageStoreTest {
 
 	@Test
 	public void testHandleSendEvent1() {
-		SendEvent send=new SendEvent();
+		final SendEvent send=new SendEvent();
 		send.setOperationName("op");
 		
 		Parameter p1=new Parameter();
@@ -41,9 +41,22 @@ public class MessageStoreTest {
 		send.getParameter().add(p1);
 		
 		try {
-			SimulationHandler handler=new TestSimulationHandler();
+			final TestSimulationHandler handler=new TestSimulationHandler();
 			
-			MessageStore.handleSendEvent(send, handler);
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						synchronized(send) {
+							send.wait(500);
+						}
+						MessageStore.handleSendEvent(send, handler);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						fail("Failed: "+e);
+					}					
+				}
+			}).start();
 			
 			Operation op=new OperationImpl();
 			op.setName("op");
@@ -52,10 +65,11 @@ public class MessageStoreTest {
 					new org.apache.tuscany.sca.core.invocation.impl.MessageImpl();
 
 			mesg.setOperation(op);
+			mesg.setBody("hello");
 			
-			boolean ret=MessageStore.waitForSendEvent(mesg);
+			MessageStore.waitForSendEvent(mesg);
 			
-			if (ret == false) {
+			if (handler.getProcessedEvents().size() != 1) {
 				fail("Send event failed");
 			}
 		} catch(Exception e) {
@@ -75,44 +89,44 @@ public class MessageStoreTest {
 		send.getParameter().add(p1);
 		
 		try {
+			final TestSimulationHandler handler=new TestSimulationHandler();
+			
 			new Thread(new Runnable() {
 				public void run() {
-					Operation op=new OperationImpl();
-					op.setName("op");
-					
 					try {
-						org.apache.tuscany.sca.core.invocation.impl.MessageImpl mesg=
-								new org.apache.tuscany.sca.core.invocation.impl.MessageImpl();
-
-						mesg.setOperation(op);
-						
-						boolean found=MessageStore.waitForSendEvent(mesg);
-						
-						if (found == false) {
-							fail("Send event not found");
-						}
-					} catch(Exception e) {
+						MessageStore.handleSendEvent(send, handler);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 						fail("Failed: "+e);
-					}
+					}					
 				}
 			}).start();
 			
+			Operation op=new OperationImpl();
+			op.setName("op");
+			
+			org.apache.tuscany.sca.core.invocation.impl.MessageImpl mesg=
+					new org.apache.tuscany.sca.core.invocation.impl.MessageImpl();
+
+			mesg.setOperation(op);
+			mesg.setBody("hello");
+			
 			synchronized(send) {
-				// Wait until receive event has been registered
-				send.wait(100);
+				send.wait(500);
 			}
 
-			SimulationHandler handler=new TestSimulationHandler();
+			MessageStore.waitForSendEvent(mesg);
 			
-			MessageStore.handleSendEvent(send, handler);
-			
+			if (handler.getProcessedEvents().size() != 1) {
+				fail("Send event failed");
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail("Failed: "+e);
 		}
 	}
-
+	
 	@Test
 	public void testHandleReceiveEvent1() {
 		ReceiveEvent receive=new ReceiveEvent();

@@ -63,7 +63,18 @@ public class SCARoleSimulator implements RoleSimulator {
 		
 		if (model.getName().endsWith(SCA_COMPOSITE_FILE_EXTENSION)) {
 			try {
-		        ret = NodeFactory.newInstance().createNode(model.getName()).start();
+				NodeFactory nf=NodeFactory.newInstance();
+				
+				System.err.println("NF="+nf);
+				
+				Node n=nf.createNode(model.getName());
+				
+				System.err.println("N="+n);
+				
+				ret = n.start();
+				
+				System.err.println("RET="+ret);
+		        //ret = NodeFactory.newInstance().createNode(model.getName()).start();
 			} catch(Exception e) {
 				logger.log(Level.SEVERE, "Failed to load SCA composite model", e);
 			}
