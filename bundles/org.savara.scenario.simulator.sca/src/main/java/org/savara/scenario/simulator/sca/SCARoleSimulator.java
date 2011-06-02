@@ -54,27 +54,29 @@ public class SCARoleSimulator implements RoleSimulator {
 	}
 
 	public void initialize(SimulationContext context) throws Exception {
-		System.out.println("CONTEXT="+context);
-		System.out.println("MODEL="+context.getModel());
 	}
 
-	public Object getSupportedModel(SimulationModel model) {
+	/**
+	 * This method indicates whether the supplied model is supported.
+	 * 
+	 * @param model The simulation model information
+	 * @return Whether the model is supported by this role simulator
+	 */
+	public boolean isSupported(SimulationModel model) {
+		return(model.getName().endsWith(SCA_COMPOSITE_FILE_EXTENSION));
+	}
+	
+	public Object getModel(SimulationModel model) {
 		Object ret=null;
 		
 		if (model.getName().endsWith(SCA_COMPOSITE_FILE_EXTENSION)) {
 			try {
 				NodeFactory nf=NodeFactory.newInstance();
 				
-				System.err.println("NF="+nf);
-				
 				Node n=nf.createNode(model.getName());
 				
-				System.err.println("N="+n);
-				
 				ret = n.start();
-				
-				System.err.println("RET="+ret);
-		        //ret = NodeFactory.newInstance().createNode(model.getName()).start();
+
 			} catch(Exception e) {
 				logger.log(Level.SEVERE, "Failed to load SCA composite model", e);
 			}

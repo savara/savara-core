@@ -43,6 +43,14 @@ public interface RoleSimulator {
 	public void initialize(SimulationContext context) throws Exception;
 	
 	/**
+	 * This method indicates whether the supplied model is supported.
+	 * 
+	 * @param model The simulation model information
+	 * @return Whether the model is supported by this role simulator
+	 */
+	public boolean isSupported(SimulationModel model);
+	
+	/**
 	 * This method identifies whether the role simulator supports
 	 * the model information, and if so, returns the specific model
 	 * representation. If the model is not supported, then a null
@@ -51,7 +59,7 @@ public interface RoleSimulator {
 	 * @param model The simulation model information
 	 * @return The supported model, or null if not handled
 	 */
-	public Object getSupportedModel(SimulationModel model);
+	public Object getModel(SimulationModel model);
 	
 	/**
 	 * This method returns the list of roles associated with the supplied

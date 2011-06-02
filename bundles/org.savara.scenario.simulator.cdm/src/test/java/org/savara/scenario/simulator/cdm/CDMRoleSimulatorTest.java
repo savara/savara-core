@@ -47,7 +47,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getSupportedModel(sm);
+			Object model=rsim.getModel(sm);
 			
 			if (model == null) {
 				fail("No model returned");
@@ -76,7 +76,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getSupportedModel(sm);
+			Object model=rsim.getModel(sm);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -115,7 +115,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getSupportedModel(sm);
+			Object model=rsim.getModel(sm);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -190,7 +190,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getSupportedModel(sm);
+			Object model=rsim.getModel(sm);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -265,7 +265,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getSupportedModel(sm);
+			Object model=rsim.getModel(sm);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -340,7 +340,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getSupportedModel(sm);
+			Object model=rsim.getModel(sm);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			

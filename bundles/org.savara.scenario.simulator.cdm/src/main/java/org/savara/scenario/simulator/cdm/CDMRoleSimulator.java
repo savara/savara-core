@@ -73,6 +73,16 @@ public class CDMRoleSimulator implements RoleSimulator {
 	}
 
 	/**
+	 * This method indicates whether the supplied model is supported.
+	 * 
+	 * @param model The simulation model information
+	 * @return Whether the model is supported by this role simulator
+	 */
+	public boolean isSupported(SimulationModel model) {
+		return(model.getName().endsWith(CDM_FILE_EXTENSION));
+	}
+	
+	/**
 	 * This method identifies whether the role simulator supports
 	 * the model information, and if so, returns the specific model
 	 * representation. If the model is not supported, then a null
@@ -81,7 +91,7 @@ public class CDMRoleSimulator implements RoleSimulator {
 	 * @param model The simulation model information
 	 * @return The supported model, or null if not handled
 	 */
-	public Object getSupportedModel(SimulationModel model) {
+	public Object getModel(SimulationModel model) {
 		Object ret=null;
 		
 		if (model.getName().endsWith(CDM_FILE_EXTENSION)) {
