@@ -77,7 +77,7 @@ public class SCARoleSimulator implements RoleSimulator {
 				
 				ret = n.start();
 
-			} catch(Exception e) {
+			} catch(Throwable e) {
 				logger.log(Level.SEVERE, "Failed to load SCA composite model", e);
 			}
 		}

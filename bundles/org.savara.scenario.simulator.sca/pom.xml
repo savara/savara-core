@@ -72,4 +72,26 @@
 		</dependency>
    </dependencies>
 
+	<build>
+		<plugins>
+		  <plugin>
+		    <artifactId>maven-dependency-plugin</artifactId>
+		    <executions>
+		      <execution>
+		        <id>${project.artifactId}-fetch-deps</id>
+		        <phase>generate-sources</phase>
+		        <goals><goal>copy-dependencies</goal></goals>
+		        <configuration>
+		          <outputDirectory>${project.build.outputDirectory}/lib</outputDirectory>
+		          <stripVersion>true</stripVersion>
+		          <!-- >excludeTransitive>true</excludeTransitive -->
+		          <excludeArtifactIds>junit,org.osgi.core,org.osgi.compendium</excludeArtifactIds>
+		          <excludeGroupIds>org.savara.bundles,org.scribble.bundles</excludeGroupIds>
+		        </configuration>
+		      </execution>
+		    </executions>
+		  </plugin>
+		</plugins>
+	</build>
+
 </project>
