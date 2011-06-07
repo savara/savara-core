@@ -362,6 +362,7 @@ public class ScenarioSimulatorMain {
 
 		public void noSimulator(Event event) {
 			super.noSimulator(event);
+			System.err.println(">>> NO_SIMULATOR [ID="+event.getId()+"]");
 		}
 
 		public void processed(Event event) {

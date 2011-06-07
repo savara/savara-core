@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca.binding.ws.runtime;
+package org.savara.scenario.simulator.sca.internal.binding.ws.runtime;
 
 import org.apache.tuscany.sca.core.ExtensionPointRegistry;
 import org.apache.tuscany.sca.provider.BindingProviderFactory;
@@ -23,9 +23,9 @@ import org.apache.tuscany.sca.provider.ReferenceBindingProvider;
 import org.apache.tuscany.sca.provider.ServiceBindingProvider;
 import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
 import org.apache.tuscany.sca.runtime.RuntimeEndpointReference;
-import org.savara.scenario.simulator.sca.MessageStore;
-import org.savara.scenario.simulator.sca.ServiceStore;
-import org.savara.scenario.simulator.sca.binding.ws.WSBinding;
+import org.savara.scenario.simulator.sca.internal.MessageStore;
+import org.savara.scenario.simulator.sca.internal.ServiceStore;
+import org.savara.scenario.simulator.sca.internal.binding.ws.WSBinding;
 
 public class WSBindingProviderFactory implements BindingProviderFactory<WSBinding> {
 

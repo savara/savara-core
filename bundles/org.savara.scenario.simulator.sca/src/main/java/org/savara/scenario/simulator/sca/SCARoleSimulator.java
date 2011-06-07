@@ -35,7 +35,11 @@ import org.savara.scenario.simulation.RoleSimulator;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
 import org.savara.scenario.simulation.SimulationModel;
-import org.savara.scenario.simulator.sca.binding.ws.runtime.WSBindingProviderFactory;
+import org.savara.scenario.simulator.sca.internal.MessageStore;
+import org.savara.scenario.simulator.sca.internal.ReferenceInvoker;
+import org.savara.scenario.simulator.sca.internal.ServiceInvoker;
+import org.savara.scenario.simulator.sca.internal.ServiceStore;
+import org.savara.scenario.simulator.sca.internal.binding.ws.runtime.WSBindingProviderFactory;
 
 /**
  * The SCA based implementation of the RoleSimulator.

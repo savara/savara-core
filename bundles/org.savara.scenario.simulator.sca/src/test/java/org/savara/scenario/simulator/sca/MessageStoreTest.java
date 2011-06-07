@@ -28,6 +28,7 @@ import org.savara.scenario.model.ReceiveEvent;
 import org.savara.scenario.model.SendEvent;
 import org.savara.scenario.simulation.DefaultSimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
+import org.savara.scenario.simulator.sca.internal.MessageStore;
 
 public class MessageStoreTest {
 

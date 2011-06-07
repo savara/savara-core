@@ -15,34 +15,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca.binding.ws.runtime;
+package org.savara.scenario.simulator.sca.internal.binding.ws.runtime;
 
+import org.apache.tuscany.sca.assembly.EndpointReference;
 import org.apache.tuscany.sca.interfacedef.InterfaceContract;
-import org.apache.tuscany.sca.provider.ServiceBindingProvider;
-import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
-import org.savara.scenario.simulator.sca.MessageStore;
-import org.savara.scenario.simulator.sca.ServiceStore;
+import org.apache.tuscany.sca.interfacedef.Operation;
+import org.apache.tuscany.sca.invocation.Invoker;
+import org.apache.tuscany.sca.provider.ReferenceBindingProvider;
+import org.savara.scenario.simulator.sca.internal.MessageStore;
+import org.savara.scenario.simulator.sca.internal.ServiceStore;
 
-public class WSServiceBindingProvider implements ServiceBindingProvider {
+public class WSReferenceBindingProvider implements ReferenceBindingProvider {
 
-    private RuntimeEndpoint endpoint;
+    private EndpointReference endpoint;
     private InterfaceContract contract;
     private ServiceStore m_serviceStore;
     private MessageStore m_messageStore;
 
-    public WSServiceBindingProvider(RuntimeEndpoint endpoint, ServiceStore sstore, MessageStore mstore) {
+    public WSReferenceBindingProvider(EndpointReference endpoint, ServiceStore sstore, MessageStore mstore) {
         this.endpoint = endpoint;
         m_serviceStore = sstore;
         m_messageStore = mstore;
     }
+    
+    public Invoker createInvoker(Operation operation) {
+    	WSReferenceInvoker ret=new WSReferenceInvoker(operation, endpoint, m_messageStore);
+    	
+        m_serviceStore.addReference(endpoint.getBinding().getURI(), ret);
+
+        return(ret);
+    }
 
     public void start() {
-        // For this sample we'll just share it in a static
-        m_serviceStore.addService(endpoint.getBinding().getURI(), new WSServiceInvoker(endpoint));
     }
 
     public void stop() {
-    	m_serviceStore.removeService(endpoint.getBinding().getURI());
     }
 
     public InterfaceContract getBindingInterfaceContract() {

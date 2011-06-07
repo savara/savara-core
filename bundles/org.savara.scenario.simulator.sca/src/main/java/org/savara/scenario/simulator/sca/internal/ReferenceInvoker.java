@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca;
+package org.savara.scenario.simulator.sca.internal;
 
+import org.apache.tuscany.sca.assembly.EndpointReference;
 import org.apache.tuscany.sca.invocation.Invoker;
-import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
 
-public interface ServiceInvoker extends Invoker {
+public interface ReferenceInvoker extends Invoker {
 
-    public RuntimeEndpoint getEndpoint();
+    public EndpointReference getEndpointReference();
     
 }

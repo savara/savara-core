@@ -17,7 +17,7 @@
  */
 package org.apache.tuscany.sca.binding.ws;
 
-import org.savara.scenario.simulator.sca.binding.ws.WSBinding;
+import org.savara.scenario.simulator.sca.internal.binding.ws.WSBinding;
 
 public class WebServiceBindingFactory {
 

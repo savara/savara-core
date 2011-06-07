@@ -15,13 +15,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca;
+package org.savara.scenario.simulator.sca.internal.binding.ws;
 
-import org.apache.tuscany.sca.assembly.EndpointReference;
-import org.apache.tuscany.sca.invocation.Invoker;
+public class WSBindingFactory {
 
-public interface ReferenceInvoker extends Invoker {
+    public WSBinding createSampleBinding() {
+        return new WSBinding();
+    }
 
-    public EndpointReference getEndpointReference();
-    
 }
