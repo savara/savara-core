@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca.binding.ws;
+package org.savara.scenario.simulator.sca.internal.binding.ws;
 
 import javax.xml.namespace.QName;
 

@@ -35,6 +35,11 @@ import org.savara.scenario.simulation.RoleSimulator;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
 import org.savara.scenario.simulation.SimulationModel;
+import org.savara.scenario.simulator.sca.internal.MessageStore;
+import org.savara.scenario.simulator.sca.internal.ReferenceInvoker;
+import org.savara.scenario.simulator.sca.internal.ServiceInvoker;
+import org.savara.scenario.simulator.sca.internal.ServiceStore;
+import org.savara.scenario.simulator.sca.internal.binding.ws.runtime.WSBindingProviderFactory;
 
 /**
  * The SCA based implementation of the RoleSimulator.
@@ -46,6 +51,9 @@ public class SCARoleSimulator implements RoleSimulator {
 	private static final String SCA_COMPOSITE_FILE_EXTENSION = ".composite";
 	
 	private int m_eventCounter=0;
+	private ServiceStore m_serviceStore=null;
+	private MessageStore m_messageStore=null;
+	private SimulationContext m_context=null;
 	
 	private static final Logger logger=Logger.getLogger(SCARoleSimulator.class.getName());
 
@@ -54,28 +62,49 @@ public class SCARoleSimulator implements RoleSimulator {
 	}
 
 	public void initialize(SimulationContext context) throws Exception {
-		System.out.println("CONTEXT="+context);
-		System.out.println("MODEL="+context.getModel());
+		m_context = context;
+		
+		if (m_messageStore != null) {
+			m_messageStore.setSimulationContext(context);
+		}
 	}
 
-	public Object getSupportedModel(SimulationModel model) {
+	/**
+	 * This method indicates whether the supplied model is supported.
+	 * 
+	 * @param model The simulation model information
+	 * @return Whether the model is supported by this role simulator
+	 */
+	public boolean isSupported(SimulationModel model) {
+		return(model.getName().endsWith(SCA_COMPOSITE_FILE_EXTENSION));
+	}
+	
+	public Object getModel(SimulationModel model) {
 		Object ret=null;
 		
 		if (model.getName().endsWith(SCA_COMPOSITE_FILE_EXTENSION)) {
 			try {
-				NodeFactory nf=NodeFactory.newInstance();
-				
-				System.err.println("NF="+nf);
-				
-				Node n=nf.createNode(model.getName());
-				
-				System.err.println("N="+n);
-				
-				ret = n.start();
-				
-				System.err.println("RET="+ret);
-		        //ret = NodeFactory.newInstance().createNode(model.getName()).start();
-			} catch(Exception e) {
+				synchronized(this) {
+					m_serviceStore = new ServiceStore();
+					m_messageStore = new MessageStore();
+					
+					if (m_context != null) {
+						m_messageStore.setSimulationContext(m_context);
+					}
+					
+					WSBindingProviderFactory.setServiceStore(m_serviceStore);
+					WSBindingProviderFactory.setMessageStore(m_messageStore);
+					
+					NodeFactory nf=NodeFactory.newInstance();
+					
+					Node n=nf.createNode(model.getName());
+					
+					ret = n.start();
+	
+					WSBindingProviderFactory.setServiceStore(null);
+					WSBindingProviderFactory.setMessageStore(null);
+				}
+			} catch(Throwable e) {
 				logger.log(Level.SEVERE, "Failed to load SCA composite model", e);
 			}
 		}
@@ -108,7 +137,7 @@ public class SCARoleSimulator implements RoleSimulator {
 			// If response, then should cache awaiting the reference service invoke.
 			
 			java.util.Collection<ServiceInvoker> invokers=
-					ServiceStore.getServices();
+					m_serviceStore.getServices();
 	
 			for (final ServiceInvoker invoker : invokers) {
 				String opName=recv.getOperationName();
@@ -126,29 +155,34 @@ public class SCARoleSimulator implements RoleSimulator {
 							new org.apache.tuscany.sca.core.invocation.impl.MessageImpl();
 					
 			        msg.setOperation(operation);
-			        msg.setBody(getRequestBody(recv.getParameter()));
-
-			        new Thread(new Runnable() {
-			        	public void run() {					        
-					        // TODO: Handle oneway request
-		        			
-		        			handler.processed(event);
-
-		        			try {
-			        			Message resp=invoker.invoke(msg);
-							
-			        			if (resp != null) {
-			        				MessageStore.waitForSendEvent(resp);
-			        			}
-			        		} catch(Throwable t){
-			        			handler.error("Failed to handle receive event", event, t);
-			        		}
-		        			
-		        			decrementEventCounter();
-			        	}
-			        }).start();
 			        
-			        handled = true;
+			        try {
+				        msg.setBody(getRequestBody(recv.getParameter()));
+	
+				        new Thread(new Runnable() {
+				        	public void run() {					        
+						        // TODO: Handle oneway request
+			        			
+			        			handler.processed(event);
+	
+			        			try {
+				        			Message resp=invoker.invoke(msg);
+								
+				        			if (resp != null) {
+				        				m_messageStore.waitForSendEvent(resp);
+				        			}
+				        		} catch(Throwable t){
+				        			handler.error("Failed to handle receive event", event, t);
+				        		}
+			        			
+			        			decrementEventCounter();
+				        	}
+				        }).start();
+				        
+				        handled = true;
+			        } catch(Exception e) {
+	        			handler.error("Failed to create request message", event, e);
+			        }
 			        
 			        break;
 		        }
@@ -157,7 +191,7 @@ public class SCARoleSimulator implements RoleSimulator {
 			if (handled == false) {
 				
 				java.util.Collection<ReferenceInvoker> refInvokers=
-						ServiceStore.getReferences();
+						m_serviceStore.getReferences();
 		
 				for (final ReferenceInvoker refInvoker : refInvokers) {
 					String opName=recv.getOperationName();
@@ -174,7 +208,7 @@ public class SCARoleSimulator implements RoleSimulator {
 				
 						// Assume is receiving a response
 						try {
-							MessageStore.handleReceiveEvent(recv, handler);
+							m_messageStore.handleReceiveEvent(recv, handler);
 						} catch(Throwable t) {
 			    			handler.error("Failed to handle receive event", event, t);
 						}
@@ -199,7 +233,7 @@ public class SCARoleSimulator implements RoleSimulator {
 			
 			// Should block waiting for sent event
 			try {
-				MessageStore.handleSendEvent(send, handler);
+				m_messageStore.handleSendEvent(send, handler);
 				
 			} catch(Throwable t) {
     			handler.error("Failed to handle send event", event, t);
@@ -231,11 +265,22 @@ public class SCARoleSimulator implements RoleSimulator {
 		}
 	}
 
-	protected Object[] getRequestBody(java.util.List<Parameter> parameters) {
+	protected Object[] getRequestBody(java.util.List<Parameter> parameters) throws Exception {
 		Object[] ret=new Object[parameters.size()];
 		
 		for (int i=0; i < parameters.size(); i++) {
-			ret[i] = parameters.get(i).getValue();
+			java.io.InputStream is=m_context.getResource(parameters.get(i).getValue());
+			
+			byte[] b=new byte[is.available()];
+			is.read(b);
+			
+			ret[i] = new String(b);
+			
+			if (logger.isLoggable(Level.INFO)) {
+				logger.info("Request parameter body "+i+" = "+ret[i]);
+			}	
+			
+			is.close();
 		}
 		
 		return(ret);

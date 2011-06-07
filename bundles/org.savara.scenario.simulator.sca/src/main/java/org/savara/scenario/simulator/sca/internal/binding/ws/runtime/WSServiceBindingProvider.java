@@ -15,29 +15,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca.binding.ws.runtime;
+package org.savara.scenario.simulator.sca.internal.binding.ws.runtime;
 
 import org.apache.tuscany.sca.interfacedef.InterfaceContract;
 import org.apache.tuscany.sca.provider.ServiceBindingProvider;
 import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
-import org.savara.scenario.simulator.sca.ServiceStore;
+import org.savara.scenario.simulator.sca.internal.MessageStore;
+import org.savara.scenario.simulator.sca.internal.ServiceStore;
 
 public class WSServiceBindingProvider implements ServiceBindingProvider {
 
     private RuntimeEndpoint endpoint;
     private InterfaceContract contract;
+    private ServiceStore m_serviceStore;
+    private MessageStore m_messageStore;
 
-    public WSServiceBindingProvider(RuntimeEndpoint endpoint) {
+    public WSServiceBindingProvider(RuntimeEndpoint endpoint, ServiceStore sstore, MessageStore mstore) {
         this.endpoint = endpoint;
+        m_serviceStore = sstore;
+        m_messageStore = mstore;
     }
 
     public void start() {
         // For this sample we'll just share it in a static
-        ServiceStore.addService(endpoint.getBinding().getURI(), new WSServiceInvoker(endpoint));
+        m_serviceStore.addService(endpoint.getBinding().getURI(), new WSServiceInvoker(endpoint));
     }
 
     public void stop() {
-        ServiceStore.removeService(endpoint.getBinding().getURI());
+    	m_serviceStore.removeService(endpoint.getBinding().getURI());
     }
 
     public InterfaceContract getBindingInterfaceContract() {

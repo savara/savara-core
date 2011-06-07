@@ -52,12 +52,14 @@ public class Activator implements BundleActivator {
         logger.info("Registered Scenario Simulator");
 		
 		// Obtain references to role simulators
+        /*
 		ServiceReference sref=context.getServiceReference(RoleSimulator.class.getName());
 		
 		if (sref != null) {
 			RoleSimulator rs=(RoleSimulator)context.getService(sref);
 			RoleSimulatorFactory.register(rs);
 		} else {
+		*/
 	        m_roleSimulatorTracker = new ServiceTracker(context,
 	        		RoleSimulator.class.getName(), null) {
 	        	
@@ -73,7 +75,7 @@ public class Activator implements BundleActivator {
 	        };
 	        
 	        m_roleSimulatorTracker.open();
-		}
+		//}
 	}
 
 	/*

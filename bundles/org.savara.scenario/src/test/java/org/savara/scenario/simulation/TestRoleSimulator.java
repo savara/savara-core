@@ -39,8 +39,12 @@ public class TestRoleSimulator implements RoleSimulator {
 	public String getName() {
 		return(m_name);
 	}
+	
+	public boolean isSupported(SimulationModel model) {
+		return(true);
+	}
 
-	public Object getSupportedModel(SimulationModel model) {
+	public Object getModel(SimulationModel model) {
 		java.io.InputStream is=model.getContents();
 	
 		byte[] b=null;

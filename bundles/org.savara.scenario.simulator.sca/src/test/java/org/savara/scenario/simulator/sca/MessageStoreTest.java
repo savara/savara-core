@@ -26,7 +26,9 @@ import org.junit.Test;
 import org.savara.scenario.model.Parameter;
 import org.savara.scenario.model.ReceiveEvent;
 import org.savara.scenario.model.SendEvent;
+import org.savara.scenario.simulation.DefaultSimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
+import org.savara.scenario.simulator.sca.internal.MessageStore;
 
 public class MessageStoreTest {
 
@@ -36,11 +38,20 @@ public class MessageStoreTest {
 		send.setOperationName("op");
 		
 		Parameter p1=new Parameter();
-		p1.setValue("hello");
+		p1.setValue("req.data");
 		
 		send.getParameter().add(p1);
 		
 		try {
+			java.net.URL url=ClassLoader.getSystemResource("req.data");
+			
+			java.io.File f=new java.io.File(url.getFile());
+			
+			DefaultSimulationContext context=new DefaultSimulationContext(f);
+
+			final MessageStore mstore=new MessageStore();
+			mstore.setSimulationContext(context);
+			
 			final TestSimulationHandler handler=new TestSimulationHandler();
 			
 			new Thread(new Runnable() {
@@ -49,7 +60,7 @@ public class MessageStoreTest {
 						synchronized(send) {
 							send.wait(500);
 						}
-						MessageStore.handleSendEvent(send, handler);
+						mstore.handleSendEvent(send, handler);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -67,7 +78,7 @@ public class MessageStoreTest {
 			mesg.setOperation(op);
 			mesg.setBody("hello");
 			
-			MessageStore.waitForSendEvent(mesg);
+			mstore.waitForSendEvent(mesg);
 			
 			if (handler.getProcessedEvents().size() != 1) {
 				fail("Send event failed");
@@ -84,17 +95,26 @@ public class MessageStoreTest {
 		send.setOperationName("op");
 		
 		Parameter p1=new Parameter();
-		p1.setValue("hello");
+		p1.setValue("req.data");
 		
 		send.getParameter().add(p1);
 		
 		try {
+			java.net.URL url=ClassLoader.getSystemResource("req.data");
+			
+			java.io.File f=new java.io.File(url.getFile());
+			
+			DefaultSimulationContext context=new DefaultSimulationContext(f);
+
+			final MessageStore mstore=new MessageStore();
+			mstore.setSimulationContext(context);
+			
 			final TestSimulationHandler handler=new TestSimulationHandler();
 			
 			new Thread(new Runnable() {
 				public void run() {
 					try {
-						MessageStore.handleSendEvent(send, handler);
+						mstore.handleSendEvent(send, handler);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -116,7 +136,7 @@ public class MessageStoreTest {
 				send.wait(500);
 			}
 
-			MessageStore.waitForSendEvent(mesg);
+			mstore.waitForSendEvent(mesg);
 			
 			if (handler.getProcessedEvents().size() != 1) {
 				fail("Send event failed");
@@ -138,14 +158,16 @@ public class MessageStoreTest {
 		receive.getParameter().add(p1);
 		
 		try {
+			MessageStore mstore=new MessageStore();
+			
 			SimulationHandler handler=new TestSimulationHandler();
 			
-			MessageStore.handleReceiveEvent(receive, handler);
+			mstore.handleReceiveEvent(receive, handler);
 			
 			Operation op=new OperationImpl();
 			op.setName("op");
 			
-			Message mesg=MessageStore.waitForReceiveEvent(op);
+			Message mesg=mstore.waitForReceiveEvent(op);
 			
 			if (mesg == null) {
 				fail("Null message");
@@ -169,13 +191,15 @@ public class MessageStoreTest {
 		receive.getParameter().add(p1);
 		
 		try {
+			final MessageStore mstore=new MessageStore();
+			
 			new Thread(new Runnable() {
 				public void run() {
 					Operation op=new OperationImpl();
 					op.setName("op");
 					
 					try {
-						Message mesg=MessageStore.waitForReceiveEvent(op);
+						Message mesg=mstore.waitForReceiveEvent(op);
 						
 						if (mesg == null) {
 							fail("Null message");
@@ -196,7 +220,7 @@ public class MessageStoreTest {
 
 			SimulationHandler handler=new TestSimulationHandler();
 			
-			MessageStore.handleReceiveEvent(receive, handler);
+			mstore.handleReceiveEvent(receive, handler);
 			
 		} catch(Exception e) {
 			e.printStackTrace();

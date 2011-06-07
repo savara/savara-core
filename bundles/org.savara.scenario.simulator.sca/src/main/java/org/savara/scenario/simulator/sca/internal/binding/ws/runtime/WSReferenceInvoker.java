@@ -15,44 +15,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca.binding.ws.runtime;
+package org.savara.scenario.simulator.sca.internal.binding.ws.runtime;
 
 import org.apache.tuscany.sca.assembly.EndpointReference;
-import org.apache.tuscany.sca.interfacedef.InterfaceContract;
 import org.apache.tuscany.sca.interfacedef.Operation;
-import org.apache.tuscany.sca.invocation.Invoker;
-import org.apache.tuscany.sca.provider.ReferenceBindingProvider;
-import org.savara.scenario.simulator.sca.ServiceStore;
+import org.apache.tuscany.sca.invocation.Message;
+import org.savara.scenario.simulator.sca.internal.MessageStore;
+import org.savara.scenario.simulator.sca.internal.ReferenceInvoker;
 
-public class WSReferenceBindingProvider implements ReferenceBindingProvider {
-
-    private EndpointReference endpoint;
-    private InterfaceContract contract;
-
-    public WSReferenceBindingProvider(EndpointReference endpoint) {
-        this.endpoint = endpoint;
-    }
+public class WSReferenceInvoker implements ReferenceInvoker {
     
-    public Invoker createInvoker(Operation operation) {
-    	WSReferenceInvoker ret=new WSReferenceInvoker(operation, endpoint);
-    	
-        ServiceStore.addReference(endpoint.getBinding().getURI(), ret);
+    protected Operation operation;
+    protected EndpointReference endpoint;
+    private MessageStore m_messageStore;
 
-        return(ret);
+    public WSReferenceInvoker(Operation operation, EndpointReference endpoint, MessageStore mstore) {
+        this.operation = operation;
+        this.endpoint = endpoint;
+        m_messageStore = mstore;
     }
 
-    public void start() {
+    public EndpointReference getEndpointReference() {
+    	return(endpoint);
     }
 
-    public void stop() {
+    public Message invoke(Message msg) {
+        try {
+        	m_messageStore.waitForSendEvent(msg);
+        	
+        	// TODO: Need to check if should wait for a response
+        	Message resp = m_messageStore.waitForReceiveEvent(operation);
+        	
+    		return(resp);
+            
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-
-    public InterfaceContract getBindingInterfaceContract() {
-        return contract;
-    }
-
-    public boolean supportsOneWayInvocation() {
-        return false;
-    }
-
 }

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca;
+package org.savara.scenario.simulator.sca.internal;
 
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -23,30 +23,28 @@ import java.util.logging.Logger;
 
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.Message;
-import org.savara.scenario.model.Event;
 import org.savara.scenario.model.MessageEvent;
 import org.savara.scenario.model.Parameter;
 import org.savara.scenario.model.SendEvent;
 import org.savara.scenario.model.ReceiveEvent;
+import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
 
 public class MessageStore {
 
 	private static final Logger logger=Logger.getLogger(MessageStore.class.getName());
 	
-	private static java.util.List<ReceiveEvent> m_receiveEvents=new java.util.Vector<ReceiveEvent>();
-	private static java.util.concurrent.SynchronousQueue<SendEvent> m_sendEvents=
+	private java.util.List<ReceiveEvent> m_receiveEvents=new java.util.Vector<ReceiveEvent>();
+	private java.util.concurrent.SynchronousQueue<SendEvent> m_sendEvents=
 							new java.util.concurrent.SynchronousQueue<SendEvent>();
-	private static SimulationHandler m_handler=null;
+	private SimulationHandler m_handler=null;
+	private SimulationContext m_context=null;
 
-	public static java.util.List<Event> getOutstandingEvents() {
-		java.util.List<Event> ret=new java.util.Vector<Event>();
-		ret.addAll(m_receiveEvents);
-		ret.addAll(m_sendEvents);
-		return(ret);
+	public void setSimulationContext(SimulationContext context) {
+		m_context = context;
 	}
 	
-	public static void waitForSendEvent(Message mesg) throws Exception {
+	public void waitForSendEvent(Message mesg) throws Exception {
 
 		SendEvent send=m_sendEvents.take();
 		
@@ -59,7 +57,30 @@ public class MessageStore {
 		
 	}
 	
-	protected static boolean isValidMessage(MessageEvent event, Message mesg) {
+	protected String getValue(String path) {
+		String ret=null;
+		
+		try {
+			java.io.InputStream is=m_context.getResource(path);
+			
+			byte[] b=new byte[is.available()];
+			is.read(b);
+			
+			ret = new String(b);
+			
+			is.close();
+		} catch(Exception e) {
+			logger.log(Level.SEVERE, "Failed to get parameter value '"+path+"'", e);
+		}
+		
+		if (logger.isLoggable(Level.INFO)) {
+			logger.info("Get value = "+ret);
+		}	
+		
+		return(ret);
+	}
+	
+	protected boolean isValidMessage(MessageEvent event, Message mesg) {
 		boolean ret=false;
 		
 		// Check the operation names
@@ -84,15 +105,17 @@ public class MessageStore {
 		return(ret);
 	}
 	
-	protected static boolean isValidParameter(Parameter param, Object value) {
+	protected boolean isValidParameter(Parameter param, Object value) {
 		boolean ret=false;
 		
-		if (param.getValue().equals(value)) {
+		String paramValue=getValue(param.getValue());
+		
+		if (paramValue != null && paramValue.equals(value)) {
 			ret = true;
 		}
 
-		if (logger.isLoggable(Level.FINE)) {
-			logger.fine("Is valid parameter '"+value+"'? "+ret);
+		if (logger.isLoggable(Level.INFO)) {
+			logger.info("Is valid parameter '"+param.getValue()+":"+paramValue+"' = '"+value+"'? "+ret);
 		}
 		
 		return(ret);
@@ -106,7 +129,7 @@ public class MessageStore {
 	 * @param handler The handler
 	 * @throws Exception Failed to handle send event
 	 */
-	public static void handleSendEvent(SendEvent send, SimulationHandler handler) throws Exception {
+	public void handleSendEvent(SendEvent send, SimulationHandler handler) throws Exception {
 		// TODO: Need better way to tie receive event with a particular simulation handler
 		// in case multiple simulations done?
 		m_handler = handler;
@@ -114,7 +137,7 @@ public class MessageStore {
 		m_sendEvents.offer(send, 5000, TimeUnit.MILLISECONDS);
 	}
 	
-	public static void handleReceiveEvent(ReceiveEvent receive, SimulationHandler handler) throws Exception {
+	public void handleReceiveEvent(ReceiveEvent receive, SimulationHandler handler) throws Exception {
 		// TODO: Need better way to tie receive event with a particular simulation handler
 		// in case multiple simulations done?
 		m_handler = handler;
@@ -126,7 +149,7 @@ public class MessageStore {
 		}
 	}
 	
-	public static Message waitForReceiveEvent(Operation operation) throws Exception {
+	public Message waitForReceiveEvent(Operation operation) throws Exception {
 		Message ret=null;
 		
 		synchronized(m_receiveEvents) {
@@ -144,7 +167,8 @@ public class MessageStore {
 						resp.setOperation(operation);
 						
 						// TODO: Check if multiple parameters and report error?
-						resp.setBody(receive.getParameter().get(0).getValue());
+						String value=getValue(receive.getParameter().get(0).getValue());
+						resp.setBody(value);
 						
 						ret = resp;
 						

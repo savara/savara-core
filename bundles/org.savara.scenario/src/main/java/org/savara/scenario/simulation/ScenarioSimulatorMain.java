@@ -285,7 +285,7 @@ public class ScenarioSimulatorMain {
 				}
 				
 				if (modelFile != null && is != null) {
-					Object model=rsim.getSupportedModel(new SimulationModel(modelFile.getName(), is));
+					Object model=rsim.getModel(new SimulationModel(modelFile.getName(), is));
 					
 					// Check if model should be projected to a particular role
 					if (rsim.getModelRoles(model).size() == 0) {
@@ -362,6 +362,7 @@ public class ScenarioSimulatorMain {
 
 		public void noSimulator(Event event) {
 			super.noSimulator(event);
+			System.err.println(">>> NO_SIMULATOR [ID="+event.getId()+"]");
 		}
 
 		public void processed(Event event) {

@@ -16,5 +16,5 @@
 # under the License. 
 
 # Implementation class for the binding extension
-org.savara.scenario.simulator.sca.binding.ws.runtime.WSBindingProviderFactory;model=org.savara.scenario.simulator.sca.binding.ws.WSBinding
+org.savara.scenario.simulator.sca.internal.binding.ws.runtime.WSBindingProviderFactory;model=org.savara.scenario.simulator.sca.internal.binding.ws.WSBinding
 

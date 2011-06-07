@@ -16,5 +16,5 @@
 # under the License. 
 
 # Implementation class for model factory
-org.savara.scenario.simulator.sca.binding.ws.WSBindingFactory
+org.savara.scenario.simulator.sca.internal.binding.ws.WSBindingFactory
 

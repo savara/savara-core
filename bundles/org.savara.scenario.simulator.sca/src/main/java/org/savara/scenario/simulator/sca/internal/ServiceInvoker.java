@@ -15,29 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.scenario.simulator.sca.binding.ws.runtime;
+package org.savara.scenario.simulator.sca.internal;
 
-import org.apache.tuscany.sca.invocation.Message;
+import org.apache.tuscany.sca.invocation.Invoker;
 import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
-import org.savara.scenario.simulator.sca.ServiceInvoker;
 
-public class WSServiceInvoker implements ServiceInvoker {
+public interface ServiceInvoker extends Invoker {
 
-    private RuntimeEndpoint wire;
-    
-    public WSServiceInvoker(RuntimeEndpoint wire) {
-        this.wire = wire;
-    }
-
-    public RuntimeEndpoint getEndpoint() {
-    	return(wire);
-    }
-    
-    /**
-     * Send the request down the wire to invoke the service 
-     */
-    public Message invoke(Message msg) {
-        return wire.invoke(msg);
-    }
+    public RuntimeEndpoint getEndpoint();
     
 }

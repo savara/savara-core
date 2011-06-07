@@ -1,0 +1,14 @@
+<composite	xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+		xmlns:tuscany="http://tuscany.apache.org/xmlns/sca/1.1"
+		targetNamespace="http://simulate"
+		name="externalservice">
+
+	<component name="ExternalServiceComponent">
+		<implementation.java class="simsample.test.service.ExternalServiceImpl"/> 
+		<service name="ExternalService">
+			<interface.java interface="simsample.test.service.ExternalService" />
+            <binding.ws uri="http://localhost:8080/ExternalServiceComponent"/>
+   		</service>
+	</component> 
+ 	
+</composite>
