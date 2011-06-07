@@ -23,23 +23,36 @@ import org.apache.tuscany.sca.provider.ReferenceBindingProvider;
 import org.apache.tuscany.sca.provider.ServiceBindingProvider;
 import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
 import org.apache.tuscany.sca.runtime.RuntimeEndpointReference;
+import org.savara.scenario.simulator.sca.MessageStore;
+import org.savara.scenario.simulator.sca.ServiceStore;
 import org.savara.scenario.simulator.sca.binding.ws.WSBinding;
 
 public class WSBindingProviderFactory implements BindingProviderFactory<WSBinding> {
 
+	private static ServiceStore m_serviceStore=null;
+	private static MessageStore m_messageStore=null;
+	
     public WSBindingProviderFactory(ExtensionPointRegistry extensionPoints) {
     }
 
+    public static void setServiceStore(ServiceStore sstore) {
+    	m_serviceStore = sstore;
+    }
+    
+    public static void setMessageStore(MessageStore mstore) {
+    	m_messageStore = mstore;
+    }
+    
     public Class<WSBinding> getModelType() {
         return WSBinding.class;
     }
 
     public ReferenceBindingProvider createReferenceBindingProvider(RuntimeEndpointReference endpoint) {
-        return new WSReferenceBindingProvider(endpoint);
+        return new WSReferenceBindingProvider(endpoint, m_serviceStore, m_messageStore);
     }
 
     public ServiceBindingProvider createServiceBindingProvider(RuntimeEndpoint endpoint) {
-        return new WSServiceBindingProvider(endpoint);
+        return new WSServiceBindingProvider(endpoint, m_serviceStore, m_messageStore);
     }
 
 }

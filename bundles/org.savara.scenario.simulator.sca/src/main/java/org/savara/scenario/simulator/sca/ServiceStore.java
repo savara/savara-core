@@ -22,39 +22,39 @@ import java.util.Map;
 
 public class ServiceStore {
     
-    private static Map<String,ServiceInvoker> services = new HashMap<String,ServiceInvoker>();
-    private static Map<String,ReferenceInvoker> references = new HashMap<String,ReferenceInvoker>();
+    private Map<String,ServiceInvoker> services = new HashMap<String,ServiceInvoker>();
+    private Map<String,ReferenceInvoker> references = new HashMap<String,ReferenceInvoker>();
     
     
-    public static void addService(String uri, ServiceInvoker serviceInvoker) {
+    public void addService(String uri, ServiceInvoker serviceInvoker) {
         services.put(uri, serviceInvoker);
     }
     
-    public static java.util.Collection<ServiceInvoker> getServices() {
+    public java.util.Collection<ServiceInvoker> getServices() {
     	return(services.values());
     }
 
-    public static ServiceInvoker getService(String uri) {
+    public ServiceInvoker getService(String uri) {
         return services.get(uri);
     }
 
-    public static void removeService(String uri) {
+    public void removeService(String uri) {
         services.remove(uri);
     }
 
-    public static void addReference(String uri, ReferenceInvoker refInvoker) {
+    public void addReference(String uri, ReferenceInvoker refInvoker) {
         references.put(uri, refInvoker);
     }
     
-    public static java.util.Collection<ReferenceInvoker> getReferences() {
+    public java.util.Collection<ReferenceInvoker> getReferences() {
     	return(references.values());
     }
 
-    public static ReferenceInvoker getReference(String uri) {
+    public ReferenceInvoker getReference(String uri) {
         return references.get(uri);
     }
 
-    public static void removeReference(String uri) {
+    public void removeReference(String uri) {
     	references.remove(uri);
     }
 

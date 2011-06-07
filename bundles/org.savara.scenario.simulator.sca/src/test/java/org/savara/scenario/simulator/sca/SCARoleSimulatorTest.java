@@ -74,7 +74,7 @@ public class SCARoleSimulatorTest {
 	}
 
 	@Test
-	public void testOnEventAllProcessed() {
+	public void testSimSampleOnEventAllProcessed() {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
@@ -86,13 +86,18 @@ public class SCARoleSimulatorTest {
 				fail("Model is null");
 			}
 
-			DefaultSimulationContext context=new DefaultSimulationContext(null);
+			java.net.URL url=ClassLoader.getSystemResource("req.data");
+			
+			java.io.File f=new java.io.File(url.getFile());
+			
+			DefaultSimulationContext context=new DefaultSimulationContext(f);
 			context.setModel(model);
+			sim.initialize(context);
 			
 			TestSimulationHandler handler=new TestSimulationHandler();
 			
 			Parameter param=new Parameter();
-			param.setValue("something");
+			param.setValue("req.data");
 
 			ReceiveEvent event1=new ReceiveEvent();
 			event1.setOperationName("call");
@@ -107,7 +112,7 @@ public class SCARoleSimulatorTest {
 			sim.onEvent(context, event2, handler);
 
 			Parameter resp=new Parameter();
-			resp.setValue("hello");
+			resp.setValue("resp.data");
 
 			ReceiveEvent event3=new ReceiveEvent();
 			event3.setOperationName("callOut");
@@ -145,7 +150,7 @@ public class SCARoleSimulatorTest {
 	}
 	
 	@Test
-	public void testOnEventResponseValueUnexpected() {
+	public void testSimSampleOnEventResponseValueUnexpected() {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
@@ -157,13 +162,18 @@ public class SCARoleSimulatorTest {
 				fail("Model is null");
 			}
 
-			DefaultSimulationContext context=new DefaultSimulationContext(null);
+			java.net.URL url=ClassLoader.getSystemResource("req.data");
+			
+			java.io.File f=new java.io.File(url.getFile());
+			
+			DefaultSimulationContext context=new DefaultSimulationContext(f);
 			context.setModel(model);
+			sim.initialize(context);
 			
 			TestSimulationHandler handler=new TestSimulationHandler();
 			
 			Parameter param=new Parameter();
-			param.setValue("something");
+			param.setValue("req.data");
 
 			ReceiveEvent event1=new ReceiveEvent();
 			event1.setOperationName("call");
@@ -178,7 +188,7 @@ public class SCARoleSimulatorTest {
 			sim.onEvent(context, event2, handler);
 
 			Parameter resp=new Parameter();
-			resp.setValue("hello");
+			resp.setValue("resp.data");
 
 			ReceiveEvent event3=new ReceiveEvent();
 			event3.setOperationName("callOut");
@@ -188,7 +198,7 @@ public class SCARoleSimulatorTest {
 
 			// Create an invalid response
 			resp=new Parameter();
-			resp.setValue("helloX");
+			resp.setValue("resp2.data");
 
 			SendEvent event4=new SendEvent();
 			event4.setOperationName("call");
@@ -220,7 +230,7 @@ public class SCARoleSimulatorTest {
 	}
 	
 	@Test
-	public void testOnEventRequestOperationUnexpected() {
+	public void testSimSampleOnEventRequestOperationUnexpected() {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
@@ -232,13 +242,18 @@ public class SCARoleSimulatorTest {
 				fail("Model is null");
 			}
 
-			DefaultSimulationContext context=new DefaultSimulationContext(null);
+			java.net.URL url=ClassLoader.getSystemResource("req.data");
+			
+			java.io.File f=new java.io.File(url.getFile());
+			
+			DefaultSimulationContext context=new DefaultSimulationContext(f);
 			context.setModel(model);
+			sim.initialize(context);
 			
 			TestSimulationHandler handler=new TestSimulationHandler();
 			
 			Parameter param=new Parameter();
-			param.setValue("something");
+			param.setValue("req.data");
 
 			ReceiveEvent event1=new ReceiveEvent();
 			event1.setOperationName("callX");
@@ -270,7 +285,7 @@ public class SCARoleSimulatorTest {
 	}
 	
 	@Test
-	public void testOnEventExternalRequestOperationUnexpected() {
+	public void testSimSampleOnEventExternalRequestOperationUnexpected() {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
@@ -282,13 +297,18 @@ public class SCARoleSimulatorTest {
 				fail("Model is null");
 			}
 
-			DefaultSimulationContext context=new DefaultSimulationContext(null);
+			java.net.URL url=ClassLoader.getSystemResource("req.data");
+			
+			java.io.File f=new java.io.File(url.getFile());
+			
+			DefaultSimulationContext context=new DefaultSimulationContext(f);
 			context.setModel(model);
+			sim.initialize(context);
 			
 			TestSimulationHandler handler=new TestSimulationHandler();
 			
 			Parameter param=new Parameter();
-			param.setValue("something");
+			param.setValue("req.data");
 
 			ReceiveEvent event1=new ReceiveEvent();
 			event1.setOperationName("call");
@@ -318,6 +338,70 @@ public class SCARoleSimulatorTest {
 
 			if (handler.getProcessedEvents().size() != 1) {
 				fail("Should be 1 processed events");
+			}
+
+		} catch(Exception e) {
+			fail("Exception occurred: "+e);
+		}
+	}
+	
+	@Test
+	public void testExternalServiceOnEventAllProcessed() {
+		SCARoleSimulator sim=new SCARoleSimulator();
+		
+		try {
+			SimulationModel simmodel=new SimulationModel("externalservice.composite",null);
+			
+			Object model=sim.getModel(simmodel);
+			
+			if (model == null) {
+				fail("Model is null");
+			}
+
+			java.net.URL url=ClassLoader.getSystemResource("req.data");
+			
+			java.io.File f=new java.io.File(url.getFile());
+			
+			DefaultSimulationContext context=new DefaultSimulationContext(f);
+			context.setModel(model);
+			sim.initialize(context);
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			Parameter param=new Parameter();
+			param.setValue("req.data");
+
+			ReceiveEvent event2=new ReceiveEvent();
+			event2.setOperationName("callOut");
+			event2.getParameter().add(param);
+			
+			sim.onEvent(context, event2, handler);
+
+			Parameter resp=new Parameter();
+			resp.setValue("resp.data");
+
+			SendEvent event3=new SendEvent();
+			event3.setOperationName("callOut");
+			event3.getParameter().add(resp);
+			
+			sim.onEvent(context, event3, handler);
+
+			sim.close(context);
+			
+			if (handler.getErrorEvents().size() > 0) {
+				fail("Should be no errors");
+			}
+			
+			if (handler.getUnexpectedEvents().size() > 0) {
+				fail("Should be no unexpected events");
+			}
+			
+			if (handler.getNoSimulatorEvents().size() > 0) {
+				fail("Should be no 'no simulator' events");
+			}
+
+			if (handler.getProcessedEvents().size() != 2) {
+				fail("Should be 2 processed events");
 			}
 
 		} catch(Exception e) {

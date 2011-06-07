@@ -27,10 +27,12 @@ public class WSReferenceInvoker implements ReferenceInvoker {
     
     protected Operation operation;
     protected EndpointReference endpoint;
+    private MessageStore m_messageStore;
 
-    public WSReferenceInvoker(Operation operation, EndpointReference endpoint) {
+    public WSReferenceInvoker(Operation operation, EndpointReference endpoint, MessageStore mstore) {
         this.operation = operation;
         this.endpoint = endpoint;
+        m_messageStore = mstore;
     }
 
     public EndpointReference getEndpointReference() {
@@ -39,10 +41,10 @@ public class WSReferenceInvoker implements ReferenceInvoker {
 
     public Message invoke(Message msg) {
         try {
-        	MessageStore.waitForSendEvent(msg);
+        	m_messageStore.waitForSendEvent(msg);
         	
         	// TODO: Need to check if should wait for a response
-        	Message resp = MessageStore.waitForReceiveEvent(operation);
+        	Message resp = m_messageStore.waitForReceiveEvent(operation);
         	
     		return(resp);
             

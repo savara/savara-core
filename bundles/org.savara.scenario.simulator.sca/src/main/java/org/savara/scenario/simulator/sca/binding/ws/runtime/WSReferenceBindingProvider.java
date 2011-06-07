@@ -22,21 +22,26 @@ import org.apache.tuscany.sca.interfacedef.InterfaceContract;
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.Invoker;
 import org.apache.tuscany.sca.provider.ReferenceBindingProvider;
+import org.savara.scenario.simulator.sca.MessageStore;
 import org.savara.scenario.simulator.sca.ServiceStore;
 
 public class WSReferenceBindingProvider implements ReferenceBindingProvider {
 
     private EndpointReference endpoint;
     private InterfaceContract contract;
+    private ServiceStore m_serviceStore;
+    private MessageStore m_messageStore;
 
-    public WSReferenceBindingProvider(EndpointReference endpoint) {
+    public WSReferenceBindingProvider(EndpointReference endpoint, ServiceStore sstore, MessageStore mstore) {
         this.endpoint = endpoint;
+        m_serviceStore = sstore;
+        m_messageStore = mstore;
     }
     
     public Invoker createInvoker(Operation operation) {
-    	WSReferenceInvoker ret=new WSReferenceInvoker(operation, endpoint);
+    	WSReferenceInvoker ret=new WSReferenceInvoker(operation, endpoint, m_messageStore);
     	
-        ServiceStore.addReference(endpoint.getBinding().getURI(), ret);
+        m_serviceStore.addReference(endpoint.getBinding().getURI(), ret);
 
         return(ret);
     }
