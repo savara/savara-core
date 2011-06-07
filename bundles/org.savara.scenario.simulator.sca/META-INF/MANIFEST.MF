@@ -34,4 +34,6 @@ Bundle-ClassPath: .,
  lib/tuscany-node-impl.jar,
  lib/tuscany-sca-api.jar,
  lib/tuscany-xsd.jar,
- lib/XmlSchema.jar
+ lib/XmlSchema.jar,
+ lib/cglib.jar,
+ lib/asm.jar

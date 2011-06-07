@@ -29,16 +29,19 @@
 		  <groupId>org.apache.tuscany.sca</groupId>
 		  <artifactId>tuscany-core</artifactId>
 		  <version>${tuscany.version}</version>
+		  <scope>provided</scope>
 		</dependency>
 		<dependency>
 		  <groupId>org.apache.tuscany.sca</groupId>
 		  <artifactId>tuscany-node-api</artifactId>
 		  <version>${tuscany.version}</version>
+		  <scope>provided</scope>
 		</dependency>
 		<dependency>
 		  <groupId>org.apache.tuscany.sca</groupId>
 		  <artifactId>tuscany-node-impl</artifactId>
 		  <version>${tuscany.version}</version>
+		  <scope>provided</scope>
 		</dependency>
 		<dependency>
 		  <groupId>org.apache.tuscany.sca</groupId>
