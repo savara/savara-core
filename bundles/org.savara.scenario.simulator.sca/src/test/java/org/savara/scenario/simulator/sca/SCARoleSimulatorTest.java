@@ -30,7 +30,7 @@ import org.savara.scenario.simulation.SimulationModel;
 import org.savara.scenario.simulator.sca.SCARoleSimulator;
 
 public class SCARoleSimulatorTest {
-
+/*
 	@Test
 	public void testGetSupportedModel() {
 		SCARoleSimulator sim=new SCARoleSimulator();
@@ -405,6 +405,71 @@ public class SCARoleSimulatorTest {
 			}
 
 		} catch(Exception e) {
+			fail("Exception occurred: "+e);
+		}
+	}
+*/	
+	@Test
+	public void testStoreServiceOnEventAllProcessed() {
+		SCARoleSimulator sim=new SCARoleSimulator();
+		
+		try {
+			SimulationModel simmodel=new SimulationModel("store/Store.composite",null);
+			
+			Object model=sim.getModel(simmodel);
+			
+			if (model == null) {
+				fail("Model is null");
+			}
+
+			java.net.URL url=ClassLoader.getSystemResource("store/BuyRequest.xml");
+			
+			java.io.File f=new java.io.File(url.getFile());
+			
+			DefaultSimulationContext context=new DefaultSimulationContext(f);
+			context.setModel(model);
+			sim.initialize(context);
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			Parameter param=new Parameter();
+			param.setValue("BuyRequest.xml");
+
+			ReceiveEvent event2=new ReceiveEvent();
+			event2.setOperationName("buy");
+			event2.getParameter().add(param);
+			
+			sim.onEvent(context, event2, handler);
+
+			Parameter resp=new Parameter();
+			resp.setValue("BuyConfirmed.xml");
+
+			SendEvent event3=new SendEvent();
+			event3.setOperationName("buy");
+			event3.getParameter().add(resp);
+			
+			sim.onEvent(context, event3, handler);
+
+			sim.close(context);
+			
+			if (handler.getErrorEvents().size() > 0) {
+				fail("Should be no errors");
+			}
+			
+			if (handler.getUnexpectedEvents().size() > 0) {
+				fail("Should be no unexpected events");
+			}
+			
+			if (handler.getNoSimulatorEvents().size() > 0) {
+				fail("Should be no 'no simulator' events");
+			}
+
+			if (handler.getProcessedEvents().size() != 2) {
+				fail("Should be 2 processed events");
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
 			fail("Exception occurred: "+e);
 		}
 	}

@@ -281,6 +281,13 @@ public class SCARoleSimulator implements RoleSimulator {
 			}	
 			
 			is.close();
+			
+			// Check if is XML document
+			org.w3c.dom.Node node=org.savara.common.util.XMLUtils.getNode((String)ret[i]);
+			
+			if (node != null) {
+				ret[i] = node;
+			}
 		}
 		
 		return(ret);

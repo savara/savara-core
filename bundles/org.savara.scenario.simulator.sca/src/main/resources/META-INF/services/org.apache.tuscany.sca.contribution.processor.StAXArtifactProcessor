@@ -16,5 +16,5 @@
 # under the License. 
 
 # Implementation class for the artifact processor extension
-org.apache.tuscany.sca.assembly.xml.DefaultBeanModelProcessor;qname=http://docs.oasis-open.org/ns/opencsa/sca/200912#binding.ws,model=org.savara.scenario.simulator.sca.internal.binding.ws.WSBinding,factory=org.savara.scenario.simulator.sca.internal.binding.ws.WSBindingFactory
+org.apache.tuscany.sca.assembly.xml.DefaultBeanModelProcessor;qname=http://docs.oasis-open.org/ns/opencsa/sca/200912#binding.ws,model=org.apache.tuscany.sca.binding.ws.WebServiceBinding,factory=org.apache.tuscany.sca.binding.ws.WebServiceBindingFactory
 

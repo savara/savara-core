@@ -15,10 +15,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.apache.tuscany.sca.binding.ws;
+package org.apache.tuscany.sca.binding.ws.impl;
 
-public interface WebServiceBindingFactory {
+import org.apache.tuscany.sca.binding.ws.WebServiceBinding;
+import org.apache.tuscany.sca.binding.ws.WebServiceBindingFactory;
 
-    public WebServiceBinding createWebServiceBinding();
+public class WebServiceBindingFactoryImpl implements WebServiceBindingFactory {
+
+    public WebServiceBinding createWebServiceBinding() {
+    	return(new WebServiceBindingImpl());
+    }
 
 }

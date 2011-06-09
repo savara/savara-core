@@ -1,0 +1,14 @@
+<composite	xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+		xmlns:tuscany="http://tuscany.apache.org/xmlns/sca/1.1"
+		targetNamespace="http://www.jboss.org/examples/store"
+		name="Store">
+
+	<component name="StoreComponent">
+		<implementation.java class="org.jboss.examples.store.StoreInterfaceImpl"/> 
+		<service name="StoreInterface">
+			<interface.java interface="org.jboss.examples.store.StoreInterface" />
+            <binding.ws uri="http://localhost:8080/StoreComponent"/>
+   		</service>
+	</component> 
+ 	
+</composite>

@@ -43,6 +43,20 @@
 		  <version>${tuscany.version}</version>
 		  <scope>provided</scope>
 		</dependency>
+		
+		<!-- SAVARA-234
+			Tried using WSDL contract builder to help return XSD element rather than type
+			but results in type mismatch on service component invocation
+		<dependency>
+		  <groupId>org.apache.tuscany.sca</groupId>
+		  <artifactId>tuscany-binding-ws-wsdlgen</artifactId>
+		  <version>${tuscany.version}</version>
+		  <scope>provided</scope>
+		  
+		  ALSO NEED TO EXCLUDE THE binding-ws MODULE!
+		</dependency>
+		-->
+		
 		<dependency>
 		  <groupId>org.apache.tuscany.sca</groupId>
 		  <artifactId>tuscany-implementation-java</artifactId>
