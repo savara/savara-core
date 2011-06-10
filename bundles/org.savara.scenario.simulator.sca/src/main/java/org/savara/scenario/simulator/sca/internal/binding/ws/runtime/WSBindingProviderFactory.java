@@ -18,6 +18,8 @@
 package org.savara.scenario.simulator.sca.internal.binding.ws.runtime;
 
 import org.apache.tuscany.sca.core.ExtensionPointRegistry;
+import org.apache.tuscany.sca.databinding.xml.DOMDataBinding;
+import org.apache.tuscany.sca.interfacedef.InterfaceContract;
 import org.apache.tuscany.sca.provider.BindingProviderFactory;
 import org.apache.tuscany.sca.provider.ReferenceBindingProvider;
 import org.apache.tuscany.sca.provider.ServiceBindingProvider;
@@ -48,10 +50,24 @@ public class WSBindingProviderFactory implements BindingProviderFactory<WSBindin
     }
 
     public ReferenceBindingProvider createReferenceBindingProvider(RuntimeEndpointReference endpoint) {
+    	// SAVARA-234 - currently responses returned as XSD types rather than elements
+    	// Tried using WSDL contract to see whether that would help, but causes a type mismatch
+    	// on the request
+    	//InterfaceContract interfaceContract = endpoint.getGeneratedWSDLContract(endpoint.getComponentReferenceInterfaceContract());
+        
+    	InterfaceContract interfaceContract = endpoint.getComponentReferenceInterfaceContract();
+        interfaceContract.getInterface().resetDataBinding(DOMDataBinding.NAME);
         return new WSReferenceBindingProvider(endpoint, m_serviceStore, m_messageStore);
     }
 
     public ServiceBindingProvider createServiceBindingProvider(RuntimeEndpoint endpoint) {
+    	// SAVARA-234 - currently responses returned as XSD types rather than elements
+    	// Tried using WSDL contract to see whether that would help, but causes a type mismatch
+    	// on the request
+    	//InterfaceContract interfaceContract = endpoint.getGeneratedWSDLContract(endpoint.getComponentServiceInterfaceContract());
+
+    	InterfaceContract interfaceContract = endpoint.getComponentServiceInterfaceContract();
+        interfaceContract.getInterface().resetDataBinding(DOMDataBinding.NAME);
         return new WSServiceBindingProvider(endpoint, m_serviceStore, m_messageStore);
     }
 

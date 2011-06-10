@@ -29,6 +29,7 @@ import org.savara.scenario.model.SendEvent;
 import org.savara.scenario.model.ReceiveEvent;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
+import org.savara.scenario.util.MessageUtil;
 
 public class MessageStore {
 
@@ -110,10 +111,10 @@ public class MessageStore {
 		
 		String paramValue=getValue(param.getValue());
 		
-		if (paramValue != null && paramValue.equals(value)) {
+		if (paramValue != null && MessageUtil.isValid(paramValue, value)) {
 			ret = true;
 		}
-
+		
 		if (logger.isLoggable(Level.INFO)) {
 			logger.info("Is valid parameter '"+param.getValue()+":"+paramValue+"' = '"+value+"'? "+ret);
 		}

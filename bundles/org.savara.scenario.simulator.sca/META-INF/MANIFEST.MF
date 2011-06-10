@@ -36,4 +36,5 @@ Bundle-ClassPath: .,
  lib/tuscany-xsd.jar,
  lib/XmlSchema.jar,
  lib/cglib.jar,
- lib/asm.jar
+ lib/asm.jar,
+ lib/wsdl4j.jar
