@@ -68,6 +68,12 @@ public class MessageUtil {
 			
 			ret = true;
 			
+			// Check if comment has been provided
+			String instructions="";
+			if (paramElem.getPreviousSibling() instanceof org.w3c.dom.Comment) {
+				instructions = ((org.w3c.dom.Comment)paramElem.getPreviousSibling()).getTextContent();
+			}
+			
 			// Iterate through parameter element to check that all its attributes are present
 			// in the message value, with the same values
 			NamedNodeMap map=paramElem.getAttributes();
@@ -77,7 +83,8 @@ public class MessageUtil {
 				
 				// Check attribute is not a namespace definition
 				if (!paramAttr.getName().startsWith("xmlns:") &&
-						!paramAttr.getName().endsWith(":schemaLocation")) { // Should really check prefix
+						!paramAttr.getName().endsWith(":schemaLocation") && // Should really check prefix
+						instructions.indexOf("@IgnoreAttr("+paramAttr.getName()+")") == -1) {
 					org.w3c.dom.Attr mesgAttr=mesgElem.getAttributeNode(paramAttr.getName());
 					
 					if (mesgAttr == null) {
@@ -98,21 +105,25 @@ public class MessageUtil {
 				org.w3c.dom.Element pn=paramnl.get(i);
 				
 				boolean matched=false;
+				boolean ignore=(instructions.indexOf("@IgnoreElem("+pn.getNodeName()+")") != -1);
 				
 				for (int j=0; matched == false && j < mesgnl.size(); j++) {
 					org.w3c.dom.Element mn=mesgnl.get(j);
 					
-					if (pn.getNodeName().equals(mn.getNodeName()) &&
-									isValid(pn, mn)) {
-						matched = true;
-						
-						mesgnl.remove(j);
-						
-						break;
+					if (pn.getNodeName().equals(mn.getNodeName())) {
+						if (ignore) {
+							mesgnl.remove(j);
+						} else if (isValid(pn, mn)) {
+							matched = true;
+							
+							mesgnl.remove(j);
+							
+							break;
+						}
 					}
 				}
 				
-				if (matched == false) {
+				if (ignore == false && matched == false) {
 					ret = false;
 				}
 			}
