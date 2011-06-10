@@ -23,7 +23,7 @@ import org.junit.Test;
 
 public class SCAJavaGeneratorTest {
 
-	private static final String SRC_PATH = "/tmp/savara/sca";
+	private static final String SRC_PATH = System.getProperty("java.io.tmpdir")+"/savara/sca";
 	private static final String WSDL_LOCATION = "wsdl/PurchaseGoodsProcess_Store.wsdl";
 
 	@Test

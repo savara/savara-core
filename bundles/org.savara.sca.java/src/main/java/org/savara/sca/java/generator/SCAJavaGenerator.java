@@ -20,6 +20,8 @@ package org.savara.sca.java.generator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.wsdl.PortType;
+import javax.wsdl.Service;
 import javax.wsdl.xml.WSDLReader;
 
 import org.apache.cxf.tools.common.ToolContext;
@@ -56,6 +58,8 @@ public class SCAJavaGenerator {
 			logger.log(Level.SEVERE, "Failed to generate Java interfaces", e);
 			throw e;
 		}
+		
+		makeServiceInterfaceRemotable(wsdlPath, srcFolder);
 	}
 	
 	protected void makeServiceInterfaceRemotable(String wsdlPath, String srcFolder) throws Exception {
@@ -64,13 +68,88 @@ public class SCAJavaGenerator {
 		javax.wsdl.Definition defn=reader.readWSDL(wsdlPath);
 		
 		if (defn != null) {
-			String namespace=defn.getTargetNamespace();
 			
 			// Use the namespace to obtain a Java package
+			String pack=getJavaPackage(defn.getTargetNamespace());
+			
+			String folder=pack.replace('.', java.io.File.separatorChar);
+			
+			@SuppressWarnings("unchecked")
+			java.util.Iterator<PortType> portTypes=defn.getPortTypes().values().iterator();
+			
+			while (portTypes.hasNext()) {
+				PortType portType=portTypes.next();
+				
+				java.io.File f=new java.io.File(srcFolder+java.io.File.separatorChar+
+								folder+java.io.File.separatorChar+portType.getQName().getLocalPart()+".java");
+				
+				if (f.exists()) {
+					java.io.FileInputStream fis=new java.io.FileInputStream(f);
+					
+					byte[] b=new byte[fis.available()];
+					fis.read(b);
+					
+					StringBuffer text=new StringBuffer();
+					text.append(new String(b));
+					
+					fis.close();
+					
+					int index=text.indexOf("public interface");
+					
+					if (index != -1) {
+						text.insert(index, "@org.oasisopen.sca.annotation.Remotable ");
+					
+						java.io.FileOutputStream fos=new java.io.FileOutputStream(f);
+						
+						fos.write(text.toString().getBytes());
+						
+						fos.close();
+					} else {
+						logger.severe("Service interface file '"+f.getAbsolutePath()+
+								"' does not have 'public interface' to make remotable");
+					}
+					
+				} else {
+					logger.severe("Service interface file '"+f.getAbsolutePath()+"' does not exist");
+				}
+			}
 			
 		} else {
 			logger.severe("Failed to retrieve WSDL definition '"+wsdlPath+"'");
 		}
+	}
+	
+	protected String getJavaPackage(String namespace) {
+		String ret=null;
+		
+		try {
+			java.net.URI uri=new java.net.URI(namespace);
+			
+			String host=uri.getHost();
+			
+			// Removing preceding www
+			if (host.startsWith("www.")) {
+				host = host.substring(4);
+			}
+			
+			// Place the suffix at the beginning
+			int index=host.lastIndexOf('.');
+			
+			if (index != -1) {
+				ret = host.substring(index+1);
+				
+				ret += "."+host.substring(0, index);
+			} else {
+				ret = host;
+			}
+			
+			ret += uri.getPath().replace('/', '.');
+			
+		} catch(Exception e) {
+			logger.log(Level.SEVERE, "Failed to get java package from namespace '"+namespace+"'", e);
+		}
+		
+		return(ret);
 	}
 	
 	public void createServiceImplementationFromWSDL(String wsdlPath, String wsdlLocation, String srcFolder) throws Exception {
