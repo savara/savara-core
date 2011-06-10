@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.wsdl.PortType;
-import javax.wsdl.Service;
 import javax.wsdl.xml.WSDLReader;
 
 import org.apache.cxf.tools.common.ToolContext;
@@ -145,6 +144,8 @@ public class SCAJavaGenerator {
 			
 			ret += uri.getPath().replace('/', '.');
 			
+			ret = ret.toLowerCase();
+			
 		} catch(Exception e) {
 			logger.log(Level.SEVERE, "Failed to get java package from namespace '"+namespace+"'", e);
 		}
@@ -168,5 +169,7 @@ public class SCAJavaGenerator {
 			logger.log(Level.SEVERE, "Failed to generate Java interfaces", e);
 			throw e;
 		}
+		
+		makeServiceInterfaceRemotable(wsdlPath, srcFolder);
 	}
 }

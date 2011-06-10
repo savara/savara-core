@@ -24,20 +24,52 @@ import org.junit.Test;
 public class SCAJavaGeneratorTest {
 
 	private static final String SRC_PATH = System.getProperty("java.io.tmpdir")+"/savara/sca";
-	private static final String WSDL_LOCATION = "wsdl/PurchaseGoodsProcess_Store.wsdl";
+	private static final String STORE_WSDL_LOCATION = "wsdl/PurchaseGoodsProcess_Store.wsdl";
+	private static final String LOGISTICS_WSDL_LOCATION = "wsdl/PurchaseGoodsProcess_Logistics.wsdl";
+	private static final String CREDITAGENCY_WSDL_LOCATION = "wsdl/PurchaseGoodsProcess_CreditAgency.wsdl";
 
 	@Test
-	public void testGenerateServiceInterfaceFromWSDL() {
+	public void testGenerateStoreServiceInterfaceFromWSDL() {
 		SCAJavaGenerator gen=new SCAJavaGenerator();
 		
 		try {
-			java.net.URL url=ClassLoader.getSystemClassLoader().getResource(WSDL_LOCATION);
-			java.io.InputStream is=ClassLoader.getSystemClassLoader().getResourceAsStream("expected/StoreInterface.txt");
-			
-			gen.createServiceInterfaceFromWSDL(url.getFile(), WSDL_LOCATION, SRC_PATH);
+			java.net.URL url=ClassLoader.getSystemClassLoader().getResource(STORE_WSDL_LOCATION);
+
+			gen.createServiceInterfaceFromWSDL(url.getFile(), STORE_WSDL_LOCATION, SRC_PATH);
 			
 			compare("expected/StoreInterface.java.txt",
 					SRC_PATH+"/org/jboss/examples/store/StoreInterface.java");
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to generate interface: "+e);
+		}
+	}
+
+	@Test
+	public void testGenerateAllServiceInterfaceFromWSDL() {
+		SCAJavaGenerator gen=new SCAJavaGenerator();
+		
+		try {
+			java.net.URL url=ClassLoader.getSystemClassLoader().getResource(STORE_WSDL_LOCATION);
+
+			gen.createServiceInterfaceFromWSDL(url.getFile(), STORE_WSDL_LOCATION, SRC_PATH);
+
+			url=ClassLoader.getSystemClassLoader().getResource(CREDITAGENCY_WSDL_LOCATION);
+
+			gen.createServiceInterfaceFromWSDL(url.getFile(), CREDITAGENCY_WSDL_LOCATION, SRC_PATH);
+
+			url=ClassLoader.getSystemClassLoader().getResource(LOGISTICS_WSDL_LOCATION);
+
+			gen.createServiceInterfaceFromWSDL(url.getFile(), LOGISTICS_WSDL_LOCATION, SRC_PATH);
+			
+			compare("expected/StoreInterface.java.txt",
+					SRC_PATH+"/org/jboss/examples/store/StoreInterface.java");
+			
+			compare("expected/CreditAgencyInterface.java.txt",
+					SRC_PATH+"/org/jboss/examples/creditagency/CreditAgencyInterface.java");
+			
+			compare("expected/LogisticsInterface.java.txt",
+					SRC_PATH+"/org/jboss/examples/logistics/LogisticsInterface.java");
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail("Failed to generate interface: "+e);

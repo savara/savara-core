@@ -36,5 +36,6 @@ Bundle-ClassPath: .,
  lib/stax2-api.jar,
  lib/velocity.jar,
  lib/wsdl4j.jar,
- lib/xmlschema-core.jar
+ lib/xmlschema-core.jar,
+ lib/tuscany-sca-api.jar
  

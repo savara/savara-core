@@ -72,6 +72,16 @@
 			<version>${cxf.version}</version>
 			<scope>provided</scope>
  		</dependency>
+ 		
+ 		<!-- Required to provide annotation jar for use by classpath container in
+ 			org.savara.tools.sca.java plugin -->
+		<dependency>
+		  <groupId>org.apache.tuscany.sca</groupId>
+		  <artifactId>tuscany-sca-api</artifactId>
+		  <version>${tuscany.version}</version>
+		  <scope>provided</scope>
+		</dependency>
+		
 	    <dependency>
 	      <groupId>org.osgi</groupId>
 	      <artifactId>org.osgi.core</artifactId>
