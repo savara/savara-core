@@ -19,7 +19,9 @@ package org.savara.sca.java.generator;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
+import org.scribble.protocol.model.Role;
 
 public class SCAJavaGeneratorTest {
 
@@ -42,6 +44,76 @@ public class SCAJavaGeneratorTest {
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail("Failed to generate interface: "+e);
+		}
+	}
+
+	@Test
+	public void testGenerateStoreServiceImplementationFromWSDL() {
+		SCAJavaGenerator gen=new SCAJavaGenerator();
+		
+		try {
+			java.net.URL url=ClassLoader.getSystemClassLoader().getResource(STORE_WSDL_LOCATION);
+
+			java.util.List<Role> refRoles=new java.util.Vector<Role>();
+			refRoles.add(new Role("CreditAgency"));
+			refRoles.add(new Role("Logistics"));
+			
+			java.util.List<String> refWsdlPaths=new java.util.Vector<String>();
+			refWsdlPaths.add(ClassLoader.getSystemClassLoader().getResource(CREDITAGENCY_WSDL_LOCATION).getFile());
+			refWsdlPaths.add(ClassLoader.getSystemClassLoader().getResource(LOGISTICS_WSDL_LOCATION).getFile());
+			
+			gen.createServiceImplementationFromWSDL(new Role("Store"), refRoles,
+					url.getFile(), STORE_WSDL_LOCATION, refWsdlPaths, SRC_PATH);
+			
+			compare("expected/StoreInterfaceImpl.java.txt",
+					SRC_PATH+"/org/jboss/examples/store/StoreInterfaceImpl.java");
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to generate interface: "+e);
+		}
+	}
+
+	@Test
+	public void testGenerateStoreServiceCompositeJustService() {
+		SCAJavaGenerator gen=new SCAJavaGenerator();
+		
+		try {
+			java.net.URL url=ClassLoader.getSystemClassLoader().getResource(STORE_WSDL_LOCATION);
+
+			gen.createServiceComposite(new Role("Store"), new java.util.Vector<Role>(),
+					url.getFile(), new java.util.Vector<String>(), SRC_PATH);
+			
+			compare("expected/Store.composite",
+					SRC_PATH+"/Store.composite");
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to generate Store composite: "+e);
+		}
+	}
+
+	@Test
+	public void testGenerateStoreServiceCompositeWithReferences() {
+		SCAJavaGenerator gen=new SCAJavaGenerator();
+		
+		try {
+			java.net.URL url=ClassLoader.getSystemClassLoader().getResource(STORE_WSDL_LOCATION);
+
+			java.util.List<Role> refRoles=new java.util.Vector<Role>();
+			refRoles.add(new Role("CreditAgency"));
+			refRoles.add(new Role("Logistics"));
+			
+			java.util.List<String> refWsdlPaths=new java.util.Vector<String>();
+			refWsdlPaths.add(ClassLoader.getSystemClassLoader().getResource(CREDITAGENCY_WSDL_LOCATION).getFile());
+			refWsdlPaths.add(ClassLoader.getSystemClassLoader().getResource(LOGISTICS_WSDL_LOCATION).getFile());
+			
+			gen.createServiceComposite(new Role("Store"), refRoles,
+					url.getFile(), refWsdlPaths, SRC_PATH);
+			
+			compare("expected/StoreWithReferences.composite",
+					SRC_PATH+"/Store.composite");
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to generate Store composite: "+e);
 		}
 	}
 
@@ -97,7 +169,10 @@ public class SCAJavaGeneratorTest {
 		
 		// Remove comment blocks
 		expectedContent = removeComments(expectedContent);
+		expectedContent = expectedContent.replaceAll("\r\n", "\n");
+		
 		generatedContent = removeComments(generatedContent);
+		generatedContent = generatedContent.replaceAll("\r\n", "\n");
 		
 		if (expectedContent.equals(generatedContent) == false) {
 			System.out.println(">> expected=");

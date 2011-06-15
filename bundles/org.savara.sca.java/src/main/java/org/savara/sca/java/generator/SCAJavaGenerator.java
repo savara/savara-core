@@ -154,7 +154,9 @@ public class SCAJavaGenerator {
 		return(ret);
 	}
 	
-	public void createServiceImplementationFromWSDL(String wsdlPath, String wsdlLocation, String srcFolder) throws Exception {
+	public void createServiceImplementationFromWSDL(Role role, java.util.List<Role> refRoles,
+							String wsdlPath, String wsdlLocation,
+						java.util.List<String> refWsdlPaths, String srcFolder) throws Exception {
 		String[] cxfargs=new String[]{
 				"-impl",
 				"-d", srcFolder,
@@ -172,9 +174,103 @@ public class SCAJavaGenerator {
 		}
 		
 		makeServiceInterfaceRemotable(wsdlPath, srcFolder);
+		
+		addServiceReferencesToImplementation(role, refRoles, wsdlPath, refWsdlPaths, srcFolder);
 	}
 	
-	public void createServiceComposite(Role role, String wsdlPath, String resourceFolder) throws Exception {
+	protected void addServiceReferencesToImplementation(Role role, java.util.List<Role> refRoles,
+			String wsdlPath, java.util.List<String> refWsdlPaths, String srcFolder) throws Exception {
+		WSDLReader reader=javax.wsdl.factory.WSDLFactory.newInstance().newWSDLReader();
+		
+		// Check that the number of reference roles and wsdl paths are the same
+		if (refRoles.size() != refWsdlPaths.size()) {
+			throw new IllegalArgumentException("The number of reference roles and wsdl paths are not consistent");
+		}
+
+		javax.wsdl.Definition defn=reader.readWSDL(wsdlPath);
+		
+		if (defn != null) {
+			
+			// Use the namespace to obtain a Java package
+			String pack=getJavaPackage(defn.getTargetNamespace());
+			
+			String folder=pack.replace('.', java.io.File.separatorChar);
+			
+			@SuppressWarnings("unchecked")
+			java.util.Iterator<PortType> portTypes=defn.getPortTypes().values().iterator();
+			
+			while (portTypes.hasNext()) {
+				PortType portType=portTypes.next();
+				
+				java.io.File f=new java.io.File(srcFolder+java.io.File.separatorChar+
+								folder+java.io.File.separatorChar+portType.getQName().getLocalPart()+"Impl.java");
+				
+				if (f.exists()) {
+					java.io.FileInputStream fis=new java.io.FileInputStream(f);
+					
+					byte[] b=new byte[fis.available()];
+					fis.read(b);
+					
+					StringBuffer text=new StringBuffer();
+					text.append(new String(b));
+					
+					fis.close();
+					
+					int index=text.indexOf("private static final Logger");
+					
+					if (index != -1) {
+						
+						for (int i=0; i < refRoles.size(); i++) {
+							javax.wsdl.Definition refDefn=reader.readWSDL(refWsdlPaths.get(i));
+							
+							if (refDefn != null) {
+								
+								// Use the namespace to obtain a Java package
+								String refPack=getJavaPackage(refDefn.getTargetNamespace());
+								
+								@SuppressWarnings("unchecked")
+								java.util.Iterator<PortType> refPortTypes=refDefn.getPortTypes().values().iterator();
+								int refPortCount=1;
+
+								while (refPortTypes.hasNext()) {
+									PortType refPortType=refPortTypes.next();
+									String name=Character.toLowerCase(refRoles.get(i).getName().charAt(0))+
+											refRoles.get(i).getName().substring(1);
+									
+									if (refDefn.getPortTypes().size() > 1) {
+										name += refPortCount;
+									}									
+								
+									text.insert(index, "@org.oasisopen.sca.annotation.Reference\r\n    "+
+											refPack+"."+refPortType.getQName().getLocalPart()+" "+
+											name+";\r\n\r\n    ");
+								}
+							}
+						}
+					
+						java.io.FileOutputStream fos=new java.io.FileOutputStream(f);
+						
+						fos.write(text.toString().getBytes());
+						
+						fos.close();
+					} else {
+						logger.severe("Service implementation file '"+f.getAbsolutePath()+
+								"' does not have 'private static final Logger' as location to insert references");
+					}
+					
+				} else {
+					logger.severe("Service implementation file '"+f.getAbsolutePath()+"' does not exist");
+				}
+			}
+			
+		} else {
+			logger.severe("Failed to retrieve WSDL definition '"+wsdlPath+"'");
+		}
+	}
+	
+	public void createServiceComposite(Role role, java.util.List<Role> refRoles,
+							String wsdlPath, java.util.List<String> refWsdlPaths,
+								String resourceFolder) throws Exception {
 		WSDLReader reader=javax.wsdl.factory.WSDLFactory.newInstance().newWSDLReader();
 		
 		javax.wsdl.Definition defn=reader.readWSDL(wsdlPath);
@@ -208,6 +304,36 @@ public class SCAJavaGenerator {
 				composite.append("\t\t\t<binding.ws uri=\"http://localhost:8080/"+
 									portType.getQName().getLocalPart()+"Component\" />\r\n");
 				composite.append("\t\t</service>\r\n");
+				
+				for (int i=0; i < refWsdlPaths.size(); i++){
+					String refWsdlPath=refWsdlPaths.get(i);
+					javax.wsdl.Definition refDefn=reader.readWSDL(refWsdlPath);
+					
+					if (refDefn != null) {
+						
+						@SuppressWarnings("unchecked")
+						java.util.Iterator<PortType> refPortTypes=refDefn.getPortTypes().values().iterator();
+						int refPortCount=1;
+						
+						while (refPortTypes.hasNext()) {
+							PortType refPortType=refPortTypes.next();
+							String name=Character.toLowerCase(refRoles.get(i).getName().charAt(0))+
+									refRoles.get(i).getName().substring(1);
+							
+							if (refDefn.getPortTypes().size() > 1) {
+								name += refPortCount;
+							}
+							
+							composite.append("\t\t<reference name=\""+name+"\">\r\n");
+							composite.append("\t\t\t<binding.ws uri=\"http://localhost:8080/"+
+											refPortType.getQName().getLocalPart()+"Component\" />\r\n");
+							composite.append("\t\t</reference>\r\n");
+							
+							refPortCount++;
+						}
+					}
+				}
+				
 				composite.append("\t</component>\r\n");
 			}
 
