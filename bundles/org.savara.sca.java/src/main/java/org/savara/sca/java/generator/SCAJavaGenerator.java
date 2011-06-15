@@ -174,7 +174,9 @@ public class SCAJavaGenerator {
 		makeServiceInterfaceRemotable(wsdlPath, srcFolder);
 	}
 	
-	public void createServiceComposite(Role role, String wsdlPath, String resourceFolder) throws Exception {
+	public void createServiceComposite(Role role, java.util.List<Role> refRoles,
+							String wsdlPath, java.util.List<String> refWsdlPaths,
+								String resourceFolder) throws Exception {
 		WSDLReader reader=javax.wsdl.factory.WSDLFactory.newInstance().newWSDLReader();
 		
 		javax.wsdl.Definition defn=reader.readWSDL(wsdlPath);
@@ -208,6 +210,36 @@ public class SCAJavaGenerator {
 				composite.append("\t\t\t<binding.ws uri=\"http://localhost:8080/"+
 									portType.getQName().getLocalPart()+"Component\" />\r\n");
 				composite.append("\t\t</service>\r\n");
+				
+				for (int i=0; i < refWsdlPaths.size(); i++){
+					String refWsdlPath=refWsdlPaths.get(i);
+					javax.wsdl.Definition refDefn=reader.readWSDL(refWsdlPath);
+					
+					if (refDefn != null) {
+						
+						@SuppressWarnings("unchecked")
+						java.util.Iterator<PortType> refPortTypes=refDefn.getPortTypes().values().iterator();
+						int refPortCount=1;
+						
+						while (refPortTypes.hasNext()) {
+							PortType refPortType=refPortTypes.next();
+							String name=Character.toLowerCase(refRoles.get(i).getName().charAt(0))+
+									refRoles.get(i).getName().substring(1);
+							
+							if (refDefn.getPortTypes().size() > 1) {
+								name += refPortCount;
+							}
+							
+							composite.append("\t\t<reference name=\""+name+"\">\r\n");
+							composite.append("\t\t\t<binding.ws uri=\"http://localhost:8080/"+
+											refPortType.getQName().getLocalPart()+"Component\" />\r\n");
+							composite.append("\t\t</reference>\r\n");
+							
+							refPortCount++;
+						}
+					}
+				}
+				
 				composite.append("\t</component>\r\n");
 			}
 
