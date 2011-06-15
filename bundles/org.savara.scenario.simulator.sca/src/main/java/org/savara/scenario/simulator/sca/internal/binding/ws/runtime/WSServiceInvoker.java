@@ -17,22 +17,12 @@
  */
 package org.savara.scenario.simulator.sca.internal.binding.ws.runtime;
 
-import java.util.logging.Logger;
-
-import org.apache.tuscany.sca.databinding.TransformationContext;
-import org.apache.tuscany.sca.databinding.impl.TransformationContextImpl;
-import org.apache.tuscany.sca.databinding.jaxb.JAXB2Node;
-import org.apache.tuscany.sca.databinding.jaxb.Node2JAXB;
-import org.apache.tuscany.sca.interfacedef.DataType;
-import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.Message;
 import org.apache.tuscany.sca.runtime.RuntimeEndpoint;
 import org.savara.scenario.simulator.sca.internal.ServiceInvoker;
 
 public class WSServiceInvoker implements ServiceInvoker {
 
-	private static Logger logger=Logger.getLogger(WSServiceInvoker.class.getName());
-	
     private RuntimeEndpoint wire;
     
     public WSServiceInvoker(RuntimeEndpoint wire) {
@@ -49,25 +39,5 @@ public class WSServiceInvoker implements ServiceInvoker {
     public Message invoke(Message msg) {
         return wire.invoke(msg);
     }
-    
-	protected Object transformRequestValue(Object source, Operation op, DataType<?> dtype) {
-		Object ret=source;
-		
-		if (source instanceof org.w3c.dom.Node) {
-			logger.info("GPB: Transform "+source+" of type "+dtype);
-			
-			Node2JAXB transformer=new Node2JAXB(WSBindingProviderFactory.getRegistry());
-			
-			TransformationContext context=new TransformationContextImpl();
-			context.setTargetDataType(dtype);
-			context.setTargetOperation(op);
-			
-			ret = transformer.transform((org.w3c.dom.Node)source, context);
-			
-			logger.info("GPB: INTO "+ret);
-		}
-		
-		return(ret);
-	}
 	
 }

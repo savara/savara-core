@@ -22,14 +22,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.tuscany.sca.core.ExtensionPointRegistry;
 import org.apache.tuscany.sca.databinding.TransformationContext;
 import org.apache.tuscany.sca.databinding.impl.TransformationContextImpl;
 import org.apache.tuscany.sca.databinding.jaxb.JAXB2Node;
+import org.apache.tuscany.sca.databinding.jaxb.String2JAXB;
 import org.apache.tuscany.sca.interfacedef.DataType;
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.Message;
-import org.savara.common.util.XMLUtils;
 import org.savara.scenario.model.MessageEvent;
 import org.savara.scenario.model.Parameter;
 import org.savara.scenario.model.SendEvent;
@@ -38,7 +37,6 @@ import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
 import org.savara.scenario.simulator.sca.internal.binding.ws.runtime.WSBindingProviderFactory;
 import org.savara.scenario.util.MessageUtil;
-import org.w3c.dom.Node;
 
 public class MessageStore {
 
@@ -51,7 +49,6 @@ public class MessageStore {
 	private SimulationContext m_context=null;
 
 	public MessageStore() {
-		System.out.println("CREATED MESSAGE STORE: "+this);
 	}
 	
 	public void setSimulationContext(SimulationContext context) {
@@ -110,7 +107,7 @@ public class MessageStore {
 					for (int i=0; ret && i < event.getParameter().size(); i++) {
 						@SuppressWarnings("rawtypes")
 						DataType<List<DataType>> dtypes=mesg.getOperation().getInputType();
-						ret = isValidParameter(event.getParameter().get(i), transformValue(params[i],
+						ret = isValidParameter(event.getParameter().get(i), transformJAXBToNodeValue(params[i],
 										mesg.getOperation(), dtypes.getLogical().get(i)));
 					}
 				}
@@ -118,19 +115,22 @@ public class MessageStore {
 				@SuppressWarnings("rawtypes")
 				DataType<List<DataType>> dtypes=mesg.getOperation().getOutputType();
 				ret = isValidParameter(event.getParameter().get(0),
-						transformValue(mesg.getBody(), mesg.getOperation(), dtypes.getLogical().get(0)));
+						transformJAXBToNodeValue(mesg.getBody(), mesg.getOperation(), dtypes.getLogical().get(0)));
 			}
 		}
 		
 		return(ret);
 	}
 	
-	protected Object transformValue(Object source, Operation op, DataType<?> dtype) {
+	public static Object transformJAXBToNodeValue(Object source, Operation op, DataType<?> dtype) {
 		Object ret=source;
 		
 		if ((source instanceof String) == false &&
 					(source instanceof org.w3c.dom.Node) == false) {
-			logger.info("GPB: Transform "+source+" of type "+dtype);
+			
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transform "+source+" of type "+dtype);
+			}
 			
 			JAXB2Node transformer=new JAXB2Node(WSBindingProviderFactory.getRegistry());
 			
@@ -140,12 +140,62 @@ public class MessageStore {
 			
 			ret = transformer.transform(source, context);
 			
-			logger.info("GPB: INTO "+ret);
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transformed into "+ret);
+			}
 		}
 		
 		return(ret);
 	}
 	
+	public static Object transformRequestStringToJAXBValue(Object source, Operation op, DataType<?> dtype) {
+		Object ret=source;
+		
+		if (source instanceof String) {
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transform "+source+" of type "+dtype);
+			}
+			
+			String2JAXB transformer=new String2JAXB(WSBindingProviderFactory.getRegistry());
+			
+			TransformationContext context=new TransformationContextImpl();
+			context.setTargetDataType(dtype);
+			context.setTargetOperation(op);
+			
+			ret = transformer.transform((String)source, context);
+			
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transformed into "+ret);
+			}
+		}
+		
+		return(ret);
+	}
+
+	public static Object transformResponseStringToJAXBValue(Object source, Operation op, DataType<?> dtype) {
+		Object ret=source;
+		
+		if (source instanceof String) {
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transform "+source+" of type "+dtype);
+			}
+			
+			String2JAXB transformer=new String2JAXB(WSBindingProviderFactory.getRegistry());
+			
+			TransformationContext context=new TransformationContextImpl();
+			context.setTargetDataType(dtype);
+			context.setTargetOperation(op);
+			
+			ret = transformer.transform((String)source, context);
+			
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transformed into "+ret);
+			}
+		}
+		
+		return(ret);
+	}
+
 	protected boolean isValidParameter(Parameter param, Object value) {
 		boolean ret=false;
 		
@@ -155,8 +205,8 @@ public class MessageStore {
 			ret = true;
 		}
 		
-		if (logger.isLoggable(Level.INFO)) {
-			logger.info("Is valid parameter '"+param.getValue()+":"+paramValue+"' = '"+value+"'? "+ret);
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("Is valid parameter '"+param.getValue()+":"+paramValue+"' = '"+value+"'? "+ret);
 		}
 		
 		return(ret);
@@ -208,21 +258,8 @@ public class MessageStore {
 						resp.setOperation(operation);
 						
 						// TODO: Check if multiple parameters and report error?
-						Object value=getValue(receive.getParameter().get(0).getValue());
-						
-						// Check if value is an XML doc
-						if (value instanceof String) {
-							try {
-								Node node=XMLUtils.getNode((String)value);
-								if (node != null) {
-									value = node;
-								}
-							} catch(Exception e) {
-								logger.log(Level.FINEST, "Value does not appear to be XML", e);
-							}
-						} else {
-							logger.info("GPB: type="+value.getClass());
-						}
+						Object value=transformResponseStringToJAXBValue(getValue(receive.getParameter().get(0).getValue()),
+								operation, operation.getOutputType().getLogical().get(0));
 						
 						resp.setBody(value);
 						

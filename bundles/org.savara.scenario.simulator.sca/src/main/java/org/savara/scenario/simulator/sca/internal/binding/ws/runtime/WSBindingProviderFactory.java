@@ -18,8 +18,6 @@
 package org.savara.scenario.simulator.sca.internal.binding.ws.runtime;
 
 import org.apache.tuscany.sca.core.ExtensionPointRegistry;
-import org.apache.tuscany.sca.databinding.xml.DOMDataBinding;
-import org.apache.tuscany.sca.interfacedef.InterfaceContract;
 import org.apache.tuscany.sca.provider.BindingProviderFactory;
 import org.apache.tuscany.sca.provider.ReferenceBindingProvider;
 import org.apache.tuscany.sca.provider.ServiceBindingProvider;
@@ -61,9 +59,8 @@ public class WSBindingProviderFactory implements BindingProviderFactory<WSBindin
     	// on the request
     	//InterfaceContract interfaceContract = endpoint.getGeneratedWSDLContract(endpoint.getComponentReferenceInterfaceContract());
         
-    	InterfaceContract interfaceContract = endpoint.getComponentReferenceInterfaceContract();
-//    	InterfaceContract interfaceContract = endpoint.getBindingInterfaceContract();
-        interfaceContract.getInterface().resetDataBinding(DOMDataBinding.NAME);
+    	//InterfaceContract interfaceContract = endpoint.getComponentReferenceInterfaceContract();
+        //interfaceContract.getInterface().resetDataBinding(DOMDataBinding.NAME);
         return new WSReferenceBindingProvider(endpoint, m_serviceStore, m_messageStore);
     }
 
@@ -73,8 +70,8 @@ public class WSBindingProviderFactory implements BindingProviderFactory<WSBindin
     	// on the request
     	//InterfaceContract interfaceContract = endpoint.getGeneratedWSDLContract(endpoint.getComponentServiceInterfaceContract());
 
-    	InterfaceContract interfaceContract = endpoint.getComponentServiceInterfaceContract();
-        interfaceContract.getInterface().resetDataBinding(DOMDataBinding.NAME);
+    	//InterfaceContract interfaceContract = endpoint.getComponentServiceInterfaceContract();
+        //interfaceContract.getInterface().resetDataBinding(DOMDataBinding.NAME);
         return new WSServiceBindingProvider(endpoint, m_serviceStore, m_messageStore);
     }
 

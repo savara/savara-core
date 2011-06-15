@@ -18,7 +18,6 @@
 package org.savara.scenario.simulator.sca.internal.binding.ws.runtime;
 
 import org.apache.tuscany.sca.assembly.EndpointReference;
-import org.apache.tuscany.sca.databinding.xml.DOMDataBinding;
 import org.apache.tuscany.sca.interfacedef.InterfaceContract;
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.Invoker;
