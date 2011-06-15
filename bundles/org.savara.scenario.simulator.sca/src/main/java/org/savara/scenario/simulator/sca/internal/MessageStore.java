@@ -114,8 +114,12 @@ public class MessageStore {
 			} else if (event.getParameter().size() == 1) {
 				@SuppressWarnings("rawtypes")
 				DataType<List<DataType>> dtypes=mesg.getOperation().getOutputType();
+				DataType dtype=null;
+				if (dtypes.getLogical().size() > 0) {
+					dtype = dtypes.getLogical().get(0);
+				}
 				ret = isValidParameter(event.getParameter().get(0),
-						transformJAXBToNodeValue(mesg.getBody(), mesg.getOperation(), dtypes.getLogical().get(0)));
+						transformJAXBToNodeValue(mesg.getBody(), mesg.getOperation(), dtype));
 			}
 		}
 		
@@ -125,7 +129,7 @@ public class MessageStore {
 	public static Object transformJAXBToNodeValue(Object source, Operation op, DataType<?> dtype) {
 		Object ret=source;
 		
-		if ((source instanceof String) == false &&
+		if (dtype != null && (source instanceof String) == false &&
 					(source instanceof org.w3c.dom.Node) == false) {
 			
 			if (logger.isLoggable(Level.FINER)) {
@@ -151,7 +155,7 @@ public class MessageStore {
 	public static Object transformRequestStringToJAXBValue(Object source, Operation op, DataType<?> dtype) {
 		Object ret=source;
 		
-		if (source instanceof String) {
+		if (source instanceof String && dtype.getPhysical() != String.class) {
 			if (logger.isLoggable(Level.FINER)) {
 				logger.finer("Transform "+source+" of type "+dtype);
 			}
@@ -175,7 +179,7 @@ public class MessageStore {
 	public static Object transformResponseStringToJAXBValue(Object source, Operation op, DataType<?> dtype) {
 		Object ret=source;
 		
-		if (source instanceof String) {
+		if (dtype != null && source instanceof String && dtype.getPhysical() != String.class) {
 			if (logger.isLoggable(Level.FINER)) {
 				logger.finer("Transform "+source+" of type "+dtype);
 			}
@@ -257,9 +261,15 @@ public class MessageStore {
 
 						resp.setOperation(operation);
 						
+						DataType dtype=null;
+						
+						if (operation.getOutputType().getLogical().size() > 0) {
+							dtype = operation.getOutputType().getLogical().get(0);
+						}
+						
 						// TODO: Check if multiple parameters and report error?
 						Object value=transformResponseStringToJAXBValue(getValue(receive.getParameter().get(0).getValue()),
-								operation, operation.getOutputType().getLogical().get(0));
+								operation, dtype);
 						
 						resp.setBody(value);
 						

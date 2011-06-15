@@ -30,7 +30,7 @@ import org.savara.scenario.simulation.SimulationModel;
 import org.savara.scenario.simulator.sca.SCARoleSimulator;
 
 public class SCARoleSimulatorTest {
-/*
+
 	@Test
 	public void testGetSupportedModel() {
 		SCARoleSimulator sim=new SCARoleSimulator();
@@ -408,7 +408,7 @@ public class SCARoleSimulatorTest {
 			fail("Exception occurred: "+e);
 		}
 	}
-*/	
+
 	@Test
 	public void testStoreServiceOnEventAllProcessed() {
 		SCARoleSimulator sim=new SCARoleSimulator();
