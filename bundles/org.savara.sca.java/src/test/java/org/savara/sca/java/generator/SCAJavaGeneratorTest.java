@@ -48,6 +48,32 @@ public class SCAJavaGeneratorTest {
 	}
 
 	@Test
+	public void testGenerateStoreServiceImplementationFromWSDL() {
+		SCAJavaGenerator gen=new SCAJavaGenerator();
+		
+		try {
+			java.net.URL url=ClassLoader.getSystemClassLoader().getResource(STORE_WSDL_LOCATION);
+
+			java.util.List<Role> refRoles=new java.util.Vector<Role>();
+			refRoles.add(new Role("CreditAgency"));
+			refRoles.add(new Role("Logistics"));
+			
+			java.util.List<String> refWsdlPaths=new java.util.Vector<String>();
+			refWsdlPaths.add(ClassLoader.getSystemClassLoader().getResource(CREDITAGENCY_WSDL_LOCATION).getFile());
+			refWsdlPaths.add(ClassLoader.getSystemClassLoader().getResource(LOGISTICS_WSDL_LOCATION).getFile());
+			
+			gen.createServiceImplementationFromWSDL(new Role("Store"), refRoles,
+					url.getFile(), STORE_WSDL_LOCATION, refWsdlPaths, SRC_PATH);
+			
+			compare("expected/StoreInterfaceImpl.java.txt",
+					SRC_PATH+"/org/jboss/examples/store/StoreInterfaceImpl.java");
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to generate interface: "+e);
+		}
+	}
+
+	@Test
 	public void testGenerateStoreServiceCompositeJustService() {
 		SCAJavaGenerator gen=new SCAJavaGenerator();
 		
