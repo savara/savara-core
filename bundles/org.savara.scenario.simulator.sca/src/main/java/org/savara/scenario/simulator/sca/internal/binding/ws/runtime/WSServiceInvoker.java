@@ -39,5 +39,5 @@ public class WSServiceInvoker implements ServiceInvoker {
     public Message invoke(Message msg) {
         return wire.invoke(msg);
     }
-    
+	
 }

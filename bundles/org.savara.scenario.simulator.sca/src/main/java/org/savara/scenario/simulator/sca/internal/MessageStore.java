@@ -17,10 +17,16 @@
  */
 package org.savara.scenario.simulator.sca.internal;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.tuscany.sca.databinding.TransformationContext;
+import org.apache.tuscany.sca.databinding.impl.TransformationContextImpl;
+import org.apache.tuscany.sca.databinding.jaxb.JAXB2Node;
+import org.apache.tuscany.sca.databinding.jaxb.String2JAXB;
+import org.apache.tuscany.sca.interfacedef.DataType;
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.Message;
 import org.savara.scenario.model.MessageEvent;
@@ -29,6 +35,7 @@ import org.savara.scenario.model.SendEvent;
 import org.savara.scenario.model.ReceiveEvent;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
+import org.savara.scenario.simulator.sca.internal.binding.ws.runtime.WSBindingProviderFactory;
 import org.savara.scenario.util.MessageUtil;
 
 public class MessageStore {
@@ -41,6 +48,9 @@ public class MessageStore {
 	private SimulationHandler m_handler=null;
 	private SimulationContext m_context=null;
 
+	public MessageStore() {
+	}
+	
 	public void setSimulationContext(SimulationContext context) {
 		m_context = context;
 	}
@@ -86,7 +96,7 @@ public class MessageStore {
 		
 		// Check the operation names
 		if (event.getOperationName().equals(mesg.getOperation().getName())) {
-
+			
 			if (mesg.getBody() instanceof Object[]) {
 				// Multiple parameters
 				Object[] params=(Object[])mesg.getBody();
@@ -95,17 +105,101 @@ public class MessageStore {
 					// Validate the message bodies
 					ret = true;
 					for (int i=0; ret && i < event.getParameter().size(); i++) {
-						ret = isValidParameter(event.getParameter().get(i), params[i]);
+						@SuppressWarnings("rawtypes")
+						DataType<List<DataType>> dtypes=mesg.getOperation().getInputType();
+						ret = isValidParameter(event.getParameter().get(i), transformJAXBToNodeValue(params[i],
+										mesg.getOperation(), dtypes.getLogical().get(i)));
 					}
 				}
 			} else if (event.getParameter().size() == 1) {
-				ret = isValidParameter(event.getParameter().get(0), mesg.getBody());
+				@SuppressWarnings("rawtypes")
+				DataType<List<DataType>> dtypes=mesg.getOperation().getOutputType();
+				DataType dtype=null;
+				if (dtypes.getLogical().size() > 0) {
+					dtype = dtypes.getLogical().get(0);
+				}
+				ret = isValidParameter(event.getParameter().get(0),
+						transformJAXBToNodeValue(mesg.getBody(), mesg.getOperation(), dtype));
 			}
 		}
 		
 		return(ret);
 	}
 	
+	public static Object transformJAXBToNodeValue(Object source, Operation op, DataType<?> dtype) {
+		Object ret=source;
+		
+		if (dtype != null && (source instanceof String) == false &&
+					(source instanceof org.w3c.dom.Node) == false) {
+			
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transform "+source+" of type "+dtype);
+			}
+			
+			JAXB2Node transformer=new JAXB2Node(WSBindingProviderFactory.getRegistry());
+			
+			TransformationContext context=new TransformationContextImpl();
+			context.setSourceDataType(dtype);
+			context.setSourceOperation(op);
+			
+			ret = transformer.transform(source, context);
+			
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transformed into "+ret);
+			}
+		}
+		
+		return(ret);
+	}
+	
+	public static Object transformRequestStringToJAXBValue(Object source, Operation op, DataType<?> dtype) {
+		Object ret=source;
+		
+		if (source instanceof String && dtype.getPhysical() != String.class) {
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transform "+source+" of type "+dtype);
+			}
+			
+			String2JAXB transformer=new String2JAXB(WSBindingProviderFactory.getRegistry());
+			
+			TransformationContext context=new TransformationContextImpl();
+			context.setTargetDataType(dtype);
+			context.setTargetOperation(op);
+			
+			ret = transformer.transform((String)source, context);
+			
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transformed into "+ret);
+			}
+		}
+		
+		return(ret);
+	}
+
+	public static Object transformResponseStringToJAXBValue(Object source, Operation op, DataType<?> dtype) {
+		Object ret=source;
+		
+		if (dtype != null && source instanceof String && dtype.getPhysical() != String.class) {
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transform "+source+" of type "+dtype);
+			}
+			
+			String2JAXB transformer=new String2JAXB(WSBindingProviderFactory.getRegistry());
+			
+			TransformationContext context=new TransformationContextImpl();
+			context.setTargetDataType(dtype);
+			context.setTargetOperation(op);
+			
+			ret = transformer.transform((String)source, context);
+			
+			if (logger.isLoggable(Level.FINER)) {
+				logger.finer("Transformed into "+ret);
+			}
+		}
+		
+		return(ret);
+	}
+
 	protected boolean isValidParameter(Parameter param, Object value) {
 		boolean ret=false;
 		
@@ -115,8 +209,8 @@ public class MessageStore {
 			ret = true;
 		}
 		
-		if (logger.isLoggable(Level.INFO)) {
-			logger.info("Is valid parameter '"+param.getValue()+":"+paramValue+"' = '"+value+"'? "+ret);
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("Is valid parameter '"+param.getValue()+":"+paramValue+"' = '"+value+"'? "+ret);
 		}
 		
 		return(ret);
@@ -167,8 +261,16 @@ public class MessageStore {
 
 						resp.setOperation(operation);
 						
+						DataType dtype=null;
+						
+						if (operation.getOutputType().getLogical().size() > 0) {
+							dtype = operation.getOutputType().getLogical().get(0);
+						}
+						
 						// TODO: Check if multiple parameters and report error?
-						String value=getValue(receive.getParameter().get(0).getValue());
+						Object value=transformResponseStringToJAXBValue(getValue(receive.getParameter().get(0).getValue()),
+								operation, dtype);
+						
 						resp.setBody(value);
 						
 						ret = resp;

@@ -157,7 +157,7 @@ public class SCARoleSimulator implements RoleSimulator {
 			        msg.setOperation(operation);
 			        
 			        try {
-				        msg.setBody(getRequestBody(recv.getParameter()));
+				        msg.setBody(getRequestBody(operation, recv.getParameter()));
 	
 				        new Thread(new Runnable() {
 				        	public void run() {					        
@@ -173,6 +173,7 @@ public class SCARoleSimulator implements RoleSimulator {
 				        			}
 				        		} catch(Throwable t){
 				        			handler.error("Failed to handle receive event", event, t);
+				        			t.printStackTrace();
 				        		}
 			        			
 			        			decrementEventCounter();
@@ -265,7 +266,7 @@ public class SCARoleSimulator implements RoleSimulator {
 		}
 	}
 
-	protected Object[] getRequestBody(java.util.List<Parameter> parameters) throws Exception {
+	protected Object[] getRequestBody(Operation op, java.util.List<Parameter> parameters) throws Exception {
 		Object[] ret=new Object[parameters.size()];
 		
 		for (int i=0; i < parameters.size(); i++) {
@@ -274,25 +275,19 @@ public class SCARoleSimulator implements RoleSimulator {
 			byte[] b=new byte[is.available()];
 			is.read(b);
 			
-			ret[i] = new String(b);
+			ret[i] = MessageStore.transformRequestStringToJAXBValue(new String(b),
+							op, op.getInputType().getLogical().get(i));
 			
 			if (logger.isLoggable(Level.INFO)) {
 				logger.info("Request parameter body "+i+" = "+ret[i]);
 			}	
 			
 			is.close();
-			
-			// Check if is XML document
-			org.w3c.dom.Node node=org.savara.common.util.XMLUtils.getNode((String)ret[i]);
-			
-			if (node != null) {
-				ret[i] = node;
-			}
 		}
 		
 		return(ret);
 	}
-	
+	   
 	public void close(SimulationContext context) throws Exception {
 		
 		// Delay until all events handled

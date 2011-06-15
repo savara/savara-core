@@ -24,6 +24,7 @@ import javax.wsdl.PortType;
 import javax.wsdl.xml.WSDLReader;
 
 import org.apache.cxf.tools.common.ToolContext;
+import org.scribble.protocol.model.Role;
 
 public class SCAJavaGenerator {
 	
@@ -171,5 +172,53 @@ public class SCAJavaGenerator {
 		}
 		
 		makeServiceInterfaceRemotable(wsdlPath, srcFolder);
+	}
+	
+	public void createServiceComposite(Role role, String wsdlPath, String resourceFolder) throws Exception {
+		WSDLReader reader=javax.wsdl.factory.WSDLFactory.newInstance().newWSDLReader();
+		
+		javax.wsdl.Definition defn=reader.readWSDL(wsdlPath);
+		
+		if (defn != null) {
+			// Use the namespace to obtain a Java package
+			String pack=getJavaPackage(defn.getTargetNamespace());
+			
+			StringBuffer composite=new StringBuffer();
+			
+			composite.append("<composite xmlns=\"http://docs.oasis-open.org/ns/opencsa/sca/200912\"\r\n");
+			composite.append("\t\txmlns:tuscany=\"http://tuscany.apache.org/xmlns/sca/1.1\"\r\n");
+			composite.append("\t\ttargetNamespace=\"");
+			composite.append(defn.getTargetNamespace());
+			composite.append("\"\r\n\t\tname=\"");
+			composite.append(role.getName());
+			composite.append("\" >\r\n");
+			
+			@SuppressWarnings("unchecked")
+			java.util.Iterator<PortType> portTypes=defn.getPortTypes().values().iterator();
+			
+			while (portTypes.hasNext()) {
+				PortType portType=portTypes.next();
+				
+				composite.append("\t<component name=\""+portType.getQName().getLocalPart()+"Component\">\r\n");
+				composite.append("\t\t<implementation.java class=\""+pack+"."+
+									portType.getQName().getLocalPart()+"Impl\" />\r\n");
+				composite.append("\t\t<service name=\""+portType.getQName().getLocalPart()+"\">\r\n");
+				composite.append("\t\t\t<interface.java interface=\""+pack+"."+
+									portType.getQName().getLocalPart()+"\" />\r\n");
+				composite.append("\t\t\t<binding.ws uri=\"http://localhost:8080/"+
+									portType.getQName().getLocalPart()+"Component\" />\r\n");
+				composite.append("\t\t</service>\r\n");
+				composite.append("\t</component>\r\n");
+			}
+
+			composite.append("</composite>\r\n");
+			
+			java.io.FileOutputStream fos=new java.io.FileOutputStream(resourceFolder+java.io.File.separatorChar+
+									role.getName()+".composite");
+			
+			fos.write(composite.toString().getBytes());
+			
+			fos.close();
+		}		
 	}
 }
