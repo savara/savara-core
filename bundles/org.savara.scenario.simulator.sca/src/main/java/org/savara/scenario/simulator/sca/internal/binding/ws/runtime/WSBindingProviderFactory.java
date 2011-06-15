@@ -33,8 +33,10 @@ public class WSBindingProviderFactory implements BindingProviderFactory<WSBindin
 
 	private static ServiceStore m_serviceStore=null;
 	private static MessageStore m_messageStore=null;
+	private static ExtensionPointRegistry m_registry=null;
 	
     public WSBindingProviderFactory(ExtensionPointRegistry extensionPoints) {
+    	m_registry = extensionPoints;
     }
 
     public static void setServiceStore(ServiceStore sstore) {
@@ -43,6 +45,10 @@ public class WSBindingProviderFactory implements BindingProviderFactory<WSBindin
     
     public static void setMessageStore(MessageStore mstore) {
     	m_messageStore = mstore;
+    }
+    
+    public static ExtensionPointRegistry getRegistry() {
+    	return(m_registry);
     }
     
     public Class<WSBinding> getModelType() {
@@ -56,6 +62,7 @@ public class WSBindingProviderFactory implements BindingProviderFactory<WSBindin
     	//InterfaceContract interfaceContract = endpoint.getGeneratedWSDLContract(endpoint.getComponentReferenceInterfaceContract());
         
     	InterfaceContract interfaceContract = endpoint.getComponentReferenceInterfaceContract();
+//    	InterfaceContract interfaceContract = endpoint.getBindingInterfaceContract();
         interfaceContract.getInterface().resetDataBinding(DOMDataBinding.NAME);
         return new WSReferenceBindingProvider(endpoint, m_serviceStore, m_messageStore);
     }

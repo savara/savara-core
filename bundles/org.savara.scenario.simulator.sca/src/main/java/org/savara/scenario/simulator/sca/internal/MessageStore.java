@@ -17,19 +17,28 @@
  */
 package org.savara.scenario.simulator.sca.internal;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.tuscany.sca.core.ExtensionPointRegistry;
+import org.apache.tuscany.sca.databinding.TransformationContext;
+import org.apache.tuscany.sca.databinding.impl.TransformationContextImpl;
+import org.apache.tuscany.sca.databinding.jaxb.JAXB2Node;
+import org.apache.tuscany.sca.interfacedef.DataType;
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.Message;
+import org.savara.common.util.XMLUtils;
 import org.savara.scenario.model.MessageEvent;
 import org.savara.scenario.model.Parameter;
 import org.savara.scenario.model.SendEvent;
 import org.savara.scenario.model.ReceiveEvent;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
+import org.savara.scenario.simulator.sca.internal.binding.ws.runtime.WSBindingProviderFactory;
 import org.savara.scenario.util.MessageUtil;
+import org.w3c.dom.Node;
 
 public class MessageStore {
 
@@ -41,6 +50,10 @@ public class MessageStore {
 	private SimulationHandler m_handler=null;
 	private SimulationContext m_context=null;
 
+	public MessageStore() {
+		System.out.println("CREATED MESSAGE STORE: "+this);
+	}
+	
 	public void setSimulationContext(SimulationContext context) {
 		m_context = context;
 	}
@@ -86,7 +99,7 @@ public class MessageStore {
 		
 		// Check the operation names
 		if (event.getOperationName().equals(mesg.getOperation().getName())) {
-
+			
 			if (mesg.getBody() instanceof Object[]) {
 				// Multiple parameters
 				Object[] params=(Object[])mesg.getBody();
@@ -95,12 +108,39 @@ public class MessageStore {
 					// Validate the message bodies
 					ret = true;
 					for (int i=0; ret && i < event.getParameter().size(); i++) {
-						ret = isValidParameter(event.getParameter().get(i), params[i]);
+						@SuppressWarnings("rawtypes")
+						DataType<List<DataType>> dtypes=mesg.getOperation().getInputType();
+						ret = isValidParameter(event.getParameter().get(i), transformValue(params[i],
+										mesg.getOperation(), dtypes.getLogical().get(i)));
 					}
 				}
 			} else if (event.getParameter().size() == 1) {
-				ret = isValidParameter(event.getParameter().get(0), mesg.getBody());
+				@SuppressWarnings("rawtypes")
+				DataType<List<DataType>> dtypes=mesg.getOperation().getOutputType();
+				ret = isValidParameter(event.getParameter().get(0),
+						transformValue(mesg.getBody(), mesg.getOperation(), dtypes.getLogical().get(0)));
 			}
+		}
+		
+		return(ret);
+	}
+	
+	protected Object transformValue(Object source, Operation op, DataType<?> dtype) {
+		Object ret=source;
+		
+		if ((source instanceof String) == false &&
+					(source instanceof org.w3c.dom.Node) == false) {
+			logger.info("GPB: Transform "+source+" of type "+dtype);
+			
+			JAXB2Node transformer=new JAXB2Node(WSBindingProviderFactory.getRegistry());
+			
+			TransformationContext context=new TransformationContextImpl();
+			context.setSourceDataType(dtype);
+			context.setSourceOperation(op);
+			
+			ret = transformer.transform(source, context);
+			
+			logger.info("GPB: INTO "+ret);
 		}
 		
 		return(ret);
@@ -168,7 +208,22 @@ public class MessageStore {
 						resp.setOperation(operation);
 						
 						// TODO: Check if multiple parameters and report error?
-						String value=getValue(receive.getParameter().get(0).getValue());
+						Object value=getValue(receive.getParameter().get(0).getValue());
+						
+						// Check if value is an XML doc
+						if (value instanceof String) {
+							try {
+								Node node=XMLUtils.getNode((String)value);
+								if (node != null) {
+									value = node;
+								}
+							} catch(Exception e) {
+								logger.log(Level.FINEST, "Value does not appear to be XML", e);
+							}
+						} else {
+							logger.info("GPB: type="+value.getClass());
+						}
+						
 						resp.setBody(value);
 						
 						ret = resp;

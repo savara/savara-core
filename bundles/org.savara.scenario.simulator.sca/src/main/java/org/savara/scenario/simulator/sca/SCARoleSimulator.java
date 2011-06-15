@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.tuscany.sca.databinding.TransformationContext;
+import org.apache.tuscany.sca.databinding.impl.TransformationContextImpl;
+import org.apache.tuscany.sca.databinding.jaxb.Node2JAXB;
+import org.apache.tuscany.sca.databinding.jaxb.String2JAXB;
+import org.apache.tuscany.sca.interfacedef.DataType;
 import org.apache.tuscany.sca.interfacedef.Operation;
 import org.apache.tuscany.sca.invocation.InvocationChain;
 import org.apache.tuscany.sca.invocation.Message;
@@ -157,7 +162,7 @@ public class SCARoleSimulator implements RoleSimulator {
 			        msg.setOperation(operation);
 			        
 			        try {
-				        msg.setBody(getRequestBody(recv.getParameter()));
+				        msg.setBody(getRequestBody(operation, recv.getParameter()));
 	
 				        new Thread(new Runnable() {
 				        	public void run() {					        
@@ -265,7 +270,7 @@ public class SCARoleSimulator implements RoleSimulator {
 		}
 	}
 
-	protected Object[] getRequestBody(java.util.List<Parameter> parameters) throws Exception {
+	protected Object[] getRequestBody(Operation op, java.util.List<Parameter> parameters) throws Exception {
 		Object[] ret=new Object[parameters.size()];
 		
 		for (int i=0; i < parameters.size(); i++) {
@@ -274,7 +279,7 @@ public class SCARoleSimulator implements RoleSimulator {
 			byte[] b=new byte[is.available()];
 			is.read(b);
 			
-			ret[i] = new String(b);
+			ret[i] = transformRequestValue(new String(b), op, op.getInputType().getLogical().get(i));
 			
 			if (logger.isLoggable(Level.INFO)) {
 				logger.info("Request parameter body "+i+" = "+ret[i]);
@@ -282,17 +287,39 @@ public class SCARoleSimulator implements RoleSimulator {
 			
 			is.close();
 			
+			/*
 			// Check if is XML document
 			org.w3c.dom.Node node=org.savara.common.util.XMLUtils.getNode((String)ret[i]);
 			
 			if (node != null) {
 				ret[i] = node;
 			}
+			*/
 		}
 		
 		return(ret);
 	}
-	
+	   
+	protected Object transformRequestValue(Object source, Operation op, DataType<?> dtype) {
+		Object ret=source;
+		
+		if (source instanceof String) {
+			logger.info("GPB: Transform "+source+" of type "+dtype);
+			
+			String2JAXB transformer=new String2JAXB(WSBindingProviderFactory.getRegistry());
+			
+			TransformationContext context=new TransformationContextImpl();
+			context.setTargetDataType(dtype);
+			context.setTargetOperation(op);
+			
+			ret = transformer.transform((String)source, context);
+			
+			logger.info("GPB: INTO "+ret);
+		}
+		
+		return(ret);
+	}
+
 	public void close(SimulationContext context) throws Exception {
 		
 		// Delay until all events handled
