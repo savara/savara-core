@@ -112,15 +112,65 @@ public class MessageStore {
 					}
 				}
 			} else if (event.getParameter().size() == 1) {
-				@SuppressWarnings("rawtypes")
-				DataType<List<DataType>> dtypes=mesg.getOperation().getOutputType();
-				DataType dtype=null;
-				if (dtypes.getLogical().size() > 0) {
-					dtype = dtypes.getLogical().get(0);
+				DataType<?> dtype=null;
+				Object content=mesg.getBody();
+				
+				if (mesg.isFault()) {
+					@SuppressWarnings("rawtypes")
+					List<DataType> dtypes=mesg.getOperation().getFaultTypes();
+					
+					for (DataType<?> dt : dtypes) {
+						
+						if (logger.isLoggable(Level.FINEST)) {
+							logger.finest("Checking fault body '"+mesg.getBody().getClass()+
+									"' against data type '"+dt.getPhysical()+"'");
+						}
+						
+						if (mesg.getBody().getClass() == dt.getPhysical()) {
+							dtype = dt;
+							break;
+						}
+					}
+					
+					if (dtype.getDataBinding() == null && dtype.getLogical() instanceof DataType<?>) {
+						dtype = (DataType<?>)dtype.getLogical();
+						
+						// Extract the jaxb based object from the exception/fault
+						try {
+							for (int i=0; i < content.getClass().getMethods().length; i++) {
+								java.lang.reflect.Method method = content.getClass().getMethods()[i];
+								
+								if (method.getReturnType().getName().equals(dtype.getPhysical().getName()) &&
+										method.getParameterTypes().length == 0) {
+									content = method.invoke(content);
+								}
+							}
+						} catch(Exception e) {
+							logger.log(Level.SEVERE, "Failed to extract fault content from exception", e);
+						}
+					}
+					
+					if (dtype == null) {
+						logger.severe("Cannot find data type for fault body '"+mesg.getBody().getClass()+"'");
+					} else if (content == null) {
+						logger.severe("Cannot find content for fault body '"+mesg.getBody()+"'");
+					}
+				} else {
+					@SuppressWarnings("rawtypes")
+					List<DataType> dtypes=mesg.getOperation().getOutputType().getLogical();
+					
+					if (dtypes.size() > 0) {
+						dtype = dtypes.get(0);
+					}
 				}
+
 				ret = isValidParameter(event.getParameter().get(0),
-						transformJAXBToNodeValue(mesg.getBody(), mesg.getOperation(), dtype));
+						transformJAXBToNodeValue(content, mesg.getOperation(), dtype));
 			}
+		}
+		
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("Is message "+mesg+" valid against event "+event+"? = "+ret);
 		}
 		
 		return(ret);
@@ -261,19 +311,23 @@ public class MessageStore {
 
 						resp.setOperation(operation);
 						
-						DataType dtype=null;
+						DataType<?> dtype=null;
+						DataType<?> excDType=null;
 						
-						if (operation.getOutputType().getLogical().size() > 0) {
+						if (receive.getFaultName() != null && receive.getFaultName().trim().length() > 0) {
+							
+							// Identify data type associated with the fault name
+							excDType = getDataTypeForFaultName(operation, receive.getFaultName());
+
+							dtype = (DataType<?>)excDType.getLogical();
+
+						} else if (operation.getOutputType().getLogical().size() > 0) {
 							dtype = operation.getOutputType().getLogical().get(0);
 						}
 						
 						// TODO: Check if multiple parameters and report error?
 						Object value=transformResponseStringToJAXBValue(getValue(receive.getParameter().get(0).getValue()),
 								operation, dtype);
-						
-						resp.setBody(value);
-						
-						ret = resp;
 						
 						// Remove handled receive event
 						m_receiveEvents.remove(receive);
@@ -283,6 +337,22 @@ public class MessageStore {
 						// Will only report unexpected if the service cannot accept
 						// the message.
 						m_handler.processed(receive);
+						
+						// Check if exception needs to be generated
+						if (excDType != null) {
+							java.lang.reflect.Constructor<?> con=
+									excDType.getPhysical().getConstructor(String.class,
+												dtype.getPhysical());
+							
+							resp.setFaultBody(con.newInstance(receive.getFaultName(), value));
+							
+							ret = resp;
+							
+						} else {
+							resp.setBody(value);
+							
+							ret = resp;
+						}
 						
 						break;
 					}
@@ -298,6 +368,21 @@ public class MessageStore {
 				}
 				
 			} while (!f_found);
+		}
+		
+		return(ret);
+	}
+	
+	public static DataType<?> getDataTypeForFaultName(Operation operation, String faultName) {
+		DataType<?> ret=null;
+		
+		for (DataType<?> faultDataType : operation.getFaultTypes()) {
+			javax.xml.ws.WebFault wf=faultDataType.getPhysical().getAnnotation(javax.xml.ws.WebFault.class);
+			
+			if (wf != null && wf.name() != null && wf.name().equals(faultName)) {
+				ret = faultDataType;
+				break;
+			}
 		}
 		
 		return(ret);
