@@ -199,7 +199,10 @@ public class ScenarioSimulatorMain {
 												role, details, rsim);
 								
 							if (context != null) {
+								logger.fine("Adding context for role '"+role.getName()+"'");
 								ret.put(role, context);
+							} else {
+								logger.severe("Failed to load context for role '"+role.getName()+"'");
 							}
 							
 							is.close();
@@ -306,6 +309,8 @@ public class ScenarioSimulatorMain {
 				} else {
 					ret = null;
 				}
+			} else {
+				logger.severe("Failed to locate scenario '"+simulation.getScenario()+"'");
 			}
 			
 		} catch(Exception e) {
@@ -320,22 +325,40 @@ public class ScenarioSimulatorMain {
 		private boolean m_failed=false;
 		
 		public void start(Event event) {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("START: "+printable(event));
+			}
 		}
 
 		public void end(Event event) {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("END: "+printable(event));
+			}
 		}
 
 		public void noSimulator(Event event) {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("NO SIMULATOR: "+printable(event));
+			}
 		}
 
 		public void processed(Event event) {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("PROCESSED: "+printable(event));
+			}
 		}
 
 		public void unexpected(Event event) {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("UNEXPECTED: "+printable(event));
+			}
 			setFailed(true);
 		}
 
 		public void error(String mesg, Event event, Throwable e) {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.log(Level.FINE, "ERROR: "+event.getId()+" \""+mesg+"\"", e);
+			}
 			setFailed(true);
 		}
 		
@@ -345,6 +368,30 @@ public class ScenarioSimulatorMain {
 		
 		protected void setFailed(boolean b) {
 			m_failed = b;
+		}
+		
+		protected String printable(Event event) {
+			String ret=null;
+			
+			if (event instanceof MessageEvent) {
+				MessageEvent me=(MessageEvent)event;
+				ret = event.getClass().getSimpleName()+"["+event.getId()+"] "+me.getOperationName()+"(";
+				
+				for (int i=0; i < me.getParameter().size(); i++) {
+					if (i != 0) {
+						ret += ",";
+					}
+					ret += me.getParameter().get(i).getValue();
+				}
+				
+				ret += ")";
+			}
+			
+			if (event.isErrorExpected()) {
+				ret += " (Error Expected)";
+			}
+			
+			return(ret);
 		}
 	}
 	
@@ -386,30 +433,6 @@ public class ScenarioSimulatorMain {
 		
 		protected void failure(Event event, String mesg) {
 			System.err.println(">>> FAIL [ID="+event.getId()+"] "+mesg);
-		}
-		
-		protected String printable(Event event) {
-			String ret=null;
-			
-			if (event instanceof MessageEvent) {
-				MessageEvent me=(MessageEvent)event;
-				ret = event.getClass().getSimpleName()+" "+me.getOperationName()+"(";
-				
-				for (int i=0; i < me.getParameter().size(); i++) {
-					if (i != 0) {
-						ret += ",";
-					}
-					ret += me.getParameter().get(i).getValue();
-				}
-				
-				ret += ")";
-			}
-			
-			if (event.isErrorExpected()) {
-				ret += " (Error Expected)";
-			}
-			
-			return(ret);
 		}
 	}
 	
