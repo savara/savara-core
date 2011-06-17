@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="sid-3735768">
+    
+    <title>Overview</title>
+    <para>
+      This is the Getting Started Guide for SAVARA. This guide starts with the
+      
+      installation instructions for the SAVARA tools and runtime modules.
+    </para>
+    <para>
+      The remainder of the document is organised to reflect phases within the SAVARA
+      
+      Methodology, and how the current tools can be used in support of that methodology.
+      
+      The tools are still in development, and therefore not all phases will have tools,
+      
+      and the tools in some phases will not necessarily be complete.
+    </para>
+    <para>As an overview, the tools currently include capabilities for:</para>
+    <itemizedlist>
+      <listitem>
+        <para>Definition of business requirements as scenarios</para>
+      </listitem>
+      <listitem>
+        <para>
+          Creation of a choreography (global model) to represent the architecture for a system
+          
+          that delivers the requirements
+        </para>
+      </listitem>
+      <listitem>
+        <para>Generation of documentation based on the choreography</para>
+      </listitem>
+      <listitem>
+        <para>Generation of service implementation using WS-BPEL</para>
+      </listitem>
+      <listitem>
+        <para>Generation of service interfaces using WSDL</para>
+      </listitem>
+      <listitem>
+        <para>Runtime validation of JBossWS (Native) and ESB services against a choreography description</para>
+      </listitem>
+    </itemizedlist>
+  </chapter>

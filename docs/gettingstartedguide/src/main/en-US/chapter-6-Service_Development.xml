@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="sid-3735784">
+    
+    <title>Service Development</title>
+    <para>
+      Services can be developed by generating initial development artifacts, based on artifacts
+      
+      created in preceding phases (e.g. global model or service contracts/designs).
+    </para>
+    <para>
+      To ensure that the services continue to conform to the artifacts defined in the previous
+      
+      phases, the tools perform conformance checking between the service implementation and
+      
+      the existing architecture/design artifacts. This is not possible with all implementation
+      
+      languages - they must provide the means to extract the communication structure for
+      
+      comparison.
+    </para>
+    <para>
+      The following sections explain how the generation and conformance checking can be achieved
+      
+      for the WS-BPEL implementation language.
+    </para>
+    <section id="sid-3735783">
+      
+      <title>BPEL</title>
+      <para>
+        This tools include a capability to generate a service implementation, for a participant in a choreography,
+        
+        using WS-BPEL. A completed version of the
+        <emphasis role="italics">PurchasingGoods</emphasis>
+        example can be
+        
+        found in the samples directory (which can be imported into Eclipse).
+      </para>
+      <para>
+        However if you wish to generate the example from scratch, the follow the instructions in this section.
+        
+        More information about how to use this feature can be found in the User Guide.
+      </para>
+      <section id="sid-3735783_WS-BPEL-GeneratingWSBPELbasedServices">
+        
+        <title>Generating WS-BPEL based Services</title>
+        <para>
+          When a choreography description has been created, it is possible to generate a BPEL Process (and associated
+          
+          WSDL files and deployment descriptor) for each of the participants defined within the choreography.
+          
+          To try this out, select the
+          <emphasis role="italics">Savara-&gt;Generate-&gt;Service</emphasis>
+          menu item from the popup menu
+          
+          associated with the
+          <code>PurchaseGoods.cdm</code>
+          .
+        </para>
+        <para>
+          <figure>
+<title>TODO InformalFigure image title empty</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/3735783/GenerateServiceMenu.png" width="3in"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>
+          This will display a dialog listing the possible services that can be generated from this choreography,
+          
+          with a proposed Eclipse project name, and the option to select a
+          
+          service type (in this case BPEL).
+        </para>
+        <para>
+          <figure>
+<title>TODO InformalFigure image title empty</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/3735783/GenerateService.png" width="5in"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>
+          Press the 'Ok' button and this will create a single a BPEL project for the
+          <emphasis role="italics">Store</emphasis>
+          and
+          
+          <emphasis role="italics">CreditAgency</emphasis>
+          participants.
+        </para>
+        <para>
+          Each project will contain a single
+          <code>bpel</code>
+          folder containing the WS-BPEL process
+          
+          definition for the participant, a list of relevant WSDL files and a deployment descriptor file
+          
+          for use with RiftSaw. However the WS-BPEL and WSDL files are standard, so can be deployed to any
+          
+          WS-BPEL 2.0 compliant engine.
+        </para>
+      </section>
+      <section id="sid-3735783_WS-BPEL-Addingimplementationdetails">
+        
+        <title>Adding implementation details</title>
+        <para>
+          The generated BPEL processes and deployment descriptors are incomplete, due to
+          
+          lack of implementation details in the choreography description. The choreography
+          
+          simply represents the externally observable interactions between the parties,
+          
+          and therefore cannot provide internal implementation details.
+        </para>
+        <para>
+          Therefore a completed version of the deployment descriptor and BPEL process files,
+          
+          for both the creditAgency and store participants, can be found in the
+          
+          <emphasis role="italics">purchasing</emphasis>
+          example's
+          <code>completed/bpel</code>
+          folder.
+        </para>
+        <para>
+          To highlight the differences between the original generated version, and the completed
+          
+          version, simply select both files and use the
+          <emphasis role="italics">Compare With-&gt;Each Other</emphasis>
+          
+          menu item.
+        </para>
+      </section>
+    </section>
+  </chapter>
