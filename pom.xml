@@ -55,6 +55,15 @@
 		<cxf.version>2.4.0</cxf.version>
 	</properties>
 
+  	<profiles>
+		<profile>
+			<id>docs</id>
+		    	<modules>
+				<module>docs</module>
+		    	</modules>
+		</profile>
+  	</profiles>
+
 	<modules>
 		<module>bundles</module>
 	</modules>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="sid-3735771">
+    
+    <title>Installation</title>
+    <para>This section describes the installation procedure for SAVARA tools and runtime modules.</para>
+    <section id="sid-3735770">
+      
+      <title>Prerequisites</title>
+      <para>The pre-requisites for the SAVARA Eclipse Tools are:</para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Eclipse JEE (3.6 or higher)
+            <ulink url="http://www.eclipse.org"/>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            JBoss Tools (3.2 or higher)
+            <ulink url="http://www.jboss.org/tools"/>
+            
+            available from an update site
+          </para>
+        </listitem>
+      </orderedlist>
+      <para>The pre-requisites for the SAVARA JBoss server integration are</para>
+      <orderedlist>
+        <listitem>
+          <para>
+            JBossAS (5.1.0.GA or higher)
+            <ulink url="http://www.jboss.org/jbossas"/>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            JBossESB (4.9 or higher)
+            <ulink url="http://www.jboss.org/jbossesb"/>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            RiftSaw (2.2 or higher)
+            <ulink url="http://www.jboss.org/riftsaw"/>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            SAVARA (version 2.0.0 or higher), available from
+            <ulink url="http://www.jboss.org/savara/downloads"/>
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+    <section id="sid-3735772">
+      
+      <title>Installation Instructions</title>
+      <para>The installation instructions for the SAVARA Eclipse tools are:</para>
+      <orderedlist>
+        <listitem>
+          <para>Eclipse</para>
+        </listitem>
+      </orderedlist>
+      <para>Download the latest version of Eclipse JEE, and install in your environment.</para>
+      <orderedlist>
+        <listitem>
+          <para>BPMN Modeller</para>
+        </listitem>
+      </orderedlist>
+      <para>
+        When Eclipse has been lauched, go to the
+        <emphasis role="italics">Help-&gt;Install New Software..</emphasis>
+        
+        menu item. Select the Eclipse update site
+        
+        for the version of Eclipse (e.g. Helios). Within the SOA Development
+        
+        category, select the BPMN Project Feature. Follow the instructions to accept
+        
+        the license and then restart Eclipse after the plugins have been
+        
+        installed.
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>JBoss Tools</para>
+        </listitem>
+      </orderedlist>
+      <para>
+        Start up your Eclipse environment, and go to the
+        <emphasis role="italics">Help-&gt;Install New Software..</emphasis>
+        
+        menu item. Select the appropriate update site URL from the JBoss Tools download
+        
+        page, and enter it into the top text field in the dialog window, and press the
+        
+        <emphasis role="italics">Add</emphasis>
+        button. Once the contents of the update site is available,
+        
+        then select the appropriate components and follow the instructions to install
+        
+        them within your Eclipse environment.
+        
+        The
+        <emphasis role="italics">SAVARA Tools</emphasis>
+        ,
+        <emphasis role="italics">JBoss BPEL Editor</emphasis>
+        and
+        
+        <emphasis role="italics">pi4soa core</emphasis>
+        features should be selected from the
+        
+        <emphasis role="italics">SOA Development</emphasis>
+        category.
+      </para>
+      <note>
+        <para>
+          If a more recent version of the Eclipse plugins is required,
+          
+          then only select the other features from
+          
+          this JBoss Tools update site, and instead go to the SAVARA download page
+          
+          for information on the location of an alternative update site
+          
+          where more recent SAVARA Tools plugins can be obtained.
+        </para>
+      </note>
+      <para>
+        It is also recommended that you install the JBoss WebServices Tools, and JBossAS Tools,
+        
+        from the All category. These are required to define and launch a JBossAS
+        
+        server from within Eclipse, generate a JAX-WS web service from a WSDL definition,
+        
+        and test a Web Service.
+      </para>
+      <para>The installation instructions for the SAVARA JBoss server integration are:</para>
+      <orderedlist>
+        <listitem>
+          <para>JBossAS</para>
+        </listitem>
+      </orderedlist>
+      <para>Download the latest version and follow its installation instructions.</para>
+      <orderedlist>
+        <listitem>
+          <para>JBossESB</para>
+        </listitem>
+      </orderedlist>
+      <para>
+        Download the latest version and follow the instructions for installing it
+        
+        into the JBossAS environment.
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>RiftSaw</para>
+        </listitem>
+      </orderedlist>
+      <para>
+        Download the latest version and follow the instructions for installing it
+        
+        into the JBossAS environment.
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>SAVARA</para>
+        </listitem>
+      </orderedlist>
+      <para>
+        Unpack the SAVARA distribution and edit the
+        
+        <code>deployment.properties</code>
+        file
+        
+        in this
+        <code>${SAVARA}/install</code>
+        folder.
+        
+        Set the
+        <emphasis role="italics">org.jboss.as.home</emphasis>
+        property to the root
+        
+        directory where the JBossAS environment is located, and change the
+        
+        <emphasis role="italics">org.jboss.as.config</emphasis>
+        property from default
+        
+        if you wish to start your JBossAS using a different configuration. Set the
+        
+        <emphasis role="italics">org.jboss.esb.home</emphasis>
+        property to the root directory
+        
+        where the JBossESB environment is located.
+        
+        Start a command window and execute the command
+        <emphasis role="italics">ant deploy</emphasis>
+        .
+      </para>
+    </section>
+    <section id="sid-3735773">
+      
+      <title>Importing Samples into Eclipse</title>
+      <para>
+        Once the SAVARA Eclipse Tool distribution has been correctly installed, if you wish to try out
+        
+        any of the examples then the following steps should be followed to import the relevant
+        
+        projects into the previously configured Eclipse environment.
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Select the 'Import...' menu item, associated with the popup menu on the background of the left
+            
+            panal (Navigator or Package depending on perspective being viewed).
+          </para>
+        </listitem>
+      </orderedlist>
+      <para>
+        <figure>
+<title>TODO InformalFigure image title empty</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/3735773/ImportMenu.jpg" width="3in"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            When the import dialog appears, select the
+            <emphasis role="italics">General-&gt;ExistingProject from Workspace</emphasis>
+            
+            option and press the 'Next' button.
+          </para>
+        </listitem>
+      </orderedlist>
+      <para>
+        <figure>
+<title>TODO InformalFigure image title empty</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/3735773/ImportDialog.jpg" width="3in"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            Ensuring that the 'Select root directory' radio button is selected, press the 'Browse' button and
+            
+            navigate to the
+            <code>${SAVARA-Tools}/samples</code>
+            folder, then press 'Ok'.
+          </para>
+        </listitem>
+      </orderedlist>
+      <para>
+        <figure>
+<title>TODO InformalFigure image title empty</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/3735773/ImportFileDialog.jpg" width="3in"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <orderedlist>
+        <listitem>
+          <para>
+            All of the Eclipse projects contained within the
+            <code>${SAVARA-Tools}/samples</code>
+            directory structure
+            
+            will be listed. Press the 'Finish' button to import them all.
+          </para>
+        </listitem>
+      </orderedlist>
+      <para>
+        <figure>
+<title>TODO InformalFigure image title empty</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/3735773/ImportProjectsDialog.jpg" width="3in"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>Once imported, the Eclipse navigator will list the sample projects:</para>
+      <para>
+        <figure>
+<title>TODO InformalFigure image title empty</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/3735773/ImportedProject.jpg" width="3in"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+    </section>
+  </chapter>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book>
+  <xi:include href="Book_Info.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-1-Overview.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-2-Installation.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-3-Business_Analysis.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-4-Architecture.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-5-Service_Oriented_Analysis_and_Design.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+  <xi:include href="chapter-6-Service_Development.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+</book>
