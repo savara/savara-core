@@ -6,35 +6,24 @@
     <section id="sid-3735774">
       
       <title>Define Participants</title>
-      <para>
-        In the current Eclipse tools, that use the pi4soa Scenario and Choreography based
-        
-        models for defining requirements and architectural models, this phase would be
-        
-        achieved by defining the Participants and Roles within the choreography model.
-      </para>
+      <para>In the current Eclipse tools, that use the pi4soa Choreography based models for defining architectural models, this phase would be achieved by defining the Participants and Roles within the choreography model.</para>
       <para>
         When a choreography description is initially created, using the
-        
         <emphasis role="italics">New-&gt;Other-&gt;Choreography-&gt;Choreography Description</emphasis>
-        menu
-        
-        item, the roles and relationships can be defined on the first tab.
+        menu item, the roles and relationships can be defined on the first tab.
       </para>
       <para>
         <figure>
 <title>TODO InformalFigure image title empty</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735774/RolesAndRelationships.png" width="6in"/>
+              <imagedata fileref="author/download/attachments/3735774/RolesAndRelationships.png"/>
             </imageobject>
           </mediaobject>
         </figure>
       </para>
       <para>
-        Default participant types are automatically created, one per role, and can be
-        
-        found on the
+        Default participant types are automatically created, one per role, and can be found on the
         <emphasis role="italics">Base Types</emphasis>
         tab. For example,
       </para>
@@ -43,19 +32,13 @@
 <title>TODO InformalFigure image title empty</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735774/ParticipantAndOtherTypes.png" width="3in"/>
+              <imagedata fileref="author/download/attachments/3735774/ParticipantAndOtherTypes.png"/>
             </imageobject>
           </mediaobject>
         </figure>
       </para>
       <para>
-        Only these components need to be specified in the choreography model. This enables
-        
-        them to be referenced in the subsequently defined scenarios. Otherwise it would be
-        
-        necessary to return to the scenarios, once the choreography model had been defined
-        
-        in the
+        Only these components need to be specified in the choreography model. This enables them to be referenced in the subsequently defined scenarios. Otherwise it would be necessary to return to the scenarios, once the choreography model had been defined in the
         <emphasis role="italics">Architecture</emphasis>
         phase.
       </para>
@@ -63,22 +46,9 @@
     <section id="sid-3735776">
       
       <title>Outline Scenarios</title>
+      <para>When designing a system, it is necessary to capture requirements. Various approaches can be used for this, but currently there are no mechanisms that enable the requirements to be documented in such a way to enable an implementation to be validated back against the requirements.</para>
       <para>
-        When designing a system, it is necessary to capture requirements. Various approaches can be
-        
-        used for this, but currently there are no mechanisms that enable the requirements to be
-        
-        documented in such a way to enable an implementation to be validated back against the requirements.
-      </para>
-      <para>
-        The pi4soa tools provide a means of describing requirements, representing specific use cases
-        
-        for the interactions between a set of cooperating services, using scenarios - which can be
-        
-        considered similar to UML sequence diagrams that have been enhanced to include example messages.
-      </para>
-      <para>
-        In the
+        The SAVARA tools provide a means of describing requirements, representing specific use cases for the interactions between a set of cooperating services, using scenarios - which can be considered similar to UML sequence diagrams that have been enhanced to include example messages. In the
         <code>purchasing</code>
         Eclipse project, the
         <code>SuccessfulPurchase.scn</code>
@@ -89,7 +59,7 @@
 <title>TODO InformalFigure image title empty</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735776/SuccessfulPurchasePreTest.jpg" width="5in"/>
+              <imagedata fileref="author/download/attachments/3735776/SuccessfulPurchasePreTest.png"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -107,34 +77,13 @@
       <para>
         Some previously defined examples can be found in the
         <code>purchasing</code>
-        
         Eclipse project. For example, the Buy request is defined as:
       </para>
       <informalexample>
-        <programlisting>&lt;tns:BuyRequest xmlns:tns="http://www.jboss.org/examples/store" 
-			id="1" /&gt;</programlisting>
+        <programlisting>&lt;tns:BuyRequest xmlns:tns="http://www.jboss.org/examples/store"
+            id="1" product="Laptop" /&gt;</programlisting>
       </informalexample>
-      <para>
-        Although a schema may not have been defined at this stage, unless one previously
-        
-        existed that is being reused, it is a good idea to define a namespace for the
-        
-        message type. This is because it will be used within the scenarios and
-        
-        architectural models defined in the following stage. If the namespace was not
-        
-        specified at this stage, then the example messages, scenarios and architectural
-        
-        models would need to be updated at a later stage.
-      </para>
-      <para>
-        Although this phase has been defined following the definition of the scenarios,
-        
-        in practice these phases are iterative. So scenarios and example messages would be
-        
-        defined concurrently. Similarly, new participants may be added in an evolutionary
-        
-        manner, as scenarios are created that require them.
-      </para>
+      <para>Although a schema may not have been defined at this stage, unless one previously existed that is being reused, it is a good idea to define a namespace for the message type. This is because it will be used within the scenarios and architectural models defined in the following stage. If the namespace was not specified at this stage, then the example messages, scenarios and architectural models would need to be updated at a later stage.</para>
+      <para>Although this phase has been defined following the definition of the scenarios, in practice these phases are iterative. So scenarios and example messages would be defined concurrently. Similarly, new participants may be added in an evolutionary manner, as scenarios are created that require them.</para>
     </section>
   </chapter>

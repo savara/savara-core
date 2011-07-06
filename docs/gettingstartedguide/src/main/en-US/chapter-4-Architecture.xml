@@ -6,73 +6,62 @@
     <section id="sid-3735778">
       
       <title>Define Information Model</title>
-      <para>
-        One of the stages within the architecture phase is to define the information model
-        
-        for the message types associated with the messages exchanges between the
-        
-        interacting participants.
-      </para>
-      <para>
-        This involves defining message schema for each example message. The schema could
-        
-        already exist and be reused, it could be based on existing schema and just need
-        
-        to be upgraded to support new requirements, or it may need to be defined from
-        
-        scratch.
-      </para>
+      <para>One of the stages within the architecture phase is to define the information model for the message types associated with the messages exchanges between the interacting participants.</para>
+      <para>This involves defining message schema for each example message. The schema could already exist and be reused, it could be based on existing schema and just need to be upgraded to support new requirements, or it may need to be defined from scratch.</para>
       <para>
         An example of a schema associated with the purchasing model is the
-        
         <code>store.xsd</code>
         shown here:
       </para>
       <informalexample>
         <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;schema xmlns="http://www.w3.org/2001/XMLSchema" 
-		targetNamespace="http://www.jboss.org/examples/store" 
-		xmlns:tns="http://www.jboss.org/examples/store" 
-		elementFormDefault="qualified"&gt;
+&lt;schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.jboss.org/examples/store"
+                xmlns:tns="http://www.jboss.org/examples/store" elementFormDefault="qualified"&gt;
 
-    &lt;element name="BuyRequest" type="tns:StoreType"&gt;&lt;/element&gt;
-    &lt;element name="BuyConfirmed" type="tns:StoreType"&gt;&lt;/element&gt;
-    &lt;element name="BuyFailed" type="tns:StoreType"&gt;&lt;/element&gt;
+    &lt;element name="BuyRequest" type="tns:BuyRequestType"&gt;&lt;/element&gt;
+    &lt;element name="BuyConfirmed" type="tns:BuyConfirmedType"&gt;&lt;/element&gt;
+    &lt;element name="AccountNotFound" type="tns:AccountNotFoundType"&gt;&lt;/element&gt;
+    &lt;element name="BuyFailed" type="tns:BuyFailedType"&gt;&lt;/element&gt;
 
-    &lt;complexType name="StoreType"&gt;
-    	&lt;attribute name="id" type="string"&gt;&lt;/attribute&gt;
-    &lt;/complexType&gt;
+    &lt;complexType name="BuyRequestType"&gt;
+        &lt;attribute name="id" type="string"&gt;&lt;/attribute&gt;
+        &lt;attribute name="product" type="string"&gt;&lt;/attribute&gt;
+    &lt;/complexType&gt;
+    
+    &lt;complexType name="BuyConfirmedType"&gt;
+        &lt;attribute name="id" type="string"&gt;&lt;/attribute&gt;
+        &lt;attribute name="amount" type="integer"&gt;&lt;/attribute&gt;
+        &lt;attribute name="deliveryDate" type="date"&gt;&lt;/attribute&gt;
+    &lt;/complexType&gt;
+    
+    &lt;complexType name="AccountNotFoundType"&gt;
+        &lt;attribute name="id" type="string"&gt;&lt;/attribute&gt;
+        &lt;attribute name="reason" type="string"&gt;&lt;/attribute&gt;
+    &lt;/complexType&gt;
+    
+    &lt;complexType name="BuyFailedType"&gt;
+        &lt;attribute name="id" type="string"&gt;&lt;/attribute&gt;
+        &lt;attribute name="reason" type="string"&gt;&lt;/attribute&gt;
+    &lt;/complexType&gt;
 &lt;/schema&gt;</programlisting>
       </informalexample>
       <para>
-        Once the schema has been defined, then the example messages need to be updated
-        
-        to reference the schema, as shown in the following
+        Once the schema has been defined, then the example messages need to be updated to reference the schema, as shown in the following
         <code>BuyRequest.xml</code>
-        
         example message:
       </para>
       <informalexample>
-        <programlisting>&lt;tns:BuyRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-			xmlns:tns="http://www.jboss.org/examples/store" 
-			xsi:schemaLocation="http://www.jboss.org/examples/store store.xsd " 
-			id="1" /&gt;</programlisting>
+        <programlisting>&lt;tns:BuyRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:tns="http://www.jboss.org/examples/store"
+            xsi:schemaLocation="http://www.jboss.org/examples/store store.xsd "
+            id="1" product="Laptop" /&gt;</programlisting>
       </informalexample>
       <section id="sid-3735778_DefineInformationModel-ValidatingExampleMessagesagainstSchema">
         
         <title>Validating Example Messages against Schema</title>
+        <para>Once the association between example messages and the schema has been established, it is possible to validate the messages against the schema.</para>
         <para>
-          Once the association between example messages and the schema has been
-          
-          established, it is possible to validate the messages against the
-          
-          schema.
-        </para>
-        <para>
-          For information on how to use the validation capabilities within
-          
-          Eclipse, please read the
-          
+          For information on how to use the validation capabilities within Eclipse, please read the
           <ulink url="http://www.eclipse.org/webtools/community/tutorials/XMLValidation/XMLValidationTutorial.html">Eclipse XML Validation Tutorial</ulink>
           .
         </para>
@@ -81,42 +70,21 @@
     <section id="sid-3735780">
       
       <title>Define Choreography Model</title>
-      <para>
-        The next step in the development process is to specify a Choreography Model to implement
-        
-        the requirements described within the set of scenarios.
-      </para>
-      <para>
-        The current representation used to define Choreography Models within SAVARA is the W3C Web Service
-        
-        Choreography Description Language (WS-CDL). The pi4soa tools provide a WS-CDL (or choreography
-        
-        description) editor. Although this standard is associated with web services, it does not mean
-        
-        that a system specified using this standard needs to be implemented using web services. The
-        
-        actual WS-CDL language is used for defining the interactions between any distributed system.
-      </para>
+      <para>The next step in the development process is to specify a Choreography Model to implement the requirements described within the set of scenarios.</para>
+      <para>The current representation used to define Choreography Models within SAVARA is the W3C Web Service Choreography Description Language (WS-CDL). The pi4soa tools provide a WS-CDL (or choreography description) editor. Although this standard is associated with web services, it does not mean that a system specified using this standard needs to be implemented using web services. The actual WS-CDL language is used for defining the interactions between any distributed system.</para>
       <para>
         The choreography description for the Purchasing example can be found in
-        
         <code>purchasing/PurchaseGoods.cdm</code>
-        . When the
-        
-        choreography editor has been launched, by double-clicking on this file within the Eclipse
-        
-        environment, then navigate to the
+        . When the choreography editor has been launched, by double-clicking on this file within the Eclipse environment, then navigate to the
         <emphasis role="italics">Choreography Flows</emphasis>
-        tab to see the
-        
-        definition of the purchasing process:
+        tab to see the definition of the purchasing process:
       </para>
       <para>
         <figure>
 <title>TODO InformalFigure image title empty</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735780/PurchaseGoods.jpg" width="6in" />
+              <imagedata fileref="author/download/attachments/3735780/PurchaseGoods.jpg"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -125,49 +93,58 @@
         
         <title>Validating Requirements against Choreography Model</title>
         <para>
-          The pi4soa tools can be used to test the scenarios against the choreography description, to
-          
-          ensure that the choreography correctly implements the requirements. To test the
-          
+          The SAVARA tools can be used to validate the scenarios against the choreography description, to ensure that the choreography correctly implements the requirements. To test the
           <code>SuccessfulPurchase.scn</code>
-          scenario against the choreography, launch
-          
-          the scenario editor by double-clicking on the scenario file, and then pressing the
-          
-          green
+          scenario against the choreography, launch the scenario editor by double-clicking on the scenario file, and then pressing the green
           <emphasis role="italics">play</emphasis>
-          button in the toolbar. When complete, the scenario
-          
-          should look like the following image, indicating that the scenario completed successfully.
+          button in the toolbar. This will display a dlalog window used to configure what models and simulators are used for each role in the scenarion:
         </para>
         <para>
           <figure>
 <title>TODO InformalFigure image title empty</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/SuccessfulPurchasePostTest.jpg" width="5in"/>
+                <imagedata fileref="author/download/attachments/3735780/ScenarioSimulation1.png"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>When simulating all roles against a single model (i.e. a choreography), then simply browser for the model (using the ... button) - which in this case is the PurchaseGoods.cdm file in the same Eclipse project, and then when asked "Should model be set for all roles", press the "Yes" button. This will setup the simulation configuration for all roles:</para>
+        <para>
+          <figure>
+<title>TODO InformalFigure image title empty</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/3735780/ScenarioSimulation2.png"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>The simulators are all automatically initialised to "WS-CDL simulator", as this is the only simulator that supports the ".cdm" type of model, and the model roles are initialised on a best guess basis. If the roles in the scenario are completely different names to the ones in the model (i.e. choreography), then the user will need to select the appropriate model roles to map from the scenario roles.</para>
+        <para>When the "Simulate" button has been pressed, and the simulation is complete, the scenario should look like the following image, indicating that the scenario completed successfully.</para>
+        <para>
+          <figure>
+<title>TODO InformalFigure image title empty</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/3735780/SuccessfulPurchaseValid2.png"/>
               </imageobject>
             </mediaobject>
           </figure>
         </para>
         <para>
           To view a scenario that demonstrates a test failure, open the
-          
-          <code>InvalidPurchase.scn</code>
-          scenario by double-clicking on the file, and
-          
-          then initiate the test using the green
+          <code>InvalidStoreBehaviour.scn</code>
+          scenario by double-clicking on the file, and then initiate the test using the green
           <emphasis role="italics">play</emphasis>
-          button in the toolbar.
-          
-          When complete, the scenario should look like the following image.
+          button in the toolbar. When complete, the scenario should look like the following image.
         </para>
         <para>
           <figure>
 <title>TODO InformalFigure image title empty</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/InvalidPurchasePostTest.jpg" width="5in"/>
+                <imagedata fileref="author/download/attachments/3735780/InvalidStoreBehaviour.png"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -175,45 +152,21 @@
         <para>
           You will notice that the
           <emphasis role="italics">Store</emphasis>
-          participant has a red 'send' node,
-          
-          indicating that this action was not expected behaviour when compared with the choreography
-          
-          description. The reason this is considered an error, is that the
+          participant has a red 'send' node, indicating that this action was not expected behaviour when compared with the choreography description. The reason this is considered an error, is that the
           <emphasis role="italics">Store</emphasis>
-          
-          participant should only send a
-          <emphasis role="italics">BuyFailed</emphasis>
-          message following an invalid
-          
-          credit check.
+          participant should only send an
+          <emphasis role="italics">AccountNotFound</emphasis>
+          message following a customer unknown response from the credit agency.
         </para>
-        <para>
-          When an error is detected in a scenario, the choreography designer can then determine whether
-          
-          the scenario is wrong (i.e. it does not correctly describe a business requirement), or whether
-          
-          the choreography is wrong and needs to be updated to accomodate the scenario.
-        </para>
+        <para>When an error is detected in a scenario, the architect can then determine whether the scenario is wrong (i.e. it does not correctly describe a business requirement), or whether the choreography is wrong and needs to be updated to accomodate the scenario.</para>
       </section>
       <section id="sid-3735780_DefineChoreographyModel-CreateDocumentation">
         
         <title>Create Documentation</title>
-        <para>
-          Once the choreography description has been successfully tested against the scenarios, the
-          
-          next step may be to obtain approval to proceed to the analysis/design phase. To help support
-          
-          this effort, the pi4soa tools provide the means to export the choreography description to
-          
-          a range of representations. HTML documentation generation is discussed below, and BPMN
-          
-          diagram generation is discussed in the Service Oriented Analysis and Design section.
-        </para>
+        <para>Once the choreography description has been successfully tested against the scenarios, the next step may be to obtain approval to proceed to the analysis/design phase. To help support this effort, the pi4soa tools provide the means to export the choreography description to a range of representations. HTML documentation generation is discussed below, and BPMN diagram generation is discussed in the Service Oriented Analysis and Design section.</para>
         <para>
           To generate HTML documentation, select the
           <emphasis role="italics">Export-&gt;Other-&gt;HTML</emphasis>
-          
           menu item associated with the choreography description file.
         </para>
         <para>
@@ -221,41 +174,29 @@
 <title>TODO InformalFigure image title empty</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/ExportHTMLMenu.png" width="3in"/>
+                <imagedata fileref="author/download/attachments/3735780/ExportHTMLMenu.png"/>
               </imageobject>
             </mediaobject>
           </figure>
         </para>
-        <para>
-          The next step is to provide the location and name of the HTML file to be
-          
-          generated.
-        </para>
+        <para>The next step is to provide the location and name of the HTML file to be generated.</para>
         <para>
           <figure>
 <title>TODO InformalFigure image title empty</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/ExportHTMLDialog.png" width="3in"/>
+                <imagedata fileref="author/download/attachments/3735780/ExportHTMLDialog.png"/>
               </imageobject>
             </mediaobject>
           </figure>
         </para>
-        <para>
-          If the HTML has been generated within the scope of Eclipse project, then refresh
-          
-          the relevant folder to show the file and open the file with the Eclipse web
-          
-          browser (as shown below). If outside the Eclipse project, then use a normal
-          
-          web browser to view the file.
-        </para>
+        <para>If the HTML has been generated within the scope of Eclipse project, then refresh the relevant folder to show the file and open the file with the Eclipse web browser (as shown below). If outside the Eclipse project, then use a normal web browser to view the file.</para>
         <para>
           <figure>
 <title>TODO InformalFigure image title empty</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/ExportedHTML.png" width="6in"/>
+                <imagedata fileref="author/download/attachments/3735780/ExportedHTML.png"/>
               </imageobject>
             </mediaobject>
           </figure>

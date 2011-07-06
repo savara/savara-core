@@ -3,57 +3,25 @@
 <chapter id="sid-3735784">
     
     <title>Service Development</title>
-    <para>
-      Services can be developed by generating initial development artifacts, based on artifacts
-      
-      created in preceding phases (e.g. global model or service contracts/designs).
-    </para>
-    <para>
-      To ensure that the services continue to conform to the artifacts defined in the previous
-      
-      phases, the tools perform conformance checking between the service implementation and
-      
-      the existing architecture/design artifacts. This is not possible with all implementation
-      
-      languages - they must provide the means to extract the communication structure for
-      
-      comparison.
-    </para>
-    <para>
-      The following sections explain how the generation and conformance checking can be achieved
-      
-      for the WS-BPEL implementation language.
-    </para>
+    <para>Services can be developed by generating initial development artifacts, based on artifacts created in preceding phases (e.g. architectural model or service contracts/designs).</para>
+    <para>To ensure that the services continue to conform to the artifacts defined in the previous phases, the tools will (eventaully) perform conformance checking between the service implementation and the existing architecture/design artifacts. This is not possible with all implementation languages - they must provide the means to extract the communication structure for comparison.</para>
+    <para>The following sections explain how the generation can be achieved for the WS-BPEL and SCA Java implementations.</para>
     <section id="sid-3735783">
       
       <title>BPEL</title>
       <para>
-        This tools include a capability to generate a service implementation, for a participant in a choreography,
-        
-        using WS-BPEL. A completed version of the
+        The tools include a capability to generate a service implementation, for a participant in a choreography, using WS-BPEL. A completed version of the
         <emphasis role="italics">PurchasingGoods</emphasis>
-        example can be
-        
-        found in the samples directory (which can be imported into Eclipse).
+        example can be found in the samples directory (which can be imported into Eclipse).
       </para>
-      <para>
-        However if you wish to generate the example from scratch, the follow the instructions in this section.
-        
-        More information about how to use this feature can be found in the User Guide.
-      </para>
+      <para>However if you wish to generate the example from scratch, the follow the instructions in this section. More information about how to use this feature can be found in the User Guide.</para>
       <section id="sid-3735783_WS-BPEL-GeneratingWSBPELbasedServices">
         
         <title>Generating WS-BPEL based Services</title>
         <para>
-          When a choreography description has been created, it is possible to generate a BPEL Process (and associated
-          
-          WSDL files and deployment descriptor) for each of the participants defined within the choreography.
-          
-          To try this out, select the
+          When a choreography description has been created, it is possible to generate a BPEL Process (and associated WSDL files and deployment descriptor) for each of the participants defined within the choreography. To try this out, select the
           <emphasis role="italics">Savara-&gt;Generate-&gt;Service</emphasis>
-          menu item from the popup menu
-          
-          associated with the
+          menu item from the popup menu associated with the
           <code>PurchaseGoods.cdm</code>
           .
         </para>
@@ -62,24 +30,18 @@
 <title>TODO InformalFigure image title empty</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735783/GenerateServiceMenu.png" width="3in"/>
+                <imagedata fileref="author/download/attachments/3735783/GenerateServiceMenu.png"/>
               </imageobject>
             </mediaobject>
           </figure>
         </para>
-        <para>
-          This will display a dialog listing the possible services that can be generated from this choreography,
-          
-          with a proposed Eclipse project name, and the option to select a
-          
-          service type (in this case BPEL).
-        </para>
+        <para>This will display a dialog listing the possible services that can be generated from this choreography, with a proposed Eclipse project name, and the option to select a service type (in this case BPEL).</para>
         <para>
           <figure>
 <title>TODO InformalFigure image title empty</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735783/GenerateService.png" width="5in"/>
+                <imagedata fileref="author/download/attachments/3735783/GenerateServiceBPEL.png"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -88,51 +50,142 @@
           Press the 'Ok' button and this will create a single a BPEL project for the
           <emphasis role="italics">Store</emphasis>
           and
-          
           <emphasis role="italics">CreditAgency</emphasis>
           participants.
         </para>
         <para>
           Each project will contain a single
           <code>bpel</code>
-          folder containing the WS-BPEL process
-          
-          definition for the participant, a list of relevant WSDL files and a deployment descriptor file
-          
-          for use with RiftSaw. However the WS-BPEL and WSDL files are standard, so can be deployed to any
-          
-          WS-BPEL 2.0 compliant engine.
+          folder containing the WS-BPEL process definition for the participant, a list of relevant WSDL files and a deployment descriptor file for use with RiftSaw. However the WS-BPEL and WSDL files are standard, so can be deployed to any WS-BPEL 2.0 compliant engine.
         </para>
       </section>
       <section id="sid-3735783_WS-BPEL-Addingimplementationdetails">
         
         <title>Adding implementation details</title>
+        <para>The generated BPEL processes and deployment descriptors are incomplete, due to lack of implementation details in the choreography description. The choreography simply represents the externally observable interactions between the parties, and therefore cannot provide internal implementation details.</para>
         <para>
-          The generated BPEL processes and deployment descriptors are incomplete, due to
-          
-          lack of implementation details in the choreography description. The choreography
-          
-          simply represents the externally observable interactions between the parties,
-          
-          and therefore cannot provide internal implementation details.
+          Therefore a completed version of the deployment descriptor and BPEL process files, for both the creditAgency, logistics and store participants, can be found in the
+          <ulink url="http://downloads.jboss.org/savara/examples/purchasing_bpel_impl.zip">purchasing_bpel_impl.zip</ulink>
+          .
         </para>
         <para>
-          Therefore a completed version of the deployment descriptor and BPEL process files,
-          
-          for both the creditAgency and store participants, can be found in the
-          
-          <emphasis role="italics">purchasing</emphasis>
-          example's
-          <code>completed/bpel</code>
-          folder.
-        </para>
-        <para>
-          To highlight the differences between the original generated version, and the completed
-          
-          version, simply select both files and use the
+          To highlight the differences between the original generated version, and the completed version, simply select both files and use the
           <emphasis role="italics">Compare With-&gt;Each Other</emphasis>
-          
           menu item.
+        </para>
+      </section>
+    </section>
+    <section id="sid-3735904">
+      
+      <title>SCA Java</title>
+      <para>This section shows how to generate SCA Java based services from a choreography, add implementation details to the service and then verify it against scenarios.</para>
+      <section id="sid-3735904_SCAJava-GeneratingSCAJavabasedServices">
+        
+        <title>Generating SCA Java based Services</title>
+        <para>
+          When a choreography description has been created, it is possible to generate a SCA Java implementation (and associated WSDL files and SCA composite descriptor) for one or more of the participants defined within the choreography. To try this out, select the
+          <emphasis role="italics">Savara-&gt;Generate-&gt;Service</emphasis>
+          menu item from the popup menu associated with the
+          <code>PurchaseGoods.cdm</code>
+          .
+        </para>
+        <para>
+          This will display a dialog listing the possible services that can be generated from this choreography, with a proposed Eclipse project name, and the option to select a service type (in this case
+          <emphasis role="italics">SCA Java</emphasis>
+          ).
+        </para>
+        <para>
+          <figure>
+<title>TODO InformalFigure image title empty</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/3735904/GenerateServiceSCAJava.png"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>
+          Press the 'Ok' button and this will create a Java project for the
+          <emphasis role="italics">Store</emphasis>
+          ,
+          <emphasis role="italics">Logistics</emphasis>
+          and
+          <emphasis role="italics">CreditAgency</emphasis>
+          participants.
+        </para>
+        <para>
+          Each project will contain a single
+          <code>bpel</code>
+          folder containing the WS-BPEL process definition for the participant, a list of relevant WSDL files and a deployment descriptor file for use with RiftSaw. However the WS-BPEL and WSDL files are standard, so can be deployed to any WS-BPEL 2.0 compliant engine.
+        </para>
+      </section>
+      <section id="sid-3735904_SCAJava-AddingImplementationDetails">
+        
+        <title>Adding Implementation Details</title>
+        <para>The generated SCA Java service implementation for a particular role is incomplete, due to lack of implementation details in the choreography description. The choreography simply represents the externally observable interactions between the parties, and therefore cannot provide internal implementation details.</para>
+        <para>
+          Therefore a completed version of the SCA Java service implementation, for the creditAgency, logistics and store participants, can be found in the
+          <ulink url="http://downloads.jboss.org/savara/examples/purchasing_sca_impl.zip">purchasing_sca_impl.zip</ulink>
+          .
+        </para>
+        <para>
+          To highlight the differences between the original generated version, and the completed version, simply select both files and use the
+          <emphasis role="italics">Compare With-&gt;Each Other</emphasis>
+          menu item.Labels parameters
+        </para>
+      </section>
+      <section id="sid-3735904_SCAJava-VerifyingtheSCAJavaimplementationagainstaScenario">
+        
+        <title>Verifying the SCA Java implementation against a Scenario</title>
+        <para>In a previous section of the document, it showed how to use the Scenario (that represents a particular use case or requirement) to verify an architectural model (or choreography). The same scenarios can be used to test the service implementations generated from those architectural models or designs.</para>
+        <para>
+          For example, to test the SCA Java implemenations for the
+          <emphasis role="italics">Store</emphasis>
+          ,
+          <emphasis role="italics">CreditAgency</emphasis>
+          and
+          <emphasis role="italics">Logistics</emphasis>
+          participants, you open the
+          <code>SuccessfulPurchase.scn</code>
+          scenario and press the green "play" button. This will show the 'scenario simulation' dialog. Then for each of the particpiants, select the relevant composite file, so for example for the
+          <emphasis role="italics">Store</emphasis>
+          role locate the
+          <code>Store.composite</code>
+          file in the
+          <code>PurchaseGoodsProcess-Store/src/main/resources</code>
+          folder:
+        </para>
+        <para>
+          <figure>
+<title>TODO InformalFigure image title empty</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/3735904/FileDialogStoreComposite.png"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>When the SCA composite has been selected, then it will automatically set the simulator to be "SCA simulator" and clear the model role - this is because the model role is not relevant as the service implementation represents a single role, rather than a collection of roles as in the case of a choreography being used for the model.</para>
+        <para>
+          <figure>
+<title>TODO InformalFigure image title empty</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/3735904/ScenarioSimulationSCA.png"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+        <para>Once all of the roles have been initialised, then press the "Simulate" button. Unlike the verification against a choreography model, which is pure simulation, when the SCA simulator is used and configured with a particular SCA composite file, then the simulation is performed by executing the service implementation. The simulation output is the same though:</para>
+        <para>
+          <figure>
+<title>TODO InformalFigure image title empty</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="author/download/attachments/3735904/SimulateSuccessfulPurchaseSCA.png"/>
+              </imageobject>
+            </mediaobject>
+          </figure>
         </para>
       </section>
     </section>
