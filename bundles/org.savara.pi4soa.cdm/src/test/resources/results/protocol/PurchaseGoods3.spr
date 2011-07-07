@@ -17,7 +17,8 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 [[ Type(location=creditAgency.xsd,prefix=ca,namespace=http://www.jboss.org/examples/creditAgency) ]]
 [[ Type(location=logistics.xsd,prefix=lg,namespace=http://www.jboss.org/examples/logistics) ]]
 protocol PurchaseGoodsProcess(role Buyer) {
-	Buyer introduces CreditAgency, Store;
+	Store introduces CreditAgency;
+	Buyer introduces Store;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.jboss.org/examples/store}StoreInterface) ]]
 	[[ Correlation(request=buy) ]]
@@ -34,7 +35,7 @@ protocol PurchaseGoodsProcess(role Buyer) {
 		checkCredit(CreditRating) from CreditAgency to Store;
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@activities.1) ]]
 		choice at Store {
-			Buyer introduces Logistics;
+			Store introduces Logistics;
 			[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@activities.1/@activities.0/@activities.0/@exchangeDetails.0) ]]
 			[[ Interface(name={http://www.jboss.org/examples/logistics}LogisticsInterface) ]]
 			[[ Correlation(request=deliver) ]]

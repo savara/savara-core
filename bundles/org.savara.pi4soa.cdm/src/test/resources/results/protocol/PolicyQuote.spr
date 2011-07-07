@@ -26,7 +26,8 @@ import xsd "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http
 [[ Type(prefix=dmv,namespace=http://dmv.com/drivingRecordService) ]]
 [[ Type(prefix=ca,namespace=http://creditagency.com/creditCheckService) ]]
 protocol PolicyQuoteProcess(role Driver) {
-	Driver introduces DrivingRecordService, PolicyQuoteProcessService;
+	PolicyQuoteProcessService introduces DrivingRecordService;
+	Driver introduces PolicyQuoteProcessService;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.example.org/policyQuoteProcessService}PolicyQuoteProcessService) ]]
 	[[ Correlation(request=receivePolicyQuote) ]]
@@ -39,7 +40,7 @@ protocol PolicyQuoteProcess(role Driver) {
 	receiveDrivingRecord(DrivingRecordResponse) from DrivingRecordService to PolicyQuoteProcessService;
 	[[ SourceComponent(id=//@choreographies.0/@activities.3) ]]
 	choice at PolicyQuoteProcessService {
-		Driver introduces PolicyQuoteEntityService, PolicyQuoteCalculationService, CreditCheckService;
+		PolicyQuoteProcessService introduces PolicyQuoteEntityService, PolicyQuoteCalculationService, CreditCheckService;
 		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.0/@activities.0/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={http://creditagency.com/creditCheckService}CreditCheckService) ]]
 		[[ Correlation(request=checkCredit) ]]

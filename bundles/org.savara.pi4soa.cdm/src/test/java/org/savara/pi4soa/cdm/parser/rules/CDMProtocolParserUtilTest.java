@@ -20,6 +20,7 @@ package org.savara.pi4soa.cdm.parser.rules;
 import static org.junit.Assert.*;
 
 import org.pi4soa.cdl.CDLManager;
+import org.scribble.protocol.model.Introduces;
 import org.scribble.protocol.model.Role;
 
 public class CDMProtocolParserUtilTest {
@@ -39,28 +40,35 @@ public class CDMProtocolParserUtilTest {
 			fail("Expecting only one top level choreo");
 		}
 		
-		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleDeclarations(cdlpack.getChoreographies().get(0));
+		java.util.List<Introduces> introduces=CDMProtocolParserUtil.getRoleDeclarations(cdlpack.getChoreographies().get(0));
 		
-		if (roles.size() != 4) {
-			fail("Was expecting 4 roles");
+		if (introduces.size() != 2) {
+			fail("Was expecting 2 introduces clauses");
 		}
 		
-		if (roles.contains(new Role("Broker")) == false) {
-			fail("Broker not found");
+		Introduces i1=introduces.get(0);
+		Introduces i2=introduces.get(1);
+		
+		if (i1.getIntroducer() == null || i1.getIntroducer().getName().equals("Buyer") == false) {
+			fail("First introducer should be Buyer");
 		}
 		
-		if (roles.contains(new Role("Buyer")) == false) {
-			fail("Buyer not found");
+		if (i1.getRoles().size() != 1) {
+			fail("First introduces should have 1 role");
+		} else if (i1.getRoles().get(0).getName().equals("Broker") == false) {
+			fail("First introduces should be Broker");
 		}
 		
-		if (roles.contains(new Role("CreditAgency")) == false) {
-			fail("CreditAgency not found");
+		if (i2.getIntroducer() == null || i2.getIntroducer().getName().equals("Broker") == false) {
+			fail("Second introducer should be Broker");
 		}
 		
-		// Maybe only until the search is refined to used participant types
-		if (roles.contains(new Role("Supplier")) == false) {
-			fail("Supplier not found");
+		if (i2.getRoles().size() != 1) {
+			fail("Second introduces should have 1 role");
+		} else if (i2.getRoles().get(0).getName().equals("CreditAgency") == false) {
+			fail("Second introduces should be CreditAgency");
 		}
+		
 	}
 
 	@org.junit.Test
@@ -86,14 +94,24 @@ public class CDMProtocolParserUtilTest {
 			fail("Failed to get 'RequestForQuote' sub-choreo");
 		}
 		
-		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleDeclarations(sub);
+		java.util.List<Introduces> introduces=CDMProtocolParserUtil.getRoleDeclarations(sub);
 		
-		if (roles.size() != 1) {
-			fail("Was expecting 1 roles");
+		if (introduces.size() != 1) {
+			fail("Was expecting 1 introduces");
 		}
 		
-		if (roles.contains(new Role("SupplierQuoteEngine")) == false) {
-			fail("SupplierQuoteEngine not found");
+		Introduces i1=introduces.get(0);
+		
+		if (i1.getIntroducer().getName().equals("Broker") == false) {
+			fail("Introducer should be Broker");
+		}
+		
+		if (i1.getRoles().size() != 1) {
+			fail("Number of roles should be 1");
+		}
+		
+		if (i1.getRoles().get(0).getName().equals("SupplierQuoteEngine") == false) {
+			fail("Role should be SupplierQuoteEngine");
 		}
 	}
 
@@ -120,14 +138,24 @@ public class CDMProtocolParserUtilTest {
 			fail("Failed to get 'CompleteTransaction' sub-choreo");
 		}
 		
-		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleDeclarations(sub);
+		java.util.List<Introduces> introduces=CDMProtocolParserUtil.getRoleDeclarations(sub);
 		
-		if (roles.size() != 1) {
-			fail("Was expecting 1 roles");
+		if (introduces.size() != 1) {
+			fail("Was expecting 1 introduces");
 		}
 		
-		if (roles.contains(new Role("SupplierTxnProcessor")) == false) {
-			fail("SupplierTxnProcessor not found");
+		Introduces i1=introduces.get(0);
+		
+		if (i1.getIntroducer().getName().equals("Broker") == false) {
+			fail("Introducer should be Broker");
+		}
+		
+		if (i1.getRoles().size() != 1) {
+			fail("Number of roles should be 1");
+		}
+		
+		if (i1.getRoles().get(0).getName().equals("SupplierTxnProcessor") == false) {
+			fail("Role should be SupplierTxnProcessor");
 		}
 	}
 
@@ -148,8 +176,8 @@ public class CDMProtocolParserUtilTest {
 		
 		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleParameters(cdlpack.getChoreographies().get(0));
 		
-		if (roles.size() != 0) {
-			fail("Was expecting 0 roles");
+		if (roles.size() != 1) {
+			fail("Was expecting 1 role");
 		}
 	}
 

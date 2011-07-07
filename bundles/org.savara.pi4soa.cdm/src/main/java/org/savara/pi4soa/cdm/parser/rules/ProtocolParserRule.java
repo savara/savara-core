@@ -81,11 +81,26 @@ public class ProtocolParserRule implements ParserRule {
 			ret.getParameterDefinitions().add(pd);
 			
 			context.setState(r.getName(), r);
+			
+			if (choreo.getRoot() == Boolean.TRUE) {
+				
+				// Associate Namespace annotation with protocol
+				Annotation annotation=AnnotationDefinitions.getAnnotation(r.getAnnotations(),
+							AnnotationDefinitions.NAMESPACE);
+				
+				if (annotation != null) {
+					Annotation pa=new Annotation(AnnotationDefinitions.NAMESPACE);
+					pa.getProperties().putAll(annotation.getProperties());
+					pa.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, r.getName());
+					ret.getAnnotations().add(pa);
+				}
+			}
 		}
 
-		java.util.List<Role> declared=CDMProtocolParserUtil.getRoleDeclarations(choreo);
+		java.util.List<Introduces> declared=CDMProtocolParserUtil.getRoleDeclarations(choreo);
 		
 		if (declared.size() > 0) {
+			/*
 			Introduces rl=new Introduces();
 			
 			// TODO: Need to discover introducing role (or roles if need to be
@@ -116,25 +131,31 @@ public class ProtocolParserRule implements ParserRule {
 				rl.setIntroducer(r);
 				declared.remove(0);
 			}
+			*/
 			
-			for (Role r : declared) {
-				rl.getRoles().add(r);
+			for (Introduces intro : declared) {
 				
-				context.setState(r.getName(), r);
-				
-				// Associate Namespace annotation with protocol
-				Annotation annotation=AnnotationDefinitions.getAnnotation(r.getAnnotations(),
-							AnnotationDefinitions.NAMESPACE);
-				
-				if (annotation != null) {
-					Annotation pa=new Annotation(AnnotationDefinitions.NAMESPACE);
-					pa.getProperties().putAll(annotation.getProperties());
-					pa.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, r.getName());
-					ret.getAnnotations().add(pa);
+				for (Role r : intro.getRoles()) {
+					//rl.getRoles().add(r);
+					
+					context.setState(r.getName(), r);
+					
+					// Associate Namespace annotation with protocol
+					Annotation annotation=AnnotationDefinitions.getAnnotation(r.getAnnotations(),
+								AnnotationDefinitions.NAMESPACE);
+					
+					if (annotation != null) {
+						Annotation pa=new Annotation(AnnotationDefinitions.NAMESPACE);
+						pa.getProperties().putAll(annotation.getProperties());
+						pa.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, r.getName());
+						ret.getAnnotations().add(pa);
+					}
 				}
+				
+				ret.getBlock().add(intro);
 			}
 			
-			ret.getBlock().add(rl);
+			//ret.getBlock().add(rl);
 		}
 		
 		// Check if root, then need to project other sibling choreos

@@ -103,14 +103,9 @@ public class CDMProtocolParserUtil {
 	public static java.util.List<Role> getRoleParameters(final Choreography choreo) {
 		java.util.List<Role> ret=new java.util.Vector<Role>();
 		
-		// If root choreo, then no parameters
-		if (choreo.getRoot() == Boolean.TRUE) {
-			return(ret);
-		}
-		
 		final java.util.List<ParticipantType> partTypes=new java.util.Vector<ParticipantType>();
 		final java.util.List<Participant> partInstances=new java.util.Vector<Participant>();
-		
+
 		choreo.visit(new DefaultCDLVisitor() {
 			
 			// TODO: SAVARA-161 May also need to handle 'perform' (and take care of recursion),
@@ -121,7 +116,11 @@ public class CDMProtocolParserUtil {
 			
 			public void interaction(Interaction interaction) {
 				
-				if (interaction.getEnclosingChoreography() != choreo) {
+				// Return immediately if not same as interactions
+				// enclosing choreo
+				if (interaction.getEnclosingChoreography() != choreo ||
+						(choreo.getRoot() == Boolean.TRUE &&
+						(partTypes.size() > 0 || partInstances.size() > 0))) {
 					return;
 				}
 				
@@ -140,23 +139,25 @@ public class CDMProtocolParserUtil {
 					}
 				}
 				
-				if (interaction.getToParticipant() != null) {
-					if (partInstances.contains(interaction.getToParticipant()) == false) {
-						partInstances.add(interaction.getToParticipant());
-					}
-				} else {
-					ParticipantType ptype=
-						org.pi4soa.cdl.util.PackageUtil.getParticipantForRoleType(
-								interaction.getToRoleType());
-					
-					if (ptype != null &&
-							partTypes.contains(ptype) == false) {
-						partTypes.add(ptype);
+				if (choreo.getRoot() == Boolean.FALSE) {
+					if (interaction.getToParticipant() != null) {
+						if (partInstances.contains(interaction.getToParticipant()) == false) {
+							partInstances.add(interaction.getToParticipant());
+						}
+					} else {
+						ParticipantType ptype=
+							org.pi4soa.cdl.util.PackageUtil.getParticipantForRoleType(
+									interaction.getToRoleType());
+						
+						if (ptype != null &&
+								partTypes.contains(ptype) == false) {
+							partTypes.add(ptype);
+						}
 					}
 				}
 			}
 		});
-		
+
 		// Define roles
 		java.util.Iterator<ParticipantType> ptiter=partTypes.iterator();
 
@@ -197,23 +198,35 @@ public class CDMProtocolParserUtil {
 		return(ret);
 	}
 
-	public static java.util.List<Role> getRoleDeclarations(final Choreography choreo) {
-		java.util.List<Role> ret=new java.util.Vector<Role>();
+	public static java.util.List<Introduces> getRoleDeclarations(final Choreography choreo) {
+		java.util.List<Introduces> ret=new java.util.Vector<Introduces>();
+		java.util.List<Role> roles=new java.util.Vector<Role>();
 		
 		final java.util.List<ParticipantType> partTypes=new java.util.Vector<ParticipantType>();
 		final java.util.List<Participant> partInstances=new java.util.Vector<Participant>();
+		final java.util.Map<String,String> introducer=new java.util.HashMap<String,String>();
 		
 		choreo.visit(new DefaultCDLVisitor() {
 			
 			public void interaction(Interaction interaction) {
 				
-				if (interaction.getEnclosingChoreography() != choreo) {
+				/*
+				if (interaction.getEnclosingChoreography() != choreo &&
+						choreo.getRoot() == Boolean.FALSE) {
 					return;
 				}
+				*/
+				
+				String fromRole=null;
+				String toRole=null;
 				
 				if (interaction.getFromParticipant() != null) {
 					if (partInstances.contains(interaction.getFromParticipant()) == false) {
 						partInstances.add(interaction.getFromParticipant());
+					}
+					
+					if (isLocalParticipant(choreo, interaction.getFromParticipant().getName())) {
+						fromRole = XMLUtils.getLocalname(interaction.getFromParticipant().getName());
 					}
 				} else {
 					ParticipantType ptype=
@@ -224,11 +237,16 @@ public class CDMProtocolParserUtil {
 							partTypes.contains(ptype) == false) {
 						partTypes.add(ptype);
 					}
+					fromRole = XMLUtils.getLocalname(ptype.getName());
 				}
 				
 				if (interaction.getToParticipant() != null) {
 					if (partInstances.contains(interaction.getToParticipant()) == false) {
 						partInstances.add(interaction.getToParticipant());
+					}
+
+					if (isLocalParticipant(choreo, interaction.getToParticipant().getName())) {
+						toRole = XMLUtils.getLocalname(interaction.getToParticipant().getName());
 					}
 				} else {
 					ParticipantType ptype=
@@ -239,6 +257,12 @@ public class CDMProtocolParserUtil {
 							partTypes.contains(ptype) == false) {
 						partTypes.add(ptype);
 					}
+					toRole = XMLUtils.getLocalname(ptype.getName());
+				}
+				
+				if (fromRole != null && toRole != null &&
+								introducer.containsKey(toRole) == false) {
+					introducer.put(toRole, fromRole);
 				}
 			}
 		});
@@ -262,7 +286,7 @@ public class CDMProtocolParserUtil {
 							CDLTypeUtil.getNamespace(ptype.getName(), ptype, true));
 				role.getAnnotations().add(annotation);
 				
-				ret.add(role);
+				roles.add(role);
 			}
 		}
 		
@@ -282,11 +306,46 @@ public class CDMProtocolParserUtil {
 							CDLTypeUtil.getNamespace(pinst.getName(), pinst, true));
 				role.getAnnotations().add(annotation);
 				
-				ret.add(role);
+				roles.add(role);
 			}			
 		}
 	
+		for (Role r : roles) {
+			Introduces intro=null;
+			String introducerRole=introducer.get(r.getName());
+			
+			if (introducerRole != null) {
+				// Check if introduces statement already exists for introducer role
+				for (Introduces i : ret) {
+					if (i.getIntroducer().getName().equals(introducerRole)) {
+						intro = i;
+						break;
+					}
+				}
+				
+				if (intro == null) {
+					intro = new Introduces();
+					intro.setIntroducer(new Role(introducerRole));
+					ret.add(intro);
+				}
+				
+				intro.getRoles().add(r);
+			}
+		}
+		
 		return(ret);
 	}
 	
+	protected static boolean isLocalParticipant(Choreography choreo, String name) {
+		boolean ret=false;
+		
+		for (Participant p : choreo.getParticipantDefinitions()) {
+			if (p.getName().equals(name)) {
+				ret = true;
+				break;
+			}
+		}
+		
+		return(ret);
+	}
 }

@@ -13,7 +13,8 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 [[ Type(prefix=pur,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Type(prefix=sto,namespace=http://www.jboss.org/examples/store) ]]
 protocol PurchaseGoodsProcess(role Buyer) {
-	Buyer introduces CreditAgency, Store;
+	Store introduces CreditAgency;
+	Buyer introduces Store;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.jboss.org/examples/store}StoreInterface) ]]
 	[[ Correlation(request=buy) ]]
