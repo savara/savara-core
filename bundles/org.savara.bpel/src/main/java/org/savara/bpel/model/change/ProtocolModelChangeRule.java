@@ -17,10 +17,8 @@
  */
 package org.savara.bpel.model.change;
 
-import org.savara.bpel.BPELDefinitions;
 import org.savara.bpel.model.TImport;
 import org.savara.bpel.model.TProcess;
-import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TSequence;
 import org.savara.bpel.util.ImportUtil;
 import org.savara.protocol.model.change.ModelChangeContext;
@@ -28,6 +26,7 @@ import org.savara.protocol.model.change.ModelChangeUtils;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.Interface;
 import org.scribble.protocol.model.*;
+import org.scribble.protocol.util.RoleUtil;
 
 /**
  * This is the model change rule for the Conversation.
@@ -114,10 +113,21 @@ public class ProtocolModelChangeRule extends AbstractBPELModelChangeRule {
 			addImport(context, bpelModel, conv, conv.getRole());
 
 			// Add import statements for partner roles
-			java.util.List<Role> roles=conv.getRoles();
+			final java.util.List<Role> roles=new java.util.Vector<Role>();
 			
-			for (int i=0; i < roles.size(); i++) {
-				addImport(context, bpelModel, conv, roles.get(i));
+			conv.getParent().visit(new DefaultVisitor() {
+				
+				public void accept(Introduces elem) {
+					for (Role r : elem.getRoles()) {
+						if (roles.contains(r) == false) {
+							roles.add(r);
+						}
+					}
+				}
+			});
+			
+			for (Role r : roles) {
+				addImport(context, bpelModel, conv, r);
 			}
 			
 			// Add import for partner link types

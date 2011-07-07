@@ -3,12 +3,13 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as C
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed, "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest from "http://www.jboss.org/examples/logistics";
 import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http://www.w3.org/2001/XMLSchema";
 
-protocol PurchaseGoodsWithCancel {
-	role Buyer, CreditAgency, Store;
+protocol PurchaseGoodsWithCancel(role Buyer) {
+	Buyer introduces Store;
+	Store introduces CreditAgency;
 
 	buy(BuyRequest) from Buyer to Store;
 
-	try {
+	do {
 		checkCredit(CreditCheckRequest) from Store to CreditAgency;
 	
 		choice at CreditAgency {
@@ -18,9 +19,11 @@ protocol PurchaseGoodsWithCancel {
 			checkCredit(CustomerUnknown) from CreditAgency to Store;
 			buy(AccountNotFound) from Store to Buyer;
 		}
-	} catch (cancel(CancelOrder) from Buyer to Store) {
+	} interrupt {
+		cancel(CancelOrder) from Buyer to Store;
 	
-	} catch (cancel(OtherRequest) from Buyer to Store) {
+	} interrupt {
+		cancel(OtherRequest) from Buyer to Store;
 		OtherResponse from Store to Buyer;
 	}
 }

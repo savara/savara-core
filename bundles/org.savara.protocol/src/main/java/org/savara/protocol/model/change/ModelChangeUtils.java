@@ -67,8 +67,8 @@ public class ModelChangeUtils {
 			public boolean process(ModelObject obj) {
 				boolean ret=true;
 				
-				if (obj instanceof RoleList) {
-					roles.addAll(((RoleList)obj).getRoles());
+				if (obj instanceof Introduces) {
+					roles.addAll(((Introduces)obj).getRoles());
 				} else if (obj instanceof Protocol &&
 						obj != conv) {
 					ret = false;

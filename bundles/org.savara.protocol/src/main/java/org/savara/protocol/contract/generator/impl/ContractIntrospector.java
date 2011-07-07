@@ -224,7 +224,7 @@ public class ContractIntrospector extends DefaultVisitor {
 		return(elem == m_protocol);
 	}
 
-	public boolean start(Run elem) {
+	public void accept(Run elem) {
 		Protocol toProtocol=RunUtil.getInnerProtocol(elem.enclosingProtocol(),
 								elem.getProtocolReference());
 		
@@ -248,8 +248,6 @@ public class ContractIntrospector extends DefaultVisitor {
 		} else {
 			logger.fine("Run protocol not returned - possibly external");
 		}
-		
-		return(true);
 	}
 	
 	/*

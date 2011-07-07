@@ -135,7 +135,9 @@ public class FinalizerHandlerParserRule implements ParserRule {
 		// Define roles
 		java.util.Iterator<Participant> piter=partInstances.iterator();
 		
-		RoleList roleList=null;
+		Introduces roleList=null;
+		
+		// TODO: Should this be protocol parameters?
 		
 		while (piter.hasNext()) {
 			Role role=new Role();
@@ -143,7 +145,7 @@ public class FinalizerHandlerParserRule implements ParserRule {
 			role.setName(pinst.getName());
 			
 			if (roleList == null) {
-				roleList = new RoleList();
+				roleList = new Introduces();
 				conv.getBlock().getContents().add(roleList);
 			}
 			
@@ -168,7 +170,7 @@ public class FinalizerHandlerParserRule implements ParserRule {
 			role.setName(ptype.getName());
 			
 			if (roleList == null) {
-				roleList = new RoleList();
+				roleList = new Introduces();
 				
 				//roleList.setOpen(choreo.getEnclosingChoreography().getRoot() != Boolean.TRUE);
 				

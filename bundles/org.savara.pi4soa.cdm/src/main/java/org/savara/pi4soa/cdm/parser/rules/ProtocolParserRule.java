@@ -83,12 +83,41 @@ public class ProtocolParserRule implements ParserRule {
 			context.setState(r.getName(), r);
 		}
 
-		roles = CDMProtocolParserUtil.getRoleDeclarations(choreo);
+		java.util.List<Role> declared=CDMProtocolParserUtil.getRoleDeclarations(choreo);
 		
-		if (roles.size() > 0) {
-			RoleList rl=new RoleList();
+		if (declared.size() > 0) {
+			Introduces rl=new Introduces();
 			
-			for (Role r : roles) {
+			// TODO: Need to discover introducing role (or roles if need to be
+			// different for each introduced role)
+			// For now use any role in the list of parameters
+			if (roles.size() > 0) {
+				rl.setIntroducer(roles.get(0));
+			} else {
+				Role r=declared.get(0);
+				
+				ParameterDefinition pd=new ParameterDefinition();
+				pd.setName(r.getName());
+				ret.getParameterDefinitions().add(pd);
+				
+				context.setState(r.getName(), r);
+				
+				// Associate Namespace annotation with protocol
+				Annotation annotation=AnnotationDefinitions.getAnnotation(r.getAnnotations(),
+							AnnotationDefinitions.NAMESPACE);
+				
+				if (annotation != null) {
+					Annotation pa=new Annotation(AnnotationDefinitions.NAMESPACE);
+					pa.getProperties().putAll(annotation.getProperties());
+					pa.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, r.getName());
+					ret.getAnnotations().add(pa);
+				}
+
+				rl.setIntroducer(r);
+				declared.remove(0);
+			}
+			
+			for (Role r : declared) {
 				rl.getRoles().add(r);
 				
 				context.setState(r.getName(), r);
@@ -189,7 +218,7 @@ public class ProtocolParserRule implements ParserRule {
 			(choreo.getExceptionHandler() != null &&
 					choreo.getExceptionHandler().getExceptionWorkUnits().size() > 0)) {
 			
-			Try te=new Try();
+			Do te=new Do();
 			ret.getBlock().getContents().add(te);
 			
 			// Process all of the activities within the
@@ -203,7 +232,7 @@ public class ProtocolParserRule implements ParserRule {
 				ExceptionWorkUnit ewu=choreo.getExceptionHandler().
 					getExceptionWorkUnits().get(i);
 				
-				Catch catchPath=new Catch();
+				Interrupt interruptPath=new Interrupt();
 
 				/*
 				 * TODO: Consider how to deal with catch types
@@ -218,10 +247,10 @@ public class ProtocolParserRule implements ParserRule {
 				}
 				*/
 				
-				te.getCatches().add(catchPath);
+				te.getInterrupts().add(interruptPath);
 				
 				convertActivities(context, ewu.getActivities(),
-								catchPath.getBlock());
+								interruptPath.getBlock());
 			}
 			
 			/*
@@ -270,8 +299,8 @@ public class ProtocolParserRule implements ParserRule {
 		}
 		
 		// SAVARA-214 - check if declared roles should be moved to inner blocks
-		if (ret.getBlock().get(0) instanceof RoleList) {
-			RoleList rl=(RoleList)ret.getBlock().get(0);
+		if (ret.getBlock().get(0) instanceof Introduces) {
+			Introduces rl=(Introduces)ret.getBlock().get(0);
 			
 			for (int i=rl.getRoles().size()-1; i >= 0; i--) {
 				Role r=rl.getRoles().get(i);
@@ -280,12 +309,13 @@ public class ProtocolParserRule implements ParserRule {
 				if (b == null) {
 					// Report error
 				} else if (b != ret.getBlock()){
-					RoleList innerrl=null;
+					Introduces innerrl=null;
 					
-					if (b.size() > 0 && b.get(0) instanceof RoleList) {
-						innerrl = (RoleList)b.get(0);
+					if (b.size() > 0 && b.get(0) instanceof Introduces) {
+						innerrl = (Introduces)b.get(0);
 					} else {
-						innerrl = new RoleList();
+						innerrl = new Introduces();
+						innerrl.setIntroducer(rl.getIntroducer());
 						b.getContents().add(0, innerrl);
 					}
 					

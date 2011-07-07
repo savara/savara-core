@@ -12,8 +12,8 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(prefix=pur,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Type(prefix=sto,namespace=http://www.jboss.org/examples/store) ]]
-protocol PurchaseGoodsProcess {
-	role Buyer, CreditAgency, Store;
+protocol PurchaseGoodsProcess(role Buyer) {
+	Buyer introduces CreditAgency, Store;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.jboss.org/examples/store}StoreInterface) ]]
 	[[ Correlation(request=buy) ]]
@@ -24,25 +24,24 @@ protocol PurchaseGoodsProcess {
 	checkCredit(CreditCheckRequest) from Store to CreditAgency;
 	[[ SourceComponent(id=//@choreographies.0/@activities.2) ]]
 	choice at CreditAgency {
-		[[ Correlation(replyTo=checkCredit) ]]
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={java:org.jboss.savara.examples.purchasing}CreditAgencyInterface) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckOk) from CreditAgency to Store;
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.0) ]]
 		[[ Interface(name={http://www.jboss.org/examples/store}StoreInterface) ]]
 		[[ Correlation(replyTo=buy) ]]
 		buy(BuyConfirmed) from Store to Buyer;
 	} or {
-		[[ Fault(name=CreditCheckFailed) ]]
-		[[ Correlation(replyTo=checkCredit) ]]
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.1/@activities.0/@exchangeDetails.0) ]]
+		[[ Fault(name=CreditCheckFailed) ]]
 		[[ Interface(name={java:org.jboss.savara.examples.purchasing}CreditAgencyInterface) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckInvalid) from CreditAgency to Store;
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.1/@activities.1/@exchangeDetails.0) ]]
 		[[ Fault(name=BuyFailed) ]]
 		[[ Interface(name={http://www.jboss.org/examples/store}StoreInterface) ]]
 		[[ Correlation(replyTo=buy) ]]
 		buy(BuyFailed) from Store to Buyer;
-
 	}
 }

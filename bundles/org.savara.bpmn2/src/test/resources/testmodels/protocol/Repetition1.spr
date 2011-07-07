@@ -16,15 +16,15 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 [[ Type(location=store.xsd,prefix=sto,namespace=http://www.jboss.org/examples/store) ]]
 [[ Type(location=creditAgency.xsd,prefix=ca,namespace=http://www.jboss.org/examples/creditAgency) ]]
 [[ Type(location=logistics.xsd,prefix=lg,namespace=http://www.jboss.org/examples/logistics) ]]
-protocol Repetition1 {
-	role Buyer, Store;
+protocol Repetition1 (role Buyer) {
+	Buyer introduces Store;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.jboss.org/examples/store}StoreInterface) ]]
 	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer to Store;
 	
 	repeat {
-		role CreditAgency;
+		Store introduces CreditAgency;
 		
 		[[ SourceComponent(id=//@choreographies.0/@activities.1/@exchangeDetails.0) ]]
 		[[ Interface(name={http://www.jboss.org/examples/creditAgency}CreditAgencyInterface) ]]

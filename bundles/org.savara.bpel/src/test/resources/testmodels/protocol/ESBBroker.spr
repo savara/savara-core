@@ -13,8 +13,9 @@ import xsd "bookingReference" as BookingReference, "buy" as Buy, "cancel" as Can
 [[ Type(prefix=spr,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 [[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierTxnProcessor) ]]
 [[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierQuoteEngine) ]]
-protocol ESBBrokerProcess {
-	role Broker, Buyer, CreditAgency, Supplier;
+protocol ESBBrokerProcess(role Buyer) {
+	Buyer introduces Broker;
+	Broker introduces CreditAgency, Supplier;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
 	[[ Correlation(request=makeEnquiry) ]]
@@ -22,7 +23,7 @@ protocol ESBBrokerProcess {
 	[[ SourceComponent(id=//@choreographies.0/@activities.1) ]]
 	repeat {
 		[[ SourceComponent(id=//@choreographies.0/@activities.1/@activities.0) ]]
-		run RequestForQuote(Broker);
+		run RequestForQuote(Broker) from Broker;
 	}
 	[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
@@ -31,7 +32,7 @@ protocol ESBBrokerProcess {
 	[[ SourceComponent(id=//@choreographies.0/@activities.3) ]]
 	choice at Buyer {
 		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.0/@activities.0) ]]
-		run CompleteTransaction(Buyer, Broker, CreditAgency);
+		run CompleteTransaction(Buyer, Broker, CreditAgency) from Buyer;
 	} or {
 		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.1/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
@@ -50,7 +51,7 @@ protocol ESBBrokerProcess {
 		checkCredit(CreditInformation) from Broker to CreditAgency;
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2) ]]
 		choice at CreditAgency {
-			role SupplierTxnProcessor;
+			Broker introduces SupplierTxnProcessor;
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.0/@exchangeDetails.0) ]]
 			[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
 			[[ Correlation(replyTo=checkCredit) ]]
@@ -83,7 +84,7 @@ protocol ESBBrokerProcess {
 	[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.1) ]]
 	[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierQuoteEngine) ]]
 	protocol RequestForQuote(role Broker) {
-		role SupplierQuoteEngine;
+		Broker introduces SupplierQuoteEngine;
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.1/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
 		[[ Correlation(request=getQuote) ]]

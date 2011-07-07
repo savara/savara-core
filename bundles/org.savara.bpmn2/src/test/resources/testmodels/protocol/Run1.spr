@@ -3,17 +3,17 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as C
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed, "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest from "http://www.jboss.org/examples/logistics";
 import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http://www.w3.org/2001/XMLSchema";
 
-protocol Run1 {
-	role Buyer, Store;
+protocol Run1(role Buyer) {
+	Buyer introduces Store;
 
 	buy(BuyRequest) from Buyer to Store;
 	
-	run CheckCredit(Store);
+	run CheckCredit(Store) from Store;
 	
 	buy(BuyConfirmed) from Store to Buyer;
 	
 	protocol CheckCredit(role Store) {
-		role CreditAgency;
+		Store introduces CreditAgency;
 	
 		checkCredit(CreditCheckRequest) from Store to CreditAgency;
 		checkCredit(CreditRating) from CreditAgency to Store;

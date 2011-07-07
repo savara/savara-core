@@ -136,8 +136,8 @@ public class ProcessParserRule implements ProtocolParserRule {
 			if (process.getFaultHandlers() != null &&
 					(process.getFaultHandlers().getCatch().size() > 0 ||
 							process.getFaultHandlers().getCatchAll() != null)) {
-				org.scribble.protocol.model.Try te=
-						new org.scribble.protocol.model.Try();
+				org.scribble.protocol.model.Do te=
+						new org.scribble.protocol.model.Do();
 				//te.derivedFrom(this);
 				//te.getBlock().derivedFrom(this);
 				
@@ -148,8 +148,8 @@ public class ProcessParserRule implements ProtocolParserRule {
 				for (int i=0; i < process.getFaultHandlers().getCatch().size(); i++) {
 					TCatch catchPath=process.getFaultHandlers().getCatch().get(i);
 					
-					org.scribble.protocol.model.Catch cb=
-						new org.scribble.protocol.model.Catch();
+					org.scribble.protocol.model.Interrupt cb=
+						new org.scribble.protocol.model.Interrupt();
 					//cb.derivedFrom(catchPath);				
 					
 					/* TODO: How to deal with catch based on type?
@@ -180,7 +180,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 						context.removeVariable(faultVar);
 					}
 
-					te.getCatches().add(cb);
+					te.getInterrupts().add(cb);
 				}
 			}
 			

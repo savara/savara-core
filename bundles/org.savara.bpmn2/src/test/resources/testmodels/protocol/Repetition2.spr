@@ -3,19 +3,20 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as C
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed, "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest from "http://www.jboss.org/examples/logistics";
 import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http://www.w3.org/2001/XMLSchema";
 
-protocol Repetition2 {
-	role Buyer, Store, CreditAgency;
+protocol Repetition2 (role Buyer) {
+	Buyer introduces Store;
+	Store introduces CreditAgency;
 
 	buy(BuyRequest) from Buyer to Store;
 	
 	checkCredit(CreditCheckRequest) from Store to CreditAgency;
 	
-	par {
-		repeat {
+	parallel {
+		repeat at CreditAgency {
 			checkCredit(CreditRating) from CreditAgency to Store;
 		}
 	} and {
-		repeat {
+		repeat at CreditAgency {
 			checkCredit(CreditRating) from CreditAgency to Store;
 		}
 	}

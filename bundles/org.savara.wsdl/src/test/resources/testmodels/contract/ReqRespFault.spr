@@ -7,8 +7,8 @@ import xsd "CreditCheckRequest" as CreditInformation, "CreditCheckInvalid" as Cr
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(prefix=byr,namespace=http://www.pi4soa.org/ReqRespFault/Buyer) ]]
 [[ Type(prefix=slr,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
-protocol ReqRespFaultProcess {
-	role Buyer, Seller;
+protocol ReqRespFaultProcess(role Buyer) {
+	Buyer introduces Seller;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.pi4soa.org/ReqRespFault/Seller}SellerBehavior) ]]
 	[[ Correlation(request=checkCredit) ]]

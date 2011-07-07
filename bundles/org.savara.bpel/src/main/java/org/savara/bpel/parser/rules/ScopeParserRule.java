@@ -158,8 +158,8 @@ public class ScopeParserRule implements ProtocolParserRule {
 			if (scope.getFaultHandlers() != null &&
 					(scope.getFaultHandlers().getCatch().size() > 0 ||
 							scope.getFaultHandlers().getCatchAll() != null)) {
-				org.scribble.protocol.model.Try te=
-						new org.scribble.protocol.model.Try();
+				org.scribble.protocol.model.Do te=
+						new org.scribble.protocol.model.Do();
 				//te.derivedFrom(this);
 				//te.getBlock().derivedFrom(this);
 				
@@ -170,8 +170,8 @@ public class ScopeParserRule implements ProtocolParserRule {
 				for (int i=0; i < scope.getFaultHandlers().getCatch().size(); i++) {
 					TCatch catchPath=scope.getFaultHandlers().getCatch().get(i);
 					
-					org.scribble.protocol.model.Catch cb=
-						new org.scribble.protocol.model.Catch();
+					org.scribble.protocol.model.Interrupt cb=
+						new org.scribble.protocol.model.Interrupt();
 					//cb.derivedFrom(catchPath);
 					
 					TypeReference tref=new TypeReference();
@@ -202,7 +202,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 						context.removeVariable(faultVar);
 					}
 
-					te.getCatches().add(cb);
+					te.getInterrupts().add(cb);
 				}
 			}
 			

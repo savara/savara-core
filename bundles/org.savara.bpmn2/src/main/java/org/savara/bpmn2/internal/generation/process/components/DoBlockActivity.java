@@ -23,7 +23,7 @@ package org.savara.bpmn2.internal.generation.process.components;
  * This class represents the BPMN activity node for a Perform activity.
  * 
  */
-public class TryBlockActivity extends RunInlineActivity {
+public class DoBlockActivity extends InlineActivity {
 
 	/**
 	 * This constructor initializes the receive state.
@@ -32,7 +32,7 @@ public class TryBlockActivity extends RunInlineActivity {
 	 * @param parent The parent BPMN state
 	 * @param model The BPMN model
 	 */
-	public TryBlockActivity(BPMNActivity parent,
+	public DoBlockActivity(BPMNActivity parent,
 			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(parent, model, notation);

@@ -25,8 +25,8 @@ import xsd "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http
 [[ Type(prefix=pes,namespace=http://www.example.org/policyQuoteEntityService) ]]
 [[ Type(prefix=dmv,namespace=http://dmv.com/drivingRecordService) ]]
 [[ Type(prefix=ca,namespace=http://creditagency.com/creditCheckService) ]]
-protocol PolicyQuoteProcess {
-	role Driver, CreditCheckService, DrivingRecordService, PolicyQuoteCalculationService, PolicyQuoteEntityService, PolicyQuoteProcessService;
+protocol PolicyQuoteProcess(role Driver) {
+	Driver introduces DrivingRecordService, PolicyQuoteProcessService;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.example.org/policyQuoteProcessService}PolicyQuoteProcessService) ]]
 	[[ Correlation(request=receivePolicyQuote) ]]
@@ -39,7 +39,8 @@ protocol PolicyQuoteProcess {
 	receiveDrivingRecord(DrivingRecordResponse) from DrivingRecordService to PolicyQuoteProcessService;
 	[[ SourceComponent(id=//@choreographies.0/@activities.3) ]]
 	choice at PolicyQuoteProcessService {
-		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.0/@activities.0/@activities.0) ]]
+		Driver introduces PolicyQuoteEntityService, PolicyQuoteCalculationService, CreditCheckService;
+		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.0/@activities.0/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={http://creditagency.com/creditCheckService}CreditCheckService) ]]
 		[[ Correlation(request=checkCredit) ]]
 		checkCredit(CreditCheckRequest) from PolicyQuoteProcessService to CreditCheckService;
@@ -67,13 +68,11 @@ protocol PolicyQuoteProcess {
 		[[ Interface(name={http://www.example.org/policyQuoteProcessService}PolicyQuoteProcessService) ]]
 		[[ Correlation(replyTo=receivePolicyQuote) ]]
 		receivePolicyQuote(PolicyQuoteReply) from PolicyQuoteProcessService to Driver;
-		
 	} or {
-		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.1/@activities.0) ]]
-		[[ Interface(name={http://www.example.org/policyQuoteProcessService}PolicyQuoteProcessService) ]]
+		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.1/@activities.0/@exchangeDetails.0) ]]
 		[[ Fault(name=policyQuoteFault) ]]
+		[[ Interface(name={http://www.example.org/policyQuoteProcessService}PolicyQuoteProcessService) ]]
 		[[ Correlation(replyTo=receivePolicyQuote) ]]
 		receivePolicyQuote(PolicyQuoteFault) from PolicyQuoteProcessService to Driver;
-
 	}
 }

@@ -7,24 +7,23 @@ import xsd "CreditCheckRequest" as CreditInformation, "CreditCheckInvalid" as Cr
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(prefix=byr,namespace=http://www.pi4soa.org/ReqRespFault/Buyer) ]]
 [[ Type(prefix=slr,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
-protocol ReqRespFaultProcess {
-	role Buyer, Seller;
+protocol ReqRespFaultProcess(role Buyer) {
+	Buyer introduces Seller;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name={http://www.pi4soa.org/ReqRespFault/Seller}SellerBehavior) ]]
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditInformation) from Buyer to Seller;
 	[[ SourceComponent(id=//@choreographies.0/@activities.1) ]]
 	choice at Seller {
-		[[ Correlation(replyTo=checkCredit) ]]
 		[[ SourceComponent(id=//@choreographies.0/@activities.1/@activities.0/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name={http://www.pi4soa.org/ReqRespFault/Seller}SellerBehavior) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditValid) from Seller to Buyer;
 	} or {
-		[[ Fault(name=insufficientCredit) ]]
-		[[ Correlation(replyTo=checkCredit) ]]
 		[[ SourceComponent(id=//@choreographies.0/@activities.1/@activities.1/@activities.0/@exchangeDetails.0) ]]
+		[[ Fault(name=insufficientCredit) ]]
 		[[ Interface(name={http://www.pi4soa.org/ReqRespFault/Seller}SellerBehavior) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditInvalid) from Seller to Buyer;
-
 	}
 }

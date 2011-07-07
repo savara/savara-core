@@ -59,6 +59,7 @@ public class PerformParserRule implements ParserRule {
 		// Check if context contains an interaction from the performed choreography
 		// that is to be ignored - this would indicate that the perform is contained
 		// within a choice
+		/* TODO: Check if this is required, as using more liberal choice
 		if (context.shouldExpandChoreography(cdl.getChoreography())) {
 			ret = new Block();
 			
@@ -75,7 +76,7 @@ public class PerformParserRule implements ParserRule {
 			roles = CDMProtocolParserUtil.getRoleDeclarations(cdl.getChoreography());
 			
 			if (roles.size() > 0) {
-				RoleList rl=new RoleList();
+				Introduces rl=new Introduces();
 				for (Role r : roles) {
 					rl.getRoles().add(r);
 					context.setState(r.getName(), r);
@@ -89,6 +90,7 @@ public class PerformParserRule implements ParserRule {
 			context.popScope();
 			
 		} else {
+		*/
 			org.scribble.protocol.model.Run run=new org.scribble.protocol.model.Run();
 			
 			if (cdl.getWaitForCompletion() != Boolean.TRUE) {
@@ -146,7 +148,7 @@ public class PerformParserRule implements ParserRule {
 			}
 			
 			ret = run;
-		}
+		//}
 				
 		return(ret);
 	}

@@ -1,3 +1,2 @@
 Contract {http://www.jboss.org/examples/store}Store {
-	Namespace prefix=pur uri=java:org.jboss.savara.examples.purchasing schemaLocation=null
 }

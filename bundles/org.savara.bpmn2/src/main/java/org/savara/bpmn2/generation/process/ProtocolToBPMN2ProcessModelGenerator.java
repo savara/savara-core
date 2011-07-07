@@ -33,11 +33,11 @@ import org.savara.bpmn2.internal.generation.process.components.ParallelActivity;
 import org.savara.bpmn2.internal.generation.process.components.ReceiveActivity;
 import org.savara.bpmn2.internal.generation.process.components.RepeatActivity;
 import org.savara.bpmn2.internal.generation.process.components.RunActivity;
-import org.savara.bpmn2.internal.generation.process.components.RunInlineActivity;
+import org.savara.bpmn2.internal.generation.process.components.InlineActivity;
 import org.savara.bpmn2.internal.generation.process.components.SendActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
-import org.savara.bpmn2.internal.generation.process.components.TryActivity;
-import org.savara.bpmn2.internal.generation.process.components.TryBlockActivity;
+import org.savara.bpmn2.internal.generation.process.components.DoActivity;
+import org.savara.bpmn2.internal.generation.process.components.DoBlockActivity;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.generator.ModelGenerator;
@@ -284,19 +284,13 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * 
 		 * @param elem The perform
 		 */
-		public boolean start(Run elem) {
+		public void accept(Run elem) {
 			AbstractBPMNActivity state=null;
 			
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
-				if (elem.isInline()) {
-					state = new RunInlineActivity(umls, m_modelFactory, m_notationFactory);
-				
-					pushBPMNActivity(state);
-				} else {
-					state = new RunActivity(elem,
+				state = new RunActivity(elem,
 							umls, m_modelFactory, m_notationFactory);					
-				}
 				
 				/* TODO: See if possible to determine who is the initiating party
 				 * in the performed protocol, to establish a link
@@ -328,40 +322,26 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				}
 				*/
 			}
-			
-			return(true);
-		}
-		
-		/**
-		 * This method ends visiting the run element.
-		 * 
-		 * @param elem The run
-		 */
-		public void end(Run elem) {
-			
-			if (elem.isInline()) {
-				popBPMNActivity();
-			}
 		}
 		
 		/**
 		 * This method indicates the start of a
-		 * try escape.
+		 * global escape.
 		 * 
-		 * @param elem The try escape
+		 * @param elem The global escape
 		 * @return Whether to process the contents
 		 */
-		public boolean start(Try elem) {
+		public boolean start(Do elem) {
 			AbstractBPMNActivity state=null;
 			
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
-				state = new TryActivity(elem,
+				state = new DoActivity(elem,
 					umls, m_modelFactory, m_notationFactory);
 			
 				pushBPMNActivity(state);
 				
-				TryBlockActivity inline=new TryBlockActivity(state, m_modelFactory, m_notationFactory);
+				DoBlockActivity inline=new DoBlockActivity(state, m_modelFactory, m_notationFactory);
 				
 				pushBPMNActivity(inline);
 			}
@@ -373,11 +353,11 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * This method indicates the end of a
 		 * try escape.
 		 * 
-		 * @param elem The try escape
+		 * @param elem The global escape
 		 */
-		public void end(Try elem) {
+		public void end(Do elem) {
 			
-			if (getBPMNActivity() instanceof TryBlockActivity) {				
+			if (getBPMNActivity() instanceof DoBlockActivity) {				
 				popBPMNActivity();
 			}
 			
@@ -391,8 +371,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * @param elem The catch block
 		 * @return Whether to process the contents
 		 */
-		public boolean start(Catch elem) {
-			if (getBPMNActivity() instanceof TryBlockActivity) {				
+		public boolean start(Interrupt elem) {
+			if (getBPMNActivity() instanceof DoBlockActivity) {				
 				popBPMNActivity();
 			}
 			
@@ -405,7 +385,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * 
 		 * @param elem The catch block
 		 */
-		public void end(Catch elem) {
+		public void end(Interrupt elem) {
 			//popBPMNActivity();
 		}
 
@@ -501,12 +481,14 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 					}
 
 				} else */
-				if (elem.getParent() instanceof Catch) {
+				/* No longer any interactions associated with the interrupt (old catch) block
+				if (elem.getParent() instanceof Interrupt) {
 					
-					for (Interaction interaction : ((Catch)elem.getParent()).getInteractions()) {
+					for (Interaction interaction : ((Interrupt)elem.getParent()).getInteractions()) {
 						accept(interaction);
 					}
 				}
+				*/
 				
 			} catch(Exception e) {
 				logger.severe("Failed to create sequence state: "+e);

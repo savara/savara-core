@@ -121,9 +121,12 @@ public class ModelChangeUtilsTest extends TestCase {
 		Contract c2=new Contract();
 		r2.getProperties().put(Contract.class.getName(), c2);
 				
-		RoleList rl=new RoleList();
-		rl.getRoles().add(r2);
-		conv.getBlock().getContents().add(rl);
+		//RoleList rl=new RoleList();
+		//rl.getRoles().add(r2);
+		//conv.getBlock().getContents().add(rl);
+		ParameterDefinition rpd=new ParameterDefinition();
+		rpd.setName(r2.getName());
+		conv.getParameterDefinitions().add(rpd);
 		
 		ModelChangeUtils.addContract(context, r1, c1);
 		ModelChangeUtils.addContract(context, r2, c2);
@@ -200,9 +203,12 @@ public class ModelChangeUtilsTest extends TestCase {
 		Role r2=new Role();
 		r2.setName(MY_ROLE);
 		
-		RoleList rl=new RoleList();
-		rl.getRoles().add(r2);
-		conv.getBlock().getContents().add(rl);
+		//RoleList rl=new RoleList();
+		//rl.getRoles().add(r2);
+		//conv.getBlock().getContents().add(rl);
+		ParameterDefinition rpd=new ParameterDefinition();
+		rpd.setName(r2.getName());
+		conv.getParameterDefinitions().add(rpd);
 		
 		Protocol subconv=new Protocol();
 		subconv.setName(SUB_PROTOCOL);
@@ -224,10 +230,6 @@ public class ModelChangeUtilsTest extends TestCase {
 		Contract c2=new Contract();
 		r3.getProperties().put(Contract.class.getName(), c2);
 
-		RoleList rl2=new RoleList();
-		rl2.getRoles().add(r3);
-		subconv.getBlock().getContents().add(rl2);
-		
 		// Add contracts for subconv as if root, as normally
 		// this would be done by pushing the contracts, so this
 		// is just being used to setup the appropriate context
