@@ -61,7 +61,7 @@ public class ChoiceParserRule implements ParserRule {
 		org.scribble.protocol.model.Activity ret=null;
 		org.pi4soa.cdl.Choice cdl=(org.pi4soa.cdl.Choice)cdlType;
 		java.util.List<Block> blocks=new java.util.Vector<Block>();
-		Role fromRole=null;
+		//Role fromRole=null;
 		java.util.List<Role> toRoles=new java.util.Vector<Role>();
 		
 		// Check if all paths are associated with the same from and to role
@@ -233,21 +233,6 @@ public class ChoiceParserRule implements ParserRule {
 					
 					blocks.add(block);
 					//}
-					
-					// Identify 'from' role
-					if (fromRole == null) {
-						java.util.List<ModelObject> list=org.scribble.protocol.util.InteractionUtil.getInitialInteractions(block);
-					
-						for (ModelObject mo : list) {
-							if (mo instanceof org.scribble.protocol.model.Interaction) {
-								fromRole = ((org.scribble.protocol.model.Interaction)mo).getFromRole();
-								
-								if (fromRole != null) {
-									break;
-								}
-							}
-						}
-					}
 				}
 				
 				context.popState();
@@ -271,11 +256,6 @@ public class ChoiceParserRule implements ParserRule {
 		
 		((org.scribble.protocol.model.Choice)ret).
 				getBlocks().addAll(blocks);
-		
-		if (fromRole != null) {
-			((org.scribble.protocol.model.Choice)ret).
-						setRole(new Role(fromRole));
-		}
 		
 		if (ret != null) {
 			Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);

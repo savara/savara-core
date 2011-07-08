@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="RequestForQuote_SupplierQuoteEngine" targetNamespace="http://www.pi4soa.org/ESBBroker/Supplier">
-    <import importType="http://schemas.xmlsoap.org/wsdl/" location="RequestForQuote_SupplierQuoteEngine.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
-    <import importType="http://schemas.xmlsoap.org/wsdl/" location="RequestForQuote_SupplierQuoteEngineArtifacts.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ESBBrokerProcess_SupplierQuoteEngine" targetNamespace="http://www.pi4soa.org/ESBBroker/Supplier">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_SupplierQuoteEngine.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_SupplierQuoteEngineArtifacts.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
     <partnerLinks>
         <partnerLink myRole="SupplierBehavior" name="BrokerToSupplierQuoteEngine" partnerLinkType="spr:BrokerToSupplierQuoteEngineServiceLT"/>
     </partnerLinks>

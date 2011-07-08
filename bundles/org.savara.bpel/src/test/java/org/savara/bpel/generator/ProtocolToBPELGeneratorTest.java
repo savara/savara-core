@@ -40,18 +40,17 @@ public class ProtocolToBPELGeneratorTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("Protocol->BPEL Generator Tests");
 
-        suite.addTest(new ProtocolToBPELTester("ESBBroker", "Buyer"));     
-
-        // TODO: SAVARA-243
-        //suite.addTest(new ProtocolToBPELTester("ESBBroker", "Broker"));           
+        // TODO: SCRIBBLE-106 Uncomment when fixed and release
         //suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierTxnProcessor"));
-        //suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierQuoteEngine"));
         
         // TODO: SAVARA-225 - participant types only used in sub-choreographies need to be
         // declared as roles in just those sub-protocols
         //suite.addTest(new ProtocolToBPELTester("ESBBroker", "CreditAgency"));
 
-
+        suite.addTest(new ProtocolToBPELTester("ESBBroker", "Buyer"));     
+        suite.addTest(new ProtocolToBPELTester("ESBBroker", "Broker"));  
+        suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierQuoteEngine"));
+        
         suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "Buyer"));
         suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "CreditAgency"));
         suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "Store"));
@@ -59,10 +58,8 @@ public class ProtocolToBPELGeneratorTest {
         suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Buyer"));
         suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "CreditAgency"));
         suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Store"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Logistics"));
         
-        // TODO:
-        //suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Logistics"));
-
         suite.addTest(new ProtocolToBPELTester("ReqRespFault", "Buyer"));
         suite.addTest(new ProtocolToBPELTester("ReqRespFault", "Seller"));
         
