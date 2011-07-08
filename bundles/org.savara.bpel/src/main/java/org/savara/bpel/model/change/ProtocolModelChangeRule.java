@@ -113,6 +113,7 @@ public class ProtocolModelChangeRule extends AbstractBPELModelChangeRule {
 			addImport(context, bpelModel, conv, conv.getRole());
 
 			// Add import statements for partner roles
+			/*
 			final java.util.List<Role> roles=new java.util.Vector<Role>();
 			
 			conv.getParent().visit(new DefaultVisitor() {
@@ -125,6 +126,8 @@ public class ProtocolModelChangeRule extends AbstractBPELModelChangeRule {
 					}
 				}
 			});
+			*/
+			java.util.List<Role> roles=conv.getRoles();
 			
 			for (Role r : roles) {
 				addImport(context, bpelModel, conv, r);

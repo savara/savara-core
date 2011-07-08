@@ -30,9 +30,10 @@ import org.savara.protocol.model.util.TypeSystem;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
+import org.scribble.protocol.model.Choice;
 import org.scribble.protocol.model.DataType;
 
-public class ProtocolModelConverterRuleImpl implements ParserRule {
+public class ProtocolModelParserRule implements ParserRule {
 
 	/**
 	 * This method determines whether the rule can be applied
@@ -157,6 +158,40 @@ public class ProtocolModelConverterRuleImpl implements ParserRule {
 						return(true);
 					}
 				});
+				
+				// Initialize any choices
+				ret.getProtocol().visit(new DefaultVisitor() {
+					
+					public boolean start(Choice elem) {
+						Role fromRole=null;
+
+						for (Block b : elem.getBlocks()) {
+							// Identify 'from' role
+							if (fromRole == null) {
+								java.util.List<ModelObject> list=org.scribble.protocol.util.InteractionUtil.getInitialInteractions(b);
+							
+								for (ModelObject mo : list) {
+									if (mo instanceof org.scribble.protocol.model.Interaction) {
+										fromRole = ((org.scribble.protocol.model.Interaction)mo).getFromRole();
+										
+										if (fromRole != null) {
+											break;
+										}
+									}
+								}
+							}
+							if (fromRole != null) {
+								break;
+							}
+						}
+						
+						if (fromRole != null) {
+							elem.setRole(new Role(fromRole));
+						}
+
+						return(true);
+					}
+				});
 			}
 		} else {
 			logger.severe("Failed to find conversation conversion rule");
@@ -239,5 +274,5 @@ public class ProtocolModelConverterRuleImpl implements ParserRule {
 		}
 	}
 
-	private static Logger logger = Logger.getLogger(ProtocolModelConverterRuleImpl.class.getName());
+	private static Logger logger = Logger.getLogger(ProtocolModelParserRule.class.getName());
 }

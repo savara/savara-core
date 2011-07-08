@@ -30,7 +30,15 @@ import org.scribble.protocol.model.*;
  * The default implementation of the converter context.
  */
 public class DefaultParserContext implements ParserContext {
+	
+	private static Logger logger = Logger.getLogger(DefaultParserContext.class.getName());
 
+	//private ModelReference m_source=null;
+	private Scope m_scope=new Scope();
+	private java.util.List<Scope> m_scopeStack=new java.util.Vector<Scope>();
+	private java.util.List<Run> m_composeActivities=new java.util.Vector<Run>();
+	private java.util.List<Protocol> m_protocols=new java.util.Vector<Protocol>();
+	private java.util.List<ExchangeDetails> m_ignore=new java.util.Vector<ExchangeDetails>();
 	private FeedbackHandler m_feedbackHandler=null;
 	
 	/**
@@ -214,13 +222,4 @@ public class DefaultParserContext implements ParserContext {
 		
 		return(ret);
 	}
-	
-	private static Logger logger = Logger.getLogger(DefaultParserContext.class.getName());
-
-	//private ModelReference m_source=null;
-	private Scope m_scope=new Scope();
-	private java.util.List<Scope> m_scopeStack=new java.util.Vector<Scope>();
-	private java.util.List<Run> m_composeActivities=new java.util.Vector<Run>();
-	private java.util.List<Protocol> m_protocols=new java.util.Vector<Protocol>();
-	private java.util.List<ExchangeDetails> m_ignore=new java.util.Vector<ExchangeDetails>();
 }

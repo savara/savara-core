@@ -46,7 +46,7 @@ public class ParserRuleFactory {
 	}
 	
 	private static ParserRule[] m_rules={
-		new ProtocolModelConverterRuleImpl(),
+		new ProtocolModelParserRule(),
 		new ProtocolParserRule(),
 		new ParallelParserRule(),
 		new ChoiceParserRule(),
