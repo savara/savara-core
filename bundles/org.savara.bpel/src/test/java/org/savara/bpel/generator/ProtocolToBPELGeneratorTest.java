@@ -39,9 +39,6 @@ public class ProtocolToBPELGeneratorTest {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("Protocol->BPEL Generator Tests");
-
-        // TODO: SCRIBBLE-106 Uncomment when fixed and release
-        //suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierTxnProcessor"));
         
         // TODO: SAVARA-225 - participant types only used in sub-choreographies need to be
         // declared as roles in just those sub-protocols
@@ -50,6 +47,7 @@ public class ProtocolToBPELGeneratorTest {
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "Buyer"));     
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "Broker"));  
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierQuoteEngine"));
+        suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierTxnProcessor"));
         
         suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "Buyer"));
         suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "CreditAgency"));
