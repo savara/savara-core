@@ -60,8 +60,6 @@ public class ScenarioSimulatorMain {
 			if (is != null) {
 				simulation = SimulationModelUtil.deserialize(is);
 				
-				System.err.println("SIMULATION="+simulation);
-				
 				is.close();
 			}
 		} catch(Exception e) {
@@ -71,7 +69,21 @@ public class ScenarioSimulatorMain {
 		if (simulation != null) {
 			ScenarioSimulatorMain simulator=new ScenarioSimulatorMain();
 			
-			System.exit(simulator.simulate(simulation));
+			int exitCode=simulator.simulate(simulation);
+			
+			// Flush stdout/err
+			System.out.flush();
+			System.err.flush();
+			
+			try {
+				synchronized(simulator) {
+					simulator.wait(1000);
+				}
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			System.exit(exitCode);
 		} else {
 			System.exit(1);
 		}
