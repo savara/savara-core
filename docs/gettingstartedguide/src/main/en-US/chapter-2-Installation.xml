@@ -20,16 +20,6 @@
       </para>
       <itemizedlist>
         <listitem>
-          <para>BPMN Modeller</para>
-        </listitem>
-      </itemizedlist>
-      <para>
-        When Eclipse has been launched, go to the
-        <emphasis role="italics">Help-&gt;Install New Software..</emphasis>
-        menu item. Select the Eclipse update site for the version of Eclipse (e.g. Helios). Within the SOA Development category, select the BPMN Project Feature. Follow the instructions to accept the license and then restart Eclipse after the plugins have been installed.
-      </para>
-      <itemizedlist>
-        <listitem>
           <para>Savara Eclipse Tools</para>
         </listitem>
       </itemizedlist>
@@ -61,7 +51,6 @@
           category. However for the most uptodate version of the Savara tools, it is recommended to load them from the Savara update site.
         </para>
       </note>
-      <para>Labels parameters</para>
     </section>
     <section id="sid-3735773">
       
@@ -83,10 +72,10 @@
       </itemizedlist>
       <para>
         <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>The Eclipse import menu</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735773/ImportMenu.jpg"/>
+              <imagedata fileref="author/download/attachments/3735773/ImportMenu.jpg" width="2in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -102,10 +91,10 @@
       </itemizedlist>
       <para>
         <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Import dialog window</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735773/ImportDialog.jpg"/>
+              <imagedata fileref="author/download/attachments/3735773/ImportDialog.jpg" width="4in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -117,10 +106,10 @@
       </itemizedlist>
       <para>
         <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Locate the examples archive</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735773/PurchasingImport.png"/>
+              <imagedata fileref="author/download/attachments/3735773/PurchasingImport.png" width="4in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -128,10 +117,10 @@
       <para>Once imported, the Eclipse navigator will list the sample projects:</para>
       <para>
         <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Purchasing example project listing</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735773/PurchasingProject.png"/>
+              <imagedata fileref="author/download/attachments/3735773/PurchasingProject.png" width="2in"/>
             </imageobject>
           </mediaobject>
         </figure>

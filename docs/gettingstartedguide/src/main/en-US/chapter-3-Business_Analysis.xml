@@ -14,10 +14,10 @@
       </para>
       <para>
         <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>The roles and their relationships within a choreography</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735774/RolesAndRelationships.png"/>
+              <imagedata fileref="author/download/attachments/3735774/RolesAndRelationships.png" width="5in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -29,10 +29,10 @@
       </para>
       <para>
         <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Additional type information (including Participant Types) within the choreography</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735774/ParticipantAndOtherTypes.png"/>
+              <imagedata fileref="author/download/attachments/3735774/ParticipantAndOtherTypes.png" width="3in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -56,10 +56,10 @@
       </para>
       <para>
         <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Scenario representation a purchasing usecase prior to verification</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735776/SuccessfulPurchasePreTest.png"/>
+              <imagedata fileref="author/download/attachments/3735776/SuccessfulPurchasePreTest.png" width="6in"/>
             </imageobject>
           </mediaobject>
         </figure>

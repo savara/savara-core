@@ -81,10 +81,10 @@
       </para>
       <para>
         <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>An example of the behavioural description associated with a choreography</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735780/PurchaseGoods.jpg"/>
+              <imagedata fileref="author/download/attachments/3735780/PurchaseGoods.jpg" width="6in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -101,10 +101,10 @@
         </para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>The dialog used to specify what models and simulators should be used to verify the behaviour of against a scenario</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/ScenarioSimulation1.png"/>
+                <imagedata fileref="author/download/attachments/3735780/ScenarioSimulation1.png" width="3in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -112,10 +112,10 @@
         <para>When simulating all roles against a single model (i.e. a choreography), then simply browser for the model (using the ... button) - which in this case is the PurchaseGoods.cdm file in the same Eclipse project, and then when asked "Should model be set for all roles", press the "Yes" button. This will setup the simulation configuration for all roles:</para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>An example of a simulation configuration when verifying a scenario against a choreography</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/ScenarioSimulation2.png"/>
+                <imagedata fileref="author/download/attachments/3735780/ScenarioSimulation2.png" width="3in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -124,10 +124,10 @@
         <para>When the "Simulate" button has been pressed, and the simulation is complete, the scenario should look like the following image, indicating that the scenario completed successfully.</para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Scenario showing the results of a successful verification</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/SuccessfulPurchaseValid2.png"/>
+                <imagedata fileref="author/download/attachments/3735780/SuccessfulPurchaseValid2.png" width="6in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -141,10 +141,10 @@
         </para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Scenario showing the results of an unsuccessful verification</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/InvalidStoreBehaviour.png"/>
+                <imagedata fileref="author/download/attachments/3735780/InvalidStoreBehaviour.png" width="6in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -171,10 +171,10 @@
         </para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Select the HTML item from the Other menu in the Export dialog</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/ExportHTMLMenu.png"/>
+                <imagedata fileref="author/download/attachments/3735780/ExportHTMLMenu.png" width="3in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -182,10 +182,10 @@
         <para>The next step is to provide the location and name of the HTML file to be generated.</para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Specify the HTML file location</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/ExportHTMLDialog.png"/>
+                <imagedata fileref="author/download/attachments/3735780/ExportHTMLDialog.png" width="3in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -193,10 +193,10 @@
         <para>If the HTML has been generated within the scope of Eclipse project, then refresh the relevant folder to show the file and open the file with the Eclipse web browser (as shown below). If outside the Eclipse project, then use a normal web browser to view the file.</para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>The exported HTML</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735780/ExportedHTML.png"/>
+                <imagedata fileref="author/download/attachments/3735780/ExportedHTML.png" width="6in"/>
               </imageobject>
             </mediaobject>
           </figure>

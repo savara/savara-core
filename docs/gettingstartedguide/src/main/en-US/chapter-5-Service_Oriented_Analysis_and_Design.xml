@@ -7,46 +7,7 @@
     <section id="sid-3735781">
       
       <title>Service Oriented Design</title>
-      <para>In the current SAVARA tooling, the main functionality in the Service Oriented Design phase is the generation of BPMN (version 1) diagrams. These diagrams can be used as guidance for the development teams that are implementing the individual services.</para>
-      <para>It is also possible to extend the generated BPMN (version 1) diagrams to include service logic. However it should be noted that changes to the choreography or BPMN diagrams will not be synchronized/merged. So changes in the choreography will not be checked for conformance against previously generated BPMN diagrams, and it will be necessary to generate new 'service contract' BPMN (version 1) diagrams to reflect changes in behaviour of a service within the updated choreography.</para>
-      <para>In future versions of the SAVARA, based on BPMN2, it will be possible to formally check BPMN2 process models for conformance against a choreography model, and potentially synchronize differences in _externally observable behaviour_ between them.</para>
-      <para>
-        To generate a BPMN (version 1) diagram from a choreography, select the
-        <emphasis role="italics">Export</emphasis>
-        menu item associated with the choreography file, and select the
-        <emphasis role="italics">Other-&gt;BPMN</emphasis>
-        option.
-      </para>
-      <para>
-        <figure>
-<title>TODO InformalFigure image title empty</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="author/download/attachments/3735781/ExportBPMNMenu.png"/>
-            </imageobject>
-          </mediaobject>
-        </figure>
-      </para>
-      <para>Once the option has been selected, you will be asked to select the location where the generated BPMN diagrams should be stored. A diagram will be created containing all of the participants involved in the choreography in a single collaboration diagram.</para>
-      <para>
-        Select a folder that is located within a project in your Eclipse workspace. Once the folder has been chosen, the diagrams will be generated. To see them within the Eclipse project, you will need to
-        <emphasis role="italics">refresh</emphasis>
-        the relevant folder.
-      </para>
-      <para>
-        The generated diagram will appear as two files, one contains the underlying BPMN model (i.e. the information about the tasks, control links, message links, etc.) and the other file contains the diagram information (i.e. node positions, etc). Double click on the file with the
-        <code>.bpmn_diagram</code>
-        suffix to view the diagram in the Eclipse BPMN editor.
-      </para>
-      <para>
-        <figure>
-<title>TODO InformalFigure image title empty</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="author/download/attachments/3735781/ExportedBPMN.png"/>
-            </imageobject>
-          </mediaobject>
-        </figure>
-      </para>
+      <para>In the current SAVARA tooling, the main functionality in the Service Oriented Design phase is the generation of BPMN2 diagrams. These diagrams can be used as guidance for the development teams that are implementing the individual services (i.e. as design documents) or as the basis for the development (i.e. by using the BPMN2 models as executable processes).</para>
+      <para>It is also possible to extend the generated BPMN2 diagrams to include service logic. However it should be noted that changes to the choreography or BPMN2 diagrams will not be synchronized/merged. In future versions of SAVARA it will be possible to formally check BPMN2 process models for conformance against a choreography model, and potentially synchronize differences in <emphasis>externally observable behaviour</emphasis> between them.</para>
     </section>
   </chapter>

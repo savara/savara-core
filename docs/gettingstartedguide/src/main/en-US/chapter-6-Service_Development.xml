@@ -27,10 +27,10 @@
         </para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Generating WS-BPEL based services</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735783/GenerateServiceMenu.png"/>
+                <imagedata fileref="author/download/attachments/3735783/GenerateServiceMenu.png" width="5in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -38,10 +38,10 @@
         <para>This will display a dialog listing the possible services that can be generated from this choreography, with a proposed Eclipse project name, and the option to select a service type (in this case BPEL).</para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Dialog for generating services, with the <emphasis>BPEL</emphasis> service type selected</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735783/GenerateServiceBPEL.png"/>
+                <imagedata fileref="author/download/attachments/3735783/GenerateServiceBPEL.png" width="4in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -96,10 +96,10 @@
         </para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Dialog for generating services, with the <emphasis>SCA Java</emphasis> service type selected</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735904/GenerateServiceSCAJava.png"/>
+                <imagedata fileref="author/download/attachments/3735904/GenerateServiceSCAJava.png" width="4in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -131,7 +131,7 @@
         <para>
           To highlight the differences between the original generated version, and the completed version, simply select both files and use the
           <emphasis role="italics">Compare With-&gt;Each Other</emphasis>
-          menu item.Labels parameters
+          menu item.
         </para>
       </section>
       <section id="sid-3735904_SCAJava-VerifyingtheSCAJavaimplementationagainstaScenario">
@@ -157,10 +157,10 @@
         </para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Dialog for selecting the model for simulation against a particular role in a scenario</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735904/FileDialogStoreComposite.png"/>
+                <imagedata fileref="author/download/attachments/3735904/FileDialogStoreComposite.png" width="4in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -168,10 +168,10 @@
         <para>When the SCA composite has been selected, then it will automatically set the simulator to be "SCA simulator" and clear the model role - this is because the model role is not relevant as the service implementation represents a single role, rather than a collection of roles as in the case of a choreography being used for the model.</para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Simulation dialog configured to verify a scenario against three separate SCA composite models, each implementing a role within the scenario</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735904/ScenarioSimulationSCA.png"/>
+                <imagedata fileref="author/download/attachments/3735904/ScenarioSimulationSCA.png" width="3in"/>
               </imageobject>
             </mediaobject>
           </figure>
@@ -179,10 +179,10 @@
         <para>Once all of the roles have been initialised, then press the "Simulate" button. Unlike the verification against a choreography model, which is pure simulation, when the SCA simulator is used and configured with a particular SCA composite file, then the simulation is performed by executing the service implementation. The simulation output is the same though:</para>
         <para>
           <figure>
-<title>TODO InformalFigure image title empty</title>
+<title>Scenario verified against three SCA service implementations</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735904/SimulateSuccessfulPurchaseSCA.png"/>
+                <imagedata fileref="author/download/attachments/3735904/SimulateSuccessfulPurchaseSCA.png" width="6in"/>
               </imageobject>
             </mediaobject>
           </figure>
