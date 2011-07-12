@@ -132,9 +132,11 @@ public class MessageStoreTest {
 			mesg.setOperation(op);
 			mesg.setBody("hello");
 			
+			/*
 			synchronized(send) {
 				send.wait(500);
 			}
+			*/
 
 			mstore.waitForSendEvent(mesg);
 			
@@ -149,7 +151,7 @@ public class MessageStoreTest {
 	
 	@Test
 	public void testHandleReceiveEvent1() {
-		ReceiveEvent receive=new ReceiveEvent();
+		final ReceiveEvent receive=new ReceiveEvent();
 		receive.setOperationName("op");
 		
 		Parameter p1=new Parameter();
@@ -157,12 +159,20 @@ public class MessageStoreTest {
 		
 		receive.getParameter().add(p1);
 		
-		try {
-			MessageStore mstore=new MessageStore();
+		try {			
+			final MessageStore mstore=new MessageStore();
 			
-			SimulationHandler handler=new TestSimulationHandler();
+			final SimulationHandler handler=new TestSimulationHandler();
 			
-			mstore.handleReceiveEvent(receive, handler);
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						mstore.handleReceiveEvent(receive, handler);
+					} catch(Exception e) {
+						fail("Failed to handle receive event: "+e);
+					}
+				}
+			}).start();
 			
 			Operation op=new OperationImpl();
 			op.setName("op");
@@ -213,10 +223,12 @@ public class MessageStoreTest {
 				}
 			}).start();
 			
+			/*
 			synchronized(receive) {
 				// Wait until receive event has been registered
 				receive.wait(100);
 			}
+			*/
 
 			SimulationHandler handler=new TestSimulationHandler();
 			
