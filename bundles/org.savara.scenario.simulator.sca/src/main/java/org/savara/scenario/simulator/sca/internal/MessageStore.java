@@ -44,7 +44,9 @@ public class MessageStore {
 	
 	private java.util.List<ReceiveEvent> m_receiveEvents=new java.util.Vector<ReceiveEvent>();
 	private java.util.concurrent.SynchronousQueue<SendEvent> m_sendEvents=
-							new java.util.concurrent.SynchronousQueue<SendEvent>();
+			new java.util.concurrent.SynchronousQueue<SendEvent>();
+	//private java.util.concurrent.SynchronousQueue<SendEvent> m_sentEvents=
+	//		new java.util.concurrent.SynchronousQueue<SendEvent>();
 	private SimulationHandler m_handler=null;
 	private SimulationContext m_context=null;
 
@@ -66,6 +68,11 @@ public class MessageStore {
 			m_handler.unexpected(send);
 		}
 		
+		synchronized(send) {
+			send.notifyAll();
+		}
+		
+		//m_sentEvents.offer(send, 5000, TimeUnit.MILLISECONDS);
 	}
 	
 	protected String getValue(String path) {
@@ -278,8 +285,15 @@ public class MessageStore {
 		// TODO: Need better way to tie receive event with a particular simulation handler
 		// in case multiple simulations done?
 		m_handler = handler;
-		
-		m_sendEvents.offer(send, 5000, TimeUnit.MILLISECONDS);
+
+		synchronized(send) {
+			m_sendEvents.offer(send, 5000, TimeUnit.MILLISECONDS);
+			
+			send.wait(20000);
+		} 
+
+		// Wait for event to be processed
+		//m_sentEvents.take();
 	}
 	
 	public void handleReceiveEvent(ReceiveEvent receive, SimulationHandler handler) throws Exception {
@@ -287,10 +301,14 @@ public class MessageStore {
 		// in case multiple simulations done?
 		m_handler = handler;
 		
-		synchronized(m_receiveEvents) {
+		synchronized(receive) {
 			m_receiveEvents.add(receive);
 			
-			m_receiveEvents.notifyAll();
+			synchronized(m_receiveEvents) {
+				m_receiveEvents.notifyAll();
+			}
+			
+			receive.wait(20000);
 		}
 	}
 	
@@ -337,6 +355,10 @@ public class MessageStore {
 						// Will only report unexpected if the service cannot accept
 						// the message.
 						m_handler.processed(receive);
+						
+						synchronized(receive) {
+							receive.notifyAll();
+						}
 						
 						// Check if exception needs to be generated
 						if (excDType != null) {
