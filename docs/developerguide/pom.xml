@@ -48,12 +48,12 @@
 			  </dependency>
 			</dependencies>
 			<configuration>
-			  <sourceDocumentName>master.xml</sourceDocumentName>
+			  <sourceDocumentName>Developer_Guide.xml</sourceDocumentName>
 			  <sourceDirectory>${basedir}/src/main</sourceDirectory>
 			  <imageResource>
 			    <directory>${basedir}/src/main</directory>
 			    <includes>
-			      <include>**/images/**/*</include>
+			      <include>author/**/*</include>
 			    </includes>
 			  </imageResource>
 		            <formats>
