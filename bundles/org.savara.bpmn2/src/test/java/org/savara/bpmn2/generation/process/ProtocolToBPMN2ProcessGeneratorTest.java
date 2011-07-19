@@ -43,10 +43,10 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
         TestSuite suite = new TestSuite("Protocol->BPMN2 Generator Tests");
 
         // TODO: SAVARA-244
-        //suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3"));
-        //suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition1"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition1"));
         //suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition2"));
-        //suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoodsWithCancel"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoodsWithCancel"));
         
         suite.addTest(new ProtocolToBPMN2GeneratorTester("Run1"));
         suite.addTest(new ProtocolToBPMN2GeneratorTester("Parallel1"));
