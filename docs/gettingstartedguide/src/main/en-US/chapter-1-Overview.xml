@@ -17,6 +17,9 @@
         <para>Generation of documentation based on the choreography</para>
       </listitem>
       <listitem>
+        <para>Generation of service design using BPMN2</para>
+      </listitem>
+      <listitem>
         <para>Generation of service implementation using WS-BPEL</para>
       </listitem>
       <listitem>

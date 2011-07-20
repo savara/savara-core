@@ -8,6 +8,46 @@
       
       <title>Service Oriented Design</title>
       <para>In the current SAVARA tooling, the main functionality in the Service Oriented Design phase is the generation of BPMN2 diagrams. These diagrams can be used as guidance for the development teams that are implementing the individual services (i.e. as design documents) or as the basis for the development (i.e. by using the BPMN2 models as executable processes).</para>
-      <para>It is also possible to extend the generated BPMN2 diagrams to include service logic. However it should be noted that changes to the choreography or BPMN2 diagrams will not be synchronized/merged. In future versions of SAVARA it will be possible to formally check BPMN2 process models for conformance against a choreography model, and potentially synchronize differences in <emphasis>externally observable behaviour</emphasis> between them.</para>
+      <para>
+        It is also possible to extend the generated BPMN2 diagrams to include service logic. However it should be noted that changes to the choreography or BPMN2 diagrams will not be synchronized/merged. In future versions of SAVARA it will be possible to formally check BPMN2 process models for conformance against a choreography model, and potentially synchronize differences in
+        <emphasis role="strong">
+          <emphasis role="italics">externally observable behaviour</emphasis>
+        </emphasis>
+        between them.
+      </para>
+      <para>
+        To generate the BPMN2 processes for a choreography, select the
+        <emphasis role="italics">Savara-&gt;Generate-&gt;Service</emphasis>
+        menu item, and then for each relevant participant choose the
+        <emphasis role="strong">
+          <emphasis role="italics">BPMN2 Process</emphasis>
+        </emphasis>
+        service type:
+      </para>
+      <para>
+        <figure>
+<title>Select the <emphasis>BPMN2 Process</emphasis> Service Type</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/3735781/GenerateServiceBPMN2.png" width="4in"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
+      <para>
+        Once the "Ok" button has been pressed, separate projects will be created for each participant, containing the appropriate BPMN2 process for that participant. For example, the
+        <emphasis role="italics">Store</emphasis>
+        participant will have:
+      </para>
+      <para>
+        <figure>
+<title>Store participant generated as a BPMN2 process</title>
+          <mediaobject>
+            <imageobject>
+              <imagedata fileref="author/download/attachments/3735781/StoreBPMN2.png" width="6in"/>
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </para>
     </section>
   </chapter>

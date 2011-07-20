@@ -55,16 +55,11 @@
     <section id="sid-3735773">
       
       <title>Importing Samples into Eclipse</title>
-      <para>The examples are located here:</para>
-      <orderedlist>
-        <listitem>
-          <para>
-            <ulink url="http://downloads.jboss.org/savara/examples/purchasing.zip">Purchasing</ulink>
-            example
-          </para>
-        </listitem>
-      </orderedlist>
-      <para>Once the SAVARA Eclipse Tool distribution has been correctly installed, and the relevant example(s) downloaded, then use the following steps to import the project:</para>
+      <para>
+        For the purpose of the Getting Started Guide, we will be using the Purchasing example located here:
+        <ulink url="http://downloads.jboss.org/savara/examples/purchasing.zip"/>
+      </para>
+      <para>Once the SAVARA Eclipse Tool distribution has been correctly installed, and the example zip downloaded, then use the following steps to import the project:</para>
       <itemizedlist>
         <listitem>
           <para>Select the 'Import...' menu item, associated with the popup menu on the background of the left panal (Navigator or Package depending on perspective being viewed).</para>
