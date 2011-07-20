@@ -9,12 +9,7 @@
     <section id="sid-3735783">
       
       <title>BPEL</title>
-      <para>
-        The tools include a capability to generate a service implementation, for a participant in a choreography, using WS-BPEL. A completed version of the
-        <emphasis role="italics">PurchasingGoods</emphasis>
-        example can be found in the samples directory (which can be imported into Eclipse).
-      </para>
-      <para>However if you wish to generate the example from scratch, the follow the instructions in this section. More information about how to use this feature can be found in the User Guide.</para>
+      <para>The tools include a capability to generate a service implementation, for a participant in a choreography, using WS-BPEL.</para>
       <section id="sid-3735783_WS-BPEL-GeneratingWSBPELbasedServices">
         
         <title>Generating WS-BPEL based Services</title>
@@ -49,6 +44,8 @@
         <para>
           Press the 'Ok' button and this will create a single a BPEL project for the
           <emphasis role="italics">Store</emphasis>
+          ,
+          <emphasis role="italics">Logistics</emphasis>
           and
           <emphasis role="italics">CreditAgency</emphasis>
           participants.
@@ -72,6 +69,49 @@
           To highlight the differences between the original generated version, and the completed version, simply select both files and use the
           <emphasis role="italics">Compare With-&gt;Each Other</emphasis>
           menu item.
+        </para>
+      </section>
+      <section id="sid-3735783_WS-BPEL-Testingtheimplementation">
+        
+        <title>Testing the implementation</title>
+        <para>Once the implementation details have been added, the BPEL processes for the three particpiants can be deployed to Riftsaw (BPEL engine) for execution.</para>
+        <para>
+          The processes can either be deployed using
+          <ulink url="http://www.jboss.org/tools">JBossTools</ulink>
+          or manually. To manually deploy, package the contents of the 'bpelContent' folder, within each project, into a jar named after the participant (ensure that the .bpel, .wsdl and deploy.xml files are contained at the top level of the jar).
+        </para>
+        <para>
+          Once Riftsaw has been installed into your JBossAS 5.1 environment and the server has been started, then place the jars in the JBossAS
+          <emphasis role="italics">server/default/deploy</emphasis>
+          folder. Then the next step is to send a test message using an appropriate SOAP client (e.g.
+          <ulink url="http://www.soapui.org/">soapui</ulink>
+          ). Initially send the following message:
+        </para>
+        <informalexample>
+          <programlisting>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:stor="http://www.jboss.org/examples/store"&gt;
+   &lt;soapenv:Header/&gt;
+   &lt;soapenv:Body&gt;
+      &lt;stor:BuyRequest id="1" product="car" customer="Joe"/&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</programlisting>
+        </informalexample>
+        <para>
+          This will result in a normal
+          <emphasis role="italics">BuyConfirmed</emphasis>
+          response. But if you send:
+        </para>
+        <informalexample>
+          <programlisting>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:stor="http://www.jboss.org/examples/store"&gt;
+   &lt;soapenv:Header/&gt;
+   &lt;soapenv:Body&gt;
+      &lt;stor:BuyRequest id="1" product="car" customer="Fred"/&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</programlisting>
+        </informalexample>
+        <para>
+          the credit agency will return a fault, resulting in an
+          <emphasis role="italics">AccountNotFound</emphasis>
+          fault.
         </para>
       </section>
     </section>
@@ -113,11 +153,7 @@
           <emphasis role="italics">CreditAgency</emphasis>
           participants.
         </para>
-        <para>
-          Each project will contain a single
-          <code>bpel</code>
-          folder containing the WS-BPEL process definition for the participant, a list of relevant WSDL files and a deployment descriptor file for use with RiftSaw. However the WS-BPEL and WSDL files are standard, so can be deployed to any WS-BPEL 2.0 compliant engine.
-        </para>
+        <para>Each project will be generated as a Java project, containing the relevant Java interfaces and classes for the service implementation, the WSDL and XSD files for the public service interface, and the SCA composite descriptor.</para>
       </section>
       <section id="sid-3735904_SCAJava-AddingImplementationDetails">
         
@@ -126,7 +162,17 @@
         <para>
           Therefore a completed version of the SCA Java service implementation, for the creditAgency, logistics and store participants, can be found in the
           <ulink url="http://downloads.jboss.org/savara/examples/purchasing_sca_impl.zip">purchasing_sca_impl.zip</ulink>
-          .
+          . Each sub-folder in the zip represents one of the participants, containing the Java class file that has the implementation details. This file will need to be copied into the relevant participant's Java package, e.g. the
+          <emphasis role="italics">Store</emphasis>
+          folder contains the
+          <emphasis role="italics">StoreInterfaceImpl.java class</emphasis>
+          , which should be copied into the project generated for the
+          <emphasis role="italics">Store</emphasis>
+          participant (i.e.
+          <emphasis role="italics">PurchaseGoodsProcess-Store</emphasis>
+          ), in the
+          <emphasis role="italics">src/main/java/org/jboss/examples/store</emphasis>
+          folder.
         </para>
         <para>
           To highlight the differences between the original generated version, and the completed version, simply select both files and use the
@@ -147,7 +193,7 @@
           <emphasis role="italics">Logistics</emphasis>
           participants, you open the
           <code>SuccessfulPurchase.scn</code>
-          scenario and press the green "play" button. This will show the 'scenario simulation' dialog. Then for each of the particpiants, select the relevant composite file, so for example for the
+          scenario and press the green "play" button in the toolbar. This will show the 'scenario simulation' dialog. Then for each of the particpiants, select the relevant composite file, so for example for the
           <emphasis role="italics">Store</emphasis>
           role locate the
           <code>Store.composite</code>
