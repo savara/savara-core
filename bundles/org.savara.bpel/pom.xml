@@ -3,14 +3,14 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bundles</groupId>
 	<artifactId>org.savara.bpel</artifactId> 
-	<version>2.0.0.20110721-M4</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Savara::Bundles::BPEL</name>
 
 	<parent>
 		<groupId>org.savara</groupId>
 		<artifactId>bundles</artifactId>
-		<version>2.0.0.20110721-M4</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
   
 	<dependencies>
