@@ -46,6 +46,7 @@ import java.util.logging.Logger;
 import javax.jms.QueueConnectionFactory;
 import javax.jms.TextMessage;
 import javax.naming.Context;
+import javax.xml.namespace.QName;
 
 import org.pi4soa.common.util.NamesUtil;
 import org.pi4soa.common.xml.XMLUtils;
@@ -62,9 +63,9 @@ import org.pi4soa.service.session.Session;
 import org.pi4soa.service.tracker.ServiceTracker;
 import org.pi4soa.service.tracker.TrackerEvent;
 import org.savara.activity.model.Activity;
+import org.savara.activity.model.Analysis;
 import org.savara.activity.model.ExchangeType;
 import org.savara.activity.model.InteractionActivity;
-import org.savara.activity.model.MessageParameter;
 import org.savara.activity.model.ProtocolAnalysis;
 import org.savara.activity.util.ActivityModelUtil;
 
@@ -421,16 +422,18 @@ public class JMSServiceTracker implements ServiceTracker {
 	public void sentMessage(Send activity, Session session,
 					Channel channel, Message mesg) {
 		
-		InteractionActivity ia=createInteractionActivity(activity, session, mesg);
+		Activity ia=createInteractionActivity(activity, session, mesg);
 		
-		ia.setOutbound(true);		
+		((InteractionActivity)ia.getType()).setOutbound(true);		
 		
 		publish(ia);
 	}
 
-	protected InteractionActivity createInteractionActivity(org.pi4soa.service.behavior.MessageActivity activity,
+	protected Activity createInteractionActivity(org.pi4soa.service.behavior.MessageActivity activity,
 							Session session, Message mesg) {
+		Activity ret=new Activity();
 		InteractionActivity ia=new InteractionActivity();
+		ret.setType(ia);
 
 		ia.setOperationName(activity.getOperationName());
 		ia.setFaultName(activity.getFaultName());
@@ -440,11 +443,11 @@ public class JMSServiceTracker implements ServiceTracker {
 						MessageClassification.REQUEST ?
 				ExchangeType.REQUEST : ExchangeType.RESPONSE);
 		
-		MessageParameter mp=new MessageParameter();
+		org.savara.activity.model.Message mp=new org.savara.activity.model.Message();
 		mp.setType(mesg.getType());
 		mp.setAny(getMessagePayload(mesg));
 		
-		ia.getParameter().add(mp);
+		ia.getMessage().add(mp);
 
 		ProtocolAnalysis pa=new ProtocolAnalysis();
 		pa.setExpected(Boolean.TRUE);
@@ -452,7 +455,11 @@ public class JMSServiceTracker implements ServiceTracker {
 		
 		pa.setRole(XMLUtils.getLocalname(activity.getServiceDescription().getName()));
 		
-		ia.getAnalysis().add(pa);
+		Analysis anal=new Analysis();
+		anal.setAny(pa);
+		anal.setType(new QName("http://www.savara.org/activity", "ProtocolAnalysis"));
+		
+		ret.getAnalysis().add(anal);
 		
 		// Add context information from the identities info
 		java.util.Iterator<Identity> ids=null;
@@ -499,11 +506,11 @@ public class JMSServiceTracker implements ServiceTracker {
 				
 				context.setValue(value);
 				
-				ia.getContext().add(context);
+				ret.getContext().add(context);
 			}
 		}
 		
-		return(ia);
+		return(ret);
 	}
 	
 	/**
@@ -527,11 +534,11 @@ public class JMSServiceTracker implements ServiceTracker {
 	 */
 	public void receivedMessage(Receive activity, Session session,
 					Channel channel, Message mesg) {
-		InteractionActivity ia=createInteractionActivity(activity, session, mesg);
+		Activity act=createInteractionActivity(activity, session, mesg);
 
-		ia.setOutbound(false);
+		((InteractionActivity)act.getType()).setOutbound(false);
 		
-		publish(ia);
+		publish(act);
 	}
 	
 	/**

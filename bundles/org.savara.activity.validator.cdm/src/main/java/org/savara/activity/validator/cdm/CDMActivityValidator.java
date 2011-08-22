@@ -21,6 +21,7 @@ import java.io.Serializable;
 
 import org.savara.activity.ActivityValidator;
 import org.savara.activity.model.Activity;
+import org.savara.activity.model.Analysis;
 import org.savara.activity.model.ExchangeType;
 import org.savara.activity.model.InteractionActivity;
 import org.savara.activity.model.ProtocolAnalysis;
@@ -36,8 +37,8 @@ public class CDMActivityValidator implements ActivityValidator {
 	
 	public void validate(Activity activity) {
 		
-		if (activity instanceof InteractionActivity) {
-			InteractionActivity ia=(InteractionActivity)activity;
+		if (activity.getType() instanceof InteractionActivity) {
+			InteractionActivity ia=(InteractionActivity)activity.getType();
 			java.util.List<ServiceValidator> validators=null;
 			Endpoint endpoint=new Endpoint(ia.getDestinationType() != null ?
 							ia.getDestinationType() : ia.getDestinationAddress());
@@ -48,7 +49,7 @@ public class CDMActivityValidator implements ActivityValidator {
 				validators = m_serviceValidatorManager.getInputServiceValidators(endpoint);
 			}
 			
-			process(validators, ia);
+			process(validators, activity, ia);
 			
 			// Check whether a dynamic reply is expected
 			if (isOutputValidator(ia)) {
@@ -79,9 +80,9 @@ public class CDMActivityValidator implements ActivityValidator {
 						(ia.getExchangeType() == ExchangeType.REQUEST) == ia.isOutbound()));
 	}
 	
-	public void process(java.util.List<ServiceValidator> validators, InteractionActivity ia) {
+	public void process(java.util.List<ServiceValidator> validators, Activity activity, InteractionActivity ia) {
 	
-		if (validators != null && validators.size() > 0 && ia.getParameter().size() == 1) {
+		if (validators != null && validators.size() > 0 && ia.getMessage().size() == 1) {
 
 			for (int i=0; validators != null &&
 						i < validators.size(); i++) {
@@ -90,11 +91,11 @@ public class CDMActivityValidator implements ActivityValidator {
 				
 		        try {
 		        	if (ia.isOutbound()) {
-			        	contexts = validators.get(i).messageSent(ia.getParameter().get(0).getType(),
-        						(Serializable)ia.getParameter().get(0).getAny());
+			        	contexts = validators.get(i).messageSent(ia.getMessage().get(0).getType(),
+        						(Serializable)ia.getMessage().get(0).getAny());
 		        	} else {
-		        		contexts = validators.get(i).messageReceived(ia.getParameter().get(0).getType(),
-		        				(Serializable)ia.getParameter().get(0).getAny());
+		        		contexts = validators.get(i).messageReceived(ia.getMessage().get(0).getType(),
+		        				(Serializable)ia.getMessage().get(0).getAny());
 		        	}
 		        	validated = true;
 		        } catch(Exception t) {
@@ -106,10 +107,12 @@ public class CDMActivityValidator implements ActivityValidator {
 		        pa.setRole(XMLUtils.getLocalname(validators.get(i).getValidatorName().getRole()));
 		        pa.setExpected(validated);
 		        
-		        ia.getAnalysis().add(pa);
+		        Analysis anal=new Analysis();
+		        
+		        activity.getAnalysis().add(anal);
 		        
 		        if (contexts != null) {
-		        	ia.getContext().addAll(contexts);
+		        	activity.getContext().addAll(contexts);
 		        }
 			}
 		}

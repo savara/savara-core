@@ -110,6 +110,7 @@ public class ActivityStoreImpl implements ActivityStore {
        if (!isInitialized) {
            initialize();
        }
+       /* TODO: Fix model changes related to SAVARA-252
        ActivityEntity entity;
        if (activity instanceof InteractionActivity) {
            entity = new InteractionActivityEntity();
@@ -134,6 +135,7 @@ public class ActivityStoreImpl implements ActivityStore {
            txContext.rollback();
            throw new RuntimeException("Error in persist ActivityEntity.", e);
        }
+       */
     }
 
 
