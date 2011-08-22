@@ -1,63 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.0" targetNamespace="http://www.savara.org/activity" xmlns:tns="http://www.savara.org/activity" elementFormDefault="qualified">
-   <annotation>
-      <appinfo>
-        <jaxb:globalBindings>
-        <jaxb:javaType name="java.util.Date" xmlType="dateTime"
-        parseMethod="org.savara.activity.util.DateAdapter.parseDate"
-        printMethod="org.savara.activity.util.DateAdapter.printDate"/>
-        </jaxb:globalBindings>
-      </appinfo>
-   </annotation>
-
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.savara.org/activity" xmlns:tns="http://www.savara.org/activity" elementFormDefault="qualified">
 
     <complexType name="Activity">
     	<sequence>
-    		<element name="analysis" type="tns:Analysis" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="correlation" type="tns:Correlation" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="context" type="tns:Context" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
+    		<!-- Source identifies the component details for the element reporting the event -->
+    		<element name="source" type="tns:ComponentId" minOccurs="1" />
+    		
+    		<!-- Defines the type of the activity -->
+    		<element name="type" type="tns:ActivityType" minOccurs="1" />
+    		
+    		<!-- Context provides additional facts about the activity that may be searchable -->
+    		<element name="context" type="tns:Context" minOccurs="0" maxOccurs="unbounded" />
+    		
+    		<!-- Correlation information used to associate this activity with a local or
+    			global session -->
+    		<element name="correlation" type="tns:Correlation" minOccurs="0" maxOccurs="unbounded" />
+    		
+    		<!-- Analysis may be performed locally before an activity event is reported or
+    			centrally persisted. This field provides the ability to carry the initial
+    			analysis information, which can be augmented subsequently by further central
+    			analysis, which may be stored with the event, or in a separate store. -->
+    		<element name="analysis" type="tns:Analysis" minOccurs="0" maxOccurs="unbounded" />
+    		
     	</sequence>
-    	<attribute name="id" type="ID"></attribute>
+    	
+    	<!-- When the event was created -->
     	<attribute name="timestamp" type="dateTime"></attribute>
+    	
+    	<!-- Optional description code that maps onto a set of defined localised descriptions
+    		at the point where the information needs to be displayed -->
+    	<attribute name="descriptionCode" type="Name" />
+    	
     </complexType>
 
-    <complexType name="Analysis" abstract="true"></complexType>
 
+    <complexType name="ComponentId">
+		<!-- Unique location of the component within the network of systems reporting
+			 activity information, e.g. hostname, ipaddr -->
+		<attribute name="location" type="string" />
+		
+		<!-- Type of the location -->
+		<attribute name="locationType" type="Name" />
+		
+		<!-- Optional container id, e.g. app server node name, must be unique -->
+		<attribute name="containerId" type="string" />
+		
+		<!-- Optional application name -->
+		<attribute name="application" type="string" />
+		
+		<!-- Optional component name within the scope of the application -->
+		<attribute name="component" type="string" />
+		
+		<!-- Defines the type of the component, e.g. Process, etc -->
+		<attribute name="componentType" type="string" />
+		
+		<!-- For appropriate components, this field provides an instance identifier -->
+		<attribute name="instanceId" type="string" />
+		
+		<!-- For appropriate components, this field provides a thread identifier -->
+		<attribute name="threadId" type="string" />
+    </complexType>
+    
     <complexType name="Context">
 		<attribute name="name" type="string"></attribute>
 		<attribute name="value" type="string"></attribute>
     </complexType>
 
-    <complexType name="ComponentActivity">
-    	<complexContent>
-    		<extension base="tns:Activity">
-      			<attribute name="instanceId" type="string"></attribute>
-     			<attribute name="componentId" type="string"></attribute>
-     			<attribute name="componentName" type="string"></attribute>
-     			<attribute name="status" type="tns:Status"></attribute>
-    		</extension>
-    	</complexContent>
+    <complexType name="Correlation">
+    	<sequence>
+    		<element name="key" type="tns:CorrelationKey" minOccurs="0"
+    						maxOccurs="unbounded">
+    		</element>
+    	</sequence>
     </complexType>
-    
-    <simpleType name="Status">
-    	<restriction base="string">
-    		<enumeration value="Started"></enumeration>
-    		<enumeration value="Finished"></enumeration>
-    	</restriction>
-    </simpleType>
-    
+
+    <complexType name="CorrelationKey">
+		<attribute name="name" type="string"></attribute>
+		<attribute name="value" type="string"></attribute>
+    </complexType>
+
+
+	<!-- Analysis related types -->
+    <complexType name="Analysis" >
+    	<sequence>
+            <any processContents="lax"/>
+    	</sequence>
+    	<attribute name="type" type="QName"></attribute>
+    </complexType>
+
+	<!-- Specific analysis types -->
+    <complexType name="ProtocolAnalysis">
+		<attribute name="protocol" type="string"></attribute>
+		<attribute name="role" type="string"></attribute>
+		<attribute name="expected" type="boolean" default="true"></attribute>
+    </complexType>
+
+
+	<!-- Activity types -->
+    <complexType name="ActivityType" abstract="true" />
+
+	<!-- TODO: More work will be required to determine the individual activity types and
+			the information they require -->
     <complexType name="InteractionActivity">
     	<complexContent>
-    		<extension base="tns:Activity">
+    		<extension base="tns:ActivityType">   		
     			<sequence>
-    				<element name="parameter" type="tns:MessageParameter" maxOccurs="unbounded" minOccurs="0"></element>
-    			</sequence>
+		    		<!-- Zero or more message parameters can be defined. If more than one is defined,
+		    		  then a parameter name must be provided -->
+		   			<element name="message" type="tns:Message" maxOccurs="unbounded" minOccurs="0"/>
+    			</sequence>  		
     			<attribute name="destinationType" type="string"></attribute>
     			<attribute name="destinationAddress" type="string"></attribute>
     			<attribute name="replyToAddress" type="string"></attribute>
@@ -69,7 +120,7 @@
     	</complexContent>
     </complexType>
 
-    <complexType name="MessageParameter">
+    <complexType name="Message">
     	<sequence>
             <any processContents="lax"/>
     	</sequence>
@@ -85,31 +136,9 @@
     	</restriction>
     </simpleType>
 
-    <complexType name="ProtocolAnalysis">
-    	<complexContent>
-    		<extension base="tns:Analysis">
-    			<attribute name="protocol" type="string"></attribute>
-    			<attribute name="role" type="string"></attribute>
-    			<attribute name="expected" type="boolean" default="true"></attribute>
-    		</extension>
-    	</complexContent>
-    </complexType>
+
 
     <element name="activity" type="tns:Activity"></element>
-
-
-    <complexType name="Correlation">
-    	<sequence>
-    		<element name="key" type="tns:CorrelationKey" minOccurs="0"
-    						maxOccurs="unbounded">
-    		</element>
-    	</sequence>
-    </complexType>
-
-    <complexType name="CorrelationKey">
-		<attribute name="name" type="string"></attribute>
-		<attribute name="value" type="string"></attribute>
-    </complexType>
 
     <complexType name="ActivityList">
     	<sequence>
