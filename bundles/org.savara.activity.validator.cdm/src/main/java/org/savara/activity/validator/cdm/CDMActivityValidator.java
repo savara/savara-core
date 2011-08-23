@@ -75,9 +75,9 @@ public class CDMActivityValidator implements ActivityValidator {
 	}
 	
 	protected boolean isOutputValidator(InteractionActivity ia) {
-		return((ia.getExchangeType() == ExchangeType.UNDEFINED && ia.isOutbound()) ||
+		return((ia.getExchangeType() == ExchangeType.UNDEFINED && ia.getOutbound()) ||
 					(ia.getExchangeType() != ExchangeType.UNDEFINED &&
-						(ia.getExchangeType() == ExchangeType.REQUEST) == ia.isOutbound()));
+						(ia.getExchangeType() == ExchangeType.REQUEST) == ia.getOutbound()));
 	}
 	
 	public void process(java.util.List<ServiceValidator> validators, Activity activity, InteractionActivity ia) {
@@ -90,7 +90,7 @@ public class CDMActivityValidator implements ActivityValidator {
 				java.util.List<org.savara.activity.model.Context> contexts=null;
 				
 		        try {
-		        	if (ia.isOutbound()) {
+		        	if (ia.getOutbound()) {
 			        	contexts = validators.get(i).messageSent(ia.getMessage().get(0).getType(),
         						(Serializable)ia.getMessage().get(0).getAny());
 		        	} else {
