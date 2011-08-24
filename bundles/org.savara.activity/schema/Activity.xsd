@@ -134,7 +134,12 @@
 
     <complexType name="Message">
     	<sequence>
-            <any processContents="lax"/>
+            <!-- any processContents="lax"/ -->
+			<any processContents="skip">
+			   <annotation><appinfo>
+			     <jaxb:dom/>
+			   </appinfo></annotation>
+			</any>
     	</sequence>
     	<attribute name="name" type="string"></attribute>
     	<attribute name="type" type="string"></attribute>

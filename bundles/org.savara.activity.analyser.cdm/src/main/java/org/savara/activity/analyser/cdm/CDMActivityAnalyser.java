@@ -80,6 +80,12 @@ public class CDMActivityAnalyser implements ActivityAnalyser {
 						(ia.getExchangeType() == ExchangeType.REQUEST) == ia.getOutbound()));
 	}
 	
+	protected boolean isInputValidator(InteractionActivity ia) {
+		return((ia.getExchangeType() == ExchangeType.UNDEFINED && !ia.getOutbound()) ||
+					(ia.getExchangeType() != ExchangeType.UNDEFINED &&
+						(ia.getExchangeType() == ExchangeType.REQUEST) != ia.getOutbound()));
+	}
+	
 	public void process(java.util.List<ServiceValidator> validators, Activity activity, InteractionActivity ia) {
 	
 		if (validators != null && validators.size() > 0 && ia.getMessage().size() == 1) {
@@ -108,7 +114,7 @@ public class CDMActivityAnalyser implements ActivityAnalyser {
 		        pa.setExpected(validated);
 		        
 		        Analysis anal=new Analysis();
-		        
+		        anal.setAny(pa);
 		        activity.getAnalysis().add(anal);
 		        
 		        if (contexts != null) {

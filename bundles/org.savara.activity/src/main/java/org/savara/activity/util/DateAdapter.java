@@ -31,6 +31,9 @@ public class DateAdapter {
     return DatatypeConverter.parseDate(s).getTime();
   }
   public static String printDate(Date dt) {
+	  if (dt == null) {
+		  return(null);
+	  }
     Calendar cal = new GregorianCalendar();
     cal.setTime(dt);
     return DatatypeConverter.printDate(cal);
