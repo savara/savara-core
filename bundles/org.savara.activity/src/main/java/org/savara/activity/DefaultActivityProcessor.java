@@ -20,124 +20,87 @@ package org.savara.activity;
 import org.savara.activity.model.Activity;
 
 /**
- * This class implements a default activity validation manager
- * responsible for managing a set of analysers and validators,
- * and applying a supplied activity against them. The analysers
- * are applied prior to the validators, to derived additional
- * information that may be required during validation.
+ * This class implements a default activity processor.
  */
 public class DefaultActivityProcessor implements ActivityProcessor {
 
-	private java.util.List<ActivityAnalyser> m_analysers=null;
-	private java.util.List<ActivityFilter> m_filters=null;
-	private java.util.List<ActivityValidator> m_validators=null;
-	private java.util.List<ActivityStore> m_stores=null;
-	private java.util.List<ActivityNotifier> m_notifiers=null;
+	private ActivityAnalyser m_analyser=null;
+	private ActivityFilter m_filter=null;
+	private ActivityStore m_store=null;
+	private ActivityNotifier m_notifier=null;
 	
 	/**
-	 * This method returns the list of activity analysers.
+	 * This method returns the activity analyser.
 	 * 
-	 * @return The analysers
+	 * @return The analyser
 	 */
-	public java.util.List<ActivityAnalyser> getAnalysers() {
-		if (m_analysers == null) {
-			m_analysers = new java.util.Vector<ActivityAnalyser>();
-		}
-		return(m_analysers);
+	public ActivityAnalyser getAnalyser() {
+		return(m_analyser);
 	}
 	
 	/**
-	 * This method sets the list of activity analysers.
+	 * This method sets the activity analyser.
 	 * 
-	 * @param analysers The analysers
+	 * @param analyser The analyser
 	 */
-	public void setAnalysers(java.util.List<ActivityAnalyser> analysers) {
-		m_analysers = analysers;
+	public void setAnalyser(ActivityAnalyser analyser) {
+		m_analyser = analyser;
 	}
 	
 	/**
-	 * This method returns the list of activity filters.
+	 * This method returns the activity filter.
 	 * 
-	 * @return The filters
+	 * @return The filter
 	 */
-	public java.util.List<ActivityFilter> getFilters() {
-		if (m_filters == null) {
-			m_filters = new java.util.Vector<ActivityFilter>();
-		}
-		return(m_filters);
+	public ActivityFilter getFilter() {
+		return(m_filter);
 	}
 	
 	/**
-	 * This method sets the list of activity filters.
+	 * This method sets the activity filter.
 	 * 
-	 * @param filters The filters
+	 * @param filter The filter
 	 */
-	public void setFilters(java.util.List<ActivityFilter> filters) {
-		m_filters = filters;
+	public void setFilter(ActivityFilter filter) {
+		m_filter = filter;
 	}
 	
 	/**
-	 * This method returns the list of activity validators.
+	 * This method returns the activity store.
 	 * 
-	 * @return The validators
+	 * @return The store
 	 */
-	public java.util.List<ActivityValidator> getValidators() {
-		if (m_validators == null) {
-			m_validators = new java.util.Vector<ActivityValidator>();
-		}
-		return(m_validators);
+	public ActivityStore getStore() {
+		return(m_store);
 	}
 	
 	/**
-	 * This method sets the list of activity validators.
+	 * This method sets the activity store.
 	 * 
-	 * @param validators The validators
+	 * @param store The store
 	 */
-	public void setValidators(java.util.List<ActivityValidator> validators) {
-		m_validators = validators;
+	public void setStore(ActivityStore store) {
+		m_store = store;
 	}
 	
 	/**
-	 * This method returns the list of activity stores.
+	 * This method returns the activity notifier.
 	 * 
-	 * @return The stores
+	 * @return The notifier
 	 */
-	public java.util.List<ActivityStore> getStores() {
-		if (m_stores == null) {
-			m_stores = new java.util.Vector<ActivityStore>();
-		}
-		return(m_stores);
+	public ActivityNotifier getNotifier() {
+		return(m_notifier);
 	}
 	
 	/**
-	 * This method sets the list of activity stores.
+	 * This method sets the activity notifier.
 	 * 
-	 * @param stores The stores
+	 * @param notifier The notifier
 	 */
-	public void setStores(java.util.List<ActivityStore> stores) {
-		m_stores = stores;
+	public void setNotifier(ActivityNotifier notifier) {
+		m_notifier = notifier;
 	}
 	
-	/**
-	 * This method returns the list of activity notifiers.
-	 * 
-	 * @return The notifiers
-	 */
-	public java.util.List<ActivityNotifier> getNotifiers() {
-		if (m_notifiers == null) {
-			m_notifiers = new java.util.Vector<ActivityNotifier>();
-		}
-		return(m_notifiers);
-	}
-	
-	/**
-	 * This method sets the list of activity notifiers.
-	 * 
-	 * @param notifiers The notifiers
-	 */
-	public void setNotifiers(java.util.List<ActivityNotifier> notifiers) {
-		m_notifiers = notifiers;
-	}
 	
 	/**
 	 * This method processes the supplied activity event against
@@ -147,37 +110,19 @@ public class DefaultActivityProcessor implements ActivityProcessor {
 	 */
 	public void process(Activity activity) {
 		
-		// Invoke the analysers to derive any additional information
-		for (ActivityAnalyser aa : getAnalysers()) {
-			aa.analyse(activity);
-		}
-		
-		// Immediately consider the activity relevant if no filters
-		boolean process=(getFilters().size() == 0);
-		
-		// If filters defined, then check them until one indicates interest
-		for (ActivityFilter af : getFilters()) {
-			process = af.isRelevant(activity);
+		if (getFilter() == null || getFilter().isRelevant(activity)) {
 			
-			if (process) {
-				break;
-			}
-		}
-		
-		if (process) {
-			// Validate the activity
-			for (ActivityValidator av : getValidators()) {
-				av.validate(activity);
+			if (getAnalyser() != null) {
+				getAnalyser().analyse(activity);
 			}
 			
-			// Store the activity
-			for (ActivityStore as : getStores()) {
-				as.save(activity);
+			if (getStore() != null) {
+				getStore().save(activity);
 			}
 			
-			for (ActivityNotifier an : getNotifiers()) {
-				an.publish(activity);
-			}
+			if (getNotifier() != null) {
+				getNotifier().publish(activity);
+			}			
 		}
 	}
 }

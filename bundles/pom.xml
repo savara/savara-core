@@ -21,9 +21,9 @@
 
 	<modules>
 		<module>org.savara.activity</module>
-                <module>org.savara.activity.astore.rdbms</module>
+                <module>org.savara.activity.store.rdbms</module>
 		<module>org.savara.activity.notifier.jms</module>
-		<module>org.savara.activity.validator.cdm</module>
+		<module>org.savara.activity.analyser.cdm</module>
 		<module>org.savara.bpel</module>
 		<module>org.savara.bpmn2</module>
 		<module>org.savara.common</module>

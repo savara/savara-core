@@ -20,87 +20,70 @@ package org.savara.activity;
 import org.savara.activity.model.Activity;
 
 /**
- * This interface represents the activity processor
- * responsible for managing a set of analysers and validators,
- * and applying a supplied activity against them. The analysers
- * are applied prior to the validators, to derived additional
- * information that may be required during validation.
+ * This interface represents the activity processor.
  */
 public interface ActivityProcessor {
 
 	/**
-	 * This method returns the list of activity analysers.
+	 * This method returns the activity analyser.
 	 * 
-	 * @return The analysers
+	 * @return The analyser
 	 */
-	public java.util.List<ActivityAnalyser> getAnalysers();
+	public ActivityAnalyser getAnalyser();
 	
 	/**
-	 * This method sets the list of activity analysers.
+	 * This method sets the activity analyser.
 	 * 
-	 * @param analysers The analysers
+	 * @param analyser The analyser
 	 */
-	public void setAnalysers(java.util.List<ActivityAnalyser> analysers);
+	public void setAnalyser(ActivityAnalyser analyser);
 	
 	/**
-	 * This method returns the list of activity filters.
+	 * This method returns the activity filter.
 	 * 
-	 * @return The filters
+	 * @return The filter
 	 */
-	public java.util.List<ActivityFilter> getFilters();
+	public ActivityFilter getFilter();
 	
 	/**
-	 * This method sets the list of activity filters.
+	 * This method sets the activity filter.
 	 * 
-	 * @param filters The filters
+	 * @param filter The filter
 	 */
-	public void setFilters(java.util.List<ActivityFilter> filters);
+	public void setFilter(ActivityFilter filter);
 	
 	/**
-	 * This method returns the list of activity validators.
+	 * This method returns the activity store.
 	 * 
-	 * @return The validators
+	 * @return The store
 	 */
-	public java.util.List<ActivityValidator> getValidators();
+	public ActivityStore getStore();
 	
 	/**
-	 * This method sets the list of activity validators.
+	 * This method sets the activity store.
 	 * 
-	 * @param validators The validators
+	 * @param store The store
 	 */
-	public void setValidators(java.util.List<ActivityValidator> validators);
+	public void setStore(ActivityStore store);
 	
 	/**
-	 * This method returns the list of activity stores.
+	 * This method returns the activity notifier.
 	 * 
-	 * @return The stores
+	 * @return The notifier
 	 */
-	public java.util.List<ActivityStore> getStores();
+	public ActivityNotifier getNotifier();
 	
 	/**
-	 * This method sets the list of activity stores.
+	 * This method sets the activity notifier.
 	 * 
-	 * @param stores The stores
+	 * @param notifier The notifier
 	 */
-	public void setStores(java.util.List<ActivityStore> stores);
-	
-	/**
-	 * This method returns the list of activity notifiers.
-	 * 
-	 * @return The notifiers
-	 */
-	public java.util.List<ActivityNotifier> getNotifiers();
-	
-	/**
-	 * This method sets the list of activity notifiers.
-	 * 
-	 * @param notifiers The notifiers
-	 */
-	public void setNotifiers(java.util.List<ActivityNotifier> notifiers);
+	public void setNotifier(ActivityNotifier notifier);
 	
 	/**
 	 * This method processes the supplied activity event against
-	 * any predefined analysers and validators.
+	 * any predefined analysers, and optional persists and/or
+	 * distributes the event.
 	 * 
 	 * @param activity The activity event to be processed
 	 */

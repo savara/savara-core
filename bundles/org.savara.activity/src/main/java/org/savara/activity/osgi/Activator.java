@@ -27,14 +27,12 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.savara.activity.ActivityAnalyser;
 import org.savara.activity.ActivityProcessor;
 import org.savara.activity.ActivityProcessorFactory;
-import org.savara.activity.ActivityValidator;
 
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
 
 	private org.osgi.util.tracker.ServiceTracker m_activityAnalyserTracker=null;
-	private org.osgi.util.tracker.ServiceTracker m_activityValidatorTracker=null;
 
 	private static final Logger _log=Logger.getLogger(Activator.class.getName());
 
@@ -59,22 +57,6 @@ public class Activator implements BundleActivator {
         
         _log.fine("Registered Activity Validation Manager");
         
-        m_activityValidatorTracker = new ServiceTracker(context,
-        					ActivityValidator.class.getName(), null) {
-        	
-			public Object addingService(ServiceReference ref) {
-				Object ret=super.addingService(ref);
-				
-				_log.fine("Activity validator has been added: "+ret);
-				
-				avm.getValidators().add((ActivityValidator)ret);
-				
-				return(ret);
-			}
-        };
-        
-        m_activityValidatorTracker.open();
-        
         m_activityAnalyserTracker = new ServiceTracker(context,
 							ActivityAnalyser.class.getName(), null) {
 
@@ -83,13 +65,17 @@ public class Activator implements BundleActivator {
 				
 				_log.fine("Activity analyser has been added: "+ret);
 				
-				avm.getAnalysers().add((ActivityAnalyser)ret);
+				// TODO: If already set, then may need to replace with list
+				// implementation and add subsequent implementations to it
+				avm.setAnalyser((ActivityAnalyser)ret);
 				
 				return(ret);
 			}
 		};
 
 		m_activityAnalyserTracker.open();
+		
+		// TODO: Need to add trackers for other components? filter, store and notifier?
 	}
 
 	/*
