@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.savara.activity.model.Activity;
+import org.savara.activity.model.Correlation;
 import org.savara.activity.model.ExchangeType;
 import org.savara.activity.model.InteractionActivity;
 import org.savara.activity.model.Message;
@@ -102,6 +103,57 @@ public class CDMActivityAnalyserTest {
 		((InteractionActivity)recvBuyFailed.getType()).setExchangeType(ExchangeType.RESPONSE);
 		analyser.analyse(recvBuyFailed);	
 		validate(recvBuyFailed, true);
+	}
+	
+	@Test
+	public void testCorrelationAdded() {
+		CDMActivityAnalyser analyser=new CDMActivityAnalyser();
+		
+		Activity recvBuyRequest=createActivity("BuyRequest", "{http://www.jboss.org/examples/store}StoreService", false);
+		((InteractionActivity)recvBuyRequest.getType()).setExchangeType(ExchangeType.REQUEST);
+		analyser.analyse(recvBuyRequest);	
+		validate(recvBuyRequest, true);
+		
+		// Check correlation key has been defined in the activity event
+		if (recvBuyRequest.getCorrelation().size() != 1) {
+			fail("Single correlation not found");
+		}
+		
+		if (recvBuyRequest.getCorrelation().get(0).getKey().size() != 1) {
+			fail("Single correlation key not found");
+		}
+
+		if (recvBuyRequest.getCorrelation().get(0).getKey().get(0).getName().equals("ID") == false) {
+			fail("Correlation key name incorrect");
+		}
+
+		if (recvBuyRequest.getCorrelation().get(0).getKey().get(0).getValue().equals("1") == false) {
+			fail("Correlation key name incorrect");
+		}
+	}
+	
+	@Test
+	public void testCorrelationNotAdded() {
+		// Check that derived correlation information is not added to event as details already provided
+		CDMActivityAnalyser analyser=new CDMActivityAnalyser();
+		
+		Activity recvBuyRequest=createActivity("BuyRequest", "{http://www.jboss.org/examples/store}StoreService", false);
+		((InteractionActivity)recvBuyRequest.getType()).setExchangeType(ExchangeType.REQUEST);
+
+		// Add dummy correlation entry to prevent derived correlation details being added
+		recvBuyRequest.getCorrelation().add(new Correlation());
+		
+		analyser.analyse(recvBuyRequest);
+		validate(recvBuyRequest, true);
+		
+		// Check correlation key has been defined in the activity event
+		if (recvBuyRequest.getCorrelation().size() != 1) {
+			fail("Single correlation not found");
+		}
+		
+		if (recvBuyRequest.getCorrelation().get(0).getKey().size() != 0) {
+			fail("Single correlation key should not have been found");
+		}
 	}
 	
 	protected void validate(Activity activity, boolean expected) {

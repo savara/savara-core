@@ -93,14 +93,14 @@ public class CDMActivityAnalyser implements ActivityAnalyser {
 			for (int i=0; validators != null &&
 						i < validators.size(); i++) {
 				boolean validated=false;
-				java.util.List<org.savara.activity.model.Context> contexts=null;
+				java.util.List<org.savara.activity.model.Correlation> correlations=null;
 				
 		        try {
 		        	if (ia.getOutbound()) {
-			        	contexts = validators.get(i).messageSent(ia.getMessage().get(0).getType(),
+		        		correlations = validators.get(i).messageSent(ia.getMessage().get(0).getType(),
         						(Serializable)ia.getMessage().get(0).getAny());
 		        	} else {
-		        		contexts = validators.get(i).messageReceived(ia.getMessage().get(0).getType(),
+		        		correlations = validators.get(i).messageReceived(ia.getMessage().get(0).getType(),
 		        				(Serializable)ia.getMessage().get(0).getAny());
 		        	}
 		        	validated = true;
@@ -117,8 +117,10 @@ public class CDMActivityAnalyser implements ActivityAnalyser {
 		        anal.setAny(pa);
 		        activity.getAnalysis().add(anal);
 		        
-		        if (contexts != null) {
-		        	activity.getContext().addAll(contexts);
+		        // Only associate derived correlation information if the activity event
+		        // does not already include correlation details
+		        if (correlations != null && activity.getCorrelation().size() == 0) {
+		        	activity.getCorrelation().addAll(correlations);
 		        }
 			}
 		}

@@ -23,7 +23,8 @@ import org.apache.log4j.Logger;
 
 import org.savara.activity.analyser.cdm.AbstractServiceValidator;
 import org.savara.activity.analyser.cdm.ValidatorName;
-import org.savara.activity.model.Context;
+import org.savara.activity.model.Correlation;
+import org.savara.activity.model.CorrelationKey;
 import org.pi4soa.common.util.MessageUtil;
 import org.pi4soa.service.ServiceException;
 import org.pi4soa.service.behavior.*;
@@ -185,7 +186,7 @@ public class Pi4SOAServiceValidator extends AbstractServiceValidator {
 	 * @param msg The message
 	 * @throws Exception Failed to process sent message 
 	 */
-	public java.util.List<Context> messageSent(String mesgType, java.io.Serializable msg) throws Exception {
+	public java.util.List<Correlation> messageSent(String mesgType, java.io.Serializable msg) throws Exception {
     	
     	if (msg == null) {
     		throw new ServiceException("Failed to obtain value from message: "+msg);
@@ -203,7 +204,7 @@ public class Pi4SOAServiceValidator extends AbstractServiceValidator {
     		m_monitor.messageSent(mesg);
     	}
     	
-    	return(getContexts(mesg));
+    	return(getCorrelations(mesg));
 	}
 	
 	/**
@@ -214,7 +215,7 @@ public class Pi4SOAServiceValidator extends AbstractServiceValidator {
 	 * @param msg The message
 	 * @throws Exception Failed to process received message 
 	 */
-	public java.util.List<Context> messageReceived(String mesgType, java.io.Serializable msg) throws Exception {
+	public java.util.List<Correlation> messageReceived(String mesgType, java.io.Serializable msg) throws Exception {
    	
     	if (msg == null) {
     		throw new ServiceException("Failed to obtain value from message: "+msg);
@@ -232,35 +233,23 @@ public class Pi4SOAServiceValidator extends AbstractServiceValidator {
     		m_monitor.messageReceived(mesg); 
     	}
     	
-    	return(getContexts(mesg));
+    	return(getCorrelations(mesg));
 	}
 	
-	protected java.util.List<Context> getContexts(org.pi4soa.service.Message mesg) {
-    	java.util.List<Context> ret=new java.util.Vector<Context>();
+	protected java.util.List<Correlation> getCorrelations(org.pi4soa.service.Message mesg) {
+    	java.util.List<Correlation> ret=new java.util.Vector<Correlation>();
     	
      	for (org.pi4soa.service.Identity id : mesg.getMessageIdentities()) {
-    		Context context=new Context();
-    		String name=null;
-    		for (String token : id.getTokens()) {
-    			if (name == null) {
-    				name = token;
-    			} else {
-    				name += ":"+token;
-    			}
-    		}
-    		context.setName(name);
-    		
-    		String value=null;
-    		for (Object val : id.getValues()) {
-    			if (value == null) {
-    				value = val.toString();
-    			} else {
-    				value += ":"+val.toString();
-    			}
-    		}
-    		context.setValue(value);
-    		
-    		ret.add(context);
+     		Correlation correlation=new Correlation();
+     		
+     		for (int i=0; i < id.getTokens().length; i++) {
+     			CorrelationKey key=new CorrelationKey();
+     			key.setName(id.getTokens()[i]);
+     			key.setValue(id.getValues()[i].toString());
+     			correlation.getKey().add(key);
+     		}
+     		
+    		ret.add(correlation);
     	}
     	
     	return(ret);
