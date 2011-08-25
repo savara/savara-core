@@ -98,10 +98,12 @@ public class CDMActivityAnalyser implements ActivityAnalyser {
 		        try {
 		        	if (ia.getOutbound()) {
 		        		correlations = validators.get(i).messageSent(ia.getMessage().get(0).getType(),
-        						(Serializable)ia.getMessage().get(0).getAny());
+        						(Serializable)ia.getMessage().get(0).getAny(),
+        						activity.getCorrelation());
 		        	} else {
 		        		correlations = validators.get(i).messageReceived(ia.getMessage().get(0).getType(),
-		        				(Serializable)ia.getMessage().get(0).getAny());
+		        				(Serializable)ia.getMessage().get(0).getAny(),
+        						activity.getCorrelation());
 		        	}
 		        	validated = true;
 		        } catch(Exception t) {

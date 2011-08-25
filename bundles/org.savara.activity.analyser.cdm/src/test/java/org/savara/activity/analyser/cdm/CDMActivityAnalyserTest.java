@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.savara.activity.model.Activity;
 import org.savara.activity.model.Correlation;
+import org.savara.activity.model.CorrelationKey;
 import org.savara.activity.model.ExchangeType;
 import org.savara.activity.model.InteractionActivity;
 import org.savara.activity.model.Message;
@@ -154,6 +155,48 @@ public class CDMActivityAnalyserTest {
 		if (recvBuyRequest.getCorrelation().get(0).getKey().size() != 0) {
 			fail("Single correlation key should not have been found");
 		}
+	}
+	
+	@Test
+	public void testSuccessfulPurchaseNoMessage() {
+		CDMActivityAnalyser analyser=new CDMActivityAnalyser();
+		
+		Correlation correlation=new Correlation();
+		CorrelationKey key=new CorrelationKey();
+		key.setName("ID");
+		key.setValue("1");
+		correlation.getKey().add(key);
+		
+		Activity recvBuyRequest=createActivity("BuyRequest", "{http://www.jboss.org/examples/store}StoreService", false);
+		((InteractionActivity)recvBuyRequest.getType()).setExchangeType(ExchangeType.REQUEST);
+		((InteractionActivity)recvBuyRequest.getType()).getMessage().get(0).setAny(null);
+		recvBuyRequest.getCorrelation().add(correlation);
+		analyser.analyse(recvBuyRequest);	
+		validate(recvBuyRequest, true);
+
+		/* SAVARA-255 - need to determine how to analyser activity events with no message body
+		 * 
+		Activity sendCreditCheckRequest=createActivity("CreditCheckRequest", "{http://www.jboss.org/examples/creditAgency}CreditAgencyService", true);
+		((InteractionActivity)sendCreditCheckRequest.getType()).setExchangeType(ExchangeType.REQUEST);
+		((InteractionActivity)sendCreditCheckRequest.getType()).getMessage().get(0).setAny(null);
+		sendCreditCheckRequest.getCorrelation().add(correlation);
+		analyser.analyse(sendCreditCheckRequest);	
+		validate(sendCreditCheckRequest, true);		
+		
+		Activity recvCreditCheckOk=createActivity("CreditCheckOk", "{http://www.jboss.org/examples/creditAgency}CreditAgencyService", false);
+		((InteractionActivity)recvCreditCheckOk.getType()).setExchangeType(ExchangeType.RESPONSE);
+		((InteractionActivity)recvCreditCheckOk.getType()).getMessage().get(0).setAny(null);
+		recvCreditCheckOk.getCorrelation().add(correlation);
+		analyser.analyse(recvCreditCheckOk);	
+		validate(recvCreditCheckOk, true);
+		
+		Activity recvBuyConfirmed=createActivity("BuyConfirmed", "{http://www.jboss.org/examples/store}StoreService", true);
+		((InteractionActivity)recvBuyConfirmed.getType()).setExchangeType(ExchangeType.RESPONSE);
+		((InteractionActivity)recvBuyConfirmed.getType()).getMessage().get(0).setAny(null);
+		recvBuyConfirmed.getCorrelation().add(correlation);
+		analyser.analyse(recvBuyConfirmed);	
+		validate(recvBuyConfirmed, true);
+		*/
 	}
 	
 	protected void validate(Activity activity, boolean expected) {

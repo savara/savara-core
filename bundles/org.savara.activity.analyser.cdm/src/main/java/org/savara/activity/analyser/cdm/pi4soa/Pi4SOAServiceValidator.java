@@ -186,7 +186,8 @@ public class Pi4SOAServiceValidator extends AbstractServiceValidator {
 	 * @param msg The message
 	 * @throws Exception Failed to process sent message 
 	 */
-	public java.util.List<Correlation> messageSent(String mesgType, java.io.Serializable msg) throws Exception {
+	public java.util.List<Correlation> messageSent(String mesgType, java.io.Serializable msg,
+				java.util.List<Correlation> correlations) throws Exception {
     	
     	if (msg == null) {
     		throw new ServiceException("Failed to obtain value from message: "+msg);
@@ -199,7 +200,8 @@ public class Pi4SOAServiceValidator extends AbstractServiceValidator {
     	org.pi4soa.service.Message mesg=
     			m_monitor.createMessage(mesgType,
     				null, null, msg, null, null);
-    	
+    	mesg.setMessageIdentities(getIdentities(correlations));
+   	
     	synchronized(m_monitor) {
     		m_monitor.messageSent(mesg);
     	}
@@ -215,10 +217,11 @@ public class Pi4SOAServiceValidator extends AbstractServiceValidator {
 	 * @param msg The message
 	 * @throws Exception Failed to process received message 
 	 */
-	public java.util.List<Correlation> messageReceived(String mesgType, java.io.Serializable msg) throws Exception {
+	public java.util.List<Correlation> messageReceived(String mesgType, java.io.Serializable msg,
+					java.util.List<Correlation> correlations) throws Exception {
    	
     	if (msg == null) {
-    		throw new ServiceException("Failed to obtain value from message: "+msg);
+    		//throw new ServiceException("Failed to obtain value from message: "+msg);
     	}
     	
     	if (mesgType == null) {
@@ -228,12 +231,36 @@ public class Pi4SOAServiceValidator extends AbstractServiceValidator {
     	org.pi4soa.service.Message mesg=
     			m_monitor.createMessage(mesgType,
     				null, null, msg, null, null);
+    	mesg.setMessageIdentities(getIdentities(correlations));
     	
     	synchronized(m_monitor) {
     		m_monitor.messageReceived(mesg); 
     	}
     	
     	return(getCorrelations(mesg));
+	}
+	
+	protected java.util.List<org.pi4soa.service.Identity> getIdentities(java.util.List<Correlation> correlations) {
+		java.util.List<org.pi4soa.service.Identity> ret=null;
+		
+		if (correlations != null && correlations.size() > 0 &&
+							correlations.get(0).getKey().size() > 0) {
+			String[] names=new String[correlations.get(0).getKey().size()];
+			Object[] values=new String[correlations.get(0).getKey().size()];
+			String name="";
+			for (int i=0; i < names.length; i++) {
+				if (i > 0) {
+					name += ":";
+				}
+				name += correlations.get(0).getKey().get(i).getName();
+				names[i] = correlations.get(0).getKey().get(i).getName();
+				values[i] = correlations.get(0).getKey().get(i).getValue();
+			}
+			ret = new java.util.Vector<org.pi4soa.service.Identity>();
+			ret.add(new org.pi4soa.service.Identity(name, names, values));
+		}
+		
+		return(ret);
 	}
 	
 	protected java.util.List<Correlation> getCorrelations(org.pi4soa.service.Message mesg) {

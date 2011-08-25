@@ -47,7 +47,8 @@ public interface ServiceValidator {
 	 * @param msg The message
 	 * @throws Exception Failed to process sent message 
 	 */
-	public java.util.List<Correlation> messageSent(String mesgType, java.io.Serializable msg) throws Exception;
+	public java.util.List<Correlation> messageSent(String mesgType, java.io.Serializable msg,
+					java.util.List<Correlation> correlations) throws Exception;
 	
 	/**
 	 * This method processes a received message against a service
@@ -57,7 +58,8 @@ public interface ServiceValidator {
 	 * @param msg The message
 	 * @throws Exception Failed to process received message 
 	 */
-	public java.util.List<Correlation> messageReceived(String mesgType, java.io.Serializable msg) throws Exception;
+	public java.util.List<Correlation> messageReceived(String mesgType, java.io.Serializable msg,
+					java.util.List<Correlation> correlations) throws Exception;
 	
 	/**
 	 * This method is called to update the model associated
