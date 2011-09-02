@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2011, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,42 +15,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.activity.astore.rdbms;
+package org.savara.activity.store.rdbms.osgi;
 
-import javax.persistence.EntityManager;
+import java.util.Properties;
 
-/**
- * 
- * @author Jeff Yu
- *
- */
-public class JPANonTxContext implements TxContext {
-	
-	private EntityManager em;
-	
-	public JPANonTxContext(EntityManager em) {
-		this.em = em;
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
+
+public class Activator implements BundleActivator {
+
+	private static BundleContext context;
+
+	static BundleContext getContext() {
+		return context;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.savara.monitor.sstore.rdbms.TxContext#begin()
+	/*
+	 * (non-Javadoc)
+	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
-	public void begin() {
-		em.getTransaction().begin();
+	public void start(BundleContext bundleContext) throws Exception {
+		Activator.context = bundleContext;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.savara.monitor.sstore.rdbms.TxContext#commit()
+	/*
+	 * (non-Javadoc)
+	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
-	public void commit() {
-		em.getTransaction().commit();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.savara.monitor.sstore.rdbms.TxContext#rollback()
-	 */
-	public void rollback() {
-		em.getTransaction().rollback();
+	public void stop(BundleContext bundleContext) throws Exception {
+		Activator.context = null;
 	}
 
 }

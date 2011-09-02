@@ -1,4 +1,4 @@
-package org.savara.activity.astore.rdbms.model;
+package org.savara.activity.store.rdbms.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

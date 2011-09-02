@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.savara.activity.astore.rdbms;
+package org.savara.activity.store.rdbms;
 
 /**
  * Transaction context

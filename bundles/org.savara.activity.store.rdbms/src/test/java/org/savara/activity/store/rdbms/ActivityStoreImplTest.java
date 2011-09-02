@@ -15,14 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.activity.astore.rdbms;
+package org.savara.activity.store.rdbms;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.savara.activity.astore.rdbms.model.CorrelationIDEntity;
+import org.savara.activity.store.rdbms.model.CorrelationIDEntity;
 import org.savara.activity.model.Activity;
 import org.savara.activity.model.Context;
 import org.savara.activity.model.InteractionActivity;

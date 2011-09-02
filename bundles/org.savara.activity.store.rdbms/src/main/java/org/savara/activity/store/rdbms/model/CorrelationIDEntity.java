@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.activity.astore.rdbms.model;
+package org.savara.activity.store.rdbms.model;
 
 import javax.persistence.*;
 import java.io.Serializable;

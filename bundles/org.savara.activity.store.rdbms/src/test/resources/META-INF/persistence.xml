@@ -6,10 +6,10 @@
             version="1.0">
     <persistence-unit name="activity-store-unit" transaction-type="RESOURCE_LOCAL">
     	<provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>org.savara.activity.astore.rdbms.model.ActivityEntity</class>
-        <class>org.savara.activity.astore.rdbms.model.ComponentActivityEntity</class>
-        <class>org.savara.activity.astore.rdbms.model.InteractionActivityEntity</class>
-        <class>org.savara.activity.astore.rdbms.model.CorrelationIDEntity</class>
+        <class>org.savara.activity.store.rdbms.model.ActivityEntity</class>
+        <class>org.savara.activity.store.rdbms.model.ComponentActivityEntity</class>
+        <class>org.savara.activity.store.rdbms.model.InteractionActivityEntity</class>
+        <class>org.savara.activity.store.rdbms.model.CorrelationIDEntity</class>
         <properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
 			<property name="hibernate.hbm2ddl.auto" value="create"/>

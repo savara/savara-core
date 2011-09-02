@@ -15,60 +15,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.activity.astore.rdbms;
+package org.savara.activity.store.rdbms;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-import javax.transaction.TransactionManager;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * 
  * 
  * @author Jeff Yu
  *
  */
-public class JPAJTAContext implements TxContext {
-	
-	private static Logger logger = Logger.getLogger(JPAJTAContext.class.getName());
-	
-	private TransactionManager txManager;
+public class JPANonTxContext implements TxContext {
 	
 	private EntityManager em;
 	
-	public JPAJTAContext(TransactionManager txManager, EntityManager em) {
-		this.txManager = txManager;
+	public JPANonTxContext(EntityManager em) {
 		this.em = em;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see org.savara.monitor.sstore.rdbms.TxContext#begin()
+	 */
 	public void begin() {
-		try {
-			if (txManager.getStatus() == Status.STATUS_ACTIVE) {
-				em.joinTransaction();
-			}
-		}catch (SystemException e) {
-			logger.log(Level.SEVERE, "error in joining in transaction");
-			throw new RuntimeException(e);
-		}
-
+		em.getTransaction().begin();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.savara.monitor.sstore.rdbms.TxContext#commit()
+	 */
 	public void commit() {
-
+		em.getTransaction().commit();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.savara.monitor.sstore.rdbms.TxContext#rollback()
+	 */
 	public void rollback() {
-		try {
-			if (txManager.getStatus() == Status.STATUS_ACTIVE) {
-				txManager.setRollbackOnly();
-			}
-		}catch (SystemException e) {
-			logger.log(Level.SEVERE, "unable to set roll back.");
-			throw new RuntimeException(e);
-		}
-
+		em.getTransaction().rollback();
 	}
 
 }
