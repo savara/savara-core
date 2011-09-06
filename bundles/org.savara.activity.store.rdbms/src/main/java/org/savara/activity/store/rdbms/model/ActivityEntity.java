@@ -38,6 +38,9 @@ public abstract class ActivityEntity {
     @Column(name="ID")
     private long id;
 
+    @Embedded
+    private ComponentIDEntity componentId;
+
     @ManyToMany(mappedBy = "activities")
     private Collection<CorrelationIDEntity> correlationIds = new ArrayList<CorrelationIDEntity>();
 
@@ -45,7 +48,7 @@ public abstract class ActivityEntity {
     @Column(name="ACT_MODEL")
     private String activityModel;
 
-    @Column(name="CONTEXT")
+    @Column(name="ACT_CONTEXT")
     private String properties;
 
     @Column(name="ACT_ID")
@@ -53,6 +56,9 @@ public abstract class ActivityEntity {
 
     @Column(name="TIMESTAMP")
     private Date timestamp;
+
+    @Column(name="DESC_CODE")
+    private String descriptionCode;
 
 
     public long getId() {
@@ -104,5 +110,21 @@ public abstract class ActivityEntity {
             id.getActivities().add(this);
         }
         this.correlationIds = correlationIds;
+    }
+
+    public ComponentIDEntity getComponentId() {
+        return componentId;
+    }
+
+    public void setComponentId(ComponentIDEntity componentId) {
+        this.componentId = componentId;
+    }
+
+    public String getDescriptionCode() {
+        return descriptionCode;
+    }
+
+    public void setDescriptionCode(String descriptionCode) {
+        this.descriptionCode = descriptionCode;
     }
 }

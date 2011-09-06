@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<activity xmlns="http://www.savara.org/activity" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="InteractionActivity"
-          timestamp="2011-04-21T18:07:40.391+10:00" id="Activity-persistence-1"
-          outbound="true" operationName="requestForQuote" destinationAddress="BrokerEPR">
-    <correlation>
-        <key value="1" name="OrderId"/>
-    </correlation>
-    <context value="101" name="TradeID"/>
-    <context value="13245" name="ISBN" />
-    <parameter type="{http://example.org/types}RequestForQuote">
-        <RequestForQuote xmlns="http://example.org/types" id="1" product="ABC"/>
-    </parameter>
-</activity>
+<tns:activity descriptionCode="001" id="Activity-1" timestamp="2001-12-31T12:00:00" 
+			 xmlns:tns="http://www.savara.org/activity" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 outbound="false" operationName="requestForQuote">
+  <tns:source location="127.0.0.1" locationType="IP Address"
+          containerId="JBoss" application="Store" component="Store" componentType="Process" instanceId="Instance-1" threadId="Thread-1"/>
+  <tns:type xsi:type="tns:InteractionActivity"/>
+  <tns:context name="tradeId" value="101"/>
+  <tns:correlation>
+    <tns:key name="orderId" value="1"/>
+    <tns:key name="supplierId" value="1"/>
+  </tns:correlation>
+  <tns:analysis type="QName">
+  </tns:analysis>
+</tns:activity>

@@ -17,14 +17,14 @@
  */
 package org.savara.activity.store.rdbms;
 
-import org.savara.activity.ActivityStore;
-import org.savara.activity.store.rdbms.model.ActivityEntity;
-import org.savara.activity.store.rdbms.model.ComponentActivityEntity;
-import org.savara.activity.store.rdbms.model.CorrelationIDEntity;
-import org.savara.activity.store.rdbms.model.InteractionActivityEntity;
-import org.savara.activity.model.*;
-import org.savara.activity.util.ActivityModelUtil;
-import org.savara.common.config.Configuration;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -33,10 +33,18 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.transaction.TransactionManager;
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.savara.activity.ActivityStore;
+import org.savara.activity.model.Activity;
+import org.savara.activity.model.Context;
+import org.savara.activity.model.Correlation;
+import org.savara.activity.model.CorrelationKey;
+import org.savara.activity.model.InteractionActivity;
+import org.savara.activity.store.rdbms.model.ActivityEntity;
+import org.savara.activity.store.rdbms.model.CorrelationIDEntity;
+import org.savara.activity.store.rdbms.model.InteractionActivityEntity;
+import org.savara.activity.util.ActivityModelUtil;
+import org.savara.common.config.Configuration;
 
 /**
  * @author: Jeff Yu
@@ -110,32 +118,40 @@ public class ActivityStoreImpl implements ActivityStore {
        if (!isInitialized) {
            initialize();
        }
-       /* TODO: Fix model changes related to SAVARA-252
+       
        ActivityEntity entity;
-       if (activity instanceof InteractionActivity) {
-           entity = new InteractionActivityEntity();
-       } else if (activity instanceof ComponentActivity) {
-           entity = new ComponentActivityEntity();
+       
+       if (activity.getType() instanceof InteractionActivity) {
+    	   entity = new InteractionActivityEntity();
+    	   InteractionActivity ia = (InteractionActivity)activity.getType();
+    	   InteractionActivityEntity interactionAct  = (InteractionActivityEntity) entity;
+    	   interactionAct.setDestinationAddress(ia.getDestinationAddress());
+    	   interactionAct.setDestinationType(ia.getDestinationType());
+    	   interactionAct.setOperationName(ia.getOperationName());
+    	   interactionAct.setExchangeType(ia.getExchangeType().toString());
+    	   interactionAct.setOutbound(ia.getOutbound());
+    	   interactionAct.setReplyToAddress(ia.getReplyToAddress());
        } else {
-           throw new RuntimeException("Can not save the ActivityEntity: " + activity.getClass().getName());
+           throw new RuntimeException("Can not save the ActivityEntity: " + activity.getType().getClass().getName());
        }
+       
        try {
-
-           entity.setActId(activity.getId());
-           entity.setTimestamp(activity.getTimestamp());
-           entity.setActivityModel(ActivityModelUtil.serialize(activity));
-           entity.setProperties(getContextValue(activity.getContext()));
-           List<CorrelationIDEntity> ids = saveCorrelationIDEntity(activity.getCorrelation());
-
-           txContext.begin();
-           entity.setCorrelationIds(ids);
-           entityManager.persist(entity);
-           txContext.commit();
+    	   entity.setActId(activity.getId());
+    	   entity.setTimestamp(activity.getTimestamp());
+    	   entity.setActivityModel(ActivityModelUtil.serialize(activity));
+    	   entity.setProperties(getContextValue(activity.getContext()));
+    	   List<CorrelationIDEntity> ids = saveCorrelationIDEntity(activity.getCorrelation());
+    	   entity.setCorrelationIds(ids);
+    	   
+    	   txContext.begin();
+    	   entityManager.persist(entity);
+    	   txContext.commit();
+    	   
        } catch (Exception e) {
-           txContext.rollback();
-           throw new RuntimeException("Error in persist ActivityEntity.", e);
+    	   txContext.rollback();
+    	   throw new RuntimeException("Error in persisting Activity Entity.", e);
        }
-       */
+       
     }
 
 
@@ -183,10 +199,10 @@ public class ActivityStoreImpl implements ActivityStore {
         int i = 0;
         for (CorrelationKey key : correlation.getKey()) {
             builder.append(key.getName() + "=" + key.getValue());
-            i++;
             if (correlation.getKey().size()-1 > i) {
                 builder.append(",");
             }
+            i++;
         }
         return builder.toString();
     }

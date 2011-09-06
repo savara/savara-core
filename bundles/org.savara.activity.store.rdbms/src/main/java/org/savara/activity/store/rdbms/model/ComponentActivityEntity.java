@@ -11,6 +11,4 @@ import javax.persistence.Entity;
 @DiscriminatorValue("COMPONENT")
 public class ComponentActivityEntity extends ActivityEntity{
 
-
-
 }

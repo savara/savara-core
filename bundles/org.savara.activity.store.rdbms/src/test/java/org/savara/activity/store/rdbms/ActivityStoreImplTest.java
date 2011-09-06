@@ -51,7 +51,7 @@ public class ActivityStoreImplTest extends Assert {
 
         activityStore = new ActivityStoreImpl();
 
-        InputStream is = ActivityStoreImplTest.class.getResourceAsStream("/interactionActivity.xml");
+        InputStream is = ActivityStoreImplTest.class.getResourceAsStream("/InteractionActivity.xml");
         activity = ActivityModelUtil.deserialize(is);
     }
 
@@ -59,43 +59,49 @@ public class ActivityStoreImplTest extends Assert {
     public void testSaveCorrelationIDEntity() throws Exception {
         List<CorrelationIDEntity> entities = activityStore.saveCorrelationIDEntity(activity.getCorrelation());
         assertEquals(1, entities.size());
-        assertEquals("OrderId=1", entities.get(0).getValue());
+        assertEquals("orderId=1,supplierId=1", entities.get(0).getValue());
     }
 
 
-/* TODO: Fix model changes related to SAVARA-252
     @Test
     public void testSaveInteractionActivity() throws Exception {
         activityStore.save(activity);
 
         Activity theAct = activityStore.find(activity.getId());
-        assertEquals(2, theAct.getContext().size());
-        assertTrue(theAct instanceof InteractionActivity);
+        assertEquals(1, theAct.getContext().size());
+        assertTrue(theAct.getType() instanceof InteractionActivity);
 
         List<Activity> acts = activityStore.findByCorrelation(activity.getCorrelation().get(0));
-        assertEquals("Activity-persistence-1", acts.get(0).getId());
+        assertEquals("Activity-1", acts.get(0).getId());
 
         List<Activity> actContexts = activityStore.findByContext(activity.getContext());
-        assertEquals("Activity-persistence-1", actContexts.get(0).getId());
+        assertEquals("Activity-1", actContexts.get(0).getId());
 
         List<Context> condition = new ArrayList<Context>();
         condition.add(activity.getContext().get(0));
 
         List<Activity> result = activityStore.findByContext(condition);
-        assertEquals("Activity-persistence-1", actContexts.get(0).getId());
+        assertEquals("Activity-1", result.get(0).getId());
     }
-*/
+
 
 
     @Test
-    @Ignore("Related to SAVARA-252")
     public void testFindByContext() throws Exception {
         InputStream is = getClass().getResourceAsStream("/interactionActivity2.xml");
         Activity theAct = ActivityModelUtil.deserialize(is);
         activityStore.save(theAct);
 
         List<Activity> result = activityStore.findByContext(theAct.getContext());
-        assertTrue(result.size() >= 1);
+        
+        boolean resultFlag = false;
+        for (Activity act : result) {
+        	if ("Activity-2".equals(act.getId())) {
+        		resultFlag = true;
+        	}
+        }
+        
+        assertTrue(resultFlag);
     }
 
 

@@ -4,12 +4,13 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
             version="1.0">
-    <persistence-unit name="activity-store-unit" transaction-type="JTA">
+    <persistence-unit name="activity-store-unit" transaction-type="RESOURCE_LOCAL">
     	<provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <class>org.savara.activity.astore.rdbms.model.ActivityEntity</class>
-        <class>org.savara.activity.astore.rdbms.model.ComponentActivityEntity</class>
-        <class>org.savara.activity.astore.rdbms.model.InteractionActivityEntity</class>
-        <class>org.savara.activity.astore.rdbms.model.CorrelationIDEntity</class>
-    </persistence-unit>
+        <class>org.savara.activity.store.rdbms.model.ActivityEntity</class>
+        <class>org.savara.activity.store.rdbms.model.ComponentActivityEntity</class>
+        <class>org.savara.activity.store.rdbms.model.InteractionActivityEntity</class>
+        <class>org.savara.activity.store.rdbms.model.CorrelationIDEntity</class>
+        <class>org.savara.activity.store.rdbms.model.ComponentIDEntity</class>
+    </persistence-unit>    
     
 </persistence>
