@@ -17,21 +17,20 @@
  */
 package org.savara.activity.store.rdbms;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.savara.activity.store.rdbms.model.CorrelationIDEntity;
-import org.savara.activity.model.Activity;
-import org.savara.activity.model.Context;
-import org.savara.activity.model.InteractionActivity;
-import org.savara.activity.util.ActivityModelUtil;
-
 import java.io.InputStream;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.savara.activity.model.Activity;
+import org.savara.activity.model.Context;
+import org.savara.activity.model.InteractionActivity;
+import org.savara.activity.store.rdbms.model.CorrelationIDEntity;
+import org.savara.activity.util.ActivityModelUtil;
 
 /**
  * @author: Jeff Yu

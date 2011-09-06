@@ -11,6 +11,7 @@
         <class>org.savara.activity.store.rdbms.model.InteractionActivityEntity</class>
         <class>org.savara.activity.store.rdbms.model.CorrelationIDEntity</class>
         <class>org.savara.activity.store.rdbms.model.ComponentIDEntity</class>
+        <class>org.savara.activity.store.rdbms.model.ActivityModelEntity</class>
         <properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
 			<property name="hibernate.hbm2ddl.auto" value="create"/>

@@ -44,10 +44,6 @@ public abstract class ActivityEntity {
     @ManyToMany(mappedBy = "activities")
     private Collection<CorrelationIDEntity> correlationIds = new ArrayList<CorrelationIDEntity>();
 
-    @Lob
-    @Column(name="ACT_MODEL")
-    private String activityModel;
-
     @Column(name="ACT_CONTEXT")
     private String properties;
 
@@ -59,6 +55,9 @@ public abstract class ActivityEntity {
 
     @Column(name="DESC_CODE")
     private String descriptionCode;
+    
+    @OneToOne
+    private ActivityModelEntity activityModel;
 
 
     public long getId() {
@@ -67,17 +66,17 @@ public abstract class ActivityEntity {
 
     public void setId(long id) {
         this.id = id;
-    }
+    } 
 
-    public String getActivityModel() {
-        return activityModel;
-    }
+    public ActivityModelEntity getActivityModel() {
+		return activityModel;
+	}
 
-    public void setActivityModel(String activityModel) {
-        this.activityModel = activityModel;
-    }
+	public void setActivityModel(ActivityModelEntity activityModel) {
+		this.activityModel = activityModel;
+	}
 
-    public String getProperties() {
+	public String getProperties() {
         return properties;
     }
 

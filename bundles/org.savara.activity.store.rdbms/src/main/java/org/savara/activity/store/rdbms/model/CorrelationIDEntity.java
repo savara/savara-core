@@ -17,10 +17,18 @@
  */
 package org.savara.activity.store.rdbms.model;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
@@ -30,7 +38,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "SAVARA_ACT_CORRELATION_ID")
-public class CorrelationIDEntity implements Serializable{
+public class CorrelationIDEntity{
 
     @Id
     @GeneratedValue

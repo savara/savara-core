@@ -11,6 +11,7 @@
         <class>org.savara.activity.store.rdbms.model.InteractionActivityEntity</class>
         <class>org.savara.activity.store.rdbms.model.CorrelationIDEntity</class>
         <class>org.savara.activity.store.rdbms.model.ComponentIDEntity</class>
+        <class>org.savara.activity.store.rdbms.model.ActivityModelEntity</class>
     </persistence-unit>    
     
 </persistence>

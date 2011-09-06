@@ -41,6 +41,7 @@ import org.savara.activity.model.Correlation;
 import org.savara.activity.model.CorrelationKey;
 import org.savara.activity.model.InteractionActivity;
 import org.savara.activity.store.rdbms.model.ActivityEntity;
+import org.savara.activity.store.rdbms.model.ActivityModelEntity;
 import org.savara.activity.store.rdbms.model.CorrelationIDEntity;
 import org.savara.activity.store.rdbms.model.InteractionActivityEntity;
 import org.savara.activity.util.ActivityModelUtil;
@@ -138,12 +139,16 @@ public class ActivityStoreImpl implements ActivityStore {
        try {
     	   entity.setActId(activity.getId());
     	   entity.setTimestamp(activity.getTimestamp());
-    	   entity.setActivityModel(ActivityModelUtil.serialize(activity));
     	   entity.setProperties(getContextValue(activity.getContext()));
     	   List<CorrelationIDEntity> ids = saveCorrelationIDEntity(activity.getCorrelation());
     	   entity.setCorrelationIds(ids);
     	   
+    	   ActivityModelEntity model = new ActivityModelEntity();
+    	   model.setModel(ActivityModelUtil.serialize(activity));
+    	   
     	   txContext.begin();
+    	   entityManager.persist(model);
+    	   entity.setActivityModel(model);
     	   entityManager.persist(entity);
     	   txContext.commit();
     	   
@@ -231,7 +236,7 @@ public class ActivityStoreImpl implements ActivityStore {
             return null;
         }
         try {
-            return ActivityModelUtil.deserialize(entity.getActivityModel());
+            return ActivityModelUtil.deserialize(entity.getActivityModel().getModel());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -252,7 +257,7 @@ public class ActivityStoreImpl implements ActivityStore {
             for (CorrelationIDEntity id : ids) {
                 Collection<ActivityEntity> entities = id.getActivities();
                 for (ActivityEntity entity : entities) {
-                    activities.add(ActivityModelUtil.deserialize(entity.getActivityModel()));
+                    activities.add(ActivityModelUtil.deserialize(entity.getActivityModel().getModel()));
                 }
             }
             txContext.commit();
@@ -277,7 +282,7 @@ public class ActivityStoreImpl implements ActivityStore {
             query.setParameter("contexts", "%" + theContext + "%");
             List<ActivityEntity> actEntities = query.getResultList();
             for (ActivityEntity entity : actEntities) {
-                activities.add(ActivityModelUtil.deserialize(entity.getActivityModel()));
+                activities.add(ActivityModelUtil.deserialize(entity.getActivityModel().getModel()));
             }
             txContext.commit();
             return activities;
