@@ -50,7 +50,7 @@ public class ActivityStoreImplTest extends Assert {
 
         activityStore = new ActivityStoreImpl();
 
-        InputStream is = ActivityStoreImplTest.class.getResourceAsStream("/InteractionActivity.xml");
+        InputStream is = ActivityStoreImplTest.class.getResourceAsStream("/interactionActivity.xml");
         activity = ActivityModelUtil.deserialize(is);
     }
 
