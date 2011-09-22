@@ -5,11 +5,12 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 
 protocol PurchaseGoodsWithCancel(role Buyer) {
 	Buyer introduces Store;
-	Store introduces CreditAgency;
 
 	buy(BuyRequest) from Buyer to Store;
 
 	do {
+		Store introduces CreditAgency;
+
 		checkCredit(CreditCheckRequest) from Store to CreditAgency;
 	
 		choice at CreditAgency {

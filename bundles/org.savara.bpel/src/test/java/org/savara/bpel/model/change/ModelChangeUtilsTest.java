@@ -43,7 +43,7 @@ public class ModelChangeUtilsTest extends TestCase {
 		Contract c=new Contract();
 		r.getProperties().put(Contract.class.getName(), c);
 		
-		conv.setRole(r);
+		conv.setLocatedRole(r);
 		
 		ModelChangeUtils.addContract(context, r, c);
 		
@@ -68,7 +68,7 @@ public class ModelChangeUtilsTest extends TestCase {
 		Contract c=new Contract();
 		r.getProperties().put(Contract.class.getName(), c);
 		
-		conv.setRole(r);
+		conv.setLocatedRole(r);
 		
 		ModelChangeUtils.addContract(context, r, c);
 		
@@ -79,7 +79,7 @@ public class ModelChangeUtilsTest extends TestCase {
 		Contract c2=new Contract();
 		r2.getProperties().put(Contract.class.getName(), c2);
 		
-		conv2.setRole(r2);
+		conv2.setLocatedRole(r2);
 		
 		ModelChangeUtils.addContract(context, r2, c2);
 		
@@ -110,7 +110,7 @@ public class ModelChangeUtilsTest extends TestCase {
 		Protocol conv=new Protocol();
 		Role r1=new Role();
 		r1.setName(MY_LOCATED_ROLE);
-		conv.setRole(r1);
+		conv.setLocatedRole(r1);
 		
 		Contract c1=new Contract();
 		r1.getProperties().put(Contract.class.getName(), c1);
@@ -140,7 +140,7 @@ public class ModelChangeUtilsTest extends TestCase {
 
 		Role subr1=new Role();
 		subr1.setName(MY_OTHER_LOCATED_ROLE);
-		subconv.setRole(subr1);
+		subconv.setLocatedRole(subr1);
 		
 		Run run=new Run();
 		
@@ -156,7 +156,7 @@ public class ModelChangeUtilsTest extends TestCase {
 		//db.setBoundName(MY_OTHER_ROLE);
 		run.getParameters().add(db);
 		
-		conv.getBlock().add(subconv);
+		conv.getNestedProtocols().add(subconv);
 		
 		ModelChangeUtils.pushRoleContractMapping(context, run, null);
 		
@@ -198,7 +198,7 @@ public class ModelChangeUtilsTest extends TestCase {
 		Role r1=new Role();
 		r1.setName(MY_LOCATED_ROLE);
 		
-		conv.setRole(r1);
+		conv.setLocatedRole(r1);
 		
 		Role r2=new Role();
 		r2.setName(MY_ROLE);
@@ -219,7 +219,7 @@ public class ModelChangeUtilsTest extends TestCase {
 
 		Role subr1=new Role();
 		subr1.setName(MY_OTHER_LOCATED_ROLE);
-		subconv.setRole(subr1);
+		subconv.setLocatedRole(subr1);
 		
 		Contract c1=new Contract();
 		subr1.getProperties().put(Contract.class.getName(), c1);
@@ -251,7 +251,7 @@ public class ModelChangeUtilsTest extends TestCase {
 		//db.setBoundName(MY_OTHER_ROLE);
 		run.getParameters().add(db);
 		
-		conv.getBlock().add(subconv);
+		conv.getNestedProtocols().add(subconv);
 		
 		ModelChangeUtils.popRoleContractMapping(context, run, null);
 		

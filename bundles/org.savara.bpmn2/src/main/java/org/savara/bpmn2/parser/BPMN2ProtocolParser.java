@@ -60,7 +60,7 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 		return(content.hasExtension(BPMN_FILE_EXTENSION));
 	}
 	
-	public ProtocolModel parse(Content content, Journal journal, ProtocolContext context)
+	public ProtocolModel parse(ProtocolContext context, Content content, Journal journal)
 							throws java.io.IOException {
 		ProtocolModel ret=null;
 		

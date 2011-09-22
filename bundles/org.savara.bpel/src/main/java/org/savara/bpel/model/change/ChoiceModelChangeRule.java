@@ -31,7 +31,6 @@ import org.savara.bpel.model.TOnMessage;
 import org.savara.bpel.model.TPartnerLink;
 import org.savara.bpel.model.TPick;
 import org.savara.bpel.model.TProcess;
-import org.savara.bpel.model.TReply;
 import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TSequence;
 import org.savara.bpel.model.TVariable;
@@ -107,7 +106,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 		TProcess bpelModel=getBPELModel(model);
 		org.scribble.protocol.model.Choice elem=
 					 (org.scribble.protocol.model.Choice)mobj;
-		java.util.List<Block> paths=elem.getBlocks();
+		java.util.List<Block> paths=elem.getPaths();
 		
 		/*
 		
@@ -128,8 +127,8 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 		Role role=null;
 		//String roleNamespace=null;
 	
-		if (elem.enclosingProtocol() != null) {
-			role = elem.enclosingProtocol().getRole();
+		if (elem.getEnclosingProtocol() != null) {
+			role = elem.getEnclosingProtocol().getLocatedRole();
 		}
 
 		//Contract contract=ModelChangeUtils.getContract(context,
@@ -673,7 +672,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 	
 				if (i == 0) {
 					act.setSequence(seq);
-				} else if (i == elem.getBlocks().size()-1) {
+				} else if (i == elem.getPaths().size()-1) {
 					TActivityContainer construct=new TActivityContainer();
 					construct.setSequence(seq);
 					
@@ -707,8 +706,8 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 		if (var == null) {
 			Role role=null;
 			
-			if (interaction.enclosingProtocol() != null) {
-				role = interaction.enclosingProtocol().getRole();
+			if (interaction.getEnclosingProtocol() != null) {
+				role = interaction.getEnclosingProtocol().getLocatedRole();
 			}
 
 			var = new TVariable();

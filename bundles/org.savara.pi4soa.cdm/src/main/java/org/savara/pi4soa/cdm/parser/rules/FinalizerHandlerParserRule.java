@@ -149,7 +149,7 @@ public class FinalizerHandlerParserRule implements ParserRule {
 				conv.getBlock().getContents().add(roleList);
 			}
 			
-			roleList.getRoles().add(role);
+			roleList.getIntroducedRoles().add(role);
 			
 			context.setState(role.getName(), role);
 		}
@@ -177,7 +177,7 @@ public class FinalizerHandlerParserRule implements ParserRule {
 				conv.getBlock().getContents().add(roleList);
 			}
 			
-			roleList.getRoles().add(role);
+			roleList.getIntroducedRoles().add(role);
 			
 			context.setState(role.getName(), role);
 		}

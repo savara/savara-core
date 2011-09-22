@@ -20,11 +20,7 @@
 package org.savara.pi4soa.cdm.parser.rules;
 
 import org.pi4soa.cdl.*;
-import org.pi4soa.cdl.Interaction;
-import org.pi4soa.cdl.Package;
-import org.pi4soa.cdl.Parallel;
 import org.pi4soa.cdl.util.CDLTypeUtil;
-import org.pi4soa.cdl.util.InteractionUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
@@ -62,7 +58,7 @@ public class ChoiceParserRule implements ParserRule {
 		org.pi4soa.cdl.Choice cdl=(org.pi4soa.cdl.Choice)cdlType;
 		java.util.List<Block> blocks=new java.util.Vector<Block>();
 		//Role fromRole=null;
-		java.util.List<Role> toRoles=new java.util.Vector<Role>();
+		//java.util.List<Role> toRoles=new java.util.Vector<Role>();
 		
 		// Check if all paths are associated with the same from and to role
 		//boolean f_sameRoles=isSameRoles(context, cdl);
@@ -217,7 +213,7 @@ public class ChoiceParserRule implements ParserRule {
 						java.util.List<org.scribble.common.model.Annotation> annotations=
 												activity.getAnnotations();
 						
-						activity = ((Choice)activity).getBlocks().get(0);
+						activity = ((Choice)activity).getPaths().get(0);
 						
 						activity.getAnnotations().addAll(annotations);
 					}
@@ -255,7 +251,7 @@ public class ChoiceParserRule implements ParserRule {
 		ret = new org.scribble.protocol.model.Choice();
 		
 		((org.scribble.protocol.model.Choice)ret).
-				getBlocks().addAll(blocks);
+				getPaths().addAll(blocks);
 		
 		if (ret != null) {
 			Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);

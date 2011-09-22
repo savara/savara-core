@@ -1,4 +1,4 @@
-protocol ESBBrokerProcess_Buyer @ Buyer {
+protocol ESBBrokerProcess_Buyer at Buyer {
 	makeEnquiry(enquiry) to Broker;
 	makeEnquiry(quoteList) from Broker;
 	choice {

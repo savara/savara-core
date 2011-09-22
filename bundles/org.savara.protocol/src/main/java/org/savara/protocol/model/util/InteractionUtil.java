@@ -58,8 +58,8 @@ public class InteractionUtil {
 	public static boolean isSend(Interaction interaction) {
 		Role role=null;
 		
-		if (interaction.enclosingProtocol() != null) {
-			role = interaction.enclosingProtocol().getRole();
+		if (interaction.getEnclosingProtocol() != null) {
+			role = interaction.getEnclosingProtocol().getLocatedRole();
 		}
 		
 		return(isSend(interaction, role));

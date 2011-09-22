@@ -115,8 +115,8 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 		Interface intf=null;
 		String roleNamespace=null;
 			
-		if (interaction.enclosingProtocol() != null) {
-			role = interaction.enclosingProtocol().getRole();
+		if (interaction.getEnclosingProtocol() != null) {
+			role = interaction.getEnclosingProtocol().getLocatedRole();
 		}
 		
 		// Identify port type role

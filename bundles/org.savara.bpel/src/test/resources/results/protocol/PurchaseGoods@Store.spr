@@ -1,4 +1,4 @@
-protocol PurchaseGoodsProcess_Store @ StoreInterface {
+protocol PurchaseGoodsProcess_Store at StoreInterface {
 	buy(BuyRequest) from Buyer;
 	checkCredit(CreditCheckRequest) to CreditAgency;
 	choice at CreditAgency {

@@ -57,7 +57,7 @@ public class ContractGeneratorTest {
 		
 		try {
 			Protocol conv=new Protocol();
-			conv.setRole(new Role());
+			conv.setLocatedRole(new Role());
 			conv.setName("LocatedProtocol");
 			
 			FeedbackHandler journal=new DefaultFeedbackHandler();

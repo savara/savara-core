@@ -53,9 +53,9 @@ public class CDMProtocolParserUtilTest {
 			fail("First introducer should be Buyer");
 		}
 		
-		if (i1.getRoles().size() != 1) {
+		if (i1.getIntroducedRoles().size() != 1) {
 			fail("First introduces should have 1 role");
-		} else if (i1.getRoles().get(0).getName().equals("Broker") == false) {
+		} else if (i1.getIntroducedRoles().get(0).getName().equals("Broker") == false) {
 			fail("First introduces should be Broker");
 		}
 		
@@ -63,9 +63,9 @@ public class CDMProtocolParserUtilTest {
 			fail("Second introducer should be Broker");
 		}
 		
-		if (i2.getRoles().size() != 1) {
+		if (i2.getIntroducedRoles().size() != 1) {
 			fail("Second introduces should have 1 role");
-		} else if (i2.getRoles().get(0).getName().equals("CreditAgency") == false) {
+		} else if (i2.getIntroducedRoles().get(0).getName().equals("CreditAgency") == false) {
 			fail("Second introduces should be CreditAgency");
 		}
 		
@@ -106,11 +106,11 @@ public class CDMProtocolParserUtilTest {
 			fail("Introducer should be Broker");
 		}
 		
-		if (i1.getRoles().size() != 1) {
+		if (i1.getIntroducedRoles().size() != 1) {
 			fail("Number of roles should be 1");
 		}
 		
-		if (i1.getRoles().get(0).getName().equals("SupplierQuoteEngine") == false) {
+		if (i1.getIntroducedRoles().get(0).getName().equals("SupplierQuoteEngine") == false) {
 			fail("Role should be SupplierQuoteEngine");
 		}
 	}
@@ -150,11 +150,11 @@ public class CDMProtocolParserUtilTest {
 			fail("Introducer should be Broker");
 		}
 		
-		if (i1.getRoles().size() != 1) {
+		if (i1.getIntroducedRoles().size() != 1) {
 			fail("Number of roles should be 1");
 		}
 		
-		if (i1.getRoles().get(0).getName().equals("SupplierTxnProcessor") == false) {
+		if (i1.getIntroducedRoles().get(0).getName().equals("SupplierTxnProcessor") == false) {
 			fail("Role should be SupplierTxnProcessor");
 		}
 	}

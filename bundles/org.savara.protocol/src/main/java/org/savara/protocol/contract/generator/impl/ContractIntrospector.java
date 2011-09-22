@@ -225,7 +225,7 @@ public class ContractIntrospector extends DefaultVisitor {
 	}
 
 	public void accept(Run elem) {
-		Protocol toProtocol=RunUtil.getInnerProtocol(elem.enclosingProtocol(),
+		Protocol toProtocol=RunUtil.getInnerProtocol(elem.getEnclosingProtocol(),
 								elem.getProtocolReference());
 		
 		if (toProtocol != null) {
@@ -316,7 +316,7 @@ public class ContractIntrospector extends DefaultVisitor {
 	public void accept(Interaction interaction) {
 		
 		// Check if interaction is relevant for the server role 
-		if (!isRoleRelevant(interaction.enclosingProtocol().getRole()) &&
+		if (!isRoleRelevant(interaction.getEnclosingProtocol().getLocatedRole()) &&
 				!isRoleRelevant(interaction.getFromRole()) &&
 				!isRoleRelevant(interaction.getToRoles())) {
 			return;		

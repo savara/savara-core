@@ -80,7 +80,7 @@ public class ConditionalParserRule implements ParserRule {
 
 	
 		Block block=new Block();
-		ret.getBlocks().add(block);
+		ret.getPaths().add(block);
 		
 		/*
 		if (locator.getInteraction() != null &&

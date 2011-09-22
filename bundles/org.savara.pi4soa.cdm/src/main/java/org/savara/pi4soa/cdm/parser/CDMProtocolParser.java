@@ -52,7 +52,7 @@ public class CDMProtocolParser implements ProtocolParser {
 		return(content.hasExtension("cdm"));
 	}
 	
-	public ProtocolModel parse(Content content, Journal journal, ProtocolContext context)
+	public ProtocolModel parse(ProtocolContext context, Content content, Journal journal)
 							throws java.io.IOException {
 		ProtocolModel ret=null;
 		

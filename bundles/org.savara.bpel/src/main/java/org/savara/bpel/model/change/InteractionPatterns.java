@@ -69,15 +69,15 @@ public class InteractionPatterns {
 						org.scribble.protocol.model.Choice choice=
 							(org.scribble.protocol.model.Choice)act;
 						
-						if (choice.getBlocks().size() > 0) {
+						if (choice.getPaths().size() > 0) {
 							ret = true;							
 						}
 						
 						for (int i=0; ret &&
-								i < choice.getBlocks().size(); i++) {
+								i < choice.getPaths().size(); i++) {
 							
 							// Get initial interaction
-							Interaction intn=getFirstInteraction(choice.getBlocks().get(0));
+							Interaction intn=getFirstInteraction(choice.getPaths().get(0));
 
 							if (intn != null) {
 								ret = !InteractionUtil.isRequest(intn);
@@ -99,13 +99,13 @@ public class InteractionPatterns {
 	// to use for subsequent activities.
 	
 	public static boolean isResponseAndFaultHandler(Choice choice) {
-		boolean ret=choice.getBlocks().size() > 0;
+		boolean ret=choice.getPaths().size() > 0;
 		
 		// Check if all paths are responses with same reply label
 		String label=null;
 		
-		for (int i=0; ret && i < choice.getBlocks().size(); i++) {
-			Block path=choice.getBlocks().get(i);
+		for (int i=0; ret && i < choice.getPaths().size(); i++) {
+			Block path=choice.getPaths().get(i);
 			
 			// Get initial interaction
 			Interaction interaction=getFirstInteraction(path);
@@ -156,7 +156,7 @@ public class InteractionPatterns {
 			// Check if scope
 			if (sub instanceof Run) {
 				//Protocol defn=((Run)sub).getProtocol();
-				Protocol defn=RunUtil.getInnerProtocol(((Run)sub).enclosingProtocol(),
+				Protocol defn=RunUtil.getInnerProtocol(((Run)sub).getEnclosingProtocol(),
 						((Run)sub).getProtocolReference());
 				org.scribble.protocol.model.Activity b=null;
 				
@@ -203,11 +203,15 @@ public class InteractionPatterns {
 			
 		// Check if receive is directly contained within a
 		// sub-definition
+		// TODO: If first interaction in a nested protocol, then may also
+		// need to check whether being generated as first element in an onMessage
+		// with the same interaction details, as checking that the nested protocol
+		// has been called inside a choice in the protocol may not be adequate,
+		// as the same protocol may have also be called outside of a choice - so
+		// the context could be relevant.
 		} else if (InteractionUtil.isSend(in) == false &&
 				path.getParent() instanceof org.scribble.protocol.model.Protocol &&
-				path.getParent().getParent() instanceof Block &&
-				path.getParent().getParent().getParent() instanceof 
-							org.scribble.protocol.model.Protocol) {
+				path.getParent().getParent() instanceof org.scribble.protocol.model.Protocol) {
 			ret = true;
 		}
 		
@@ -219,7 +223,7 @@ public class InteractionPatterns {
 		
 		// For a choice to be considered a 'switch', it only needs
 		// to be a receiver
-		if (choice.getRole() == null || !choice.getRole().equals(choice.enclosingProtocol().getRole())) {
+		if (choice.getRole() == null || !choice.getRole().equals(choice.getEnclosingProtocol().getLocatedRole())) {
 			ret = true;
 		}
 		

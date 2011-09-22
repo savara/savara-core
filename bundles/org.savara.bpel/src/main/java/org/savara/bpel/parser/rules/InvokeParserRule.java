@@ -66,7 +66,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 			
 			org.scribble.protocol.model.Block when=
 						new org.scribble.protocol.model.Block();
-			te.getBlocks().add(when);
+			te.getPaths().add(when);
 			
 			activities = when.getContents();
 			
@@ -106,7 +106,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 				fcb.add(raise);
 				*/
 				
-				te.getBlocks().add(fcb);
+				te.getPaths().add(fcb);
 				
 				if (faultVar != null) {
 					context.removeVariable(faultVar);

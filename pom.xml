@@ -2,8 +2,8 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org</groupId>
-	<artifactId>savara</artifactId>
+	<groupId>org.savara</groupId>
+	<artifactId>parent</artifactId>
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
     <name>Savara</name>
@@ -39,8 +39,10 @@
 
 	<properties>
 		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
-		<scribble.version>2.0.0.20110708-M6</scribble.version>
-		<pi4soa.version>3.1.1-SNAPSHOT</pi4soa.version>
+		<scribble.version>2.0.0-SNAPSHOT</scribble.version>
+		<pi4soa.version>3.1.1-SNAPSHOT</pi4soa.version> <!-- Actually taken from
+						Tycho built update site, not Nexus, so
+						snapshot is irrelevant. -->
 		<junit.version>4.4</junit.version>
 		<rosetta.version>4.7</rosetta.version>
 		<log4j.version>1.2.14</log4j.version>

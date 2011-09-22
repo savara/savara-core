@@ -68,7 +68,7 @@ public class ModelChangeUtils {
 				boolean ret=true;
 				
 				if (obj instanceof Introduces) {
-					roles.addAll(((Introduces)obj).getRoles());
+					roles.addAll(((Introduces)obj).getIntroducedRoles());
 				} else if (obj instanceof Protocol &&
 						obj != conv) {
 					ret = false;
@@ -122,8 +122,8 @@ public class ModelChangeUtils {
 		
 		if (contracts != null) {
 		
-			if (conv.getRole() != null && root) {
-				removeRoleContract(conv.getRole(), contracts);
+			if (conv.getLocatedRole() != null && root) {
+				removeRoleContract(conv.getLocatedRole(), contracts);
 			}
 		
 			// Get list of roles
@@ -181,15 +181,15 @@ public class ModelChangeUtils {
 
 			// Store protocol against mapped role
 			//Protocol defn=run.getProtocol();
-			Protocol defn=RunUtil.getInnerProtocol(run.enclosingProtocol(),
+			Protocol defn=RunUtil.getInnerProtocol(run.getEnclosingProtocol(),
 							run.getProtocolReference());
 			
-			if (run.enclosingProtocol().getRole() != null &&
-					defn != null && defn.getRole() != null) {
-				Contract c=contracts.remove(run.enclosingProtocol().getRole().getName());
+			if (run.getEnclosingProtocol().getLocatedRole() != null &&
+					defn != null && defn.getLocatedRole() != null) {
+				Contract c=contracts.remove(run.getEnclosingProtocol().getLocatedRole().getName());
 				
 				if (c != null) {
-					contracts.put(defn.getRole().getName(), c);
+					contracts.put(defn.getLocatedRole().getName(), c);
 				}
 			}
 		
@@ -256,15 +256,15 @@ public class ModelChangeUtils {
 
 			// Store protocol against mapped role
 			//Protocol defn=run.getProtocol();
-			Protocol defn=RunUtil.getInnerProtocol(run.enclosingProtocol(),
+			Protocol defn=RunUtil.getInnerProtocol(run.getEnclosingProtocol(),
 					run.getProtocolReference());
 
-			if (run.enclosingProtocol().getRole() != null &&
-					defn != null && defn.getRole() != null) {
-				Contract c=contracts.remove(defn.getRole().getName());
+			if (run.getEnclosingProtocol().getLocatedRole() != null &&
+					defn != null && defn.getLocatedRole() != null) {
+				Contract c=contracts.remove(defn.getLocatedRole().getName());
 				
 				if (c != null) {
-					contracts.put(run.enclosingProtocol().getRole().getName(), c);
+					contracts.put(run.getEnclosingProtocol().getLocatedRole().getName(), c);
 				}
 			}
 			

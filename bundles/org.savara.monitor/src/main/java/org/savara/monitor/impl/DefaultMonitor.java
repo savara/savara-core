@@ -171,14 +171,12 @@ public class DefaultMonitor implements Monitor {
 		boolean f_created=false;
 		
 		if (session == null) {
-			session = new DefaultSession();
-			m_sessionStore.create(pid, cid, session);
-		
+
 			// Try to create new session
-			if (session instanceof Session) {
-				m_monitor.initialize(context, desc, (Session)session);
-			}
+			session = (DefaultSession)m_monitor.createSession(context, desc, DefaultSession.class);
 			
+			m_sessionStore.create(pid, cid, session);
+
 			f_created = true;
 		}
 		
@@ -186,7 +184,7 @@ public class DefaultMonitor implements Monitor {
 			// Won't specify role, as part of protocol description not
 			// generally in the runtime environment - possible future
 			// enhancement
-			ret = m_monitor.messageSent(context, desc, (Session)session, null, mesg);
+			ret = m_monitor.messageSent(context, desc, (Session)session, mesg);
 			
 			// If session just created but result not handled, or session finished
 			// then remove

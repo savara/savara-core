@@ -17,9 +17,6 @@
  */
 package org.savara.bpel.model.change;
 
-import org.savara.bpel.BPELDefinitions;
-import org.savara.bpel.model.TScope;
-import org.savara.bpel.model.TSequence;
 import org.savara.protocol.model.change.ModelChangeContext;
 import org.savara.protocol.model.change.ModelChangeUtils;
 import org.scribble.protocol.model.*;
@@ -85,7 +82,7 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
 		Run elem=(Run)mobj;
 
-		Protocol defn=RunUtil.getInnerProtocol(elem.enclosingProtocol(),
+		Protocol defn=RunUtil.getInnerProtocol(elem.getEnclosingProtocol(),
 				elem.getProtocolReference());
 
 		if (defn != null) {
@@ -118,7 +115,7 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 			// Process the activities within the conversation
 			java.util.List<Activity> acts=defn.getBlock().getContents();
 			
-			Object parent=context.getParent();
+			//Object parent=context.getParent();
 			
 			//context.setParent(seq);
 			

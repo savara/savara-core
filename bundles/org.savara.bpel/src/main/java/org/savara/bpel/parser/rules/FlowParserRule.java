@@ -78,7 +78,7 @@ public class FlowParserRule implements ProtocolParserRule {
 			
 			context.parse(elem.getActivity().get(i), b.getContents(), handler);
 			
-			parallel.getBlocks().add(b);
+			parallel.getPaths().add(b);
 		}
 		
 		activities.add(parallel);

@@ -84,11 +84,11 @@ public class ParallelParserRule implements ParserRule {
 				
 				if (activity != null) {
 					if (activity instanceof Block) {
-						ret.getBlocks().add((Block)activity);
+						ret.getPaths().add((Block)activity);
 					} else {
 						Block block=new Block();
 						block.getContents().add(activity);
-						ret.getBlocks().add(block);
+						ret.getPaths().add(block);
 					}
 				}
 				

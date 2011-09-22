@@ -102,6 +102,7 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 * @param elem The behavior type
 	 * @return Whether it is a root
 	 */
+	/*
 	protected boolean isRoot(Activity elem) {
 		boolean ret=false;
 		
@@ -112,6 +113,7 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 		
 		return(ret);
 	}
+	*/
 	
 	/**
 	 * This method returns the containing ActivityModel.

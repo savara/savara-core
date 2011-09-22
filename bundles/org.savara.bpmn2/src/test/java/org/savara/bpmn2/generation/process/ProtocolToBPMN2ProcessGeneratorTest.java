@@ -99,7 +99,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     			try {
     				Content content=new ResourceContent(url.toURI());
     				
-    				model = parser.parse(content, journal, null);
+    				model = parser.parse(null, content, journal);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}
@@ -121,8 +121,8 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     					});
     					*/
     	
-    					ProtocolModel local=ProtocolServices.getProtocolProjector().project(model,
-    									role, new JournalProxy(handler), context);
+    					ProtocolModel local=ProtocolServices.getProtocolProjector().project(context, model,
+    									role, new JournalProxy(handler));
     	
     					if (local != null) {
     						// TODO: SAVARA-167 - issue when projection is based on a sub-protocol
@@ -167,7 +167,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     								
     								String text=new String(baos.toByteArray());
     								
-    								checkResults(result, local.getProtocol().getRole(), text);
+    								checkResults(result, local.getProtocol().getLocatedRole(), text);
     							} catch(Exception e) {
     								result.addError(this, e);
     							}

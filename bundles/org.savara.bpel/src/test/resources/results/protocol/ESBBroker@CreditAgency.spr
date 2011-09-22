@@ -1,4 +1,4 @@
-protocol ESBBrokerProcess_CreditAgency @ CreditAgency {
+protocol ESBBrokerProcess_CreditAgency at CreditAgency {
 	checkCredit(CreditCheckRequest) from Broker;
 	choice {
 		checkCredit(CreditCheckOk) to Broker;

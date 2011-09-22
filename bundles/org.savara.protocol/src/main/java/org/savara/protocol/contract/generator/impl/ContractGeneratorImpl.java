@@ -45,13 +45,13 @@ public class ContractGeneratorImpl implements ContractGenerator {
 					java.util.PropertyResourceBundle.getBundle(
 							"org.savara.contract.Messages"), "SAVARA-CONTRACT-00001"));
 			
-		} else if (cm.getRole() == null) {
+		} else if (cm.getLocatedRole() == null) {
 			throw new IllegalArgumentException(MessageFormatter.format(
 					java.util.PropertyResourceBundle.getBundle(
 							"org.savara.contract.Messages"), "SAVARA-CONTRACT-00002"));
 		}
 
-		return(generate(cm, null, cm.getRole(), handler));
+		return(generate(cm, null, cm.getLocatedRole(), handler));
 	}
 
 	/**

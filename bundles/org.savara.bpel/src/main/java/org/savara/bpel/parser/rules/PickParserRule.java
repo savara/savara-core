@@ -105,7 +105,7 @@ public class PickParserRule implements ProtocolParserRule {
 				context.parse(act, cb.getContents(), handler);
 			}
 
-			elem.getBlocks().add(cb);
+			elem.getPaths().add(cb);
 		}
 		
 		// TODO: If alarms defined, then model these using a

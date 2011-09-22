@@ -43,7 +43,7 @@ public class BPELProtocolParser implements ProtocolParser {
 		return(content.hasExtension(BPELDefinitions.BPEL_TYPE));
 	}
 
-	public ProtocolModel parse(Content content, Journal journal, ProtocolContext context)
+	public ProtocolModel parse(ProtocolContext context, Content content, Journal journal)
 									throws java.io.IOException {
 		ProtocolModel ret=new ProtocolModel();
 		
@@ -72,7 +72,7 @@ public class BPELProtocolParser implements ProtocolParser {
 			for (TPartnerLink pl : process.getPartnerLinks().getPartnerLink()) {
 				if (pl.getMyRole() != null && pl.getMyRole().trim().length() > 0) {
 					role = pl.getMyRole();
-					protocol.setRole(new Role(role));
+					protocol.setLocatedRole(new Role(role));
 					break;
 				}
 			}

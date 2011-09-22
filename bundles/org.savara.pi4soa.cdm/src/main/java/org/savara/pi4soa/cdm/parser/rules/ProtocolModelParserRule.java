@@ -165,7 +165,7 @@ public class ProtocolModelParserRule implements ParserRule {
 					public boolean start(Choice elem) {
 						Role fromRole=null;
 
-						for (Block b : elem.getBlocks()) {
+						for (Block b : elem.getPaths()) {
 							// Identify 'from' role
 							if (fromRole == null) {
 								java.util.List<ModelObject> list=org.scribble.protocol.util.InteractionUtil.getInitialInteractions(b);

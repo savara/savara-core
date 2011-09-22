@@ -1,4 +1,4 @@
-protocol ReqRespFaultProcess_Seller @ SellerBehavior {
+protocol ReqRespFaultProcess_Seller at SellerBehavior {
 	checkCredit(CreditCheckRequest) from Buyer;
 	choice {
 		checkCredit(CreditCheckOk) to Buyer;

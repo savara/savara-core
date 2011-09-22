@@ -87,7 +87,7 @@ public class BPELModelUtil {
 					doc.getDocumentElement().setAttribute("xmlns:"+prefix, ns); 
 				}
 				
-				java.io.ByteArrayOutputStream baos2=new java.io.ByteArrayOutputStream();
+				//java.io.ByteArrayOutputStream baos2=new java.io.ByteArrayOutputStream();
 				
 				javax.xml.transform.dom.DOMSource source=new javax.xml.transform.dom.DOMSource(doc);
 				javax.xml.transform.stream.StreamResult result=new javax.xml.transform.stream.StreamResult(os);

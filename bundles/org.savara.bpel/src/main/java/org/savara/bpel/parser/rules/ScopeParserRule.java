@@ -94,7 +94,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 				}
 			}
 			
-			choice.getBlocks().add(cb);
+			choice.getPaths().add(cb);
 			
 			// Process fault handlers
 			for (int i=0; i < scope.getFaultHandlers().getCatch().size(); i++) {
@@ -141,7 +141,7 @@ public class ScopeParserRule implements ProtocolParserRule {
 					context.parse(act, fcb.getContents(), handler);
 				}
 				
-				choice.getBlocks().add(fcb);
+				choice.getPaths().add(fcb);
 				
 				if (faultVar != null) {
 					context.removeVariable(faultVar);

@@ -45,7 +45,7 @@ public class ProtocolToBPELGeneratorTest {
         //suite.addTest(new ProtocolToBPELTester("ESBBroker", "CreditAgency"));
 
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "Buyer"));     
-        suite.addTest(new ProtocolToBPELTester("ESBBroker", "Broker"));  
+        suite.addTest(new ProtocolToBPELTester("ESBBroker", "Broker"));
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierQuoteEngine"));
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierTxnProcessor"));
         
@@ -115,7 +115,7 @@ public class ProtocolToBPELGeneratorTest {
     			try {
     				Content content=new ResourceContent(url.toURI());
     				
-    				model = parser.parse(content, journal, null);
+    				model = parser.parse(null, content, journal);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}
@@ -162,7 +162,7 @@ public class ProtocolToBPELGeneratorTest {
 						*/
 						
 						org.scribble.protocol.model.ProtocolModel projected=
-    									projector.project(model, role, journal, null);
+    									projector.project(null, model, role, journal);
     					
     					/* Currently if a 'fail' is performed in Tycho build, it
     					 * hangs the build.

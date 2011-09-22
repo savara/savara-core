@@ -101,8 +101,8 @@ public class ProtocolToWSDLGeneratorTest {
     			try {
     				Content content=new ResourceContent(url.toURI());
     				
-    				model = ProtocolServices.getParserManager().parse(content,
-    								new JournalProxy(feedback), null);
+    				model = ProtocolServices.getParserManager().parse(null, content,
+    								new JournalProxy(feedback));
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}

@@ -1,4 +1,4 @@
-protocol RequestForQuote_SupplierQuoteEngine @ SupplierBehavior {
+protocol RequestForQuote_SupplierQuoteEngine at SupplierBehavior {
 	getQuote(requestForQuote) from Broker;
 	getQuote(quote) to Broker;
 }

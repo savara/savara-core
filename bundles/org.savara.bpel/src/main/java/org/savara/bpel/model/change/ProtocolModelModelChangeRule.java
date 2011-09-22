@@ -92,11 +92,11 @@ public class ProtocolModelModelChangeRule extends AbstractBPELModelChangeRule {
 			ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 			
 			if (cg != null) {
-				if (cm.getProtocol().getRole() != null) {
-					Contract c=cg.generate(cm.getProtocol(), null, cm.getProtocol().getRole(), context.getFeedbackHandler());
+				if (cm.getProtocol().getLocatedRole() != null) {
+					Contract c=cg.generate(cm.getProtocol(), null, cm.getProtocol().getLocatedRole(), context.getFeedbackHandler());
 					
 					if (c != null) {
-						ModelChangeUtils.addContract(context, cm.getProtocol().getRole(), c);
+						ModelChangeUtils.addContract(context, cm.getProtocol().getLocatedRole(), c);
 					}					
 				}
 				

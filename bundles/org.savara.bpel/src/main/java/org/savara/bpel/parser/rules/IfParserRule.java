@@ -55,7 +55,7 @@ public class IfParserRule implements ProtocolParserRule {
 			context.parse(act, cb.getContents(), handler);
 		}
 		
-		elem.getBlocks().add(cb);
+		elem.getPaths().add(cb);
 		
 		// Convert 'else if' paths
 		for (int i=0; i < bpelElem.getElseif().size(); i++) {
@@ -65,7 +65,7 @@ public class IfParserRule implements ProtocolParserRule {
 			
 			context.parse(elseIfElem, cb.getContents(), handler);
 			
-			elem.getBlocks().add(cb);
+			elem.getPaths().add(cb);
 		}
 		
 		// Convert 'else' path
@@ -74,7 +74,7 @@ public class IfParserRule implements ProtocolParserRule {
 			
 			context.parse(bpelElem.getElse(), cb.getContents(), handler);
 			
-			elem.getBlocks().add(cb);
+			elem.getPaths().add(cb);
 		}
 		
 		activities.add(elem);

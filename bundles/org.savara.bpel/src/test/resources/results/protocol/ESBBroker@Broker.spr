@@ -1,4 +1,4 @@
-protocol ESBBrokerProcess_Broker @ BrokerBehavior {
+protocol ESBBrokerProcess_Broker at BrokerBehavior {
 	makeEnquiry(enquiry) from Buyer;
 	repeat {
 		getQuote(requestForQuote) to SupplierQuoteEngine;

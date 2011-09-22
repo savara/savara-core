@@ -91,7 +91,7 @@ public class CDMToProtocolParserTest {
     			try {
     				Content content=new ResourceContent(url.toURI());
     				
-    				model = parser.parse(content, journal, null);
+    				model = parser.parse(null, content, journal);
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}

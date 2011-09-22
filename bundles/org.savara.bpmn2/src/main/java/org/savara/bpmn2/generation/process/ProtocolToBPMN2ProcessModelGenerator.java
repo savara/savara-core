@@ -33,7 +33,6 @@ import org.savara.bpmn2.internal.generation.process.components.ParallelActivity;
 import org.savara.bpmn2.internal.generation.process.components.ReceiveActivity;
 import org.savara.bpmn2.internal.generation.process.components.RepeatActivity;
 import org.savara.bpmn2.internal.generation.process.components.RunActivity;
-import org.savara.bpmn2.internal.generation.process.components.InlineActivity;
 import org.savara.bpmn2.internal.generation.process.components.SendActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
 import org.savara.bpmn2.internal.generation.process.components.DoActivity;
@@ -201,9 +200,9 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		
 		protected String getPoolName(Protocol elem) {
 			if (elem.getParent() instanceof ProtocolModel) {
-				return(elem.getRole().getName());
+				return(elem.getLocatedRole().getName());
 			} else {
-				return(elem.getName()+"_"+elem.getRole().getName());
+				return(elem.getName()+"_"+elem.getLocatedRole().getName());
 			}
 		}
 		
@@ -285,12 +284,12 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * @param elem The perform
 		 */
 		public void accept(Run elem) {
-			AbstractBPMNActivity state=null;
+			//AbstractBPMNActivity state=null;
 			
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
-				state = new RunActivity(elem,
-							umls, m_modelFactory, m_notationFactory);					
+				//state =
+				new RunActivity(elem, umls, m_modelFactory, m_notationFactory);					
 				
 				/* TODO: See if possible to determine who is the initiating party
 				 * in the performed protocol, to establish a link
@@ -398,7 +397,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			// Check if a receive
 			if (elem.getFromRole() == null ||
-					elem.getFromRole().equals(elem.enclosingProtocol().getRole())) {
+					elem.getFromRole().equals(elem.getEnclosingProtocol().getLocatedRole())) {
 				
 				BPMNActivity umls=getBPMNActivity();
 				if (umls != null) {

@@ -26,7 +26,6 @@ import org.savara.protocol.model.change.ModelChangeUtils;
 import org.savara.contract.model.Contract;
 import org.savara.contract.model.Interface;
 import org.scribble.protocol.model.*;
-import org.scribble.protocol.util.RoleUtil;
 
 /**
  * This is the model change rule for the Conversation.
@@ -97,10 +96,10 @@ public class ProtocolModelChangeRule extends AbstractBPELModelChangeRule {
 			
 			// Set the name of the process
 			bpelModel.setName(conv.getName()+"_"+
-								conv.getRole().getName());
+								conv.getLocatedRole().getName());
 			
 			// Get contract
-			Contract contract=ModelChangeUtils.getContract(context, conv.getRole());
+			Contract contract=ModelChangeUtils.getContract(context, conv.getLocatedRole());
 			
 			if (contract != null) {
 				roleNamespace = contract.getNamespace();
@@ -110,7 +109,7 @@ public class ProtocolModelChangeRule extends AbstractBPELModelChangeRule {
 			}
 			
 			// Add import for this role
-			addImport(context, bpelModel, conv, conv.getRole());
+			addImport(context, bpelModel, conv, conv.getLocatedRole());
 
 			// Add import statements for partner roles
 			/*

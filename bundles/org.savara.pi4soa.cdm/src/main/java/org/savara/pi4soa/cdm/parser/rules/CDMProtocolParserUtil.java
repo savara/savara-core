@@ -329,7 +329,7 @@ public class CDMProtocolParserUtil {
 					ret.add(intro);
 				}
 				
-				intro.getRoles().add(r);
+				intro.getIntroducedRoles().add(r);
 			}
 		}
 		

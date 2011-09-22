@@ -620,7 +620,7 @@ public class InteractionParserRule implements ParserRule {
 			for (int i=0; i < cbs.size(); i++) {
 				Block cb=cbs.get(i);
 				
-				choice.getBlocks().add(cb);
+				choice.getPaths().add(cb);
 			}
 			
 			block.getContents().add(choice);			

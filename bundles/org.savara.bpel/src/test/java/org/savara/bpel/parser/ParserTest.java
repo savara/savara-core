@@ -36,7 +36,7 @@ public class ParserTest extends TestCase {
 	public static TestSuite suite() {
         TestSuite suite = new TestSuite("BPEL->Protocol Parser Tests");
         
-        suite.addTest(new BPELToProtocolTest("ESBBrokerProcess_Broker", "ESBBroker@Broker"));
+        suite.addTest(new BPELToProtocolTest("ESBBrokerProcess_Broker", "ESBBroker@Broker"));       
         suite.addTest(new BPELToProtocolTest("ESBBrokerProcess_Buyer", "ESBBroker@Buyer"));  
         suite.addTest(new BPELToProtocolTest("ESBBrokerProcess_CreditAgency", "ESBBroker@CreditAgency"));
 
@@ -49,7 +49,7 @@ public class ParserTest extends TestCase {
         
         suite.addTest(new BPELToProtocolTest("ReqRespFaultProcess_Buyer", "ReqRespFault@Buyer"));
         suite.addTest(new BPELToProtocolTest("ReqRespFaultProcess_Seller", "ReqRespFault@Seller"));
-        
+
         /**
          * TODO: (SAVARA-150) Commenting out this test for now, as we now need the accompanying WSDL to be able to
          * resolve the message type's underlying XSD element or type.
@@ -103,8 +103,8 @@ public class ParserTest extends TestCase {
     				
     				Content content=new ResourceContent(url.toURI());
     				
-    				model = parser.parse(content, journal, new DefaultProtocolContext(null,
-    									new ResourceLoaderImpl()));
+    				model = parser.parse(new DefaultProtocolContext(null,
+							new ResourceLoaderImpl()), content, journal);
     			} catch(Exception e) {
     				e.printStackTrace();
     				result.addError(this, new Throwable("Parsing BPEL failed"));

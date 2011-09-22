@@ -1,4 +1,4 @@
-protocol PurchaseGoodsProcess_Buyer @ Buyer {
+protocol PurchaseGoodsProcess_Buyer at Buyer {
 	buy(BuyRequest) to Store;
 	choice at Store {
 		buy(BuyConfirmed) from Store;

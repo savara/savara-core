@@ -56,15 +56,15 @@ public class ContractIntrospectorTest {
 		
 		Protocol top=new Protocol();
 		top.setName("top");
-		top.setRole(r);
+		top.setLocatedRole(r);
 		
 		Protocol mid=new Protocol();
 		mid.setName("mid");
-		mid.setRole(r);
+		mid.setLocatedRole(r);
 		
 		Protocol sub=new Protocol();
 		sub.setName("sub");
-		sub.setRole(r);
+		sub.setLocatedRole(r);
 		
 		ProtocolReference ref=new ProtocolReference();
 		ref.setName("sub");
@@ -73,10 +73,10 @@ public class ContractIntrospectorTest {
 		Run run=new Run();
 		run.setProtocolReference(ref);
 		
-		top.getBlock().getContents().add(mid);
+		top.getNestedProtocols().add(mid);
 		
-		mid.getBlock().getContents().add(run);
-		mid.getBlock().getContents().add(sub);
+		mid.getBlock().add(run);
+		mid.getNestedProtocols().add(sub);
 		
 		FeedbackHandler handler=new DefaultFeedbackHandler();
 		
@@ -96,15 +96,15 @@ public class ContractIntrospectorTest {
 		
 		Protocol top=new Protocol();
 		top.setName("top");
-		top.setRole(r);
+		top.setLocatedRole(r);
 		
 		Protocol mid=new Protocol();
 		mid.setName("mid");
-		mid.setRole(r);
+		mid.setLocatedRole(r);
 		
 		Protocol sub=new Protocol();
 		sub.setName("sub");
-		sub.setRole(r);
+		sub.setLocatedRole(r);
 		
 		ProtocolReference ref1=new ProtocolReference();
 		ref1.setName("mid");
@@ -113,8 +113,8 @@ public class ContractIntrospectorTest {
 		Run run1=new Run();
 		run1.setProtocolReference(ref1);
 		
-		top.getBlock().getContents().add(run1);
-		top.getBlock().getContents().add(mid);
+		top.getBlock().add(run1);
+		top.getNestedProtocols().add(mid);
 		
 		ProtocolReference ref2=new ProtocolReference();
 		ref2.setName("sub");
@@ -123,8 +123,8 @@ public class ContractIntrospectorTest {
 		Run run2=new Run();
 		run2.setProtocolReference(ref2);
 		
-		mid.getBlock().getContents().add(run2);
-		mid.getBlock().getContents().add(sub);
+		mid.getBlock().add(run2);
+		mid.getNestedProtocols().add(sub);
 		
 		FeedbackHandler handler=new DefaultFeedbackHandler();
 		
@@ -150,7 +150,7 @@ public class ContractIntrospectorTest {
 		Protocol protocol=new Protocol();
 		Role role=new Role();
 		role.setName(MY_ROLE);
-		protocol.setRole(role);
+		protocol.setLocatedRole(role);
 		
 		FeedbackHandler handler=new DefaultFeedbackHandler();
 		
@@ -186,7 +186,7 @@ public class ContractIntrospectorTest {
 		Protocol protocol=new Protocol();
 		Role role=new Role();
 		role.setName(MY_ROLE);
-		protocol.setRole(role);
+		protocol.setLocatedRole(role);
 		
 		FeedbackHandler handler=new DefaultFeedbackHandler();
 		
@@ -244,7 +244,7 @@ public class ContractIntrospectorTest {
 		Protocol protocol=new Protocol();
 		Role role=new Role();
 		role.setName(MY_ROLE);
-		protocol.setRole(role);
+		protocol.setLocatedRole(role);
 		
 		FeedbackHandler handler=new DefaultFeedbackHandler();
 		

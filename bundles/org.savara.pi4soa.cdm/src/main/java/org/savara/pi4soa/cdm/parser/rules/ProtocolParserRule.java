@@ -135,7 +135,7 @@ public class ProtocolParserRule implements ParserRule {
 			
 			for (Introduces intro : declared) {
 				
-				for (Role r : intro.getRoles()) {
+				for (Role r : intro.getIntroducedRoles()) {
 					//rl.getRoles().add(r);
 					
 					context.setState(r.getName(), r);
@@ -171,7 +171,7 @@ public class ProtocolParserRule implements ParserRule {
 					Protocol subconv=(Protocol)
 							parse(context, Protocol.class, subchoreo);
 					
-					ret.getBlock().getContents().add(subconv);
+					ret.getNestedProtocols().add(subconv);
 					
 					context.addProtocol(subconv);
 				}
@@ -187,7 +187,7 @@ public class ProtocolParserRule implements ParserRule {
 						Protocol subconv=(Protocol)
 							rule.parse(context, Protocol.class, finalizer);
 					
-						ret.getBlock().getContents().add(subconv);
+						ret.getNestedProtocols().add(subconv);
 					
 						context.addProtocol(subconv);
 					}
@@ -205,7 +205,7 @@ public class ProtocolParserRule implements ParserRule {
 			Protocol subconv=(Protocol)
 					parse(context, Protocol.class, subchoreo);
 			
-			ret.getBlock().getContents().add(subconv);
+			ret.getNestedProtocols().add(subconv);
 			
 			context.addProtocol(subconv);
 			
@@ -220,7 +220,7 @@ public class ProtocolParserRule implements ParserRule {
 					subconv = (Protocol)
 						rule.parse(context, Protocol.class, finalizer);
 				
-					ret.getBlock().getContents().add(subconv);
+					ret.getNestedProtocols().add(subconv);
 				
 					context.addProtocol(subconv);
 				}
@@ -301,6 +301,8 @@ public class ProtocolParserRule implements ParserRule {
 		}
 		
 		// Transfer sub-conversations to end of block
+		/* TODO: Should no longer be required, as nested protocols no longer
+		 * stored as part of the block contents.
 		if (ret.getBlock().getContents().size() > 0) {
 			org.scribble.protocol.model.Activity lastAct=
 				ret.getBlock().getContents().get(ret.getBlock().getContents().size()-1);
@@ -318,14 +320,15 @@ public class ProtocolParserRule implements ParserRule {
 				}
 			}
 		}
+		 */
 		
 		// SAVARA-214 - check if declared roles should be moved to inner blocks
 		if (ret.getBlock().get(0) instanceof Introduces) {
 			Introduces rl=(Introduces)ret.getBlock().get(0);
 			
-			for (int i=rl.getRoles().size()-1; i >= 0; i--) {
-				Role r=rl.getRoles().get(i);
-				Block b=RoleUtil.getEnclosingBlock(ret, r);
+			for (int i=rl.getIntroducedRoles().size()-1; i >= 0; i--) {
+				Role r=rl.getIntroducedRoles().get(i);
+				Block b=RoleUtil.getEnclosingBlock(ret, r, false);
 				
 				if (b == null) {
 					// Report error
@@ -340,12 +343,12 @@ public class ProtocolParserRule implements ParserRule {
 						b.getContents().add(0, innerrl);
 					}
 					
-					rl.getRoles().remove(r);
-					innerrl.getRoles().add(r);
+					rl.getIntroducedRoles().remove(r);
+					innerrl.getIntroducedRoles().add(r);
 				}
 			}
 			
-			if (rl.getRoles().size() == 0) {
+			if (rl.getIntroducedRoles().size() == 0) {
 				ret.getBlock().remove(rl);
 			}
 		}
