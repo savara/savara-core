@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SAVARA Switchyard BPEL
+Bundle-SymbolicName: org.savara.switchyard.bpel;singleton:=true
+Bundle-Version: 2.0.0.SNAPSHOT
+Bundle-Activator: org.savara.switchyard.bpel.osgi.Activator
+Bundle-Vendor: www.savara.org
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"
+Require-Bundle: org.apache.commons.logging,
+ org.savara.contract,
+ org.savara.wsdl,
+ org.savara.bpel,
+ org.savara.common,
+ org.junit
+Export-Package: org.savara.switchyard.bpel.generator
+Bundle-ActivationPolicy: lazy
+
