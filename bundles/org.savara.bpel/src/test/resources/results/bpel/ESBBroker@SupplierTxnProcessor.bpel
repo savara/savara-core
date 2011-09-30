@@ -2,7 +2,7 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_SupplierTxnProcessor.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_SupplierTxnProcessorArtifacts.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
     <partnerLinks>
-        <partnerLink myRole="SupplierBehavior" name="BrokerToSupplierTxnProcessor" partnerLinkType="spr:BrokerToSupplierTxnProcessorServiceLT"/>
+        <partnerLink myRole="SupplierTxnProcessor" name="BrokerToSupplierTxnProcessor" partnerLinkType="spr:BrokerToSupplierTxnProcessorServiceLT"/>
     </partnerLinks>
     <variables>
         <variable messageType="spr:confirmRequest" name="confirmRequestVar"/>

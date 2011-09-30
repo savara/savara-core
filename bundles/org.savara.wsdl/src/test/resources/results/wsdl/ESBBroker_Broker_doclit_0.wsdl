@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Broker" targetNamespace="http://www.pi4soa.org/ESBBroker/Broker" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier">
+  <wsdl:message name="rejectedFault">
+    <wsdl:part name="content" element="orderRejected">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="makeEnquiryRequest">
+    <wsdl:part name="content" element="enquiry">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buyResponse">
+    <wsdl:part name="content" element="bookingReference">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="makeEnquiryResponse">
+    <wsdl:part name="content" element="quoteList">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buyRequest">
+    <wsdl:part name="content" element="buy">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cancelRequest">
+    <wsdl:part name="content" element="cancel">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="BrokerBehavior">
+    <wsdl:operation name="makeEnquiry">
+      <wsdl:input message="brk:makeEnquiryRequest">
+    </wsdl:input>
+      <wsdl:output message="brk:makeEnquiryResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="buy">
+      <wsdl:input message="brk:buyRequest">
+    </wsdl:input>
+      <wsdl:output message="brk:buyResponse">
+    </wsdl:output>
+      <wsdl:fault name="rejected" message="brk:rejectedFault">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="cancel">
+      <wsdl:input message="brk:cancelRequest">
+    </wsdl:input>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BrokerBehaviorBinding" type="brk:BrokerBehavior">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="makeEnquiry">
+      <soap:operation soapAction="http://www.pi4soa.org/ESBBroker/Broker/makeEnquiry"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="buy">
+      <soap:operation soapAction="http://www.pi4soa.org/ESBBroker/Broker/buy"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="rejected">
+        <soap:fault name="rejected" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="cancel">
+      <soap:operation soapAction="http://www.pi4soa.org/ESBBroker/Broker/cancel"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BrokerService">
+    <wsdl:port name="BrokerBehaviorPort" binding="brk:BrokerBehaviorBinding">
+      <soap:address location="http://localhost:8080/BrokerService/BrokerBehaviorPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

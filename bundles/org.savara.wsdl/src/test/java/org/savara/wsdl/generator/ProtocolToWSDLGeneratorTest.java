@@ -33,6 +33,7 @@ import org.savara.protocol.contract.generator.ContractGenerator;
 import org.savara.protocol.contract.generator.ContractGeneratorFactory;
 import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
+import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
 import org.savara.wsdl.generator.soap.SOAPRPCWSDLBinding;
 
 public class ProtocolToWSDLGeneratorTest {
@@ -60,6 +61,19 @@ public class ProtocolToWSDLGeneratorTest {
     }
     
     protected static class ProtocolToWSDLTester extends TestCase {
+
+    	private static final String[] BINDING_NAMES={
+    		"rpc",
+    		"doclit"
+    	};
+    	
+    	private static final WSDLBinding[] BINDINGS={
+    		new SOAPRPCWSDLBinding(),
+    		new SOAPDocLitWSDLBinding()
+    	};
+    	
+    	private String m_name=null;
+    	private String m_role=null;
 
     	/**
     	 * This constructor is initialized with the test
@@ -120,27 +134,29 @@ public class ProtocolToWSDLGeneratorTest {
 							// Convert to WSDL
 							WSDLGenerator gen=WSDLGeneratorFactory.getWSDLGenerator();
 							
-							java.util.List<Definition> defns=gen.generate(contract,
-										new SOAPRPCWSDLBinding(), feedback);
-							
-							for (int i=0; i < defns.size(); i++) {
-								Definition defn=defns.get(i);
+							for (int j=0; j < BINDING_NAMES.length; j++) {
+								java.util.List<Definition> defns=gen.generate(contract,
+											BINDINGS[j], feedback);
 								
-								try {
-									javax.wsdl.xml.WSDLWriter writer=
-										javax.wsdl.factory.WSDLFactory.newInstance().newWSDLWriter();
-	
-									java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+								for (int i=0; i < defns.size(); i++) {
+									Definition defn=defns.get(i);
 									
-									writer.writeWSDL(defn, baos);
-									
-									byte[] b=baos.toByteArray();
-									
-									baos.close();
-									
-									checkResults(result, new String(b), "rpc", i);
-								} catch(Exception e) {
-									result.addError(this, e);
+									try {
+										javax.wsdl.xml.WSDLWriter writer=
+											javax.wsdl.factory.WSDLFactory.newInstance().newWSDLWriter();
+		
+										java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+										
+										writer.writeWSDL(defn, baos);
+										
+										byte[] b=baos.toByteArray();
+										
+										baos.close();
+										
+										checkResults(result, new String(b), BINDING_NAMES[j], i);
+									} catch(Exception e) {
+										result.addError(this, e);
+									}
 								}
 							}
 						} else {
@@ -261,8 +277,5 @@ public class ProtocolToWSDLGeneratorTest {
     			}
     		}
     	}
-
-    	private String m_name=null;
-    	private String m_role=null;
     }
 }

@@ -2,7 +2,7 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ReqRespFaultProcess_Seller.wsdl" namespace="http://www.pi4soa.org/ReqRespFault/Seller"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ReqRespFaultProcess_BuyerArtifacts.wsdl" namespace="http://www.pi4soa.org/ReqRespFault/Buyer"/>
     <partnerLinks>
-        <partnerLink name="BuyerToSeller" partnerLinkType="byr:BuyerToSellerLT" partnerRole="SellerRequester"/>
+        <partnerLink name="BuyerToSeller" partnerLinkType="byr:BuyerToSellerLT" partnerRole="Seller"/>
     </partnerLinks>
     <variables>
         <variable messageType="slr:checkCreditRequest" name="checkCreditRequestVar"/>

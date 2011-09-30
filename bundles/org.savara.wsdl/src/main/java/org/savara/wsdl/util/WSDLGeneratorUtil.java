@@ -17,6 +17,8 @@
  */
 package org.savara.wsdl.util;
 
+import org.scribble.protocol.model.Role;
+
 /**
  * This class provides general utility functions for
  * use when generating artefacts.
@@ -80,4 +82,18 @@ public class WSDLGeneratorUtil {
 		}
 		return(ret);
 	}
+	
+	/**
+	 * This method returns the WSDL file name for the supplied role and local
+	 * conversation model.
+	 * 
+	 * @param role The role
+	 * @param localcm The local conversation model
+	 * @param fileNum The file name (zero being the main wsdl file)
+	 * @return The file name
+	 */
+	public static String getWSDLFileName(Role role, String modelName, String suffix) {
+		return(modelName+"_"+role.getName()+suffix+".wsdl");
+	}
+			
 }

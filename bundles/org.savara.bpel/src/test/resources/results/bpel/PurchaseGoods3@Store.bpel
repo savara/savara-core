@@ -4,9 +4,9 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_Logistics.wsdl" namespace="http://www.jboss.org/examples/logistics"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_StoreArtifacts.wsdl" namespace="http://www.jboss.org/examples/store"/>
     <partnerLinks>
-        <partnerLink myRole="StoreInterface" name="BuyerToStore" partnerLinkType="sto:BuyerToStoreServiceLT"/>
-        <partnerLink name="StoreToCreditAgency" partnerLinkType="sto:StoreToCreditAgencyLT" partnerRole="CreditAgencyRequester"/>
-        <partnerLink name="StoreToLogistics" partnerLinkType="sto:StoreToLogisticsLT" partnerRole="LogisticsRequester"/>
+        <partnerLink myRole="Store" name="BuyerToStore" partnerLinkType="sto:BuyerToStoreServiceLT"/>
+        <partnerLink name="StoreToCreditAgency" partnerLinkType="sto:StoreToCreditAgencyLT" partnerRole="CreditAgency"/>
+        <partnerLink name="StoreToLogistics" partnerLinkType="sto:StoreToLogisticsLT" partnerRole="Logistics"/>
     </partnerLinks>
     <variables>
         <variable messageType="sto:buyRequest" name="buyRequestVar"/>

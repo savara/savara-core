@@ -7,11 +7,11 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_PolicyQuoteProcessServiceArtifacts.wsdl" namespace="http://www.example.org/policyQuoteProcessService"/>
     <partnerLinks>
         <partnerLink myRole="PolicyQuoteProcessService" name="DriverToPolicyQuoteProcessService" partnerLinkType="pps:DriverToPolicyQuoteProcessServiceServiceLT"/>
-        <partnerLink name="PolicyQuoteProcessServiceToDrivingRecordService" partnerLinkType="pps:PolicyQuoteProcessServiceToDrivingRecordServiceLT" partnerRole="DrivingRecordServiceRequester"/>
-        <partnerLink myRole="DrivingRecordCallbackService" name="DrivingRecordServiceToPolicyQuoteProcessService" partnerLinkType="pps:DrivingRecordServiceToPolicyQuoteProcessServiceServiceLT"/>
-        <partnerLink name="PolicyQuoteProcessServiceToCreditCheckService" partnerLinkType="pps:PolicyQuoteProcessServiceToCreditCheckServiceLT" partnerRole="CreditCheckServiceRequester"/>
-        <partnerLink name="PolicyQuoteProcessServiceToPolicyQuoteCalculationService" partnerLinkType="pps:PolicyQuoteProcessServiceToPolicyQuoteCalculationServiceLT" partnerRole="PolicyQuoteCalculationServiceRequester"/>
-        <partnerLink name="PolicyQuoteProcessServiceToPolicyQuoteEntityService" partnerLinkType="pps:PolicyQuoteProcessServiceToPolicyQuoteEntityServiceLT" partnerRole="PolicyQuoteEntityServiceRequester"/>
+        <partnerLink name="PolicyQuoteProcessServiceToDrivingRecordService" partnerLinkType="pps:PolicyQuoteProcessServiceToDrivingRecordServiceLT" partnerRole="DrivingRecordService"/>
+        <partnerLink myRole="PolicyQuoteProcessService" name="DrivingRecordServiceToPolicyQuoteProcessService" partnerLinkType="pps:DrivingRecordServiceToPolicyQuoteProcessServiceServiceLT"/>
+        <partnerLink name="PolicyQuoteProcessServiceToCreditCheckService" partnerLinkType="pps:PolicyQuoteProcessServiceToCreditCheckServiceLT" partnerRole="CreditCheckService"/>
+        <partnerLink name="PolicyQuoteProcessServiceToPolicyQuoteCalculationService" partnerLinkType="pps:PolicyQuoteProcessServiceToPolicyQuoteCalculationServiceLT" partnerRole="PolicyQuoteCalculationService"/>
+        <partnerLink name="PolicyQuoteProcessServiceToPolicyQuoteEntityService" partnerLinkType="pps:PolicyQuoteProcessServiceToPolicyQuoteEntityServiceLT" partnerRole="PolicyQuoteEntityService"/>
     </partnerLinks>
     <variables>
         <variable messageType="pps:receivePolicyQuoteRequest" name="receivePolicyQuoteRequestVar"/>

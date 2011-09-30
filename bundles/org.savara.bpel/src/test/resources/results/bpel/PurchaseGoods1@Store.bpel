@@ -3,8 +3,8 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_CreditAgency.wsdl" namespace="java:org.jboss.savara.examples.purchasing"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_StoreArtifacts.wsdl" namespace="http://www.jboss.org/examples/store"/>
     <partnerLinks>
-        <partnerLink myRole="StoreInterface" name="BuyerToStore" partnerLinkType="sto:BuyerToStoreServiceLT"/>
-        <partnerLink name="StoreToCreditAgency" partnerLinkType="sto:StoreToCreditAgencyLT" partnerRole="CreditAgencyRequester"/>
+        <partnerLink myRole="Store" name="BuyerToStore" partnerLinkType="sto:BuyerToStoreServiceLT"/>
+        <partnerLink name="StoreToCreditAgency" partnerLinkType="sto:StoreToCreditAgencyLT" partnerRole="CreditAgency"/>
     </partnerLinks>
     <variables>
         <variable messageType="sto:buyRequest" name="buyRequestVar"/>

@@ -3,10 +3,10 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_CreditAgency.wsdl" namespace="http://www.pi4soa.org/ESBBroker/CreditAgency"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_BrokerArtifacts.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Broker"/>
     <partnerLinks>
-        <partnerLink myRole="BrokerBehavior" name="BuyerToBroker" partnerLinkType="brk:BuyerToBrokerServiceLT"/>
-        <partnerLink name="BrokerToSupplierQuoteEngine" partnerLinkType="brk:BrokerToSupplierQuoteEngineLT" partnerRole="SupplierQuoteEngineRequester"/>
-        <partnerLink name="BrokerToCreditAgency" partnerLinkType="brk:BrokerToCreditAgencyLT" partnerRole="CreditAgencyRequester"/>
-        <partnerLink name="BrokerToSupplierTxnProcessor" partnerLinkType="brk:BrokerToSupplierTxnProcessorLT" partnerRole="SupplierTxnProcessorRequester"/>
+        <partnerLink myRole="Broker" name="BuyerToBroker" partnerLinkType="brk:BuyerToBrokerServiceLT"/>
+        <partnerLink name="BrokerToSupplierQuoteEngine" partnerLinkType="brk:BrokerToSupplierQuoteEngineLT" partnerRole="SupplierQuoteEngine"/>
+        <partnerLink name="BrokerToCreditAgency" partnerLinkType="brk:BrokerToCreditAgencyLT" partnerRole="CreditAgency"/>
+        <partnerLink name="BrokerToSupplierTxnProcessor" partnerLinkType="brk:BrokerToSupplierTxnProcessorLT" partnerRole="SupplierTxnProcessor"/>
     </partnerLinks>
     <variables>
         <variable messageType="brk:makeEnquiryRequest" name="makeEnquiryRequestVar"/>

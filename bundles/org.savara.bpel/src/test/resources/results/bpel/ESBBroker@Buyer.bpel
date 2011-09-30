@@ -2,7 +2,7 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_Broker.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Broker"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_BuyerArtifacts.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Buyer"/>
     <partnerLinks>
-        <partnerLink name="BuyerToBroker" partnerLinkType="byr:BuyerToBrokerLT" partnerRole="BrokerRequester"/>
+        <partnerLink name="BuyerToBroker" partnerLinkType="byr:BuyerToBrokerLT" partnerRole="Broker"/>
     </partnerLinks>
     <variables>
         <variable messageType="brk:makeEnquiryRequest" name="makeEnquiryRequestVar"/>

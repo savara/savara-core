@@ -17,7 +17,9 @@
  */
 package org.savara.bpel.util;
 
-import org.savara.bpel.model.*;
+import org.savara.bpel.model.TPartnerLink;
+import org.savara.bpel.model.TPartnerLinks;
+import org.savara.bpel.model.TProcess;
 
 public class PartnerLinkUtil {
 
@@ -71,4 +73,5 @@ public class PartnerLinkUtil {
 		
 		return(ret);
 	}
+
 }

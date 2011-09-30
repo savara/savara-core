@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Store" targetNamespace="http://www.jboss.org/examples/store" xmlns:pur="java:org.jboss.savara.examples.purchasing" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sto="http://www.jboss.org/examples/store" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:message name="BuyFailedFault">
+    <wsdl:part name="content" type="sto:BuyFailed">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buyRequest">
+    <wsdl:part name="content" type="sto:BuyRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buyResponse">
+    <wsdl:part name="content" type="sto:BuyConfirmed">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="StoreInterface">
+    <wsdl:operation name="buy">
+      <wsdl:input message="sto:buyRequest">
+    </wsdl:input>
+      <wsdl:output message="sto:buyResponse">
+    </wsdl:output>
+      <wsdl:fault name="BuyFailed" message="sto:BuyFailedFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="StoreInterfaceBinding" type="sto:StoreInterface">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="buy">
+      <soap:operation soapAction="http://www.jboss.org/examples/store/buy"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="BuyFailed">
+        <soap:fault name="BuyFailed" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="StoreService">
+    <wsdl:port name="StoreInterfacePort" binding="sto:StoreInterfaceBinding">
+      <soap:address location="http://localhost:8080/StoreService/StoreInterfacePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -336,8 +336,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 	
 					if (interaction != null && InteractionUtil.isRequest(interaction) && prev == null) {
 						
-						pl.setMyRole(role.getName()+"Service");
-						//pl.setPartnerRole(interaction.getToRole().getName());
+						pl.setMyRole(role.getName());
 						pl.setName(interaction.getFromRole().getName()+"To"+role.getName());
 						
 						String plt=interaction.getFromRole().getName()+"To"+role.getName()+"Service"+"LT";
@@ -364,8 +363,8 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 							}
 						}
 					} else {
-						pl.setMyRole(role.getName()+"Requester");
-						pl.setPartnerRole(elem.getRole().getName()+"Service");
+						pl.setMyRole(role.getName());
+						pl.setPartnerRole(elem.getRole().getName());
 						pl.setName(role.getName()+"To"+elem.getRole().getName());
 						
 						String plt=role.getName()+"To"+elem.getRole().getName()+"Requester"+"LT";

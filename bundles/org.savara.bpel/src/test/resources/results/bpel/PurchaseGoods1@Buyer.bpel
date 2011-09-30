@@ -2,7 +2,7 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_Store.wsdl" namespace="http://www.jboss.org/examples/store"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_BuyerArtifacts.wsdl" namespace="http://www.jboss.org/savara/examples"/>
     <partnerLinks>
-        <partnerLink name="BuyerToStore" partnerLinkType="tns:BuyerToStoreLT" partnerRole="StoreRequester"/>
+        <partnerLink name="BuyerToStore" partnerLinkType="tns:BuyerToStoreLT" partnerRole="Store"/>
     </partnerLinks>
     <variables>
         <variable messageType="sto:buyRequest" name="buyRequestVar"/>

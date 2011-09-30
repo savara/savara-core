@@ -255,7 +255,7 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 				act = new TInvoke();
 				
 				// TODO: What about if multiple 'to' roles
-				pl.setPartnerRole(interaction.getToRoles().get(0).getName()+"Requester");
+				pl.setPartnerRole(interaction.getToRoles().get(0).getName());
 				pl.setName(role.getName()+"To"+interaction.getToRoles().get(0).getName());
 				
 				String plt=role.getName()+"To"+interaction.getToRoles().get(0).getName()+"LT";
@@ -273,7 +273,7 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 				act = new TReply();
 		
 				// TODO: What about if multiple 'to' roles
-				pl.setMyRole(role.getName()+"Service");
+				pl.setMyRole(role.getName());
 				pl.setName(interaction.getToRoles().get(0).getName()+"To"+role.getName());
 				
 				String plt=interaction.getToRoles().get(0)+"To"+role.getName()+"Service"+"LT";
@@ -344,8 +344,7 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 	
 				if (InteractionUtil.isRequest(interaction)) {
 		
-					pl.setMyRole(intfName); //role.getName()+"Service");
-					//pl.setPartnerRole(interaction.getToRole().getName());
+					pl.setMyRole(role.getName());
 					pl.setName(interaction.getFromRole().getName()+"To"+role.getName());
 					
 					String plt=interaction.getFromRole().getName()+"To"+role.getName()+"Service"+"LT";
@@ -355,8 +354,8 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 	
 					//portType = role.getName()+"PT";
 				} else {
-					pl.setMyRole(intfName); //role.getName()+"Requester");
-					pl.setPartnerRole(interaction.getFromRole().getName()+"Service");
+					pl.setMyRole(role.getName());
+					pl.setPartnerRole(interaction.getFromRole().getName());
 					pl.setName(role.getName()+"To"+interaction.getFromRole().getName());
 					
 					String plt=role.getName()+"To"+interaction.getFromRole().getName()+"Requester"+"LT";

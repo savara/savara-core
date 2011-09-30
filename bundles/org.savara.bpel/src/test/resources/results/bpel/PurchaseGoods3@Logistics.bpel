@@ -2,7 +2,7 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_Logistics.wsdl" namespace="http://www.jboss.org/examples/logistics"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_LogisticsArtifacts.wsdl" namespace="http://www.jboss.org/examples/logistics"/>
     <partnerLinks>
-        <partnerLink myRole="LogisticsInterface" name="StoreToLogistics" partnerLinkType="lg:StoreToLogisticsServiceLT"/>
+        <partnerLink myRole="Logistics" name="StoreToLogistics" partnerLinkType="lg:StoreToLogisticsServiceLT"/>
     </partnerLinks>
     <variables>
         <variable messageType="lg:deliverRequest" name="deliverRequestVar"/>

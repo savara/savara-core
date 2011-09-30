@@ -2,7 +2,7 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_SupplierQuoteEngine.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="ESBBrokerProcess_SupplierQuoteEngineArtifacts.wsdl" namespace="http://www.pi4soa.org/ESBBroker/Supplier"/>
     <partnerLinks>
-        <partnerLink myRole="SupplierBehavior" name="BrokerToSupplierQuoteEngine" partnerLinkType="spr:BrokerToSupplierQuoteEngineServiceLT"/>
+        <partnerLink myRole="SupplierQuoteEngine" name="BrokerToSupplierQuoteEngine" partnerLinkType="spr:BrokerToSupplierQuoteEngineServiceLT"/>
     </partnerLinks>
     <variables>
         <variable messageType="spr:getQuoteRequest" name="getQuoteRequestVar"/>

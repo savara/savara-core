@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Seller" targetNamespace="http://www.pi4soa.org/ReqRespFault/Seller" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:slr="http://www.pi4soa.org/ReqRespFault/Seller" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:message name="checkCreditRequest">
+    <wsdl:part name="content" element="CreditCheckRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkCreditResponse">
+    <wsdl:part name="content" element="CreditCheckOk">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="insufficientCreditFault">
+    <wsdl:part name="content" element="CreditCheckInvalid">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SellerBehavior">
+    <wsdl:operation name="checkCredit">
+      <wsdl:input message="slr:checkCreditRequest">
+    </wsdl:input>
+      <wsdl:output message="slr:checkCreditResponse">
+    </wsdl:output>
+      <wsdl:fault name="insufficientCredit" message="slr:insufficientCreditFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SellerBehaviorBinding" type="slr:SellerBehavior">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="checkCredit">
+      <soap:operation soapAction="http://www.pi4soa.org/ReqRespFault/Seller/checkCredit"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="insufficientCredit">
+        <soap:fault name="insufficientCredit" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SellerService">
+    <wsdl:port name="SellerBehaviorPort" binding="slr:SellerBehaviorBinding">
+      <soap:address location="http://localhost:8080/SellerService/SellerBehaviorPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

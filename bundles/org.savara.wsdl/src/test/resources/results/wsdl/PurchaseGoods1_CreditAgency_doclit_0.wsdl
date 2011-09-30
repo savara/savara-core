@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CreditAgency" targetNamespace="java:org.jboss.savara.examples.purchasing" xmlns:pur="java:org.jboss.savara.examples.purchasing" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:message name="checkCreditRequest">
+    <wsdl:part name="content" type="pur:CreditCheckRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreditCheckFailedFault">
+    <wsdl:part name="content" type="pur:CreditCheckInvalid">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkCreditResponse">
+    <wsdl:part name="content" type="pur:CreditCheckOk">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CreditAgencyInterface">
+    <wsdl:operation name="checkCredit">
+      <wsdl:input message="pur:checkCreditRequest">
+    </wsdl:input>
+      <wsdl:output message="pur:checkCreditResponse">
+    </wsdl:output>
+      <wsdl:fault name="CreditCheckFailed" message="pur:CreditCheckFailedFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CreditAgencyInterfaceBinding" type="pur:CreditAgencyInterface">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="checkCredit">
+      <soap:operation soapAction="java:org.jboss.savara.examples.purchasing/checkCredit"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CreditCheckFailed">
+        <soap:fault name="CreditCheckFailed" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CreditAgencyService">
+    <wsdl:port name="CreditAgencyInterfacePort" binding="pur:CreditAgencyInterfaceBinding">
+      <soap:address location="http://localhost:8080/CreditAgencyService/CreditAgencyInterfacePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -17,11 +17,8 @@
  */
 package org.savara.activity.store.rdbms.osgi;
 
-import java.util.Properties;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
 
 public class Activator implements BundleActivator {
 

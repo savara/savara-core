@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CreditCheckService" targetNamespace="http://creditagency.com/creditCheckService" xmlns:ca="http://creditagency.com/creditCheckService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:cred="http://creditagency.com/creditCheck" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:message name="checkCreditRequest">
+    <wsdl:part name="content" element="cred:creditCheckRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkCreditResponse">
+    <wsdl:part name="content" element="cred:creditCheckResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CreditCheckService">
+    <wsdl:operation name="checkCredit">
+      <wsdl:input message="ca:checkCreditRequest">
+    </wsdl:input>
+      <wsdl:output message="ca:checkCreditResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CreditCheckServiceBinding" type="ca:CreditCheckService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="checkCredit">
+      <soap:operation soapAction="http://creditagency.com/creditCheckService/checkCredit"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CreditCheckServiceService">
+    <wsdl:port name="CreditCheckServicePort" binding="ca:CreditCheckServiceBinding">
+      <soap:address location="http://localhost:8080/CreditCheckServiceService/CreditCheckServicePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

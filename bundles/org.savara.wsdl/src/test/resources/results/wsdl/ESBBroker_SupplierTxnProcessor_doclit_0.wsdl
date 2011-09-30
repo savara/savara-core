@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="SupplierTxnProcessor" targetNamespace="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier">
+  <wsdl:message name="confirmRequest">
+    <wsdl:part name="content" element="orderConfirmed">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="confirmResponse">
+    <wsdl:part name="content" element="bookingReference">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SupplierBehavior">
+    <wsdl:operation name="confirm">
+      <wsdl:input message="spr:confirmRequest">
+    </wsdl:input>
+      <wsdl:output message="spr:confirmResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SupplierBehaviorBinding" type="spr:SupplierBehavior">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="confirm">
+      <soap:operation soapAction="http://www.pi4soa.org/ESBBroker/Supplier/confirm"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SupplierTxnProcessorService">
+    <wsdl:port name="SupplierBehaviorPort" binding="spr:SupplierBehaviorBinding">
+      <soap:address location="http://localhost:8080/SupplierTxnProcessorService/SupplierBehaviorPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

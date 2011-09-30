@@ -2,7 +2,7 @@
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_CreditAgency.wsdl" namespace="http://www.jboss.org/examples/creditAgency"/>
     <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoodsProcess_CreditAgencyArtifacts.wsdl" namespace="http://www.jboss.org/examples/creditAgency"/>
     <partnerLinks>
-        <partnerLink myRole="CreditAgencyInterface" name="StoreToCreditAgency" partnerLinkType="ca:StoreToCreditAgencyServiceLT"/>
+        <partnerLink myRole="CreditAgency" name="StoreToCreditAgency" partnerLinkType="ca:StoreToCreditAgencyServiceLT"/>
     </partnerLinks>
     <variables>
         <variable messageType="ca:checkCreditRequest" name="checkCreditRequestVar"/>
