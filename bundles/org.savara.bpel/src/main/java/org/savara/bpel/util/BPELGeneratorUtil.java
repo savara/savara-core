@@ -17,6 +17,8 @@
  */
 package org.savara.bpel.util;
 
+import javax.xml.namespace.QName;
+
 import org.savara.bpel.model.TPartnerLink;
 import org.savara.bpel.model.TProcess;
 import org.savara.common.logging.FeedbackHandler;
@@ -47,8 +49,10 @@ public class BPELGeneratorUtil {
 	private static final String NAME_LABEL = "name";
 	private static final String PROCESS_EVENTS_LABEL = "process-events";
 	private static final String PORT_TYPE_LABEL = "portType";
-	private static final String PLNK_ROLE = "plnk:role";
-	private static final String PLNK_PARTNER_LINK_TYPE = "plnk:partnerLinkType";
+	private static final String PLNK_PREFIX = "plnk";
+	private static final String PLNK_ROLE = PLNK_PREFIX+":role";
+	private static final String PARTNER_LINK_TYPE = "partnerLinkType";
+	private static final String PLNK_PARTNER_LINK_TYPE = PLNK_PREFIX+":"+PARTNER_LINK_TYPE;
 	private static final String WSDL_DEFINITIONS = "wsdl:definitions";
 	private static final String WSDL_NS = "http://schemas.xmlsoap.org/wsdl/";
 	private static final String PLNKTYPE_NS = "http://docs.oasis-open.org/wsbpel/2.0/plnktype";
@@ -78,6 +82,8 @@ public class BPELGeneratorUtil {
 		
 		defn.setAttribute(XMLNS_PLNK, PLNKTYPE_NS);
 		defn.setAttribute(XMLNS_WSDL, WSDL_NS);
+		
+		defn.setAttribute(NAME_LABEL, localcm.getProtocol().getName());
 		
 		defn.setAttribute(TARGET_NAMESPACE_LABEL, bpelProcess.getTargetNamespace());
 		
@@ -249,12 +255,16 @@ public class BPELGeneratorUtil {
 	 * @param role The role being generated
 	 * @param localcm The local protocol model
 	 * @param bpelProcess The BPEL process
+	 * @param wsdls The list of relevant WSDL definitions
+	 * @param partnerLinkTypes The partner link types for this role
 	 * @param journal The feedback handler
 	 * @return The deployment descriptor
 	 * @throws Exception Failed to generate the BPEL deployment descriptor
 	 */
 	public static org.w3c.dom.Document generateDeploymentDescriptor(ProtocolModel model, Role role, ProtocolModel localcm,
-				TProcess bpelProcess, FeedbackHandler journal) throws Exception {	
+				TProcess bpelProcess, java.util.Collection<javax.wsdl.Definition> wsdls,
+					org.w3c.dom.Element partnerLinkTypes,
+					FeedbackHandler journal) throws Exception {	
 
 		org.w3c.dom.Document doc=javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
@@ -304,6 +314,9 @@ public class BPELGeneratorUtil {
 				
 				org.w3c.dom.Element service=doc.createElement(SERVICE_LABEL);
 				
+				// Find service for partner link
+				initializeService(service, bpelProcess, pl, wsdls, partnerLinkTypes, nsMap);
+				
 				invoke.appendChild(service);
 				
 				proc.appendChild(invoke);
@@ -315,6 +328,9 @@ public class BPELGeneratorUtil {
 				provide.setAttribute(PARTNER_LINK_LABEL, XMLUtils.getLocalname(pl.getName()));
 				
 				org.w3c.dom.Element service=doc.createElement(SERVICE_LABEL);
+				
+				// Find service for partner link
+				initializeService(service, bpelProcess,pl, wsdls, partnerLinkTypes, nsMap);
 				
 				provide.appendChild(service);
 				
@@ -334,4 +350,98 @@ public class BPELGeneratorUtil {
 		return (doc);
 	}
 
+	protected static void initializeService(org.w3c.dom.Element service, TProcess bpelProcess,
+					TPartnerLink pl, java.util.Collection<javax.wsdl.Definition> wsdls,
+					org.w3c.dom.Element partnerLinkTypes,
+					java.util.Map<String,String> nsMap) {
+		QName serviceName=null;
+		String servicePort=null;
+		
+		// Get partner link type details
+		QName partnerLinkType=pl.getPartnerLinkType();
+		
+		org.w3c.dom.NodeList nl=partnerLinkTypes.getChildNodes();
+		
+		String portType=null;
+		
+		for (int i=0; portType == null && i < nl.getLength(); i++) {
+			org.w3c.dom.Node n=nl.item(i);
+			
+			if (n instanceof org.w3c.dom.Element
+					&& XMLUtils.getLocalname(n.getNodeName()).equals(PARTNER_LINK_TYPE)) {
+				org.w3c.dom.Element plt=(org.w3c.dom.Element)nl.item(i);
+				
+				String name=plt.getAttribute("name");
+				
+				if (name != null && name.equals(partnerLinkType.getLocalPart())) {
+					org.w3c.dom.NodeList nl2=plt.getChildNodes();
+					
+					for (int j=0; portType == null && j < nl2.getLength(); j++) {
+						org.w3c.dom.Node n2=nl2.item(j);
+						
+						if (n2 instanceof org.w3c.dom.Element
+								&& XMLUtils.getLocalname(n2.getNodeName()).equals("role")) {
+							org.w3c.dom.Element role=(org.w3c.dom.Element)n2;
+							String roleName=role.getAttribute("name");
+							
+							if ((pl.getMyRole() != null && pl.getMyRole().equals(roleName))
+									|| (pl.getPartnerRole() != null && pl.getPartnerRole().equals(roleName))) {
+								portType = role.getAttribute("portType");
+								
+								String ptprefix=XMLUtils.getPrefix(portType);
+								
+								String ptns=partnerLinkTypes.getAttribute("xmlns:"+ptprefix);
+								
+								String newprefix=XMLUtils.getPrefixForNamespace(ptns, nsMap);
+								
+								portType = newprefix+":"+XMLUtils.getLocalname(portType);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		if (portType != null) {
+			String portTypePrefix=XMLUtils.getPrefix(portType);
+			String portTypeNS=XMLUtils.getNamespaceForPrefix(portTypePrefix, nsMap);
+			QName ptQName=new QName(portTypeNS, XMLUtils.getLocalname(portType));
+			
+			for (javax.wsdl.Definition wsdl : wsdls) {
+				if (wsdl.getTargetNamespace().equals(portTypeNS)) {
+					
+					@SuppressWarnings("unchecked")
+					java.util.Collection<javax.wsdl.Service> services=
+								wsdl.getServices().values();
+					
+					for (javax.wsdl.Service s : services) {
+						
+						@SuppressWarnings("unchecked")
+						java.util.Collection<javax.wsdl.Port> ports=
+										s.getPorts().values();
+						
+						for (javax.wsdl.Port p : ports) {
+							
+							if (p.getBinding() != null
+									&& p.getBinding().getPortType() != null
+									&& p.getBinding().getPortType().getQName().equals(ptQName)) {
+								serviceName = s.getQName();
+								servicePort = p.getName();
+							}
+						}
+					}
+				}
+			}
+			
+			if (serviceName != null) {
+				String prefix=XMLUtils.getPrefixForNamespace(serviceName.getNamespaceURI(), nsMap);
+				
+				service.setAttribute("name", prefix+":"+serviceName.getLocalPart());
+			}
+			
+			if (servicePort != null) {
+				service.setAttribute("port", servicePort);
+			}
+		}
+	}
 }

@@ -247,4 +247,26 @@ public final class XMLUtils {
 
 		return(prefix);
 	}
+	
+	/**
+	 * This method returns the namespace associated with the supplied prefix.
+	 * 
+	 * @param prefix The prefix
+	 * @param nsMap The existing namespace prefix mappings
+	 * @return The namespace
+	 */
+	public static String getNamespaceForPrefix(String prefix, java.util.Map<String,String> nsMap) {
+		String ret=null;
+		
+		for (String namespace : nsMap.keySet()) {
+			String p=nsMap.get(namespace);
+			
+			if (prefix.equals(p)) {
+				ret = namespace;
+				break;
+			}
+		}
+
+		return(ret);
+	}
 }

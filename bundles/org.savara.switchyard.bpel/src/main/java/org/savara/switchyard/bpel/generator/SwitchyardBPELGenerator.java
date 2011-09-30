@@ -75,7 +75,7 @@ public class SwitchyardBPELGenerator {
 		for (int i=0; i < nl.getLength(); i++) {
 			Node n=nl.item(i);
 			
-			if (n instanceof Element && n.getLocalName().equals("process")) {
+			if (n instanceof Element && XMLUtils.getLocalname(n.getNodeName()).equals("process")) {
 				Element process=(Element)n;
 				
 				composite.append(generateServices(process, wsdls, namespaces, port++));
