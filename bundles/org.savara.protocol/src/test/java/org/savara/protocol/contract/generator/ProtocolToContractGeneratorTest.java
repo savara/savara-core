@@ -38,11 +38,10 @@ public class ProtocolToContractGeneratorTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("Protocol->Contract Generator Tests");
 
-        //suite.addTest(new ProtocolToContractTester("PolicyQuote", "CreditCheckService", null));
-        //suite.addTest(new ProtocolToContractTester("PolicyQuote", "PolicyQuoteProcessService", null));
+        suite.addTest(new ProtocolToContractTester("PolicyQuote", "CreditCheckService", null));
+        suite.addTest(new ProtocolToContractTester("PolicyQuote", "PolicyQuoteProcessService", null));
         
         suite.addTest(new ProtocolToContractTester("ESBBroker", "Broker", null));
-        /*
         suite.addTest(new ProtocolToContractTester("ESBBroker", "Buyer", null));     
         suite.addTest(new ProtocolToContractTester("ESBBroker", "SupplierTxnProcessor", null));
         suite.addTest(new ProtocolToContractTester("ESBBroker", "CreditAgency", null));
@@ -56,7 +55,7 @@ public class ProtocolToContractGeneratorTest {
         
         suite.addTest(new ProtocolToContractTester("ReqRespFault", "Buyer", null));
         suite.addTest(new ProtocolToContractTester("ReqRespFault", "Seller", null));
-        */
+
         return suite;
     }
     
