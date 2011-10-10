@@ -103,6 +103,12 @@ public class BPELGeneratorUtil {
 		while (roles.hasNext()) {
 			Role r=roles.next();
 			
+			// Check if role is a client parameter - if so,
+			// don't include an import for it
+			if (localcm.getProtocol().getParameterDefinition(r.getName()) != null) {
+				continue;
+			}
+			
 			ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 			Contract contract=null;
 			
