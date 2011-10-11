@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Scenario Simulator for SCA
 Bundle-SymbolicName: org.savara.scenario.simulator.sca
-Bundle-Version: 2.0.0.SNAPSHOT
+Bundle-Version: 2.0.0.20111014-M5
 Bundle-Activator: org.savara.scenario.simulator.sca.osgi.Activator
 Import-Package: org.osgi.framework
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

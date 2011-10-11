@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara</groupId>
 	<artifactId>parent</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.0.20111014-M5</version>
 	<packaging>pom</packaging>
     <name>Savara</name>
 	<url>http://www.savara.org</url>
@@ -38,8 +38,8 @@
 	</developers>
 
 	<properties>
-		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
-		<scribble.version>2.0.0-SNAPSHOT</scribble.version>
+		<savara.core.version>2.0.0.20111014-M5</savara.core.version>
+		<scribble.version>2.0.0.CR2</scribble.version>
 		<pi4soa.version>3.1.1-SNAPSHOT</pi4soa.version> <!-- Actually taken from
 						Tycho built update site, not Nexus, so
 						snapshot is irrelevant. -->
@@ -143,6 +143,19 @@
 	        <id>jboss-developer-repository-group</id>
 	        <name>JBoss Developer Maven Repository Group</name>
 		<url>https://repository.jboss.org/nexus/content/groups/developer/</url>
+		<releases>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</releases>
+		<snapshots>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</snapshots>
+	    </repository>
+	    <repository>
+	        <id>scribble-staging</id>
+	        <name>Scribble Staging</name>
+		<url>https://repository.jboss.org/nexus/content/repositories/jboss_thirdparty_releases_staging_profile-006/</url>
 		<releases>
 		  <enabled>true</enabled>
 		  <updatePolicy>never</updatePolicy>
