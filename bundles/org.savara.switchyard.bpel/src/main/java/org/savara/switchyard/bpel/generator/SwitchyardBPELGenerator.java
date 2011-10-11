@@ -70,7 +70,6 @@ public class SwitchyardBPELGenerator {
 				"\" targetNamespace=\""+descriptor.getAttribute("xmlns")+"\">\r\n");
 		
 		NodeList nl=descriptor.getChildNodes();
-		int port=18001;
 		
 		for (int i=0; i < nl.getLength(); i++) {
 			Node n=nl.item(i);
@@ -78,7 +77,7 @@ public class SwitchyardBPELGenerator {
 			if (n instanceof Element && XMLUtils.getLocalname(n.getNodeName()).equals("process")) {
 				Element process=(Element)n;
 				
-				composite.append(generateServices(process, wsdls, namespaces, port++));
+				composite.append(generateServices(process, wsdls, namespaces));
 				
 				composite.append(generateComponent(process, wsdls, namespaces));
 				
@@ -108,7 +107,7 @@ public class SwitchyardBPELGenerator {
 	 */
 	protected String generateServices(Element process,
 					java.util.Map<String,javax.wsdl.Definition> wsdls,
-					java.util.Map<String, String> namespaces, int port) {
+					java.util.Map<String, String> namespaces) {
 		StringBuffer ret=new StringBuffer();
 		
 		String name=getComponentName(process);
@@ -134,7 +133,7 @@ public class SwitchyardBPELGenerator {
 			}
 		}
 		
-		ret.append("\t\t\t\t<soap:serverPort>"+port+"</soap:serverPort>\r\n");
+		ret.append("\t\t\t\t<soap:socketAddr>:18001</soap:socketAddr>\r\n");
 		ret.append("\t\t\t</soap:binding.soap>\r\n");
 		
 		ret.append("\t\t</sca:service>\r\n");

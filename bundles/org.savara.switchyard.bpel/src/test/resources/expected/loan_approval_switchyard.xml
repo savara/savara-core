@@ -5,9 +5,9 @@
                 <soap:wsdl>
                     loanServicePT.wsdl
                 </soap:wsdl>
-                <soap:serverPort>
-                    18001
-                </soap:serverPort>
+                <soap:socketAddr>
+                    :18001
+                </soap:socketAddr>
             </soap:binding.soap>
         </sca:service>
         <sca:component name="loanApprovalProcess">
@@ -24,9 +24,9 @@
                 <soap:wsdl>
                     riskAssessmentPT.wsdl
                 </soap:wsdl>
-                <soap:serverPort>
-                    18002
-                </soap:serverPort>
+                <soap:socketAddr>
+                    :18001
+                </soap:socketAddr>
             </soap:binding.soap>
         </sca:service>
         <sca:component name="riskAssessmentProcess">
