@@ -11,9 +11,21 @@
 	<description>
 		The SAVARA project
 	</description>
+
 	<scm>
-		<connection>scm:svn:https://svn.jboss.org/repos/savara</connection>
+		<connection>https://github.com/savara</connection>
+		<url>https://github.com/savara</url>
 	</scm>
+
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License</name>
+			<url>http://www.gnu.org/licenses/lgpl.html</url>
+			<distribution>repo</distribution>
+			<comments>GNU Lesser General Public License</comments>
+		</license>
+	</licenses>
+
 	<developers>
 		<developer>
 			<name>Jeff Yu</name>
