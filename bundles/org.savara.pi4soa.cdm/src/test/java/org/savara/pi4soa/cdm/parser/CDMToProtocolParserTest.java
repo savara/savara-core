@@ -93,7 +93,7 @@ public class CDMToProtocolParserTest {
     				
     				model = parser.parse(null, content, journal);
     			} catch(Exception e) {
-    				result.addError(this, new Throwable("Parsing choreography failed"));
+    				result.addError(this, new Throwable("Parsing choreography failed", e));
     			}
     			
     			if (model == null) {
@@ -164,9 +164,9 @@ public class CDMToProtocolParserTest {
     		}
     		
     		if (f_valid == false) {
-    			String bpelfile="testmodels/cdm/"+m_name+".cdm";
+    			String cdmfile="testmodels/cdm/"+m_name+".cdm";
     			
-    			java.net.URL url=ClassLoader.getSystemResource(bpelfile);
+    			java.net.URL url=ClassLoader.getSystemResource(cdmfile);
     			
     			if (url != null) {
     				// URL will point to copy of test models in the classes folder, so need

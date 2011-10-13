@@ -323,7 +323,8 @@ public class ProtocolParserRule implements ParserRule {
 		 */
 		
 		// SAVARA-214 - check if declared roles should be moved to inner blocks
-		if (ret.getBlock().get(0) instanceof Introduces) {
+		if (ret != null && ret.getBlock().size() > 0
+					&& ret.getBlock().get(0) instanceof Introduces) {
 			Introduces rl=(Introduces)ret.getBlock().get(0);
 			
 			for (int i=rl.getIntroducedRoles().size()-1; i >= 0; i--) {

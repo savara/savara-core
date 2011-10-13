@@ -57,14 +57,22 @@ public class CDMProtocolParser implements ProtocolParser {
 		ProtocolModel ret=null;
 		
 		if (content != null) {
+			org.pi4soa.cdl.Package cdlpack=null;
+			
 			try {						
 				java.io.InputStream is=content.getInputStream();
 				
-				org.pi4soa.cdl.Package cdlpack=
-						org.pi4soa.cdl.CDLManager.load(is);
+				cdlpack = org.pi4soa.cdl.CDLManager.load(is);
 		
-				is.close();
+				is.close();			
+			} catch(Exception e) {
+				logger.log(Level.SEVERE,
+						"Failed to load model", e);
 				
+				journal.error("Failed to load model", null);
+			}
+			
+			if (cdlpack != null) {
 				ParserRule rule=ParserRuleFactory.getConverter(ProtocolModel.class,
 									cdlpack);
 			
@@ -75,10 +83,6 @@ public class CDMProtocolParser implements ProtocolParser {
 					ret = (ProtocolModel)rule.parse(cctxt,
 							ProtocolModel.class, cdlpack);
 				}
-			
-			} catch(Exception e) {
-				logger.log(Level.SEVERE,
-						"Failed to load model", e);
 			}
 		
 			if (logger.isLoggable(java.util.logging.Level.FINEST)) {
