@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/policyQuote"
+	xmlns:pol="http://www.example.org/policyQuote" elementFormDefault="qualified">
+
+	<xs:include schemaLocation="./types/policyQuoteBase.xsd"/>
+	
+	<xs:element name="policyQuote">
+		<xs:complexType>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="receivePolicyQuote" type="pol:ReceivePolicyQuoteType"/>
+				<xs:element name="createPolicyQuote" type="pol:CreatePolicyQuoteType"/>
+				<xs:element name="deletePolicyQuote" type="pol:DeletePolicyQuoteType"/>
+				<xs:element name="getPolicyQuote" type="pol:GetPolicyQuoteType"/>
+				<xs:element name="calculatePolicyQuote" type="pol:CalculatePolicyQuoteType"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:complexType name="ReceivePolicyQuoteType">
+		<xs:complexContent>
+			<xs:extension base="pol:PolicyQuoteType">
+				<xs:sequence>
+					<xs:element name="task">
+						<xs:simpleType>
+							<xs:restriction base="pol:TaskType">
+								<xs:enumeration value="receivePolicyQuote"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="policyQuoteInfo" type="pol:PolicyQuoteInfoType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="CreatePolicyQuoteType">
+		<xs:complexContent>
+			<xs:extension base="pol:PolicyQuoteType">
+				<xs:sequence>
+					<xs:element name="task">
+						<xs:simpleType>
+							<xs:restriction base="pol:TaskType">
+								<xs:enumeration value="createPolicyQuote"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="policyQuoteInfo" type="pol:PolicyQuoteInfoType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="GetPolicyQuoteType">
+		<xs:complexContent>
+			<xs:extension base="pol:PolicyQuoteType">
+				<xs:sequence>
+					<xs:element name="task">
+						<xs:simpleType>
+							<xs:restriction base="pol:TaskType">
+								<xs:enumeration value="getPolicyQuote"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="policyQuoteID" type="xs:integer"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="DeletePolicyQuoteType">
+		<xs:complexContent>
+			<xs:extension base="pol:PolicyQuoteType">
+				<xs:sequence>
+					<xs:element name="task">
+						<xs:simpleType>
+							<xs:restriction base="pol:TaskType">
+								<xs:enumeration value="deletePolicyQuote"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="policyQuoteID" type="xs:integer"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+
+	<xs:complexType name="CalculatePolicyQuoteType">
+		<xs:complexContent>
+			<xs:extension base="pol:PolicyQuoteType">
+				<xs:sequence>
+					<xs:element name="task">
+						<xs:simpleType>
+							<xs:restriction base="pol:TaskType">
+								<xs:enumeration value="calculatePolicyQuote"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="policyQuoteInfo" type="pol:PolicyQuoteInfoType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+</xs:schema>
+

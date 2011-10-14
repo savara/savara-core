@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/policyQuote"
+	xmlns:pol="http://www.example.org/policyQuote" elementFormDefault="qualified">
+
+	<xs:include schemaLocation="./types/policyQuoteBase.xsd"/>
+	
+	<xs:element name="policyQuoteFault">
+		<xs:complexType>
+			<xs:choice minOccurs="1" maxOccurs="1">
+				<xs:element name="policyQuoteFault" type="pol:PolicyQuoteFaultType"/>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:complexType name="PolicyQuoteFaultType">
+		<xs:complexContent>
+			<xs:extension base="pol:PolicyQuoteType">
+				<xs:sequence>
+					<xs:element name="task">
+						<xs:simpleType>
+							<xs:restriction base="pol:TaskType">
+								<xs:enumeration value="receivePolicyQuote"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="code"  type="xs:string"/>
+ 					<xs:element name="reason"  type="xs:string"/>
+					<xs:element name="policyQuoteInfo" type="pol:PolicyQuoteInfoType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+</xs:schema>
+

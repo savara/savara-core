@@ -117,6 +117,8 @@ public class SwitchyardBPELGenerator {
 
 		NodeList nl=process.getElementsByTagName("provide");
 		
+		java.util.List<String> wsdlPaths=new java.util.Vector<String>();
+		
 		for (int i=0; i < nl.getLength(); i++) {
 			Node n=nl.item(i);
 			
@@ -128,7 +130,10 @@ public class SwitchyardBPELGenerator {
 					
 					String wsdlInterfacePath=getInterfacePath(service, wsdls, namespaces);
 					
-					ret.append("\t\t\t\t<soap:wsdl>"+wsdlInterfacePath+"</soap:wsdl>\r\n");
+					if (!wsdlPaths.contains(wsdlInterfacePath)) {
+						ret.append("\t\t\t\t<soap:wsdl>"+wsdlInterfacePath+"</soap:wsdl>\r\n");
+						wsdlPaths.add(wsdlInterfacePath);
+					}
 				}
 			}
 		}

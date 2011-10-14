@@ -87,6 +87,8 @@ public class BPELGeneratorUtil {
 		
 		defn.setAttribute(TARGET_NAMESPACE_LABEL, bpelProcess.getTargetNamespace());
 		
+		ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
+
 		// Add import to associated wsdl
 		String wsdlName=WSDLGeneratorUtil.getWSDLFileName(role, localcm.getProtocol().getName(), "");
 
@@ -109,7 +111,6 @@ public class BPELGeneratorUtil {
 				continue;
 			}
 			
-			ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 			Contract contract=null;
 			
 			if (cg != null) {
@@ -166,7 +167,6 @@ public class BPELGeneratorUtil {
 					}
 				}
 				
-				ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 				Contract contract=null;
 				
 				if (cg != null && useRole != null) {
@@ -206,11 +206,22 @@ public class BPELGeneratorUtil {
 				
 				plRole.setAttribute(NAME_LABEL, pl.getMyRole());
 				
-				ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
 				Contract contract=null;
 				
 				if (cg != null) {
-					contract=cg.generate(model.getProtocol(), null, role, journal);
+					String linkName=pl.getPartnerLinkType().getLocalPart();
+					
+					int pos=linkName.indexOf("To");
+
+					if (pos != -1) {
+						java.util.Set<Role> clientRoles=new java.util.HashSet<Role>();
+						
+						clientRoles.add(new Role(linkName.substring(0, pos)));
+						
+						contract=cg.generate(model.getProtocol(), clientRoles, role, journal);
+					} else {
+						contract=cg.generate(model.getProtocol(), null, role, journal);
+					}
 				}
 				
 				if (contract != null) {
@@ -311,6 +322,23 @@ public class BPELGeneratorUtil {
 		// not handle.
 		
 		// Work through partner links for now
+		for (TPartnerLink pl : bpelProcess.getPartnerLinks().getPartnerLink()) {		
+			if (pl.getMyRole() != null && pl.getMyRole().trim().length() > 0) {
+				org.w3c.dom.Element provide=doc.createElement(PROVIDE_LABEL);
+				
+				provide.setAttribute(PARTNER_LINK_LABEL, XMLUtils.getLocalname(pl.getName()));
+				
+				org.w3c.dom.Element service=doc.createElement(SERVICE_LABEL);
+				
+				// Find service for partner link
+				initializeService(service, bpelProcess,pl, wsdls, partnerLinkTypes, nsMap);
+				
+				provide.appendChild(service);
+				
+				proc.appendChild(provide);
+			}
+		}
+		
 		for (TPartnerLink pl : bpelProcess.getPartnerLinks().getPartnerLink()) {
 			if (pl.getPartnerRole() != null && pl.getPartnerRole().trim().length() > 0) {
 				org.w3c.dom.Element invoke=doc.createElement(INVOKE_LABEL);
@@ -326,21 +354,6 @@ public class BPELGeneratorUtil {
 				invoke.appendChild(service);
 				
 				proc.appendChild(invoke);
-			}
-		
-			if (pl.getMyRole() != null && pl.getMyRole().trim().length() > 0) {
-				org.w3c.dom.Element provide=doc.createElement(PROVIDE_LABEL);
-				
-				provide.setAttribute(PARTNER_LINK_LABEL, XMLUtils.getLocalname(pl.getName()));
-				
-				org.w3c.dom.Element service=doc.createElement(SERVICE_LABEL);
-				
-				// Find service for partner link
-				initializeService(service, bpelProcess,pl, wsdls, partnerLinkTypes, nsMap);
-				
-				provide.appendChild(service);
-				
-				proc.appendChild(provide);
 			}
 		}
 		

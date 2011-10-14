@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ca="http://creditagency.com/creditCheckService" xmlns:dmv="http://dmv.com/drivingRecordService" xmlns:drv="http://dmv.com/drivingRecord" xmlns:pcs="http://www.example.org/policyQuoteCalculationService" xmlns:pes="http://www.example.org/policyQuoteEntityService" xmlns:pol="http://www.example.org/policyQuote" xmlns:pps="http://www.example.org/policyQuoteProcessService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="PolicyQuoteProcessService" targetNamespace="http://www.example.org/policyQuoteProcessService">
+    <types xmlns="http://schemas.xmlsoap.org/wsdl/">
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.example.org/policyQuote" schemaLocation="schema/policyQuote.xsd"/>
+            <import namespace="http://dmv.com/drivingRecord" schemaLocation="schema/drivingRecord.xsd"/>
+        </schema>
+    </types>
+    <wsdl:message name="policyQuoteFaultFault">
+        <wsdl:part element="pol:policyQuoteFault" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="receivePolicyQuoteResponse">
+        <wsdl:part element="pol:policyQuoteReply" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="receivePolicyQuoteRequest">
+        <wsdl:part element="pol:policyQuote" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="receiveDrivingRecordRequest">
+        <wsdl:part element="drv:drivingRecordResponse" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="PolicyQuoteProcessService">
+        <wsdl:operation name="receivePolicyQuote">
+            <wsdl:input message="pps:receivePolicyQuoteRequest">
+            </wsdl:input>
+            <wsdl:output message="pps:receivePolicyQuoteResponse">
+            </wsdl:output>
+            <wsdl:fault message="pps:policyQuoteFaultFault" name="policyQuoteFault">
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:portType name="DrivingRecordCallbackService">
+        <wsdl:operation name="receiveDrivingRecord">
+            <wsdl:input message="pps:receiveDrivingRecordRequest">
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="PolicyQuoteProcessServiceBinding" type="pps:PolicyQuoteProcessService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="receivePolicyQuote">
+            <soap:operation soapAction="http://www.example.org/policyQuoteProcessService/receivePolicyQuote"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="policyQuoteFault">
+                <soap:fault name="policyQuoteFault" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="DrivingRecordCallbackServiceBinding" type="pps:DrivingRecordCallbackService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="receiveDrivingRecord">
+            <soap:operation soapAction="http://www.example.org/policyQuoteProcessService/receiveDrivingRecord"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="PolicyQuoteProcessServiceService">
+        <wsdl:port binding="pps:PolicyQuoteProcessServiceBinding" name="PolicyQuoteProcessServicePort">
+            <soap:address location="http://localhost:8080/PolicyQuoteProcessServiceService/PolicyQuoteProcessServicePort"/>
+        </wsdl:port>
+        <wsdl:port binding="pps:DrivingRecordCallbackServiceBinding" name="DrivingRecordCallbackServicePort">
+            <soap:address location="http://localhost:8080/PolicyQuoteProcessServiceService/DrivingRecordCallbackServicePort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

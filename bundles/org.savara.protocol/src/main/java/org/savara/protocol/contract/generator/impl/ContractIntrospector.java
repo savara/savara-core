@@ -336,7 +336,9 @@ public class ContractIntrospector extends DefaultVisitor {
 		// Check if receiving a request
 		if (InteractionUtil.isRequest(interaction) && !InteractionUtil.isSend(interaction, m_serverRole)) {
 				
-				if (interaction.getMessageSignature().getOperation() != null) {
+				if (interaction.getMessageSignature().getOperation() != null &&
+						(m_clientRoles == null || interaction.getFromRole() == null ||
+						m_clientRoles.contains(interaction.getFromRole()))) {
 					
 					// Check if message exchange pattern exists for operation
 					MessageExchangePattern mep=intf.getMessageExchangePatternForOperation(
@@ -359,10 +361,6 @@ public class ContractIntrospector extends DefaultVisitor {
 						intf.getMessageExchangePatterns().add(mep);
 					}
 				}
-
-			//} else {
-				
-			//}
 				
 		} else if (InteractionUtil.isResponse(interaction) && InteractionUtil.isSend(interaction, m_serverRole)) {
 			

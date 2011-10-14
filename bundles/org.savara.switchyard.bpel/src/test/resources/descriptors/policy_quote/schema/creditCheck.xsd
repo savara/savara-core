@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	 targetNamespace="http://creditagency.com/creditCheck"
+	 xmlns:cred="http://creditagency.com/creditCheck" elementFormDefault="qualified">
+
+    <element name="creditCheckRequest"
+    	type="cred:creditCheckRequestType">
+    </element>
+
+   <element name="creditCheckResponse"
+    	type="cred:CreditCheckResponseType">
+    </element>
+
+     <complexType name="creditCheckRequestType">
+    	<sequence>
+    		<element name="ssn" type="string"></element>
+    	</sequence>
+     </complexType>
+
+   <complexType name="CreditCheckResponseType">
+    	<sequence>
+    		<element name="ssn" type="string"></element>
+    		<element name="score" type="int"></element>
+    	</sequence>
+     </complexType>
+
+</schema>

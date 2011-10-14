@@ -1,0 +1,35 @@
+<switchyard xmlns="urn:switchyard-config:switchyard:1.0" xmlns:bean="urn:switchyard-component-bean:config:1.0" xmlns:bpel="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:ns1="http://www.example.org/policyQuoteProcessService" xmlns:ns2="http://dmv.com/drivingRecordService" xmlns:ns3="http://creditagency.com/creditCheckService" xmlns:ns4="http://www.example.org/policyQuoteCalculationService" xmlns:ns5="http://www.example.org/policyQuoteEntityService" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:soap="urn:switchyard-component-soap:config:1.0" xmlns:swyd="urn:switchyard-config:switchyard:1.0" xmlns:trfm="urn:switchyard-config:transform:1.0" name="policyquote" targetNamespace="http://www.apache.org/ode/schemas/dd/2007/03">
+    <sca:composite name="policyquote" targetNamespace="http://www.apache.org/ode/schemas/dd/2007/03">
+        <sca:service name="PolicyQuoteProcess_PolicyQuoteProcessService" promote="PolicyQuoteProcess_PolicyQuoteProcessService">
+            <soap:binding.soap>
+                <soap:wsdl>
+                    PolicyQuoteProcess_PolicyQuoteProcessService.wsdl
+                </soap:wsdl>
+                <soap:socketAddr>
+                    :18001
+                </soap:socketAddr>
+            </soap:binding.soap>
+        </sca:service>
+        <sca:component name="PolicyQuoteProcess_PolicyQuoteProcessService">
+            <bpel:implementation.bpel process="ns1:PolicyQuoteProcess_PolicyQuoteProcessService"/>
+            <sca:service name="PolicyQuoteProcessServiceService">
+                <sca:interface.wsdl interface="PolicyQuoteProcess_PolicyQuoteProcessService.wsdl#wsdl.porttype(PolicyQuoteProcessService)"/>
+            </sca:service>
+            <sca:service name="PolicyQuoteProcessServiceService">
+                <sca:interface.wsdl interface="PolicyQuoteProcess_PolicyQuoteProcessService.wsdl#wsdl.porttype(PolicyQuoteProcessService)"/>
+            </sca:service>
+            <sca:reference name="DrivingRecordServiceService">
+                <sca:interface.wsdl interface="PolicyQuoteProcess_DrivingRecordService.wsdl#wsdl.porttype(DrivingRecordService)"/>
+            </sca:reference>
+            <sca:reference name="CreditCheckServiceService">
+                <sca:interface.wsdl interface="PolicyQuoteProcess_CreditCheckService.wsdl#wsdl.porttype(CreditCheckService)"/>
+            </sca:reference>
+            <sca:reference name="PolicyQuoteCalculationServiceService">
+                <sca:interface.wsdl interface="PolicyQuoteProcess_PolicyQuoteCalculationService.wsdl#wsdl.porttype(PolicyQuoteCalculationService)"/>
+            </sca:reference>
+            <sca:reference name="PolicyQuoteEntityServiceService">
+                <sca:interface.wsdl interface="PolicyQuoteProcess_PolicyQuoteEntityService.wsdl#wsdl.porttype(PolicyQuoteEntityService)"/>
+            </sca:reference>
+        </sca:component>
+    </sca:composite>
+</switchyard>

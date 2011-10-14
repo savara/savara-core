@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ca="http://creditagency.com/creditCheckService" xmlns:cred="http://creditagency.com/creditCheck" xmlns:dmv="http://dmv.com/drivingRecordService" xmlns:drv="http://dmv.com/drivingRecord" xmlns:pcs="http://www.example.org/policyQuoteCalculationService" xmlns:pes="http://www.example.org/policyQuoteEntityService" xmlns:pol="http://www.example.org/policyQuote" xmlns:pps="http://www.example.org/policyQuoteProcessService" xmlns:tns="http://www.pi4soa.org/PolicyQuote" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="PolicyQuoteProcess_PolicyQuoteProcessService" targetNamespace="http://www.example.org/policyQuoteProcessService">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_PolicyQuoteProcessService.wsdl" namespace="http://www.example.org/policyQuoteProcessService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_DrivingRecordService.wsdl" namespace="http://dmv.com/drivingRecordService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_PolicyQuoteEntityService.wsdl" namespace="http://www.example.org/policyQuoteEntityService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_PolicyQuoteCalculationService.wsdl" namespace="http://www.example.org/policyQuoteCalculationService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_CreditCheckService.wsdl" namespace="http://creditagency.com/creditCheckService"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PolicyQuoteProcess_PolicyQuoteProcessServiceArtifacts.wsdl" namespace="http://www.example.org/policyQuoteProcessService"/>
+    <partnerLinks>
+        <partnerLink myRole="PolicyQuoteProcessService" name="DriverToPolicyQuoteProcessService" partnerLinkType="pps:DriverToPolicyQuoteProcessServiceServiceLT"/>
+        <partnerLink name="PolicyQuoteProcessServiceToDrivingRecordService" partnerLinkType="pps:PolicyQuoteProcessServiceToDrivingRecordServiceLT" partnerRole="DrivingRecordService"/>
+        <partnerLink myRole="PolicyQuoteProcessService" name="DrivingRecordServiceToPolicyQuoteProcessService" partnerLinkType="pps:DrivingRecordServiceToPolicyQuoteProcessServiceServiceLT"/>
+        <partnerLink name="PolicyQuoteProcessServiceToCreditCheckService" partnerLinkType="pps:PolicyQuoteProcessServiceToCreditCheckServiceLT" partnerRole="CreditCheckService"/>
+        <partnerLink name="PolicyQuoteProcessServiceToPolicyQuoteCalculationService" partnerLinkType="pps:PolicyQuoteProcessServiceToPolicyQuoteCalculationServiceLT" partnerRole="PolicyQuoteCalculationService"/>
+        <partnerLink name="PolicyQuoteProcessServiceToPolicyQuoteEntityService" partnerLinkType="pps:PolicyQuoteProcessServiceToPolicyQuoteEntityServiceLT" partnerRole="PolicyQuoteEntityService"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="pps:receivePolicyQuoteRequest" name="receivePolicyQuoteRequestVar"/>
+        <variable messageType="dmv:checkDrivingRecordRequest" name="checkDrivingRecordRequestVar"/>
+        <variable messageType="pps:receiveDrivingRecordRequest" name="receiveDrivingRecordRequestVar"/>
+        <variable messageType="ca:checkCreditRequest" name="checkCreditRequestVar"/>
+        <variable messageType="ca:checkCreditResponse" name="checkCreditResponseVar"/>
+        <variable messageType="pcs:calculatePolicyQuoteRequest" name="calculatePolicyQuoteRequestVar"/>
+        <variable messageType="pcs:calculatePolicyQuoteResponse" name="calculatePolicyQuoteResponseVar"/>
+        <variable messageType="pes:createPolicyQuoteRequest" name="createPolicyQuoteRequestVar"/>
+        <variable messageType="pes:createPolicyQuoteResponse" name="createPolicyQuoteResponseVar"/>
+        <variable messageType="pps:receivePolicyQuoteResponse" name="receivePolicyQuoteResponseVar"/>
+        <variable messageType="pps:policyQuoteFaultFault" name="policyQuoteFaultFaultVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_PolicyQuote" operation="receivePolicyQuote" partnerLink="DriverToPolicyQuoteProcessService" portType="pps:PolicyQuoteProcessService" variable="receivePolicyQuoteRequestVar"/>
+        <invoke inputVariable="checkDrivingRecordRequestVar" name="Send_DrivingRecordRequest" operation="checkDrivingRecord" partnerLink="PolicyQuoteProcessServiceToDrivingRecordService" portType="dmv:DrivingRecordService"/>
+        <receive name="Receive_DrivingRecordResponse" operation="receiveDrivingRecord" partnerLink="DrivingRecordServiceToPolicyQuoteProcessService" portType="pps:DrivingRecordCallbackService" variable="receiveDrivingRecordRequestVar"/>
+        <if>
+            <sequence>
+                <invoke inputVariable="checkCreditRequestVar" name="Send_CreditCheckRequest" operation="checkCredit" outputVariable="checkCreditResponseVar" partnerLink="PolicyQuoteProcessServiceToCreditCheckService" portType="ca:CreditCheckService"/>
+                <invoke inputVariable="calculatePolicyQuoteRequestVar" name="Send_PolicyQuote" operation="calculatePolicyQuote" outputVariable="calculatePolicyQuoteResponseVar" partnerLink="PolicyQuoteProcessServiceToPolicyQuoteCalculationService" portType="pcs:PolicyQuoteCalculationService"/>
+                <invoke inputVariable="createPolicyQuoteRequestVar" name="Send_PolicyQuote" operation="createPolicyQuote" outputVariable="createPolicyQuoteResponseVar" partnerLink="PolicyQuoteProcessServiceToPolicyQuoteEntityService" portType="pes:PolicyQuoteEntityService"/>
+                <reply name="Send_PolicyQuoteReply" operation="receivePolicyQuote" partnerLink="DriverToPolicyQuoteProcessService" portType="pps:PolicyQuoteProcessService" variable="receivePolicyQuoteResponseVar"/>
+            </sequence>
+            <else>
+                <sequence>
+                    <reply faultName="pps:policyQuoteFault" name="Send_PolicyQuoteFault" operation="receivePolicyQuote" partnerLink="DriverToPolicyQuoteProcessService" portType="pps:PolicyQuoteProcessService" variable="policyQuoteFaultFaultVar"/>
+                </sequence>
+            </else>
+        </if>
+    </sequence>
+</process>

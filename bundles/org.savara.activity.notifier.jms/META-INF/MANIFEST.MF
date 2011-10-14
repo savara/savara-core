@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Activity Notifier JMS
 Bundle-SymbolicName: org.savara.activity.notifier.jms
-Bundle-Version: 2.0.0.20111014-M5
+Bundle-Version: 2.0.0.20111018-M5
 Bundle-Activator: org.savara.activity.notifier.jms.osgi.Activator
 Import-Package: org.osgi.framework;version="1.3.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

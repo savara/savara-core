@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pes="http://www.example.org/policyQuoteEntityService" xmlns:pol="http://www.example.org/policyQuote" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="PolicyQuoteEntityService" targetNamespace="http://www.example.org/policyQuoteEntityService">
+    <types xmlns="http://schemas.xmlsoap.org/wsdl/">
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.example.org/policyQuote" schemaLocation="schema/policyQuote.xsd"/>
+        </schema>
+    </types>
+    <wsdl:message name="createPolicyQuoteResponse">
+        <wsdl:part element="pol:policyQuoteReply" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createPolicyQuoteRequest">
+        <wsdl:part element="pol:policyQuote" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="PolicyQuoteEntityService">
+        <wsdl:operation name="createPolicyQuote">
+            <wsdl:input message="pes:createPolicyQuoteRequest">
+            </wsdl:input>
+            <wsdl:output message="pes:createPolicyQuoteResponse">
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="PolicyQuoteEntityServiceBinding" type="pes:PolicyQuoteEntityService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="createPolicyQuote">
+            <soap:operation soapAction="http://www.example.org/policyQuoteEntityService/createPolicyQuote"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="PolicyQuoteEntityServiceService">
+        <wsdl:port binding="pes:PolicyQuoteEntityServiceBinding" name="PolicyQuoteEntityServicePort">
+            <soap:address location="http://localhost:8080/PolicyQuoteEntityServiceService/PolicyQuoteEntityServicePort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

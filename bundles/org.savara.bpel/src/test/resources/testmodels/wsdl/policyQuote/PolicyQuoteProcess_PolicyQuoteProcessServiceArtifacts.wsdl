@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://www.example.org/policyQuoteProcessService" xmlns:ns2="http://dmv.com/drivingRecordService" xmlns:ns3="http://creditagency.com/creditCheckService" xmlns:ns4="http://www.example.org/policyQuoteCalculationService" xmlns:ns5="http://www.example.org/policyQuoteEntityService" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" name="PolicyQuoteProcess" targetNamespace="http://www.example.org/policyQuoteProcessService">
+    <wsdl:import location="PolicyQuoteProcess_PolicyQuoteProcessService.wsdl" namespace="http://www.example.org/policyQuoteProcessService"/>
+    <wsdl:import location="PolicyQuoteProcess_DrivingRecordService.wsdl" namespace="http://dmv.com/drivingRecordService"/>
+    <wsdl:import location="PolicyQuoteProcess_PolicyQuoteEntityService.wsdl" namespace="http://www.example.org/policyQuoteEntityService"/>
+    <wsdl:import location="PolicyQuoteProcess_PolicyQuoteCalculationService.wsdl" namespace="http://www.example.org/policyQuoteCalculationService"/>
+    <wsdl:import location="PolicyQuoteProcess_CreditCheckService.wsdl" namespace="http://creditagency.com/creditCheckService"/>
+    <plnk:partnerLinkType name="DriverToPolicyQuoteProcessServiceServiceLT">
+        <plnk:role name="PolicyQuoteProcessService" portType="ns1:PolicyQuoteProcessService"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="PolicyQuoteProcessServiceToDrivingRecordServiceLT">
+        <plnk:role name="DrivingRecordService" portType="ns2:DrivingRecordService"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="DrivingRecordServiceToPolicyQuoteProcessServiceServiceLT">
+        <plnk:role name="PolicyQuoteProcessService" portType="ns1:DrivingRecordCallbackService"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="PolicyQuoteProcessServiceToCreditCheckServiceLT">
+        <plnk:role name="CreditCheckService" portType="ns3:CreditCheckService"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="PolicyQuoteProcessServiceToPolicyQuoteCalculationServiceLT">
+        <plnk:role name="PolicyQuoteCalculationService" portType="ns4:PolicyQuoteCalculationService"/>
+    </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="PolicyQuoteProcessServiceToPolicyQuoteEntityServiceLT">
+        <plnk:role name="PolicyQuoteEntityService" portType="ns5:PolicyQuoteEntityService"/>
+    </plnk:partnerLinkType>
+</wsdl:definitions>

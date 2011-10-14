@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:ns1="http://www.example.org/policyQuoteProcessService" xmlns:ns2="http://dmv.com/drivingRecordService" xmlns:ns3="http://creditagency.com/creditCheckService" xmlns:ns4="http://www.example.org/policyQuoteCalculationService" xmlns:ns5="http://www.example.org/policyQuoteEntityService">
+    <process name="ns1:PolicyQuoteProcess_PolicyQuoteProcessService">
+        <active>
+            true
+        </active>
+        <process-events generate="all"/>
+        <provide partnerLink="DriverToPolicyQuoteProcessService">
+            <service name="ns1:PolicyQuoteProcessServiceService" port="PolicyQuoteProcessServicePort"/>
+        </provide>
+        <provide partnerLink="DrivingRecordServiceToPolicyQuoteProcessService">
+            <service name="ns1:PolicyQuoteProcessServiceService" port="DrivingRecordCallbackServicePort"/>
+        </provide>
+        <invoke partnerLink="PolicyQuoteProcessServiceToDrivingRecordService" usePeer2Peer="false">
+            <service name="ns2:DrivingRecordServiceService" port="DrivingRecordServicePort"/>
+        </invoke>
+        <invoke partnerLink="PolicyQuoteProcessServiceToCreditCheckService" usePeer2Peer="false">
+            <service name="ns3:CreditCheckServiceService" port="CreditCheckServicePort"/>
+        </invoke>
+        <invoke partnerLink="PolicyQuoteProcessServiceToPolicyQuoteCalculationService" usePeer2Peer="false">
+            <service name="ns4:PolicyQuoteCalculationServiceService" port="PolicyQuoteCalculationServicePort"/>
+        </invoke>
+        <invoke partnerLink="PolicyQuoteProcessServiceToPolicyQuoteEntityService" usePeer2Peer="false">
+            <service name="ns5:PolicyQuoteEntityServiceService" port="PolicyQuoteEntityServicePort"/>
+        </invoke>
+    </process>
+</deploy>

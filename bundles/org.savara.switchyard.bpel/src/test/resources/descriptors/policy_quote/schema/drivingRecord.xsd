@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://dmv.com/drivingRecord"
+	xmlns:drv="http://dmv.com/drivingRecord" elementFormDefault="qualified">
+
+
+    <element name="drivingRecordRequest"
+    	type="drv:DrivingRecordRequestType">
+    </element>
+
+    <element name="drivingRecordResponse"
+    	type="drv:DrivingRecordResponseType">
+    </element>
+
+    <complexType name="DrivingRecordRequestType">
+    	<sequence>
+    		<element name="name" type="string"></element>
+    		<element name="ssn" type="string"></element>
+    		<element name="dlNumber" type="string"></element>
+    		<element name="age" type="int"></element>
+    	</sequence>
+    </complexType>
+
+   <complexType name="DrivingRecordResponseType">
+       	<sequence>
+    		<element name="name" type="string"></element>
+    		<element name="ssn" type="string"></element>
+    		<element name="dlNumber" type="string"></element>
+    		<element name="age" type="int"></element>
+    		<element name="numberOfTickets" type="int"></element>
+   			<element name="numberOfAccidents" type="int"></element>
+    	</sequence>
+    </complexType>
+
+</schema>

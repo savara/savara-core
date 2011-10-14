@@ -3,14 +3,14 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bundles</groupId>
 	<artifactId>org.savara.scenario.simulator.cdm</artifactId> 
-	<version>2.0.0.20111014-M5</version>
+	<version>2.0.0.20111018-M5</version>
 	<packaging>jar</packaging>
 	<name>Savara::Bundles::Scenario-Simulator-CDM</name>
 
 	<parent>
 		<groupId>org.savara</groupId>
 		<artifactId>bundles</artifactId>
-		<version>2.0.0.20111014-M5</version>
+		<version>2.0.0.20111018-M5</version>
 	</parent>
   
 	<dependencies>
