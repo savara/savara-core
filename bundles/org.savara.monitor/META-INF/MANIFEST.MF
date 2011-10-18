@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Monitor
 Bundle-SymbolicName: org.savara.monitor
-Bundle-Version: 2.0.0.20111018-M5
+Bundle-Version: 2.0.0.SNAPSHOT
 Bundle-Activator: org.savara.monitor.osgi.Activator
 Bundle-Vendor: www.savara.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
