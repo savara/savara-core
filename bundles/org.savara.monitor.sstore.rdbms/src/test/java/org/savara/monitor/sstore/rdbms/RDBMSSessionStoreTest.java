@@ -25,7 +25,7 @@ import junit.framework.Assert;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.savara.monitor.ConversationInstanceId;
+import org.savara.monitor.ConversationId;
 import org.savara.protocol.ProtocolId;
 
 /**
@@ -64,14 +64,14 @@ public class RDBMSSessionStoreTest extends Assert{
 	
 	@Test
 	public void testCreateNewSession() throws Exception {		
-		ConversationInstanceId cid = new ConversationInstanceId("1");
+		ConversationId cid = new ConversationId("1");
 		Serializable o = store.create(pid, cid, session);
 		assertEquals("DummySession", ((DummySession)o).getDescription());
 	}
 	
 	@Test
 	public void testCreateDuplicatedSession() throws Exception {
-		ConversationInstanceId cid = new ConversationInstanceId("11");
+		ConversationId cid = new ConversationId("11");
 		store.create(pid, cid, session);
 		DummySession session2 = new DummySession();
 		
@@ -85,7 +85,7 @@ public class RDBMSSessionStoreTest extends Assert{
 	
 	@Test
 	public void testFindSession() throws Exception {
-		ConversationInstanceId cid = new ConversationInstanceId("2");
+		ConversationId cid = new ConversationId("2");
 		store.create(pid, cid, session);
 		Serializable o = store.find(pid, cid);
 		assertEquals("DummySession", ((DummySession)o).getDescription() );
@@ -93,7 +93,7 @@ public class RDBMSSessionStoreTest extends Assert{
 	
 	@Test
 	public void testUpdateSession() throws Exception {
-		ConversationInstanceId cid = new ConversationInstanceId("3");
+		ConversationId cid = new ConversationId("3");
 		DummySession ds = new DummySession();
 		ds.setDescription("first one");
 		store.create(pid, cid, ds);
@@ -105,7 +105,7 @@ public class RDBMSSessionStoreTest extends Assert{
 	
 	@Test
 	public void testDeleteSession() throws Exception {
-		ConversationInstanceId cid = new ConversationInstanceId("4");
+		ConversationId cid = new ConversationId("4");
 		store.create(pid, cid, session);
 		store.remove(pid, cid);
 		Serializable o = store.find(pid, cid);

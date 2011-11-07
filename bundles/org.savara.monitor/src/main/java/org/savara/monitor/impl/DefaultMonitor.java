@@ -20,14 +20,14 @@ package org.savara.monitor.impl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.savara.monitor.ConversationInstanceId;
+import org.savara.monitor.ConversationId;
+import org.savara.monitor.ConversationResolver;
 import org.savara.monitor.MonitorResult;
 import org.savara.monitor.SessionStore;
 import org.savara.monitor.Message;
 import org.savara.monitor.Monitor;
 import org.savara.protocol.ProtocolId;
 import org.savara.protocol.repository.ProtocolRepository;
-import org.savara.protocol.ProtocolUnknownException;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.protocol.export.monitor.MonitorProtocolExporter;
 import org.scribble.protocol.model.ProtocolModel;
@@ -49,6 +49,7 @@ public class DefaultMonitor implements Monitor {
 
 	private ProtocolRepository m_protocolRepository=null;
 	private SessionStore m_sessionStore=null;
+	private ConversationResolver m_conversationResolver=null;
 	private ProtocolMonitor m_monitor=new DefaultProtocolMonitor();
 	private DescriptionCache m_descriptionCache=new DescriptionCache();
 	private MonitorProtocolExporter m_exporter=new MonitorProtocolExporter();
@@ -86,6 +87,16 @@ public class DefaultMonitor implements Monitor {
 	}
 	
 	/**
+	 * This method sets the conversation resolver to use when
+	 * processing messages against the monitor.
+	 * 
+	 * @param resolver The conversation resolver
+	 */
+	public void setConversationResolver(ConversationResolver resolver) {
+		m_conversationResolver = resolver;
+	}
+	
+	/**
 	 * This method is used to indicate that a message has been
 	 * sent or received, and should be monitored against the
 	 * specified protocol id and optional conversation instance
@@ -106,9 +117,7 @@ public class DefaultMonitor implements Monitor {
 	 * @throws ProtocolUnknownException Unknown protocol name or role
 	 * @throws IOException Failed to create or retrieve session
 	 */
-	public MonitorResult process(ProtocolId pid, ConversationInstanceId cid, Message mesg)
-							throws ProtocolUnknownException,
-									java.io.IOException {
+	public MonitorResult process(ProtocolId pid, ConversationId cid, Message mesg) {
 		MonitorResult ret=null;
 		
 		if (m_protocolRepository == null) {
@@ -123,47 +132,44 @@ public class DefaultMonitor implements Monitor {
 			
 			if (pids != null) {
 				for (ProtocolId pi : pids) {
-					try {
-						Result result=processProtocol(pi, cid, mesg);
-						
-						if (result != null && result != Result.NOT_HANDLED) {
-							ret = new MonitorResult(pid, cid, result.isValid(),
-									result.getReason(), result.getProperties());	
-							break;
-						}
-					} catch(ProtocolUnknownException pue) {
-						logger.severe("Unknown protocol: Failed to process message against protocol id '"+
-										pid+"'");
+					Result result=processProtocol(pi, cid, mesg);
+					
+					if (result != null && result != Result.NOT_HANDLED) {
+						ret = new MonitorResult(pid, cid, result.isValid(),
+								result.getReason(), result.getProperties());	
+						break;
 					}
 				}
 			}
 		} else {
-			try {
-				Result result=processProtocol(pid, cid, mesg);
-				
-				if (result != null && result != Result.NOT_HANDLED) {
-					ret = new MonitorResult(pid, cid, result.isValid(),
-							result.getReason(), result.getProperties());	
-				}
-			} catch(ProtocolUnknownException pue) {
-				logger.severe("Unknown protocol: Failed to process message against protocol id '"+
-								pid+"'");
+			Result result=processProtocol(pid, cid, mesg);
+			
+			if (result != null && result != Result.NOT_HANDLED) {
+				ret = new MonitorResult(pid, cid, result.isValid(),
+						result.getReason(), result.getProperties());	
 			}
 		}
 		
 		return(ret);
 	}
 	
-	protected Result processProtocol(ProtocolId pid, ConversationInstanceId cid, Message mesg)
-					throws ProtocolUnknownException, java.io.IOException {
+	protected Result processProtocol(ProtocolId pid, ConversationId cid, Message mesg) {
 		Result ret=null;
 		
+		Description desc=getProtocolDescription(pid);
+		
 		// Check if conversation instance id should be derived
-		if (cid == null) {
-			// TODO: Derive conversation instance id
+		if (cid == null && m_conversationResolver != null) {
+			cid = m_conversationResolver.getConversationId(desc, mesg);
 		}
 		
-		Description desc=getProtocolDescription(pid);
+		// If conversation instance id not available, then must fail monitoring
+		// TODO: HOW SHOULD TECHNICAL FAILURE BE REFLECTED IN ACTIVITY?
+		if (cid == null) {
+			logger.severe("Unable to find conversation instance id for protocol '"+pid+
+					"' and message '"+mesg+"'");
+			return(Result.INVALID);
+		}
 		
 		java.io.Serializable session=m_sessionStore.find(pid, cid);
 		
@@ -196,7 +202,8 @@ public class DefaultMonitor implements Monitor {
 			}
 			
 		} else {
-			throw new java.io.IOException("Inappropriate session type returned");
+			logger.severe("Inappropriate session type returned");
+			ret = Result.NOT_HANDLED;
 		}
 		
 		return(ret);

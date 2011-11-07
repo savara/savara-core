@@ -51,6 +51,17 @@ public class Annotation implements org.scribble.common.model.Annotation {
 	}
 	
 	/**
+	 * This is the copy constructor.
+	 * 
+	 * @param an The annotation to copy
+	 */
+	public Annotation(Annotation an) {
+		m_id = an.m_id;
+		m_name = an.m_name;
+		m_properties.putAll(an.m_properties);
+	}
+	
+	/**
 	 * This method returns the optional id associated with the annotation.
 	 * 
 	 * @return

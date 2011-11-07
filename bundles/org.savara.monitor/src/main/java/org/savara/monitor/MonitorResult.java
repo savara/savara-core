@@ -27,7 +27,7 @@ import org.savara.protocol.ProtocolId;
 public class MonitorResult {
 
 	private ProtocolId m_protocolId=null;
-	private ConversationInstanceId m_conversationInstanceId=null;
+	private ConversationId m_conversationInstanceId=null;
 	private boolean m_valid=false;
 	private String m_reason=null;
 	private java.util.Map<String,Object> m_properties=null;
@@ -41,7 +41,7 @@ public class MonitorResult {
 	 * @param reason Reason for result
 	 * @param props The properties
 	 */
-	public MonitorResult(ProtocolId pid, ConversationInstanceId cid, boolean valid,
+	public MonitorResult(ProtocolId pid, ConversationId cid, boolean valid,
 						String reason, java.util.Map<String,Object> props) {
 		m_protocolId = pid;
 		m_conversationInstanceId = cid;
@@ -64,7 +64,7 @@ public class MonitorResult {
 	 * 
 	 * @return The conversation instance id
 	 */
-	public ConversationInstanceId getConversationInstanceId() {
+	public ConversationId getConversationInstanceId() {
 		return(m_conversationInstanceId);
 	}
 	

@@ -15,12 +15,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.protocol.repository.impl;
+package org.savara.protocol.repository;
 
 import org.savara.protocol.ProtocolCriteria;
 import org.savara.protocol.ProtocolId;
-import org.savara.protocol.repository.ProtocolRepository;
-import org.savara.protocol.ProtocolUnknownException;
 import org.scribble.protocol.model.ProtocolModel;
 
 /**
@@ -50,14 +48,9 @@ public class InMemoryProtocolRepository implements ProtocolRepository {
 	 * the supplied protocol id (name and role).
 	 * 
 	 * @param pid The protocol id
-	 * @return The protocol model
-	 * @throws ProtocolUnknownException Failed to find protocol with the specified id
+	 * @return The protocol model, or null if not found
 	 */
-	public ProtocolModel getProtocol(ProtocolId pid) throws ProtocolUnknownException {
-		if (m_protocolModels.containsKey(pid) == false) {
-			throw new ProtocolUnknownException("Protocol '"+pid+"' not known");
-		}
-		
+	public ProtocolModel getProtocol(ProtocolId pid) {
 		return(m_protocolModels.get(pid));
 	}
 	

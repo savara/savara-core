@@ -23,14 +23,14 @@ import java.util.UUID;
  * This class represents the identity of a conversation instance.
  *
  */
-public class ConversationInstanceId {
+public class ConversationId {
 
 	private String m_id=null;
 	
 	/**
 	 * The default constructor.
 	 */
-	public ConversationInstanceId() {
+	public ConversationId() {
 		m_id = UUID.randomUUID().toString();
 	}
 	
@@ -39,7 +39,7 @@ public class ConversationInstanceId {
 	 * 
 	 * @param id The id
 	 */
-	public ConversationInstanceId(String id) {
+	public ConversationId(String id) {
 		m_id = id;
 	}
 	
@@ -60,8 +60,8 @@ public class ConversationInstanceId {
 	public boolean equals(Object obj) {
 		boolean ret=false;
 		
-		if (obj instanceof ConversationInstanceId &&
-				((ConversationInstanceId)obj).m_id.equals(m_id)) {
+		if (obj instanceof ConversationId &&
+				((ConversationId)obj).m_id.equals(m_id)) {
 			ret = true;
 		}
 		

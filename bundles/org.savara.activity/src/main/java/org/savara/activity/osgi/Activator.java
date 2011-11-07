@@ -25,14 +25,20 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.savara.activity.ActivityAnalyser;
+import org.savara.activity.ActivityFilter;
+import org.savara.activity.ActivityNotifier;
 import org.savara.activity.ActivityProcessor;
 import org.savara.activity.ActivityProcessorFactory;
+import org.savara.activity.ActivityStore;
 
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
 
+	private org.osgi.util.tracker.ServiceTracker m_activityFilterTracker=null;
 	private org.osgi.util.tracker.ServiceTracker m_activityAnalyserTracker=null;
+	private org.osgi.util.tracker.ServiceTracker m_activityStoreTracker=null;
+	private org.osgi.util.tracker.ServiceTracker m_activityNotifierTracker=null;
 
 	private static final Logger _log=Logger.getLogger(Activator.class.getName());
 
@@ -49,7 +55,7 @@ public class Activator implements BundleActivator {
 
         Properties props = new Properties();
 
-        // Register activity validation manager
+        // Register activity processor
         final ActivityProcessor avm=ActivityProcessorFactory.getActivityProcessor();
         
         context.registerService(ActivityProcessor.class.getName(), 
@@ -57,13 +63,33 @@ public class Activator implements BundleActivator {
         
         _log.fine("Registered Activity Validation Manager");
         
+        // Create activity filter tracker
+        m_activityFilterTracker = new ServiceTracker(context,
+							ActivityFilter.class.getName(), null) {
+
+			public Object addingService(ServiceReference ref) {
+				Object ret=super.addingService(ref);
+				
+				_log.info("Activity filter has been added: "+ret);
+				
+				// TODO: If already set, then may need to replace with list
+				// implementation and add subsequent implementations to it
+				avm.setFilter((ActivityFilter)ret);
+				
+				return(ret);
+			}
+		};
+
+		m_activityFilterTracker.open();
+		
+        // Create activity analyser tracker
         m_activityAnalyserTracker = new ServiceTracker(context,
 							ActivityAnalyser.class.getName(), null) {
 
 			public Object addingService(ServiceReference ref) {
 				Object ret=super.addingService(ref);
 				
-				_log.fine("Activity analyser has been added: "+ret);
+				_log.info("Activity analyser has been added: "+ret);
 				
 				// TODO: If already set, then may need to replace with list
 				// implementation and add subsequent implementations to it
@@ -75,7 +101,44 @@ public class Activator implements BundleActivator {
 
 		m_activityAnalyserTracker.open();
 		
-		// TODO: Need to add trackers for other components? filter, store and notifier?
+        // Create activity store tracker
+        m_activityStoreTracker = new ServiceTracker(context,
+							ActivityStore.class.getName(), null) {
+
+			public Object addingService(ServiceReference ref) {
+				Object ret=super.addingService(ref);
+				
+				_log.info("Activity store has been added: "+ret);
+				
+				// TODO: If already set, then may need to replace with list
+				// implementation and add subsequent implementations to it
+				avm.setStore((ActivityStore)ret);
+				
+				return(ret);
+			}
+		};
+
+		m_activityStoreTracker.open();
+		
+        // Create activity notifier tracker
+        m_activityNotifierTracker = new ServiceTracker(context,
+							ActivityNotifier.class.getName(), null) {
+
+			public Object addingService(ServiceReference ref) {
+				Object ret=super.addingService(ref);
+				
+				_log.info("Activity notifier has been added: "+ret);
+				
+				// TODO: If already set, then may need to replace with list
+				// implementation and add subsequent implementations to it
+				avm.setNotifier((ActivityNotifier)ret);
+				
+				return(ret);
+			}
+		};
+
+		m_activityNotifierTracker.open();
+		
 	}
 
 	/*

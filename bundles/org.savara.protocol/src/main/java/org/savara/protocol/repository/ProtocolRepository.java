@@ -19,7 +19,6 @@ package org.savara.protocol.repository;
 
 import org.savara.protocol.ProtocolCriteria;
 import org.savara.protocol.ProtocolId;
-import org.savara.protocol.ProtocolUnknownException;
 import org.scribble.protocol.model.ProtocolModel;
 
 /**
@@ -34,10 +33,9 @@ public interface ProtocolRepository {
 	 * the supplied protocol id (name and role).
 	 * 
 	 * @param pid The protocol id
-	 * @return The protocol model
-	 * @throws ProtocolUnknownException Failed to find protocol with the specified id
+	 * @return The protocol model, or null if not found
 	 */
-	public ProtocolModel getProtocol(ProtocolId pid) throws ProtocolUnknownException;
+	public ProtocolModel getProtocol(ProtocolId pid);
 	
 	/**
 	 * This method determines which protocols, identified by their protocol ids,

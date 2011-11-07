@@ -20,7 +20,7 @@ package org.savara.monitor.impl;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.savara.monitor.ConversationInstanceId;
+import org.savara.monitor.ConversationId;
 import org.savara.protocol.ProtocolId;
 import org.scribble.protocol.monitor.DefaultSession;
 
@@ -46,7 +46,7 @@ public class InMemorySessionStoreTest {
 		InMemorySessionStore store=new InMemorySessionStore();
 		
 		try {
-			store.create(null, new ConversationInstanceId("id"), null);
+			store.create(null, new ConversationId("id"), null);
 			
 			fail("Should have thrown IllegalArgumentException");
 		} catch(IllegalArgumentException iae) {
@@ -62,7 +62,7 @@ public class InMemorySessionStoreTest {
 		DefaultSession session = new DefaultSession();
 		try {
 			ProtocolId pid=new ProtocolId("p","r");
-			ConversationInstanceId id=new ConversationInstanceId("1");
+			ConversationId id=new ConversationId("1");
 			
 			try {
 				store.create(pid, id, session);
@@ -86,7 +86,7 @@ public class InMemorySessionStoreTest {
 		DefaultSession s = new DefaultSession();
 		try {
 			ProtocolId pid=new ProtocolId("p","r");
-			ConversationInstanceId id=new ConversationInstanceId("1");
+			ConversationId id=new ConversationId("1");
 
 			if (store.create(pid, id, s) == null) {
 				fail("No context created");
@@ -103,7 +103,7 @@ public class InMemorySessionStoreTest {
 		DefaultSession s = new DefaultSession();
 		try {
 			ProtocolId pid=new ProtocolId("p","r");
-			ConversationInstanceId id=new ConversationInstanceId("1");
+			ConversationId id=new ConversationId("1");
 
 			if (store.create(pid, id, s) == null) {
 				fail("No context created");
@@ -132,7 +132,7 @@ public class InMemorySessionStoreTest {
 		
 		try {
 			ProtocolId pid=new ProtocolId("p","r");
-			ConversationInstanceId id1=new ConversationInstanceId("1");
+			ConversationId id1=new ConversationId("1");
 
 			java.io.Serializable c1=null;
 			
@@ -140,7 +140,7 @@ public class InMemorySessionStoreTest {
 				fail("No context created for id 1");
 			}
 			
-			ConversationInstanceId id2=new ConversationInstanceId("2");
+			ConversationId id2=new ConversationId("2");
 
 			java.io.Serializable c2=null;
 			
@@ -169,7 +169,7 @@ public class InMemorySessionStoreTest {
 		
 		try {
 			ProtocolId pid=new ProtocolId("p","r");
-			ConversationInstanceId id1=new ConversationInstanceId("1");
+			ConversationId id1=new ConversationId("1");
 
 			java.io.Serializable c1=null;
 			
@@ -177,7 +177,7 @@ public class InMemorySessionStoreTest {
 				fail("No session created for id 1");
 			}
 			
-			ConversationInstanceId id2=new ConversationInstanceId("2");
+			ConversationId id2=new ConversationId("2");
 
 			java.io.Serializable c2=null;
 			

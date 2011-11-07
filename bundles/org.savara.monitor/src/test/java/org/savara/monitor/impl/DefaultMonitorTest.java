@@ -24,11 +24,11 @@ import java.io.Serializable;
 
 import org.junit.Test;
 import org.savara.common.config.Configuration;
-import org.savara.monitor.ConversationInstanceId;
+import org.savara.monitor.ConversationId;
 import org.savara.monitor.Message;
 import org.savara.monitor.SessionStore;
 import org.savara.protocol.ProtocolId;
-import org.savara.protocol.repository.impl.InMemoryProtocolRepository;
+import org.savara.protocol.repository.InMemoryProtocolRepository;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.monitor.DefaultSession;
 import org.scribble.protocol.monitor.ProtocolMonitorFactory;
@@ -43,7 +43,7 @@ public class DefaultMonitorTest {
 		
 		ProtocolId pid=new ProtocolId("name", "role");
 		
-		ConversationInstanceId cid=new ConversationInstanceId("cid");
+		ConversationId cid=new ConversationId("cid");
 		
 		mon.setProtocolMonitor(ProtocolMonitorFactory.createProtocolMonitor());
 		mon.setSessionStore(new InMemorySessionStore());
@@ -66,7 +66,7 @@ public class DefaultMonitorTest {
 		
 		ProtocolId pid=new ProtocolId("name", "role");
 		
-		ConversationInstanceId cid=new ConversationInstanceId("cid");
+		ConversationId cid=new ConversationId("cid");
 		
 		mon.setProtocolMonitor(ProtocolMonitorFactory.createProtocolMonitor());
 		
@@ -91,7 +91,7 @@ public class DefaultMonitorTest {
 		
 		ProtocolId pid=new ProtocolId("name", "role");
 		
-		ConversationInstanceId cid=new ConversationInstanceId("cid");
+		ConversationId cid=new ConversationId("cid");
 		
 		mon.setProtocolMonitor(ProtocolMonitorFactory.createProtocolMonitor());
 		
@@ -117,7 +117,7 @@ public class DefaultMonitorTest {
 		
 		ProtocolId pid=new ProtocolId("name", "role");
 		
-		ConversationInstanceId cid=new ConversationInstanceId("cid");
+		ConversationId cid=new ConversationId("cid");
 		
 		mon.setProtocolMonitor(ProtocolMonitorFactory.createProtocolMonitor());
 		
@@ -153,7 +153,7 @@ public class DefaultMonitorTest {
 		
 		ProtocolId pid=new ProtocolId("name", "role");
 		
-		ConversationInstanceId cid=new ConversationInstanceId("cid");
+		ConversationId cid=new ConversationId("cid");
 		
 		mon.setProtocolMonitor(ProtocolMonitorFactory.createProtocolMonitor());
 		
@@ -180,7 +180,7 @@ public class DefaultMonitorTest {
 		
 		public boolean f_removed=false;
 		
-		public java.io.Serializable create(ProtocolId pid, ConversationInstanceId cid)
+		public java.io.Serializable create(ProtocolId pid, ConversationId cid)
 					throws IllegalArgumentException, java.io.IOException {
 		
 			DefaultSession s1=new DefaultSession() {
@@ -194,7 +194,7 @@ public class DefaultMonitorTest {
 			return(s1);
 		}
 
-		public void remove(ProtocolId pid, ConversationInstanceId cid) {
+		public void remove(ProtocolId pid, ConversationId cid) {
 			f_removed = true;
 		}
 	};

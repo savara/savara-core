@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,22 +15,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.protocol;
+package org.savara.monitor;
+
+import org.scribble.protocol.monitor.model.Description;
 
 /**
- * This exceptions indicates that the protocol name or role is unknown.
+ * This interface represents the component responsible for deriving
+ * the conversation instance id from a message.
  *
  */
-public class ProtocolUnknownException extends Exception {
-
-	private static final long serialVersionUID = -229297584119164988L;
+public interface ConversationResolver {
 
 	/**
-	 * This constructor initializes the exception message.
+	 * This method derives the conversation id from the supplied protocol
+	 * description and message.
 	 * 
-	 * @param mesg The message
+	 * @param protocol The protocol
+	 * @param message The message
+	 * @return The conversation id, or null if could not be resolved
 	 */
-	public ProtocolUnknownException(String mesg) {
-		super(mesg);
-	}
+	public ConversationId getConversationId(Description protocol, Message message);
+	
 }

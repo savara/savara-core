@@ -32,7 +32,7 @@ import javax.persistence.Persistence;
 import javax.transaction.TransactionManager;
 
 import org.savara.common.config.Configuration;
-import org.savara.monitor.ConversationInstanceId;
+import org.savara.monitor.ConversationId;
 import org.savara.monitor.SessionStore;
 import org.savara.protocol.ProtocolId;
 
@@ -116,7 +116,7 @@ public class RDBMSSessionStore implements SessionStore {
 	 * (non-Javadoc)
 	 * @see org.savara.monitor.SessionStore#create(org.savara.protocol.ProtocolId, org.savara.monitor.ConversationInstanceId)
 	 */
-	public java.io.Serializable create(ProtocolId pid, ConversationInstanceId cid, Serializable session) {
+	public java.io.Serializable create(ProtocolId pid, ConversationId cid, Serializable session) {
 
         if (!isInitialized) {
             initialization();
@@ -151,7 +151,7 @@ public class RDBMSSessionStore implements SessionStore {
 	 * (non-Javadoc)
 	 * @see org.savara.monitor.SessionStore#find(org.savara.protocol.ProtocolId, org.savara.monitor.ConversationInstanceId)
 	 */
-	public java.io.Serializable find(ProtocolId pid, ConversationInstanceId cid) {
+	public java.io.Serializable find(ProtocolId pid, ConversationId cid) {
 
         if (!isInitialized) {
             initialization();
@@ -184,7 +184,7 @@ public class RDBMSSessionStore implements SessionStore {
 	 * (non-Javadoc)
 	 * @see org.savara.monitor.SessionStore#remove(org.savara.protocol.ProtocolId, org.savara.monitor.ConversationInstanceId)
 	 */
-	public void remove(ProtocolId pid, ConversationInstanceId cid) {
+	public void remove(ProtocolId pid, ConversationId cid) {
 		if (!isInitialized) {
             initialization();
         }
@@ -208,7 +208,7 @@ public class RDBMSSessionStore implements SessionStore {
 	 * (non-Javadoc)
 	 * @see org.savara.monitor.SessionStore#update(org.savara.protocol.ProtocolId, org.savara.monitor.ConversationInstanceId, java.io.Serializable)
 	 */
-	public void update(ProtocolId pid, ConversationInstanceId cid,
+	public void update(ProtocolId pid, ConversationId cid,
 					java.io.Serializable session)  {
 		if (!isInitialized) {
             initialization();

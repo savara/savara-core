@@ -19,7 +19,6 @@ package org.savara.monitor;
 
 import org.savara.protocol.ProtocolId;
 import org.savara.protocol.repository.ProtocolRepository;
-import org.savara.protocol.ProtocolUnknownException;
 
 /**
  * This interface represents a behaviour monitor, comparing a stream of messages
@@ -51,6 +50,14 @@ public interface Monitor {
 	public void setSessionStore(SessionStore store);
 	
 	/**
+	 * This method sets the conversation resolver to use when
+	 * processing messages against the monitor.
+	 * 
+	 * @param resolver The conversation resolver
+	 */
+	public void setConversationResolver(ConversationResolver resolver);
+	
+	/**
 	 * This method is used to indicate that a message has been
 	 * sent or received, and should be monitored against the
 	 * specified protocol id and optional conversation instance
@@ -68,11 +75,7 @@ public interface Monitor {
 	 * @param cid The optional conversation instance id
 	 * @param mesg The message
 	 * @return The monitor result, or null if a suitable protocol was not found
-	 * @throws ProtocolUnknownException Unknown protocol name or role
-	 * @throws IOException Failed to create or retrieve session
 	 */
-	public MonitorResult process(ProtocolId pid, ConversationInstanceId cid, Message mesg)
-							throws ProtocolUnknownException,
-									java.io.IOException;
+	public MonitorResult process(ProtocolId pid, ConversationId cid, Message mesg);
 	
 }

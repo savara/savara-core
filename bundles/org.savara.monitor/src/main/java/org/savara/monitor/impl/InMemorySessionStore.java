@@ -20,14 +20,14 @@ package org.savara.monitor.impl;
 import java.io.Serializable;
 
 import org.savara.common.config.Configuration;
-import org.savara.monitor.ConversationInstanceId;
+import org.savara.monitor.ConversationId;
 import org.savara.monitor.SessionStore;
 import org.savara.protocol.ProtocolId;
 
 public class InMemorySessionStore implements SessionStore {
 
-	private java.util.Map<ProtocolId,java.util.Map<ConversationInstanceId,java.io.Serializable>> m_sessions=
-			new java.util.HashMap<ProtocolId,java.util.Map<ConversationInstanceId, java.io.Serializable>>();
+	private java.util.Map<ProtocolId,java.util.Map<ConversationId,java.io.Serializable>> m_sessions=
+			new java.util.HashMap<ProtocolId,java.util.Map<ConversationId, java.io.Serializable>>();
 	
 	/**
 	 * This method sets the configuration for use by the session
@@ -46,12 +46,12 @@ public class InMemorySessionStore implements SessionStore {
 	 * @param cid The conversation instance id
 	 * @param session The session
 	 */
-	protected void addSession(ProtocolId pid, ConversationInstanceId cid, java.io.Serializable session) {
-		java.util.Map<ConversationInstanceId,java.io.Serializable> sessions=
+	protected void addSession(ProtocolId pid, ConversationId cid, java.io.Serializable session) {
+		java.util.Map<ConversationId,java.io.Serializable> sessions=
 						m_sessions.get(pid);
 
 		if (sessions == null) {
-			sessions = new java.util.HashMap<ConversationInstanceId,java.io.Serializable>();
+			sessions = new java.util.HashMap<ConversationId,java.io.Serializable>();
 			m_sessions.put(pid, sessions);
 		
 		} else if (sessions.containsKey(cid)) {
@@ -71,7 +71,7 @@ public class InMemorySessionStore implements SessionStore {
 	 * @throws IllegalArgumentException Protocol or conversation id is invalid
 	 * @throws IOException Failed to create new session
 	 */
-	public java.io.Serializable create(ProtocolId pid, ConversationInstanceId cid, Serializable session) {
+	public java.io.Serializable create(ProtocolId pid, ConversationId cid, Serializable session) {
 		if (pid == null) {
 			throw new IllegalArgumentException("Protocol id not specified");
 		} else if (cid == null) {
@@ -93,7 +93,7 @@ public class InMemorySessionStore implements SessionStore {
 	 * @throws IllegalArgumentException Protocol or conversation id is invalid
 	 * @throws IOException Failed to retrieve session
 	 */
-	public java.io.Serializable find(ProtocolId pid, ConversationInstanceId cid) {
+	public java.io.Serializable find(ProtocolId pid, ConversationId cid) {
 		java.io.Serializable ret=null;
 		
 		if (pid == null) {
@@ -102,7 +102,7 @@ public class InMemorySessionStore implements SessionStore {
 			throw new IllegalArgumentException("Conversation instance id not specified");
 		}
 
-		java.util.Map<ConversationInstanceId,java.io.Serializable> sessions=
+		java.util.Map<ConversationId,java.io.Serializable> sessions=
 			m_sessions.get(pid);
 
 		if (sessions != null) {
@@ -121,14 +121,14 @@ public class InMemorySessionStore implements SessionStore {
 	 * @throws IllegalArgumentException Conversation instance id is invalid or unknown
 	 * @throws java.io.IOException Failed to remove existing session
 	 */
-	public void remove(ProtocolId pid, ConversationInstanceId cid) {
+	public void remove(ProtocolId pid, ConversationId cid) {
 		if (pid == null) {
 			throw new IllegalArgumentException("Protocol id not specified");
 		} else if (cid == null) {
 			throw new IllegalArgumentException("Conversation instance id not specified");
 		}
 
-		java.util.Map<ConversationInstanceId,java.io.Serializable> sessions=
+		java.util.Map<ConversationId,java.io.Serializable> sessions=
 			m_sessions.get(pid);
 
 		if (sessions == null || sessions.containsKey(cid) == false) {
@@ -151,14 +151,14 @@ public class InMemorySessionStore implements SessionStore {
 	 * @param cid The conversation instance id
 	 * @param session The session
 	 */
-	public void update(ProtocolId pid, ConversationInstanceId cid, java.io.Serializable session) {
+	public void update(ProtocolId pid, ConversationId cid, java.io.Serializable session) {
 		if (pid == null) {
 			throw new IllegalArgumentException("Protocol id not specified");
 		} else if (cid == null) {
 			throw new IllegalArgumentException("Conversation instance id not specified");
 		}
 
-		java.util.Map<ConversationInstanceId,java.io.Serializable> sessions=
+		java.util.Map<ConversationId,java.io.Serializable> sessions=
 			m_sessions.get(pid);
 
 		if (sessions == null || sessions.containsKey(cid) == false) {

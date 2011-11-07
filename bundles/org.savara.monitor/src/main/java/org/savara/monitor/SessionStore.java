@@ -48,7 +48,7 @@ public interface SessionStore {
 	 * @param session, The session object
 	 * @return The session
 	 */
-	public java.io.Serializable create(ProtocolId pid, ConversationInstanceId cid, Serializable session);
+	public java.io.Serializable create(ProtocolId pid, ConversationId cid, Serializable session);
 	
 	/**
 	 * This method returns an existing session associated with
@@ -58,7 +58,7 @@ public interface SessionStore {
 	 * @param cid The conversation instance id
 	 * @return The session
 	 */
-	public java.io.Serializable find(ProtocolId pid, ConversationInstanceId cid);
+	public java.io.Serializable find(ProtocolId pid, ConversationId cid);
 	
 	/**
 	 * This method removes an existing session associated
@@ -67,7 +67,7 @@ public interface SessionStore {
 	 * @param pid The protocol id
 	 * @param cid The conversation instance id
 	 */
-	public void remove(ProtocolId pid, ConversationInstanceId cid);
+	public void remove(ProtocolId pid, ConversationId cid);
 	
 	/**
 	 * This method updates an existing session associated
@@ -77,7 +77,7 @@ public interface SessionStore {
 	 * @param cid The conversation instance id
 	 * @param session The session
 	 */
-	public void update(ProtocolId pid, ConversationInstanceId cid,
+	public void update(ProtocolId pid, ConversationId cid,
 					java.io.Serializable session);
 	
 	/**
