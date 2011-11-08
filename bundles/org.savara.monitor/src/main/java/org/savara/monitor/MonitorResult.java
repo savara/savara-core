@@ -17,6 +17,8 @@
  */
 package org.savara.monitor;
 
+import org.savara.protocol.ProtocolId;
+
 /**
  * This class represents a result from monitoring a message against a
  * protocol.
@@ -24,6 +26,8 @@ package org.savara.monitor;
  */
 public class MonitorResult {
 
+	private ProtocolId _protocolId=null;
+	private ConversationId _conversationId=null;
 	private boolean m_valid=false;
 	private String m_reason=null;
 	private java.util.Map<String,Object> m_properties=null;
@@ -31,14 +35,37 @@ public class MonitorResult {
 	/**
 	 * This is the result constructor.
 	 * 
+	 * @param pid The protocol id
+	 * @param cid The conversation id
 	 * @param valid Whether the result was valid
 	 * @param reason Reason for result
 	 * @param props The properties
 	 */
-	public MonitorResult(boolean valid, String reason, java.util.Map<String,Object> props) {
+	public MonitorResult(ProtocolId pid, ConversationId cid,
+			boolean valid, String reason, java.util.Map<String,Object> props) {
+		_protocolId = pid;
+		_conversationId = cid;
 		m_valid = valid;
 		m_reason = reason;
 		m_properties = props;
+	}
+	
+	/**
+	 * This method returns the protocol id.
+	 * 
+	 * @return The protocol id
+	 */
+	public ProtocolId getProtocolId() {
+		return(_protocolId);
+	}
+	
+	/**
+	 * This method returns the conversation id.
+	 * 
+	 * @return The conversation id
+	 */
+	public ConversationId getConversationId() {
+		return(_conversationId);
 	}
 	
 	/**
@@ -69,7 +96,8 @@ public class MonitorResult {
 	}
 	
 	public String toString() {
-		return("MonitorResult["+isValid()+" reason="+
+		return("MonitorResult[pid="+getProtocolId()+" cid="+getConversationId()+
+				" valid="+isValid()+" reason="+
 				getReason()+" props="+getProperties()+"]");
 	}
 }

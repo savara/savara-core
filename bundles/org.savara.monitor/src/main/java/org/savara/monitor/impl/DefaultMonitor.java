@@ -152,10 +152,18 @@ public class DefaultMonitor implements Monitor {
 			
 			if (pids != null) {
 				for (ProtocolId pi : pids) {
-					Result result=processProtocol(pi, cid, mesg);
+					Description desc=getProtocolDescription(pi);
+					ConversationId lcid=cid;
+					
+					// Check if conversation instance id should be derived
+					if (lcid == null && m_conversationResolver != null) {
+						lcid = m_conversationResolver.getConversationId(desc, mesg);
+					}
+					
+					Result result=processProtocol(pi, lcid, desc, mesg);
 					
 					if (result != null && result != Result.NOT_HANDLED) {
-						ret = new MonitorResult(result.isValid(),
+						ret = new MonitorResult(pi, lcid, result.isValid(),
 								result.getReason(), result.getProperties());	
 						break;
 					}
@@ -164,10 +172,17 @@ public class DefaultMonitor implements Monitor {
 				logger.finest("No protocols found for message '"+mesg+"'");
 			}
 		} else {
-			Result result=processProtocol(pid, cid, mesg);
+			Description desc=getProtocolDescription(pid);
+			
+			// Check if conversation instance id should be derived
+			if (cid == null && m_conversationResolver != null) {
+				cid = m_conversationResolver.getConversationId(desc, mesg);
+			}
+			
+			Result result=processProtocol(pid, cid, desc, mesg);
 			
 			if (result != null && result != Result.NOT_HANDLED) {
-				ret = new MonitorResult(result.isValid(),
+				ret = new MonitorResult(pid, cid, result.isValid(),
 						result.getReason(), result.getProperties());	
 			}
 		}
@@ -175,17 +190,10 @@ public class DefaultMonitor implements Monitor {
 		return(ret);
 	}
 	
-	protected Result processProtocol(ProtocolId pid, ConversationId cid, Message mesg) {
+	protected Result processProtocol(ProtocolId pid, ConversationId cid, Description desc, Message mesg) {
 		Result ret=null;
 		
-		Description desc=getProtocolDescription(pid);
-		
-		// Check if conversation instance id should be derived
-		if (cid == null && m_conversationResolver != null) {
-			cid = m_conversationResolver.getConversationId(desc, mesg);
-		}
-		
-		// If conversation instance id not available, then must fail monitoring
+		// If conversation id not available, then must fail monitoring
 		// TODO: HOW SHOULD TECHNICAL FAILURE BE REFLECTED IN ACTIVITY?
 		if (cid == null) {
 			logger.severe("Unable to find conversation instance id for protocol '"+pid+
