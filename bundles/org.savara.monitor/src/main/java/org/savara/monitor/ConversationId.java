@@ -67,4 +67,8 @@ public class ConversationId {
 		
 		return(ret);
 	}
+	
+	public String toString() {
+		return(m_id);
+	}
 }

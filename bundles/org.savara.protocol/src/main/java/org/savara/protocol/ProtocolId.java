@@ -75,4 +75,8 @@ public class ProtocolId {
 		
 		return(ret);
 	}
+	
+	public String toString() {
+		return("ProtocolId[name="+getName()+" role="+getRole()+"]");
+	}
 }
