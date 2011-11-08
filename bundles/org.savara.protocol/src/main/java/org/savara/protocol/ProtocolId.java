@@ -23,7 +23,9 @@ package org.savara.protocol;
  * being played by the endpoint.
  *
  */
-public class ProtocolId {
+public class ProtocolId implements java.io.Serializable {
+
+	private static final long serialVersionUID = 7264408317042223851L;
 
 	private String m_name=null;
 	private String m_role=null;

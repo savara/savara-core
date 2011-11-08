@@ -23,7 +23,9 @@ import java.util.UUID;
  * This class represents the identity of a conversation instance.
  *
  */
-public class ConversationId {
+public class ConversationId implements java.io.Serializable {
+
+	private static final long serialVersionUID = 7390602712462699690L;
 
 	private String m_id=null;
 	
