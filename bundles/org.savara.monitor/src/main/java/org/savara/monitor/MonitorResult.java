@@ -17,8 +17,6 @@
  */
 package org.savara.monitor;
 
-import org.savara.protocol.ProtocolId;
-
 /**
  * This class represents a result from monitoring a message against a
  * protocol.
@@ -26,8 +24,6 @@ import org.savara.protocol.ProtocolId;
  */
 public class MonitorResult {
 
-	private ProtocolId m_protocolId=null;
-	private ConversationId m_conversationInstanceId=null;
 	private boolean m_valid=false;
 	private String m_reason=null;
 	private java.util.Map<String,Object> m_properties=null;
@@ -35,37 +31,14 @@ public class MonitorResult {
 	/**
 	 * This is the result constructor.
 	 * 
-	 * @param pid The protocol id
-	 * @param cid The conversation instance id
 	 * @param valid Whether the result was valid
 	 * @param reason Reason for result
 	 * @param props The properties
 	 */
-	public MonitorResult(ProtocolId pid, ConversationId cid, boolean valid,
-						String reason, java.util.Map<String,Object> props) {
-		m_protocolId = pid;
-		m_conversationInstanceId = cid;
+	public MonitorResult(boolean valid, String reason, java.util.Map<String,Object> props) {
 		m_valid = valid;
 		m_reason = reason;
 		m_properties = props;
-	}
-	
-	/**
-	 * This method returns the protocol id.
-	 * 
-	 * @return The protocol id
-	 */
-	public ProtocolId getProtocolId() {
-		return(m_protocolId);
-	}
-	
-	/**
-	 * This method returns the conversation instance id.
-	 * 
-	 * @return The conversation instance id
-	 */
-	public ConversationId getConversationInstanceId() {
-		return(m_conversationInstanceId);
 	}
 	
 	/**
@@ -93,5 +66,10 @@ public class MonitorResult {
 	 */
 	public java.util.Map<String,Object> getProperties() {
 		return(m_properties);
+	}
+	
+	public String toString() {
+		return("MonitorResult["+isValid()+" reason="+
+				getReason()+" props="+getProperties()+"]");
 	}
 }

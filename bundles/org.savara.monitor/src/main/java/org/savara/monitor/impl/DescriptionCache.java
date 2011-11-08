@@ -17,11 +17,16 @@
  */
 package org.savara.monitor.impl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.savara.protocol.ProtocolId;
 import org.scribble.protocol.monitor.model.Description;
 
 public class DescriptionCache {
 
+	private static final Logger LOG=Logger.getLogger(DescriptionCache.class.getName());
+	
 	private java.util.Map<ProtocolId, Description> m_descriptions=
 					new java.util.HashMap<ProtocolId, Description>();
 	
@@ -44,6 +49,9 @@ public class DescriptionCache {
 	 * @param description The monitorable description
 	 */
 	public void setDescription(ProtocolId pid, Description description) {
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Set description for '"+pid+"' = "+description);
+		}
 		m_descriptions.put(pid, description);
 	}
 }

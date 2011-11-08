@@ -51,7 +51,7 @@
 
 	<properties>
 		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
-		<scribble.version>2.0.0.CR2</scribble.version>
+		<scribble.version>2.0.0-SNAPSHOT</scribble.version>
 		<pi4soa.version>3.1.1-SNAPSHOT</pi4soa.version> <!-- Actually taken from
 						Tycho built update site, not Nexus, so
 						snapshot is irrelevant. -->

@@ -26,11 +26,13 @@ import org.savara.monitor.MonitorResult;
 import org.savara.monitor.SessionStore;
 import org.savara.monitor.Message;
 import org.savara.monitor.Monitor;
+import org.savara.protocol.ProtocolCriteria.Direction;
 import org.savara.protocol.ProtocolId;
 import org.savara.protocol.repository.ProtocolRepository;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.protocol.export.monitor.MonitorProtocolExporter;
 import org.scribble.protocol.model.ProtocolModel;
+import org.scribble.protocol.monitor.DefaultMonitorContext;
 import org.scribble.protocol.monitor.DefaultProtocolMonitor;
 import org.scribble.protocol.monitor.DefaultSession;
 import org.scribble.protocol.monitor.MonitorContext;
@@ -53,9 +55,27 @@ public class DefaultMonitor implements Monitor {
 	private ProtocolMonitor m_monitor=new DefaultProtocolMonitor();
 	private DescriptionCache m_descriptionCache=new DescriptionCache();
 	private MonitorProtocolExporter m_exporter=new MonitorProtocolExporter();
-
+	private	MonitorContext _context=new DefaultMonitorContext();
 	
 	private static final Logger logger=Logger.getLogger(DefaultMonitor.class.getName());
+	
+	/**
+	 * This method sets the monitor context.
+	 * 
+	 * @param context The monitor context
+	 */
+	public void setMonitorContext(MonitorContext context) {
+		_context = context;
+	}
+	
+	/**
+	 * This method returns the monitor context.
+	 * 
+	 * @return The monitor context
+	 */
+	public MonitorContext getMonitorContext() {
+		return (_context);
+	}
 	
 	/**
 	 * This method sets the protocol monitor.
@@ -135,17 +155,19 @@ public class DefaultMonitor implements Monitor {
 					Result result=processProtocol(pi, cid, mesg);
 					
 					if (result != null && result != Result.NOT_HANDLED) {
-						ret = new MonitorResult(pid, cid, result.isValid(),
+						ret = new MonitorResult(result.isValid(),
 								result.getReason(), result.getProperties());	
 						break;
 					}
 				}
+			} else if (logger.isLoggable(Level.FINEST)) {
+				logger.finest("No protocols found for message '"+mesg+"'");
 			}
 		} else {
 			Result result=processProtocol(pid, cid, mesg);
 			
 			if (result != null && result != Result.NOT_HANDLED) {
-				ret = new MonitorResult(pid, cid, result.isValid(),
+				ret = new MonitorResult(result.isValid(),
 						result.getReason(), result.getProperties());	
 			}
 		}
@@ -173,13 +195,12 @@ public class DefaultMonitor implements Monitor {
 		
 		java.io.Serializable session=m_sessionStore.find(pid, cid);
 		
-		MonitorContext context=null;
 		boolean f_created=false;
 		
 		if (session == null) {
 
 			// Try to create new session
-			session = (DefaultSession)m_monitor.createSession(context, desc, DefaultSession.class);
+			session = (DefaultSession)m_monitor.createSession(_context, desc, DefaultSession.class);
 			
 			m_sessionStore.create(pid, cid, session);
 
@@ -190,7 +211,11 @@ public class DefaultMonitor implements Monitor {
 			// Won't specify role, as part of protocol description not
 			// generally in the runtime environment - possible future
 			// enhancement
-			ret = m_monitor.messageSent(context, desc, (Session)session, mesg);
+			if (mesg.getDirection() == Direction.Outbound) {
+				ret = m_monitor.messageSent(_context, desc, (Session)session, mesg);
+			} else {
+				ret = m_monitor.messageReceived(_context, desc, (Session)session, mesg);
+			}
 			
 			// If session just created but result not handled, or session finished
 			// then remove
