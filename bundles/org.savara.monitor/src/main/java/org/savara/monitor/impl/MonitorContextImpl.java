@@ -74,6 +74,10 @@ public class MonitorContextImpl extends DefaultMonitorContext {
         				
         				if (startpos != -1 && endpos != -1) {
         					nodeFaultName = ann.getValue().substring(startpos+5, endpos);
+        	    			if (LOG.isLoggable(Level.FINEST)) {
+        	    				LOG.finest("Extracted fault name '"+nodeFaultName+
+        	    						"' from node annotation");        			
+        	    			}
         				}
         				break;
         			}
@@ -89,7 +93,8 @@ public class MonitorContextImpl extends DefaultMonitorContext {
         	if (nodeFaultName.length() > 0) {
         		// Check if message has fault defined
     			if (LOG.isLoggable(Level.FINEST)) {
-    				LOG.finest("Message fault name '"+mesgFaultName+"'");        			
+    				LOG.finest("Compare message fault name '"+mesgFaultName+
+    						"' against node '"+nodeFaultName+"'");        			
     			}
 
         		if (mesgFaultName == null) {       			

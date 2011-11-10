@@ -138,6 +138,8 @@ public class DefaultMonitor implements Monitor {
 	 */
 	public MonitorResult process(ProtocolId pid, ConversationId cid, Message mesg) {
 		MonitorResult ret=null;
+		boolean messageRelevant=false;
+		ConversationId unhandledCID=null;
 		
 		if (m_protocolRepository == null) {
 			throw new IllegalStateException("Protocol repository has not been configured");
@@ -159,12 +161,18 @@ public class DefaultMonitor implements Monitor {
 						lcid = m_conversationResolver.getConversationId(desc, mesg);
 					}
 					
-					Result result=processProtocol(pi, lcid, desc, mesg);
-					
-					if (result != null && result != Result.NOT_HANDLED) {
-						ret = new MonitorResult(pi, lcid, result.isValid(),
-								result.getReason(), result.getProperties());	
-						break;
+					if (lcid != null) {
+						messageRelevant = true;
+						
+						unhandledCID = lcid;
+						
+						Result result=processProtocol(pi, lcid, desc, mesg);
+						
+						if (result != null && result != Result.NOT_HANDLED) {
+							ret = new MonitorResult(pi, lcid, result.isValid(),
+									result.getReason(), result.getProperties());	
+							break;
+						}
 					}
 				}
 			} else if (logger.isLoggable(Level.FINEST)) {
@@ -178,11 +186,32 @@ public class DefaultMonitor implements Monitor {
 				cid = m_conversationResolver.getConversationId(desc, mesg);
 			}
 			
-			Result result=processProtocol(pid, cid, desc, mesg);
-			
-			if (result != null && result != Result.NOT_HANDLED) {
-				ret = new MonitorResult(pid, cid, result.isValid(),
-						result.getReason(), result.getProperties());	
+			if (cid != null) {
+				messageRelevant = true;
+				
+				Result result=processProtocol(pid, cid, desc, mesg);
+				
+				if (result != null && result != Result.NOT_HANDLED) {
+					ret = new MonitorResult(pid, cid, result.isValid(),
+							result.getReason(), result.getProperties());	
+				}
+			}
+		}
+		
+		if (ret == null) {
+			if (messageRelevant) {
+				if (logger.isLoggable(Level.FINEST)) {
+					logger.finest("Message 'not handled' but relevant: "+mesg);
+				}
+				
+				if (cid == null) {
+					cid = unhandledCID;
+				}
+				
+				ret = new MonitorResult(pid, cid, false,
+						null, null);
+			} else if (logger.isLoggable(Level.FINEST)) {
+				logger.finest("Message 'not handled' or relevant: "+mesg);
 			}
 		}
 		
@@ -195,7 +224,7 @@ public class DefaultMonitor implements Monitor {
 		// If conversation id not available, then must fail monitoring
 		// TODO: HOW SHOULD TECHNICAL FAILURE BE REFLECTED IN ACTIVITY?
 		if (cid == null) {
-			logger.severe("Unable to find conversation instance id for protocol '"+pid+
+			logger.severe("Conversation id not defined for protocol '"+pid+
 					"' and message '"+mesg+"'");
 			return(Result.INVALID);
 		}
