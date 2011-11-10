@@ -24,13 +24,15 @@ import org.savara.protocol.ProtocolId;
  * protocol.
  *
  */
-public class MonitorResult {
+public class MonitorResult implements java.io.Serializable {
+
+	private static final long serialVersionUID = 4021604146468557927L;
 
 	private ProtocolId _protocolId=null;
 	private ConversationId _conversationId=null;
 	private boolean m_valid=false;
 	private String m_reason=null;
-	private java.util.Map<String,Object> m_properties=null;
+	private java.util.Map<String,java.io.Serializable> m_properties=null;
 	
 	/**
 	 * This is the result constructor.
@@ -42,7 +44,7 @@ public class MonitorResult {
 	 * @param props The properties
 	 */
 	public MonitorResult(ProtocolId pid, ConversationId cid,
-			boolean valid, String reason, java.util.Map<String,Object> props) {
+			boolean valid, String reason, java.util.Map<String,java.io.Serializable> props) {
 		_protocolId = pid;
 		_conversationId = cid;
 		m_valid = valid;
@@ -91,7 +93,7 @@ public class MonitorResult {
 	 * 
 	 * @return The property map
 	 */
-	public java.util.Map<String,Object> getProperties() {
+	public java.util.Map<String,java.io.Serializable> getProperties() {
 		return(m_properties);
 	}
 	
