@@ -127,4 +127,22 @@ public class MonitorContextImplTest {
 			fail("Should be invalid");
 		}
 	}
+	
+	@Test
+	public void testValidateMessageFaultEmptyValid() {
+		MonitorContextImpl context=new MonitorContextImpl();
+		
+		MessageNode mesgNode=new MessageNode();
+		mesgNode.setOperator("buy");
+		
+		Message mesg=new Message();
+		mesg.setOperator("buy");
+		mesg.setFault("");
+		
+		Result result=context.validate(null, mesgNode, mesg);
+		
+		if (!result.isValid()) {
+			fail("Should be valid");
+		}
+	}
 }

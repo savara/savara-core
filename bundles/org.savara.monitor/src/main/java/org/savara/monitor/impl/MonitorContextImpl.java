@@ -105,7 +105,7 @@ public class MonitorContextImpl extends DefaultMonitorContext {
         			}
         			ret = Result.INVALID;
         		}
-        	} else if (mesgFaultName != null) {
+        	} else if (mesgFaultName != null && mesgFaultName.trim().length() > 0) {
     			if (LOG.isLoggable(Level.FINEST)) {
     				LOG.finest("Message had fault '"+mesgFaultName+
     						"', but node had no fault");
