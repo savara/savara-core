@@ -31,7 +31,26 @@ public class Message extends org.scribble.protocol.monitor.DefaultMessage
 	private String m_sourceEndpointAddress=null;
 	private String m_sourceEndpointType=null;
 	private ProtocolCriteria.Direction m_direction=Direction.Outbound;
+	private String _fault=null;
 	private java.util.List<String> m_values=new java.util.Vector<String>();
+	
+	/**
+	 * This method sets the fault.
+	 * 
+	 * @param fault The fault
+	 */
+	public void setFault(String fault) {
+		_fault = fault;
+	}
+	
+	/**
+	 * This method returns the optional fault.
+	 * 
+	 * @return The optional fault
+	 */
+	public String getFault() {
+		return(_fault);
+	}
 	
 	/**
 	 * This method returns the list of values associated with the message.

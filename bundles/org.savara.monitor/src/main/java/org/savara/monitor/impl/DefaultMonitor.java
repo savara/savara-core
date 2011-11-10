@@ -32,7 +32,6 @@ import org.savara.protocol.repository.ProtocolRepository;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.protocol.export.monitor.MonitorProtocolExporter;
 import org.scribble.protocol.model.ProtocolModel;
-import org.scribble.protocol.monitor.DefaultMonitorContext;
 import org.scribble.protocol.monitor.DefaultProtocolMonitor;
 import org.scribble.protocol.monitor.DefaultSession;
 import org.scribble.protocol.monitor.MonitorContext;
@@ -55,7 +54,7 @@ public class DefaultMonitor implements Monitor {
 	private ProtocolMonitor m_monitor=new DefaultProtocolMonitor();
 	private DescriptionCache m_descriptionCache=new DescriptionCache();
 	private MonitorProtocolExporter m_exporter=new MonitorProtocolExporter();
-	private	MonitorContext _context=new DefaultMonitorContext();
+	private	MonitorContext _context=new MonitorContextImpl();
 	
 	private static final Logger logger=Logger.getLogger(DefaultMonitor.class.getName());
 	
