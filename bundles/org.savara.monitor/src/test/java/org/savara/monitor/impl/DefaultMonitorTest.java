@@ -19,14 +19,11 @@ package org.savara.monitor.impl;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 import org.junit.Test;
-import org.savara.common.config.Configuration;
 import org.savara.monitor.ConversationId;
 import org.savara.monitor.Message;
-import org.savara.monitor.SessionStore;
 import org.savara.protocol.ProtocolId;
 import org.savara.protocol.repository.InMemoryProtocolRepository;
 import org.scribble.protocol.model.ProtocolModel;
@@ -171,17 +168,18 @@ public class DefaultMonitorTest {
 			fail("Unexpected: "+e);
 		}
 		
-		if (store.f_removed == false) {
-			fail("Session was not removed after single message");
+		if (store.f_created == true) {
+			fail("Session should not be created after single message");
 		}
 	}
 	
 	public class TestInMemorySessionStore extends InMemorySessionStore {
 		
+		public boolean f_created=false;
 		public boolean f_removed=false;
 		
-		public java.io.Serializable create(ProtocolId pid, ConversationId cid)
-					throws IllegalArgumentException, java.io.IOException {
+		@Override
+		public java.io.Serializable create(ProtocolId pid, ConversationId cid, Serializable session) {
 		
 			DefaultSession s1=new DefaultSession() {
 				public boolean isFinished() {
@@ -190,6 +188,8 @@ public class DefaultMonitorTest {
 			};
 			
 			addSession(pid, cid, s1);
+			
+			f_created = true;
 			
 			return(s1);
 		}

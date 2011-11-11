@@ -231,16 +231,16 @@ public class DefaultMonitor implements Monitor {
 		
 		java.io.Serializable session=m_sessionStore.find(pid, cid);
 		
-		boolean f_created=false;
+		boolean f_create=false;
 		
 		if (session == null) {
 
 			// Try to create new session
 			session = (DefaultSession)m_monitor.createSession(_context, desc, DefaultSession.class);
 			
-			m_sessionStore.create(pid, cid, session);
+			//m_sessionStore.create(pid, cid, session);
 
-			f_created = true;
+			f_create = true;
 		}
 		
 		if (session instanceof Session) {
@@ -255,12 +255,27 @@ public class DefaultMonitor implements Monitor {
 			
 			// If session just created but result not handled, or session finished
 			// then remove
-			if ((f_created && ret == Result.NOT_HANDLED) ||
+			
+			if (ret != Result.NOT_HANDLED) {
+				
+				if (f_create) {
+					if (!((Session)session).isFinished()) {
+						m_sessionStore.create(pid, cid, session);
+					}
+				} else if (((Session)session).isFinished()) {
+					m_sessionStore.remove(pid, cid);
+				} else {
+					m_sessionStore.update(pid, cid, session);
+				}
+			}
+			/*
+			if ((f_create && ret == Result.NOT_HANDLED) ||
 						((Session)session).isFinished()) {
 				m_sessionStore.remove(pid, cid);
 			} else {
 				m_sessionStore.update(pid, cid, session);
 			}
+			*/
 			
 		} else {
 			logger.severe("Inappropriate session type returned");
