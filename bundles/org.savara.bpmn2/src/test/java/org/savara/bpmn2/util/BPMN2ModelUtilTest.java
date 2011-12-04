@@ -20,7 +20,6 @@ package org.savara.bpmn2.util;
 import static org.junit.Assert.*;
 
 import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
 
 import org.junit.Test;
 import org.savara.bpmn2.model.TChoreography;
@@ -32,7 +31,7 @@ public class BPMN2ModelUtilTest {
 	@Test
 	public void testGetDefinitions() {
 		java.io.InputStream is=
-			ClassLoader.getSystemResourceAsStream("testmodels/bpmn2/PurchaseGoods.bpmn2");
+			ClassLoader.getSystemResourceAsStream("testmodels/bpmn2/PurchaseGoods.bpmn");
 
 		try {
 			org.savara.bpmn2.model.TDefinitions defns=BPMN2ModelUtil.deserialize(is);

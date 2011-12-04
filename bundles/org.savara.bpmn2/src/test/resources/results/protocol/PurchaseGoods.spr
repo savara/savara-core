@@ -1,2 +1,9 @@
-import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest from "store.xsd";
-import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest from "creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest from "platform:/resource/purchasing/store.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest from "platform:/resource/purchasing/creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown from "platform:/resource/purchasing/creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating from "platform:/resource/purchasing/creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound from "platform:/resource/purchasing/store.xsd";
+import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed from "platform:/resource/purchasing/store.xsd";
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest from "platform:/resource/purchasing/logistics.xsd";
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed from "platform:/resource/purchasing/logistics.xsd";
+import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed from "platform:/resource/purchasing/store.xsd";

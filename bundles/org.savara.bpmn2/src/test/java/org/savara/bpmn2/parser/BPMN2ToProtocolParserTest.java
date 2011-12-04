@@ -61,7 +61,7 @@ public class BPMN2ToProtocolParserTest {
     		// Run test
     		result.startTest(this);
     		
-    		String filename="testmodels/bpmn2/"+m_name+".bpmn2";
+    		String filename="testmodels/bpmn2/"+m_name+".bpmn";
     		
     		java.net.URL url=
     			ClassLoader.getSystemResource(filename);
@@ -152,9 +152,9 @@ public class BPMN2ToProtocolParserTest {
     		}
     		
     		if (f_valid == false) {
-    			String bpelfile="testmodels/bpmn2/"+m_name+".bpmn2";
+    			String bpmnfile="testmodels/bpmn2/"+m_name+".bpmn";
     			
-    			java.net.URL url=ClassLoader.getSystemResource(bpelfile);
+    			java.net.URL url=ClassLoader.getSystemResource(bpmnfile);
     			
     			if (url != null) {
     				// URL will point to copy of test models in the classes folder, so need
