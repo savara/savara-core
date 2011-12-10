@@ -22,6 +22,7 @@ import org.savara.bpmn2.model.TFlowNode;
 import org.savara.protocol.model.Join;
 import org.savara.protocol.model.Sync;
 import org.scribble.protocol.model.Block;
+import org.scribble.protocol.model.Introduces;
 import org.scribble.protocol.model.Parallel;
 import org.scribble.protocol.model.Role;
 
@@ -34,6 +35,7 @@ public class Scope {
 	private java.util.Map<String,Join> _joins=new java.util.HashMap<String,Join>();
 	private java.util.Map<String,Sync> _syncs=new java.util.HashMap<String,Sync>();
 	private java.util.Map<TFlowNode,Block> _joinBlocks=new java.util.HashMap<TFlowNode,Block>();
+	private java.util.Map<Role,Introduces> _introduces=new java.util.HashMap<Role,Introduces>();
 	private java.util.List<Parallel> _parallelReviewList=new java.util.Vector<Parallel>();
 
 	public Scope(TDefinitions defns) {
@@ -146,6 +148,10 @@ public class Scope {
 		for (String label : join.getLabels()) {
 			_joins.put(label, join);
 		}
+	}
+	
+	public java.util.Map<Role,Introduces> getIntroduces() {
+		return(_introduces);
 	}
 	
 	public java.util.Map<TFlowNode, Block> getJoinBlocks() {

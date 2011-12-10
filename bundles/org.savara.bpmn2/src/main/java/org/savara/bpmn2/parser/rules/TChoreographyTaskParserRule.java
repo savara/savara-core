@@ -101,8 +101,6 @@ public class TChoreographyTaskParserRule implements BPMN2ParserRule {
 		interaction.setFromRole(initiatingRole);
 		
 		// Define 'to' role
-		Introduces intros=null;
-				
 		Role otherRole=context.getScope().getRole(target.getName());
 			
 		if (otherRole == null) {
@@ -112,13 +110,15 @@ public class TChoreographyTaskParserRule implements BPMN2ParserRule {
 			// Add to scope
 			context.getScope().registerRole(otherRole);
 
+			Introduces intros=context.getScope().getIntroduces().get(initiatingRole);
+					
 			if (intros == null) {
 				intros = new Introduces();
-				intros.setIntroducer(initiatingRole);
+				intros.setIntroducer(initiatingRole);			
 				
-				container.add(intros);
+				context.getScope().getIntroduces().put(initiatingRole, intros);
 			}
-			
+
 			intros.getIntroducedRoles().add(otherRole);
 		}
 		

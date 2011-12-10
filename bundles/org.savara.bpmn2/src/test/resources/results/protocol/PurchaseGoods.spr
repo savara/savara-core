@@ -9,9 +9,9 @@ import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as Deliv
 import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed from "platform:/resource/purchasing/store.xsd";
 [[ SourceComponent(id=Choreography_1) ]]
 protocol PurchaseGoods(role Buyer) {
+	Store introduces CreditAgency;
 	Buyer introduces Store;
 	BuyRequest from Buyer to Store;
-	Store introduces CreditAgency;
 	CreditCheck from Store to CreditAgency;
 	choice {
 		CustomerUnknown from CreditAgency to Store;

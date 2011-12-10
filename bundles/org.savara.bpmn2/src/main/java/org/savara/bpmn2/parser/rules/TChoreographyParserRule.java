@@ -34,10 +34,13 @@ import org.savara.protocol.model.Sync;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Choice;
+import org.scribble.protocol.model.Introduces;
 import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.Parallel;
 import org.scribble.protocol.model.Protocol;
+import org.scribble.protocol.model.Role;
 import org.scribble.protocol.util.ActivityUtil;
+import org.scribble.protocol.util.RoleUtil;
 
 public class TChoreographyParserRule implements BPMN2ParserRule {
 
@@ -88,6 +91,41 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 			processNode(context, startEvent, container);
 			
 			cleanUpJoins(context);
+			
+			// Work through introduced roles to localise the introduction
+			java.util.Iterator<Introduces> intros=
+						context.getScope().getIntroduces().values().iterator();
+			
+			while (intros.hasNext()) {
+				Introduces rl=intros.next();
+				
+				for (int i=rl.getIntroducedRoles().size()-1; i >= 0; i--) {
+					Role r=rl.getIntroducedRoles().get(i);
+					Block b=RoleUtil.getEnclosingBlock(container.getEnclosingProtocol(), r, false);
+					
+					if (b == null) {
+						// Report error
+					} else if (b != container.getEnclosingProtocol().getBlock()){
+						Introduces innerrl=null;
+						
+						if (b.size() > 0 && b.get(0) instanceof Introduces) {
+							innerrl = (Introduces)b.get(0);
+						} else {
+							innerrl = new Introduces();
+							innerrl.setIntroducer(rl.getIntroducer());
+							b.getContents().add(0, innerrl);
+						}
+						
+						rl.getIntroducedRoles().remove(r);
+						innerrl.getIntroducedRoles().add(r);
+					}
+				}
+				
+				if (rl.getIntroducedRoles().size() > 0) {
+					container.getEnclosingProtocol().getBlock().getContents().add(0, rl);
+				}
+			}
+
 		}
 	}
 	
