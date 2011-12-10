@@ -18,6 +18,9 @@
 package org.savara.bpmn2.parser.rules;
 
 import org.savara.bpmn2.model.TDefinitions;
+import org.savara.bpmn2.model.TFlowNode;
+import org.scribble.protocol.model.Block;
+import org.scribble.protocol.model.Parallel;
 import org.scribble.protocol.model.Role;
 
 public class Scope {
@@ -26,6 +29,8 @@ public class Scope {
 	private Scope m_parent=null;
 	private java.util.Map<String,Object> m_elements=new java.util.HashMap<String,Object>();
 	private java.util.Map<String,Role> _roles=new java.util.HashMap<String,Role>();
+	private java.util.Map<TFlowNode,Block> _joinBlocks=new java.util.HashMap<TFlowNode,Block>();
+	private java.util.List<Parallel> _parallelReviewList=new java.util.Vector<Parallel>();
 
 	public Scope(TDefinitions defns) {
 		m_definitions = defns;
@@ -95,5 +100,13 @@ public class Scope {
 	
 	public void registerRole(Role r) {
 		_roles.put(r.getName(), r);
+	}
+	
+	public java.util.Map<TFlowNode, Block> getJoinBlocks() {
+		return (_joinBlocks);
+	}
+	
+	public java.util.List<Parallel> getParallelReviewList() {
+		return (_parallelReviewList);
 	}
 }

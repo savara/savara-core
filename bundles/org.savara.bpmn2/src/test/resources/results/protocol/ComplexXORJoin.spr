@@ -2,21 +2,29 @@
 protocol ComplexXORJoin(role X) {
 	X introduces Y;
 	M1 from X to Y;
-	choice {
-		Y introduces Z;
-		M2 from Y to Z;
-		M7 from Z to Y;
-	} or {
-		M3 from Y to X;
-		M5 from Y to Z;
+	parallel {
 		choice {
-			M8 from Z to Y;
+			Y introduces Z;
+			M2 from Y to Z;
+			sync SequenceFlow_11 at 
 		} or {
-			M7 from Z to Y;
+			M3 from Y to X;
+			M5 from Y to Z;
+			choice {
+				sync SequenceFlow_9 at 
+			} or {
+				sync SequenceFlow_10 at 
+			}
+		} or {
+			M4 from Y to X;
+			M6 from Y to Z;
+			sync SequenceFlow_7 at 
 		}
-	} or {
-		M4 from Y to X;
-		M6 from Y to Z;
+	} and {
+		join SequenceFlow_10,SequenceFlow_11 at 
+		M7 from Z to Y;
+	} and {
+		join SequenceFlow_7,SequenceFlow_9 at 
 		M8 from Z to Y;
 	}
 }

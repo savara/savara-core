@@ -22,7 +22,9 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-import org.scribble.common.logging.CachedJournal;
+import org.savara.protocol.export.text.JoinTextProtocolExporterRule;
+import org.savara.protocol.export.text.SyncTextProtocolExporterRule;
+import org.scribble.common.logging.ConsoleJournal;
 import org.scribble.common.resource.Content;
 import org.scribble.common.resource.ResourceContent;
 
@@ -71,7 +73,7 @@ public class BPMN2ToProtocolParserTest {
     			result.addError(this,
     					new Throwable("Unable to locate resource: "+filename));
     		} else {			
-    			CachedJournal journal=new CachedJournal();
+    			ConsoleJournal journal=new ConsoleJournal();
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
@@ -92,6 +94,10 @@ public class BPMN2ToProtocolParserTest {
     				
     				org.scribble.protocol.export.text.TextProtocolExporter exporter=
     					new org.scribble.protocol.export.text.TextProtocolExporter();
+    				
+    				// TODO: Temporary until supported in scribble protocol model
+    				exporter.register(new SyncTextProtocolExporterRule());
+    				exporter.register(new JoinTextProtocolExporterRule());
     				
     				java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
     				

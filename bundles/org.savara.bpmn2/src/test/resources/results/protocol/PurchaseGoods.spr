@@ -13,18 +13,30 @@ protocol PurchaseGoods(role Buyer) {
 	BuyRequest from Buyer to Store;
 	Store introduces CreditAgency;
 	CreditCheck from Store to CreditAgency;
-	choice {
-		CustomerUnknown from CreditAgency to Store;
-		AccountNotFound from Store to Buyer;
-	} or {
-		CreditRating from CreditAgency to Store;
+	parallel {
 		choice {
-			BuyFailed from Store to Buyer;
+			CustomerUnknown from CreditAgency to Store;
+			AccountNotFound from Store to Buyer;
+			sync SequenceFlow_11 at 
 		} or {
-			Store introduces Logistics;
-			DeliveryRequest from Store to Logistics;
-			DeliveryConfirmed from Logistics to Store;
-			BuyConfirmed from Store to Buyer;
+			CreditRating from CreditAgency to Store;
+			parallel {
+				choice {
+					BuyFailed from Store to Buyer;
+					sync SequenceFlow_13 at 
+				} or {
+					Store introduces Logistics;
+					DeliveryRequest from Store to Logistics;
+					DeliveryConfirmed from Logistics to Store;
+					BuyConfirmed from Store to Buyer;
+					sync SequenceFlow_12 at 
+				}
+			} and {
+				join SequenceFlow_12,SequenceFlow_13 at 
+				sync SequenceFlow_10 at 
+			}
 		}
+	} and {
+		join SequenceFlow_10,SequenceFlow_11 at 
 	}
 }
