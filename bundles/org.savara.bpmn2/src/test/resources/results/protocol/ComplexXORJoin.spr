@@ -1,0 +1,22 @@
+[[ SourceComponent(id=Choreography_1) ]]
+protocol ComplexXORJoin(role X) {
+	X introduces Y;
+	M1 from X to Y;
+	choice {
+		Y introduces Z;
+		M2 from Y to Z;
+		M7 from Z to Y;
+	} or {
+		M3 from Y to X;
+		M5 from Y to Z;
+		choice {
+			M8 from Z to Y;
+		} or {
+			M7 from Z to Y;
+		}
+	} or {
+		M4 from Y to X;
+		M6 from Y to Z;
+		M8 from Z to Y;
+	}
+}

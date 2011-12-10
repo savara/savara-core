@@ -18,14 +18,20 @@
 package org.savara.bpmn2.parser.rules;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 
 import org.savara.bpmn2.model.TChoreography;
+import org.savara.bpmn2.model.TExclusiveGateway;
 import org.savara.bpmn2.model.TFlowElement;
+import org.savara.bpmn2.model.TFlowNode;
+import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
 import org.savara.common.logging.MessageFormatter;
 import org.scribble.protocol.model.Block;
+import org.scribble.protocol.model.Choice;
+import org.scribble.protocol.model.Protocol;
 
-public class ChoreographyParserRule implements BPMN2ParserRule {
+public class TChoreographyParserRule implements BPMN2ParserRule {
 
 	/**
 	 * This method determines whether the rule supports the
@@ -64,9 +70,56 @@ public class ChoreographyParserRule implements BPMN2ParserRule {
 			}
 		}
 
-		if (startEvent != null) {
-			
+		if (startEvent == null) {
+			context.getFeedbackHandler().error(MessageFormatter.format(
+					java.util.PropertyResourceBundle.getBundle(
+							"org.savara.bpmn2.Messages"), "SAVARA-BPMN2-00002"), null);
+		} else {
+			processNode(context, startEvent, container);
 		}
 	}
 	
+	protected void processNode(BPMN2ParserContext context, TFlowNode elem, Block container) {
+		
+		BPMN2ParserRule rule=ParserRuleFactory.getParserRule(elem);
+		
+		if (rule != null) {
+			rule.parse(context, elem, container);
+		}
+		
+		// Check outbound connections to see whether sequence or gateway
+		if (elem.getOutgoing().size() == 1) {
+			
+			// Get link
+			TSequenceFlow seq=(TSequenceFlow)
+					context.getScope().getBPMN2Element(elem.getOutgoing().get(0).getLocalPart());
+			
+			if (seq != null) {
+				Object target=seq.getTargetRef();
+				
+				if (target instanceof TFlowNode) {
+					processNode(context, (TFlowNode)target, container);
+				}
+			}
+		} else if (elem.getOutgoing().size() > 1) {
+			
+			if (elem instanceof TExclusiveGateway) {
+				Choice choice=new Choice();
+				
+				container.add(choice);
+				
+				for (QName seqFlowQName : elem.getOutgoing()) {
+					TSequenceFlow seq=(TSequenceFlow)
+							context.getScope().getBPMN2Element(seqFlowQName.getLocalPart());
+					
+					Block b=new Block();
+					choice.getPaths().add(b);
+					
+					if (seq.getTargetRef() instanceof TFlowNode) {
+						processNode(context, (TFlowNode)seq.getTargetRef(), b);
+					}
+				}
+			}
+		}
+	}
 }

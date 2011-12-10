@@ -7,3 +7,24 @@ import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed from "p
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest from "platform:/resource/purchasing/logistics.xsd";
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed from "platform:/resource/purchasing/logistics.xsd";
 import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed from "platform:/resource/purchasing/store.xsd";
+[[ SourceComponent(id=Choreography_1) ]]
+protocol PurchaseGoods(role Buyer) {
+	Buyer introduces Store;
+	BuyRequest from Buyer to Store;
+	Store introduces CreditAgency;
+	CreditCheck from Store to CreditAgency;
+	choice {
+		CustomerUnknown from CreditAgency to Store;
+		AccountNotFound from Store to Buyer;
+	} or {
+		CreditRating from CreditAgency to Store;
+		choice {
+			BuyFailed from Store to Buyer;
+		} or {
+			Store introduces Logistics;
+			DeliveryRequest from Store to Logistics;
+			DeliveryConfirmed from Logistics to Store;
+			BuyConfirmed from Store to Buyer;
+		}
+	}
+}

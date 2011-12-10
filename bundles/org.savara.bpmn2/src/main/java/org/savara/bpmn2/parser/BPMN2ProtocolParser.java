@@ -38,6 +38,7 @@ import org.savara.protocol.util.FeedbackHandlerProxy;
 import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.Content;
 import org.scribble.protocol.ProtocolContext;
+import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.DataType;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.ProtocolModel;
@@ -72,6 +73,8 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 		
 		Scope scope=BPMN2ParserUtil.createScope(defns);
 		
+		BPMN2ParserUtil.initializeScope(scope, defns);		
+		
 		BPMN2ParserContext parserContext=
 				new DefaultBPMN2ParserContext(new FeedbackHandlerProxy(journal), scope);
 
@@ -84,9 +87,10 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 				initialize(pm, defns);
 				
 				// Construct the choreography behaviour
-				/*
 				Protocol p=new Protocol();
 				p.setName(choreo.getName());
+				
+				p.setBlock(new Block());
 				
 				// Create annotation to link the protocol to the source choreography
 				Annotation pann=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
@@ -109,7 +113,6 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 				parserContext.popScope();
 				
 				pm.setProtocol(p);
-				*/
 				
 				ret = pm;
 				

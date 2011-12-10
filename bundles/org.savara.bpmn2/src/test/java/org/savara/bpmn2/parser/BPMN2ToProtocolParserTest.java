@@ -32,6 +32,7 @@ public class BPMN2ToProtocolParserTest {
         TestSuite suite = new TestSuite("BPMN2->Protocol Parser Tests");
 
         suite.addTest(new BPMN2ToProtocolTester("PurchaseGoods"));
+        suite.addTest(new BPMN2ToProtocolTester("ComplexXORJoin"));
         
         return suite;
     }
@@ -81,6 +82,7 @@ public class BPMN2ToProtocolParserTest {
     				
     				model = parser.parse(null, content, journal);
     			} catch(Exception e) {
+    				e.printStackTrace();
     				result.addError(this, new Throwable("Parsing BPMN2 failed"));
     			}
     			

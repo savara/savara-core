@@ -24,6 +24,10 @@ import javax.xml.bind.JAXBElement;
 import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TFlowElement;
+import org.savara.bpmn2.model.TMessage;
+import org.savara.bpmn2.model.TMessageFlow;
+import org.savara.bpmn2.model.TParticipant;
+import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.parser.rules.Scope;
 
 public class BPMN2ParserUtil {
@@ -44,17 +48,48 @@ public class BPMN2ParserUtil {
 	 * supplied BPMN2 model element.
 	 * 
 	 * @param scope The scope
-	 * @param elem The element
+	 * @param defns The BPMN definition
 	 */
-	public static void initializeScope(Scope scope, Object elem) {
+	public static void initializeScope(Scope scope, TDefinitions defns) {
 		
-		if (elem.getClass() == TChoreography.class) {
-			TChoreography choreo=(TChoreography)elem;
-			
-			initializeFlowElements(scope, choreo.getFlowElement());
+		for (JAXBElement<? extends TRootElement> elem : defns.getRootElement()) {
+			if (elem.getDeclaredType() == TMessage.class) {
+				TMessage mesg=(TMessage)elem.getValue();
+				
+				scope.register(mesg.getId(), mesg);
+			}
 		}
 	}
 	
+	/**
+	 * This method initializes the supplied scope based on the
+	 * supplied BPMN2 model element.
+	 * 
+	 * @param scope The scope
+	 * @param choreo The choreography
+	 */
+	public static void initializeScope(Scope scope, TChoreography choreo) {
+		initializeParticipants(scope, choreo.getParticipant());
+		
+		initializeFlowElements(scope, choreo.getFlowElement());
+		
+		initializeMessageFlows(scope, choreo.getMessageFlow());
+	}
+	
+	private static void initializeParticipants(Scope scope,
+						List<TParticipant> participants) {
+		for (TParticipant p : participants) {
+			scope.register(p.getId(), p);
+		}
+	}
+	
+	private static void initializeMessageFlows(Scope scope,
+					List<TMessageFlow> mflows) {
+		for (TMessageFlow mflow : mflows) {
+			scope.register(mflow.getId(), mflow);
+		}
+	}
+
 	private static void initializeFlowElements(Scope scope,
 				List<JAXBElement<? extends TFlowElement>> flowElements) {
 		for (JAXBElement<? extends TFlowElement> jaxb : flowElements) {

@@ -18,12 +18,14 @@
 package org.savara.bpmn2.parser.rules;
 
 import org.savara.bpmn2.model.TDefinitions;
+import org.scribble.protocol.model.Role;
 
 public class Scope {
 	
 	private TDefinitions m_definitions=null;
 	private Scope m_parent=null;
 	private java.util.Map<String,Object> m_elements=new java.util.HashMap<String,Object>();
+	private java.util.Map<String,Role> _roles=new java.util.HashMap<String,Role>();
 
 	public Scope(TDefinitions defns) {
 		m_definitions = defns;
@@ -78,5 +80,20 @@ public class Scope {
 	 */
 	public void register(String id, Object obj) {
 		m_elements.put(id, obj);
+	}
+	
+	/**
+	 * This method returns the role associated with the supplied
+	 * name.
+	 * 
+	 * @param name The name
+	 * @return The role, or null if not found
+	 */
+	public Role getRole(String name) {
+		return(_roles.get(name));
+	}
+	
+	public void registerRole(Role r) {
+		_roles.put(r.getName(), r);
 	}
 }

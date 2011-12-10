@@ -22,6 +22,11 @@ public class ParserRuleFactory {
 	private static java.util.List<BPMN2ParserRule> m_rules=
 						new java.util.Vector<BPMN2ParserRule>();
 	
+	static {
+		m_rules.add(new TChoreographyParserRule());
+		m_rules.add(new TChoreographyTaskParserRule());
+	}
+	
 	/**
 	 * This method registers the supplied rule.
 	 * 
