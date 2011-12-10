@@ -56,7 +56,7 @@ public class BPMN2ParserUtil {
 			if (elem.getDeclaredType() == TMessage.class) {
 				TMessage mesg=(TMessage)elem.getValue();
 				
-				scope.register(mesg.getId(), mesg);
+				scope.registerBPMN2Element(mesg.getId(), mesg);
 			}
 		}
 	}
@@ -79,14 +79,14 @@ public class BPMN2ParserUtil {
 	private static void initializeParticipants(Scope scope,
 						List<TParticipant> participants) {
 		for (TParticipant p : participants) {
-			scope.register(p.getId(), p);
+			scope.registerBPMN2Element(p.getId(), p);
 		}
 	}
 	
 	private static void initializeMessageFlows(Scope scope,
 					List<TMessageFlow> mflows) {
 		for (TMessageFlow mflow : mflows) {
-			scope.register(mflow.getId(), mflow);
+			scope.registerBPMN2Element(mflow.getId(), mflow);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class BPMN2ParserUtil {
 		for (JAXBElement<? extends TFlowElement> jaxb : flowElements) {
 			TFlowElement fe=jaxb.getValue();
 			
-			scope.register(fe.getId(), fe);
+			scope.registerBPMN2Element(fe.getId(), fe);
 		}
 	}
 }

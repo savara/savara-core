@@ -19,6 +19,8 @@ package org.savara.bpmn2.parser.rules;
 
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TFlowNode;
+import org.savara.protocol.model.Join;
+import org.savara.protocol.model.Sync;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Parallel;
 import org.scribble.protocol.model.Role;
@@ -29,6 +31,8 @@ public class Scope {
 	private Scope m_parent=null;
 	private java.util.Map<String,Object> m_elements=new java.util.HashMap<String,Object>();
 	private java.util.Map<String,Role> _roles=new java.util.HashMap<String,Role>();
+	private java.util.Map<String,Join> _joins=new java.util.HashMap<String,Join>();
+	private java.util.Map<String,Sync> _syncs=new java.util.HashMap<String,Sync>();
 	private java.util.Map<TFlowNode,Block> _joinBlocks=new java.util.HashMap<TFlowNode,Block>();
 	private java.util.List<Parallel> _parallelReviewList=new java.util.Vector<Parallel>();
 
@@ -83,7 +87,7 @@ public class Scope {
 	 * 
 	 * @param obj The object
 	 */
-	public void register(String id, Object obj) {
+	public void registerBPMN2Element(String id, Object obj) {
 		m_elements.put(id, obj);
 	}
 	
@@ -100,6 +104,48 @@ public class Scope {
 	
 	public void registerRole(Role r) {
 		_roles.put(r.getName(), r);
+	}
+	
+	/**
+	 * This method returns the sync associated with the supplied
+	 * name.
+	 * 
+	 * @param name The name
+	 * @return The sync, or null if not found
+	 */
+	public Sync getSync(String name) {
+		return(_syncs.get(name));
+	}
+	
+	/**
+	 * Register the sync.
+	 * 
+	 * @param sync The sync
+	 */
+	public void registerSync(Sync sync) {
+		_syncs.put(sync.getLabel(), sync);
+	}
+	
+	/**
+	 * This method returns the join associated with the supplied
+	 * name.
+	 * 
+	 * @param name The name
+	 * @return The join, or null if not found
+	 */
+	public Join getJoin(String name) {
+		return(_joins.get(name));
+	}
+	
+	/**
+	 * Register the join.
+	 * 
+	 * @param join The join
+	 */
+	public void registerJoin(Join join) {
+		for (String label : join.getLabels()) {
+			_joins.put(label, join);
+		}
 	}
 	
 	public java.util.Map<TFlowNode, Block> getJoinBlocks() {

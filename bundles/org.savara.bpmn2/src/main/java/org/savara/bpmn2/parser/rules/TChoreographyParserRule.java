@@ -86,6 +86,104 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 							"org.savara.bpmn2.Messages"), "SAVARA-BPMN2-00002"), null);
 		} else {
 			processNode(context, startEvent, container);
+			
+			cleanUpJoins(context);
+		}
+	}
+	
+	/**
+	 * Check whether some of the parallel constructs, added to support the
+	 * fork/join, can be removed to leave a simplified choice/parallel.
+	 * 
+	 * @param context The context
+	 */
+	protected void cleanUpJoins(BPMN2ParserContext context) {
+		// Check the join blocks to see whether the choices can be simplified
+		java.util.Iterator<Block> joinBlocks=
+					context.getScope().getJoinBlocks().values().iterator();
+		
+		// Remove join blocks that converge on other joins
+		while (joinBlocks.hasNext()) {
+			Block joinBlock=joinBlocks.next();
+			
+			// Check if parallel with only one other block
+			if (joinBlock.getParent() instanceof Parallel &&
+					((Parallel)joinBlock.getParent()).getPaths().size() == 2) {
+				
+				if (joinBlock.getContents().size() == 2 &&
+						joinBlock.getContents().get(0) instanceof Join &&
+						joinBlock.getContents().get(1) instanceof Sync) {
+					// Check that join and sync are associated with same role
+					Join join=(Join)joinBlock.getContents().get(0);
+					Sync sync=(Sync)joinBlock.getContents().get(1);
+					
+					if ((join.getRole() == null && sync.getRole() == null) ||
+						(join.getRole() != null && join.getRole().equals(sync.getRole()))) {
+						
+						Parallel par=(Parallel)joinBlock.getParent();
+						Block parParent=(Block)par.getParent();
+						int parIndex=parParent.indexOf(par);
+						
+						// Remove join path, so only remaining block is the
+						// normal content
+						par.getPaths().remove(joinBlock);
+						
+						// Extract contents of other path
+						parParent.remove(par);
+						parParent.getContents().addAll(parIndex,
+									par.getPaths().get(0).getContents());
+						
+						// Substitute labels in join with sync label in connected join
+						Join otherJoin=(Join)context.getScope().getJoin(sync.getLabel());
+						
+						if (otherJoin != null) {
+							otherJoin.getLabels().remove(sync.getLabel());
+							otherJoin.getLabels().addAll(join.getLabels());
+						}
+						
+						// Remove join block
+						joinBlocks.remove();
+					}
+				}
+			}
+		}
+		
+		// Remove join blocks that have no subsequent activities
+		joinBlocks = context.getScope().getJoinBlocks().values().iterator();
+		
+		while (joinBlocks.hasNext()) {
+			Block joinBlock=joinBlocks.next();
+			
+			// Check if parallel with only one other block
+			if (joinBlock.getParent() instanceof Parallel &&
+					((Parallel)joinBlock.getParent()).getPaths().size() == 2) {
+				
+				if (joinBlock.getContents().size() == 1 &&
+						joinBlock.getContents().get(0) instanceof Join) {
+					
+					Parallel par=(Parallel)joinBlock.getParent();
+					Block parParent=(Block)par.getParent();
+					int parIndex=parParent.indexOf(par);
+					
+					// Remove join path, so only remaining block is the
+					// normal content
+					par.getPaths().remove(joinBlock);
+					
+					// Extract contents of other path
+					parParent.remove(par);
+					parParent.getContents().addAll(parIndex,
+								par.getPaths().get(0).getContents());
+
+					// Need to find and remove sync's for join
+					Join join=(Join)joinBlock.getContents().get(0);
+					
+					for (String label : join.getLabels()) {
+						Sync sync=context.getScope().getSync(label);
+						
+						((Block)sync.getParent()).remove(sync);
+					}
+				}
+			}
 		}
 	}
 	
@@ -188,6 +286,8 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						// TODO: Get role
 						
 						container.add(sync);
+						
+						context.getScope().registerSync(sync);
 					}
 
 					processNode(context, (TFlowNode)target, container);
@@ -229,6 +329,8 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 							// TODO: Get role
 							
 							b.add(sync);
+							
+							context.getScope().registerSync(sync);
 						}
 						
 						processNode(context, (TFlowNode)seq.getTargetRef(), b);
@@ -299,6 +401,8 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 		Join join=new Join();
 		for (QName qname : elem.getIncoming()) {
 			join.getLabels().add(qname.getLocalPart());
+			
+			context.getScope().registerJoin(join);
 		}
 		
 		// Find parent parallel construct
