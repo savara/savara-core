@@ -23,9 +23,11 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.savara.bpmn2.model.TChoreography;
+import org.savara.bpmn2.model.TChoreographyTask;
 import org.savara.bpmn2.model.TExclusiveGateway;
 import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TFlowNode;
+import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
 import org.savara.common.logging.MessageFormatter;
@@ -332,7 +334,10 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						Sync sync=new Sync();
 						sync.setLabel(elem.getOutgoing().get(0).getLocalPart());
 						
-						// TODO: Get role
+						// Get role
+						Role role=getRole(context, (TFlowNode)target);
+						
+						sync.setRole(role);
 						
 						container.add(sync);
 						
@@ -375,7 +380,10 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 							Sync sync=new Sync();
 							sync.setLabel(seqFlowQName.getLocalPart());
 							
-							// TODO: Get role
+							// Get role
+							Role role=getRole(context, (TFlowNode)seq.getTargetRef());
+							
+							sync.setRole(role);
 							
 							b.add(sync);
 							
@@ -387,6 +395,57 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 				}
 			}
 		}
+	}
+	
+	protected Role getRole(BPMN2ParserContext context, TFlowNode node) {
+		Role ret=null;
+		
+		if (node instanceof TChoreographyTask) {
+			TChoreographyTask task=(TChoreographyTask)node;
+			
+			if (task.getInitiatingParticipantRef() == null) {
+				context.getFeedbackHandler().error("No initiating participant", null);
+			} else {
+				TParticipant p=(TParticipant)
+							context.getScope().getBPMN2Element(task.getInitiatingParticipantRef().getLocalPart());
+				if (p != null) {
+					ret = new Role(p.getName());
+				} else {
+					LOG.severe("Could not find participant for id '"+task.getInitiatingParticipantRef().getLocalPart()+"'");
+				}
+			}
+		} else if (node.getOutgoing().size() > 0) {
+			int count=0;
+			
+			for (QName qname : node.getOutgoing()) {
+				TSequenceFlow seqFlow=(TSequenceFlow)
+						context.getScope().getBPMN2Element(qname.getLocalPart());
+				TFlowNode otherNode=(TFlowNode)seqFlow.getTargetRef();
+				
+				if (otherNode != null) {
+					Role r=getRole(context, otherNode);
+					
+					if (r != null) {
+						count++;
+					}
+					
+					if (ret == null) {
+						ret = r;
+					} else if (ret.equals(r) == false) {
+						context.getFeedbackHandler().error("Inconsistent initiating roles after gateway '"+
+								ret+"' and '"+r+"'", null);
+					}
+				} else {
+					LOG.severe("Unable to find node for '"+qname.getLocalPart()+"'");
+				}
+			}
+			
+			if (count > 0 && count < node.getOutgoing().size()) {
+				context.getFeedbackHandler().error("Path does not identify an initiating participant", null);
+			}
+		}
+		
+		return(ret);
 	}
 	
 	/**
@@ -453,6 +512,10 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 			
 			context.getScope().registerJoin(join);
 		}
+		
+		join.setRole(getRole(context, elem));
+		
+		join.setXOR(elem instanceof TExclusiveGateway);
 		
 		// Find parent parallel construct
 		ModelObject parent=container.getParent();

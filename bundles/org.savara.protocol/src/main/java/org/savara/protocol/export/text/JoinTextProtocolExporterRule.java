@@ -42,7 +42,11 @@ public class JoinTextProtocolExporterRule implements TextProtocolExporterRule {
 		
 		for (int i=0; i < join.getLabels().size(); i++) {
 			if (i > 0) {
-				ret += ",";
+				if (join.getXOR()) {
+					ret += " or ";
+				} else {
+					ret += " and ";
+				}
 			}
 			ret += join.getLabels().get(i);
 		}
