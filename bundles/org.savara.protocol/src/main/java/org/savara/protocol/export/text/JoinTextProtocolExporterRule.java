@@ -53,8 +53,11 @@ public class JoinTextProtocolExporterRule implements TextProtocolExporterRule {
 		
 		ret += " at ";
 		
-		if (join.getRole() != null) {
-			ret += join.getRole().getName();
+		for (int i=0; i < join.getRoles().size(); i++) {
+			if (i > 0) {
+				ret += ",";
+			}
+			ret += join.getRoles().get(i).getName();
 		}
 		
 		return (ret);

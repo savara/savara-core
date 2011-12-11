@@ -36,6 +36,7 @@ import org.savara.protocol.model.Sync;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Choice;
+import org.scribble.protocol.model.CustomActivity;
 import org.scribble.protocol.model.Introduces;
 import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.Parallel;
@@ -168,8 +169,8 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 					Join join=(Join)joinBlock.getContents().get(0);
 					Sync sync=(Sync)joinBlock.getContents().get(1);
 					
-					if ((join.getRole() == null && sync.getRole() == null) ||
-						(join.getRole() != null && join.getRole().equals(sync.getRole()))) {
+					if ((join.getRoles().size() == 0 && sync.getRoles().size() == 0) ||
+						join.getRoles().containsAll(sync.getRoles())) {
 						
 						Parallel par=(Parallel)joinBlock.getParent();
 						Block parParent=(Block)par.getParent();
@@ -335,9 +336,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						sync.setLabel(elem.getOutgoing().get(0).getLocalPart());
 						
 						// Get role
-						Role role=getRole(context, (TFlowNode)target);
-						
-						sync.setRole(role);
+						getRoles(context, (TFlowNode)target, sync);
 						
 						container.add(sync);
 						
@@ -381,9 +380,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 							sync.setLabel(seqFlowQName.getLocalPart());
 							
 							// Get role
-							Role role=getRole(context, (TFlowNode)seq.getTargetRef());
-							
-							sync.setRole(role);
+							getRoles(context, (TFlowNode)seq.getTargetRef(), sync);
 							
 							b.add(sync);
 							
@@ -397,25 +394,27 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 		}
 	}
 	
-	protected Role getRole(BPMN2ParserContext context, TFlowNode node) {
-		Role ret=null;
+	protected void getRoles(BPMN2ParserContext context, TFlowNode node, CustomActivity activity) {
+		//Role ret=null;
 		
 		if (node instanceof TChoreographyTask) {
 			TChoreographyTask task=(TChoreographyTask)node;
 			
-			if (task.getInitiatingParticipantRef() == null) {
-				context.getFeedbackHandler().error("No initiating participant", null);
-			} else {
+			for (QName qname : task.getParticipantRef()) {
 				TParticipant p=(TParticipant)
-							context.getScope().getBPMN2Element(task.getInitiatingParticipantRef().getLocalPart());
+						context.getScope().getBPMN2Element(qname.getLocalPart());
+				
 				if (p != null) {
-					ret = new Role(p.getName());
+					Role r=new Role(p.getName());
+					
+					if (!activity.getRoles().contains(r)) {
+						activity.getRoles().add(r);
+					}
 				} else {
-					LOG.severe("Could not find participant for id '"+task.getInitiatingParticipantRef().getLocalPart()+"'");
+					LOG.severe("Could not find participant for id '"+qname.getLocalPart()+"'");
 				}
 			}
 		} else if (node.getOutgoing().size() > 0) {
-			int count=0;
 			
 			for (QName qname : node.getOutgoing()) {
 				TSequenceFlow seqFlow=(TSequenceFlow)
@@ -423,29 +422,29 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 				TFlowNode otherNode=(TFlowNode)seqFlow.getTargetRef();
 				
 				if (otherNode != null) {
-					Role r=getRole(context, otherNode);
+					getRoles(context, otherNode, activity);
 					
-					if (r != null) {
-						count++;
-					}
-					
+					/*
 					if (ret == null) {
 						ret = r;
 					} else if (ret.equals(r) == false) {
 						context.getFeedbackHandler().error("Inconsistent initiating roles after gateway '"+
 								ret+"' and '"+r+"'", null);
 					}
+					*/
 				} else {
 					LOG.severe("Unable to find node for '"+qname.getLocalPart()+"'");
 				}
 			}
 			
+			/*
 			if (count > 0 && count < node.getOutgoing().size()) {
 				context.getFeedbackHandler().error("Path does not identify an initiating participant", null);
 			}
+			*/
 		}
 		
-		return(ret);
+		//return(ret);
 	}
 	
 	/**
@@ -513,7 +512,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 			context.getScope().registerJoin(join);
 		}
 		
-		join.setRole(getRole(context, elem));
+		getRoles(context, elem, join);
 		
 		join.setXOR(elem instanceof TExclusiveGateway);
 		

@@ -18,7 +18,6 @@
 package org.savara.protocol.model;
 
 import org.scribble.protocol.model.CustomActivity;
-import org.scribble.protocol.model.Role;
 
 /**
  * This class represents the Sync construct.
@@ -26,26 +25,7 @@ import org.scribble.protocol.model.Role;
  */
 public class Sync extends CustomActivity {
 
-	private Role _role=null;
 	private String _label=null;
-	
-	/**
-	 * This method sets the role associated with the sync.
-	 * 
-	 * @param role The role
-	 */
-	public void setRole(Role role) {
-		_role = role;
-	}
-	
-	/**
-	 * This method returns the role associated with the sync.
-	 * 
-	 * @return The role
-	 */
-	public Role getRole() {
-		return (_role);
-	}
 	
 	/**
 	 * This method sets the label associated with the sync.

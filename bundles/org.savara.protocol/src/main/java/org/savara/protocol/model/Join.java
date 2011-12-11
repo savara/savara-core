@@ -18,7 +18,6 @@
 package org.savara.protocol.model;
 
 import org.scribble.protocol.model.CustomActivity;
-import org.scribble.protocol.model.Role;
 
 /**
  * This class represents the Join construct.
@@ -26,29 +25,9 @@ import org.scribble.protocol.model.Role;
  */
 public class Join extends CustomActivity {
 
-	private Role _role=null;
-	
 	// TODO: Currently just support XOR and AND joins - but need expression support eventually
 	private java.util.List<String> _labels=new java.util.Vector<String>();
 	private boolean _xor=false;
-	
-	/**
-	 * This method sets the role associated with the join.
-	 * 
-	 * @param role The role
-	 */
-	public void setRole(Role role) {
-		_role = role;
-	}
-	
-	/**
-	 * This method returns the role associated with the join.
-	 * 
-	 * @return The role
-	 */
-	public Role getRole() {
-		return (_role);
-	}
 	
 	/**
 	 * This method returns the list of labels being joined.
