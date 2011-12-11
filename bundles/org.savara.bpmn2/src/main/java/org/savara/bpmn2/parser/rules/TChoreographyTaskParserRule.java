@@ -98,7 +98,7 @@ public class TChoreographyTaskParserRule implements BPMN2ParserRule {
 			container.getEnclosingProtocol().getParameterDefinitions().add(pd);
 		}
 		
-		interaction.setFromRole(initiatingRole);
+		interaction.setFromRole(new Role(initiatingRole));
 		
 		// Define 'to' role
 		Role otherRole=context.getScope().getRole(target.getName());
@@ -122,7 +122,7 @@ public class TChoreographyTaskParserRule implements BPMN2ParserRule {
 			intros.getIntroducedRoles().add(otherRole);
 		}
 		
-		interaction.getToRoles().add(otherRole);
+		interaction.getToRoles().add(new Role(otherRole));
 		
 		if (mflow.getMessageRef() != null) {
 			// Define message signature
