@@ -56,4 +56,12 @@ public class SyncActivity extends SimpleActivity {
 		return(_sync);
 	}
 	
+	public int getWidth() {
+		return(30);
+	}
+	
+	public int getHeight() {
+		return(30);
+	}
+	
 }

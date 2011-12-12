@@ -19,8 +19,6 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
-import org.scribble.protocol.model.Activity;
-
 /**
  * This class represents a sequence of states within a
  * UML state machine.

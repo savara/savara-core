@@ -248,11 +248,29 @@ public class ParallelActivity extends AbstractBPMNActivity {
 		// Construct sequence links
 		for (int i=1; i < getChildStates().size(); i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
-			if (act != m_joinState) {
+			if (shouldConnect(act)) {
 				getStartState().transitionTo(act, null, parent);
+			}
+			if (act != getStartState()) {
 				act.getEndState().transitionTo(m_joinState, null, parent);
 			}
 		}
+	}
+	
+	protected boolean shouldConnect(BPMNActivity act) {
+		boolean ret=act != m_joinState;
+		
+		if (ret && act instanceof JoinActivity) {
+			ret = false;
+		}
+		
+		if (ret && act instanceof SequenceActivity &&
+				((SequenceActivity)act).getChildStates().size() > 0 &&
+				((SequenceActivity)act).getChildStates().get(0) instanceof JoinActivity) {
+			ret = false;
+		}
+		
+		return(ret);
 	}
 
 	/*

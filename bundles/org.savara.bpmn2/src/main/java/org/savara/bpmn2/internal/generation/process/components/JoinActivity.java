@@ -56,4 +56,12 @@ public class JoinActivity extends SimpleActivity {
 		return(_join);
 	}
 	
+	public int getWidth() {
+		return(30);
+	}
+	
+	public int getHeight() {
+		return(30);
+	}
+	
 }

@@ -36,6 +36,7 @@ import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TFlowNode;
 import org.savara.bpmn2.model.TGateway;
 import org.savara.bpmn2.model.TInclusiveGateway;
+import org.savara.bpmn2.model.TIntermediateThrowEvent;
 import org.savara.bpmn2.model.TMessageFlow;
 import org.savara.bpmn2.model.TParallelGateway;
 import org.savara.bpmn2.model.TParticipant;
@@ -46,6 +47,7 @@ import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TSubProcess;
 import org.savara.bpmn2.model.TTask;
+import org.savara.protocol.model.Join;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Run;
 import org.scribble.protocol.model.Interaction;
@@ -173,7 +175,7 @@ public class BPMN2ModelFactory {
 	}
 	
 	public Object createSyncTask(Object container, Activity activity) {
-		TEndEvent event=new TEndEvent();
+		TIntermediateThrowEvent event=new TIntermediateThrowEvent();
 		event.setId(createId());
 		
 		event.setName("Sync");
@@ -188,18 +190,30 @@ public class BPMN2ModelFactory {
 	}
 	
 	public Object createJoinTask(Object container, Activity activity) {
-		TStartEvent event=new TStartEvent();
-		event.setId(createId());
+		Join join=(Join)activity;
+		TGateway gw=null;
 		
-		event.setName("Join");
-		
-		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createEvent(event));
-		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createEvent(event));
+		if (join.getXOR()) {
+			gw = new TExclusiveGateway();
+			if (container instanceof TProcess) {
+				((TProcess)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
+			} else if (container instanceof TSubProcess) {
+				((TSubProcess)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
+			}
+		} else {
+			gw = new TParallelGateway();
+			if (container instanceof TProcess) {
+				((TProcess)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
+			} else if (container instanceof TSubProcess) {
+				((TSubProcess)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
+			}
 		}
+		
+		gw.setId(createId());
+		
+		gw.setName("Join");
 
-		return(event);
+		return(gw);
 	}
 	
 	public Object createSendTask(Object container, Activity activity) {
