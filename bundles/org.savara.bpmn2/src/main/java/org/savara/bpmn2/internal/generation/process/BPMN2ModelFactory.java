@@ -25,7 +25,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.savara.bpmn2.model.ObjectFactory;
-import org.savara.bpmn2.model.TActivity;
 import org.savara.bpmn2.model.TBaseElement;
 import org.savara.bpmn2.model.TBoundaryEvent;
 import org.savara.bpmn2.model.TCallActivity;
@@ -47,7 +46,6 @@ import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TSubProcess;
 import org.savara.bpmn2.model.TTask;
-import org.savara.bpmn2.model.TThrowEvent;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Run;
 import org.scribble.protocol.model.Interaction;
@@ -172,6 +170,36 @@ public class BPMN2ModelFactory {
 		task.setId(createId());
 
 		return(task);
+	}
+	
+	public Object createSyncTask(Object container, Activity activity) {
+		TEndEvent event=new TEndEvent();
+		event.setId(createId());
+		
+		event.setName("Sync");
+		
+		if (container instanceof TProcess) {
+			((TProcess)container).getFlowElement().add(m_factory.createEvent(event));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createEvent(event));
+		}
+
+		return(event);
+	}
+	
+	public Object createJoinTask(Object container, Activity activity) {
+		TStartEvent event=new TStartEvent();
+		event.setId(createId());
+		
+		event.setName("Join");
+		
+		if (container instanceof TProcess) {
+			((TProcess)container).getFlowElement().add(m_factory.createEvent(event));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createEvent(event));
+		}
+
+		return(event);
 	}
 	
 	public Object createSendTask(Object container, Activity activity) {

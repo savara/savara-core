@@ -33,8 +33,6 @@ import org.savara.bpmn2.model.DiagramElement;
 import org.savara.bpmn2.model.ObjectFactory;
 import org.savara.bpmn2.model.Point;
 import org.savara.bpmn2.model.TBaseElement;
-import org.savara.bpmn2.model.TBoundaryEvent;
-import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TGateway;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TProcess;

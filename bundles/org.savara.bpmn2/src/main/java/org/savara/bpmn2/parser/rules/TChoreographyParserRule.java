@@ -405,6 +405,11 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						context.getScope().getBPMN2Element(qname.getLocalPart());
 				
 				if (p != null) {
+					// TODO: May need to determine whether role should be added - if
+					// not in scope of the join - could check context, but problem is
+					// a later use may have it in the context, but still be
+					// not relevant to the join
+					
 					Role r=new Role(p.getName());
 					
 					if (!activity.getRoles().contains(r)) {

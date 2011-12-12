@@ -29,6 +29,7 @@ import org.savara.bpmn2.internal.generation.process.components.BPMNActivity;
 import org.savara.bpmn2.internal.generation.process.components.BPMNDiagram;
 import org.savara.bpmn2.internal.generation.process.components.BPMNPool;
 import org.savara.bpmn2.internal.generation.process.components.ChoiceActivity;
+import org.savara.bpmn2.internal.generation.process.components.JoinActivity;
 import org.savara.bpmn2.internal.generation.process.components.ParallelActivity;
 import org.savara.bpmn2.internal.generation.process.components.ReceiveActivity;
 import org.savara.bpmn2.internal.generation.process.components.RepeatActivity;
@@ -37,10 +38,13 @@ import org.savara.bpmn2.internal.generation.process.components.SendActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
 import org.savara.bpmn2.internal.generation.process.components.DoActivity;
 import org.savara.bpmn2.internal.generation.process.components.DoBlockActivity;
+import org.savara.bpmn2.internal.generation.process.components.SyncActivity;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.generator.ModelGenerator;
 import org.savara.common.resources.ResourceLocator;
+import org.savara.protocol.model.Join;
+import org.savara.protocol.model.Sync;
 import org.scribble.protocol.model.*;
 
 /**
@@ -536,6 +540,24 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			popBPMNActivity();
 			
 			popBPMNActivity();
+		}
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		public void accept(CustomActivity act) {
+			
+			if (act instanceof Sync) {
+				BPMNActivity umls=getBPMNActivity();
+				if (umls != null) {
+					new SyncActivity((Sync)act, umls, m_modelFactory, m_notationFactory);
+				}
+			} else if (act instanceof Join) {
+				BPMNActivity umls=getBPMNActivity();
+				if (umls != null) {
+					new JoinActivity((Join)act, umls, m_modelFactory, m_notationFactory);
+				}
+			}
 		}
 		
 		protected BPMNDiagram getBPMNModel(Protocol elem) throws BPMN2GenerationException {

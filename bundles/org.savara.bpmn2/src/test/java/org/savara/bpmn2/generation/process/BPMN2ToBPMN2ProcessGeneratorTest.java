@@ -30,7 +30,6 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
-import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.Content;
 import org.scribble.common.resource.ResourceContent;
 import org.scribble.protocol.DefaultProtocolContext;
@@ -43,7 +42,7 @@ public class BPMN2ToBPMN2ProcessGeneratorTest {
         TestSuite suite = new TestSuite("BPMN2 Choreo->BPMN2 Process Generator Tests");
 
         suite.addTest(new BPMN2ChoreoToBPMN2ProcessGeneratorTester("PurchaseGoods"));
-        //suite.addTest(new BPMN2ChoreoToBPMN2ProcessGeneratorTester("ComplexXORJoin"));
+        suite.addTest(new BPMN2ChoreoToBPMN2ProcessGeneratorTester("ComplexXORJoin"));
 
         return suite;
     }
@@ -83,7 +82,6 @@ public class BPMN2ToBPMN2ProcessGeneratorTest {
     					new Throwable("Unable to locate resource: "+filename));
     		} else {			
     			DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
-    			Journal journal=new JournalProxy(handler);
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
@@ -92,7 +90,7 @@ public class BPMN2ToBPMN2ProcessGeneratorTest {
     			try {
     				Content content=new ResourceContent(url.toURI());
     				
-    				model = parser.parse(null, content, journal);
+    				model = parser.parse(null, content, new JournalProxy(handler));
     			} catch(Exception e) {
     				result.addError(this, new Throwable("Parsing choreography failed"));
     			}
@@ -103,21 +101,23 @@ public class BPMN2ToBPMN2ProcessGeneratorTest {
     				java.util.List<Role> roles=model.getRoles();
     				
     				for (Role role : roles) {
+    	    			handler = new DefaultFeedbackHandler();
+    	    			
     					DefaultProtocolContext context=
     							new DefaultProtocolContext(ProtocolServices.getParserManager(),
     									null);
-    					/*
-    											new org.scribble.common.resource.ResourceLocator() {
-    						public URI getResourceURI(String uri) throws Exception {
-    							return(locator.getResourceURI(uri));
-    						}
-    					});
-    					*/
+
+    					org.scribble.protocol.projection.impl.ProtocolProjectorImpl projector=
+    							new org.scribble.protocol.projection.impl.ProtocolProjectorImpl();
+    					projector.getCustomRules().add(new org.savara.protocol.projection.JoinProjectorRule());
+    					projector.getCustomRules().add(new org.savara.protocol.projection.SyncProjectorRule());
+    					
+    					ProtocolModel local=projector.project(context, model, role,
+    										new JournalProxy(handler));
+    					//ProtocolModel local=ProtocolServices.getProtocolProjector().project(context, model,
+    					//				role, new JournalProxy(handler));
     	
-    					ProtocolModel local=ProtocolServices.getProtocolProjector().project(context, model,
-    									role, new JournalProxy(handler));
-    	
-    					if (local != null) {
+    					if (!handler.hasErrors() && local != null) {
     						// TODO: SAVARA-167 - issue when projection is based on a sub-protocol
     						if (AnnotationDefinitions.getAnnotation(local.getProtocol().getAnnotations(),
     										AnnotationDefinitions.TYPE) == null &&
