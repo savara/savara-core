@@ -251,7 +251,7 @@ public class ParallelActivity extends AbstractBPMNActivity {
 			if (shouldConnect(act)) {
 				getStartState().transitionTo(act, null, parent);
 			}
-			if (act != getStartState()) {
+			if (act != m_joinState) {
 				act.getEndState().transitionTo(m_joinState, null, parent);
 			}
 		}

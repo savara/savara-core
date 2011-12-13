@@ -5,20 +5,20 @@
     <process id="MID2" name="Y">
         <startEvent id="MID4">
             <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID40</ns5:outgoing>
-            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID64</ns5:outgoing>
+            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID63</ns5:outgoing>
         </startEvent>
         <endEvent id="MID5">
-            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID65</ns5:incoming>
+            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID64</ns5:incoming>
         </endEvent>
         <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: M1 from X" xsi:type="tReceiveTask">
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID40</ns6:incoming>
-            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID64</ns6:incoming>
+            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID63</ns6:incoming>
             <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID39</ns6:outgoing>
-            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID63</ns6:outgoing>
+            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID62</ns6:outgoing>
         </task>
         <parallelGateway id="MID7">
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID39</ns5:incoming>
-            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID63</ns5:incoming>
+            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID62</ns5:incoming>
             <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID33</ns5:outgoing>
             <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID35</ns5:outgoing>
             <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID37</ns5:outgoing>
@@ -31,9 +31,7 @@
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID59</ns5:incoming>
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID60</ns5:incoming>
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID61</ns5:incoming>
-            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID62</ns5:incoming>
-            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID62</ns5:outgoing>
-            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID65</ns5:outgoing>
+            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID64</ns5:outgoing>
         </parallelGateway>
         <exclusiveGateway id="MID9">
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID33</ns5:incoming>
@@ -163,10 +161,9 @@
         <sequenceFlow id="MID59" sourceRef="MID10" targetRef="MID8"/>
         <sequenceFlow id="MID60" sourceRef="MID28" targetRef="MID8"/>
         <sequenceFlow id="MID61" sourceRef="MID31" targetRef="MID8"/>
-        <sequenceFlow id="MID62" sourceRef="MID8" targetRef="MID8"/>
-        <sequenceFlow id="MID63" sourceRef="MID6" targetRef="MID7"/>
-        <sequenceFlow id="MID64" sourceRef="MID4" targetRef="MID6"/>
-        <sequenceFlow id="MID65" sourceRef="MID8" targetRef="MID5"/>
+        <sequenceFlow id="MID62" sourceRef="MID6" targetRef="MID7"/>
+        <sequenceFlow id="MID63" sourceRef="MID4" targetRef="MID6"/>
+        <sequenceFlow id="MID64" sourceRef="MID8" targetRef="MID5"/>
     </process>
     <ns4:BPMNDiagram id="NID1">
         <ns4:BPMNPlane>
@@ -348,18 +345,18 @@
                 <ns2:waypoint x="1040.0" y="285.0"/>
                 <ns2:waypoint x="1090.0" y="285.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID63" id="NID46" sourceElement="NID4" targetElement="NID5">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID62" id="NID45" sourceElement="NID4" targetElement="NID5">
                 <ns2:waypoint x="240.0" y="285.0"/>
                 <ns2:waypoint x="290.0" y="285.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID64" id="NID47" sourceElement="NID3" targetElement="NID4">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID63" id="NID46" sourceElement="NID3" targetElement="NID4">
                 <ns2:waypoint x="80.0" y="285.0"/>
                 <ns2:waypoint x="130.0" y="285.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNShape xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID5" id="NID48">
+            <ns4:BPMNShape xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID5" id="NID47">
                 <ns3:Bounds height="30.0" width="30.0" x="1170.0" y="270.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID65" id="NID49" sourceElement="NID40" targetElement="NID48">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID64" id="NID48" sourceElement="NID40" targetElement="NID47">
                 <ns2:waypoint x="1140.0" y="285.0"/>
                 <ns2:waypoint x="1170.0" y="285.0"/>
             </ns4:BPMNEdge>

@@ -12,6 +12,7 @@ Require-Bundle: org.scribble.common,
  org.scribble.protocol,
  org.savara.common,
  org.scribble.protocol.parser,
+ org.scribble.protocol.projection,
  org.savara.contract
 Export-Package: org.savara.protocol,
  org.savara.protocol.contract.generator,
