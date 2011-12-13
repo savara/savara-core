@@ -1,5 +1,6 @@
 package org.savara.protocol.osgi;
 
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.osgi.framework.Bundle;
@@ -7,9 +8,15 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
+import org.savara.protocol.export.text.JoinTextProtocolExporterRule;
+import org.savara.protocol.export.text.SyncTextProtocolExporterRule;
+import org.savara.protocol.projection.JoinProjectorRule;
+import org.savara.protocol.projection.SyncProjectorRule;
 import org.savara.protocol.util.ProtocolServices;
+import org.scribble.protocol.export.text.TextProtocolExporterRule;
 import org.scribble.protocol.parser.ProtocolParserManager;
 import org.scribble.protocol.projection.ProtocolProjector;
+import org.scribble.protocol.projection.impl.ProjectorRule;
 
 public class Activator implements BundleActivator {
 
@@ -30,6 +37,25 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 		
+        Properties props = new Properties();
+
+        // Register extension rules
+        JoinProjectorRule jpr=new JoinProjectorRule();        
+        context.registerService(ProjectorRule.class.getName(), 
+                            jpr, props);
+        
+        SyncProjectorRule spr=new SyncProjectorRule();        
+        context.registerService(ProjectorRule.class.getName(), 
+                            spr, props);
+        
+        JoinTextProtocolExporterRule jtper=new JoinTextProtocolExporterRule();        
+        context.registerService(TextProtocolExporterRule.class.getName(), 
+        					jtper, props);
+        
+        SyncTextProtocolExporterRule stper=new SyncTextProtocolExporterRule();        
+        context.registerService(TextProtocolExporterRule.class.getName(), 
+        					stper, props);
+        
 		// Make sure any bundles, associated with scribble, are started (excluding
 		// the designer itself)
 		Bundle[] bundles=context.getBundles();

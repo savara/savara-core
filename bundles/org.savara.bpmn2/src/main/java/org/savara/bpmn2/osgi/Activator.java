@@ -1,11 +1,19 @@
 package org.savara.bpmn2.osgi;
 
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.savara.bpmn2.parser.BPMN2ProtocolParser;
+import org.scribble.protocol.parser.ProtocolParser;
 
 public class Activator implements BundleActivator {
 
 	private static BundleContext context;
+	
+	private static final Logger LOG=Logger.getLogger(Activator.class.getName());
 
 	static BundleContext getContext() {
 		return context;
@@ -17,6 +25,17 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
+
+        Properties props = new Properties();
+        
+        BPMN2ProtocolParser pp=new BPMN2ProtocolParser();
+        
+        context.registerService(ProtocolParser.class.getName(), 
+				pp, props);
+
+        if (LOG.isLoggable(Level.FINE)) {
+        	LOG.fine("BPMN2 Protocol Parser registered");
+		}
 	}
 
 	/*
