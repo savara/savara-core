@@ -27,6 +27,7 @@ import org.savara.bpmn2.model.TChoreographyTask;
 import org.savara.bpmn2.model.TExclusiveGateway;
 import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TFlowNode;
+import org.savara.bpmn2.model.TParallelGateway;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
@@ -373,6 +374,39 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 					choice.getPaths().add(b);
 					
 					if (seq.getTargetRef() instanceof TFlowNode) {
+						if (((TFlowNode)seq.getTargetRef()).getIncoming().size() > 1) {
+							
+							// Add sync
+							Sync sync=new Sync();
+							sync.setLabel(getJoinName(seqFlowQName.getLocalPart()));
+							
+							// Get role
+							getRoles(context, (TFlowNode)seq.getTargetRef(), sync);
+							
+							b.add(sync);
+							
+							context.getScope().registerSync(sync);
+						}
+						
+						processNode(context, (TFlowNode)seq.getTargetRef(), b);
+					}
+				}
+			} else {
+					
+				// Create outer parallel
+				Parallel parallel=new Parallel();
+				
+				container.add(parallel);
+				
+				for (QName seqFlowQName : elem.getOutgoing()) {
+					TSequenceFlow seq=(TSequenceFlow)
+							context.getScope().getBPMN2Element(seqFlowQName.getLocalPart());
+					
+					Block b=new Block();
+					parallel.getPaths().add(b);
+					
+					if (seq.getTargetRef() instanceof TFlowNode) {
+
 						if (((TFlowNode)seq.getTargetRef()).getIncoming().size() > 1) {
 							
 							// Add sync

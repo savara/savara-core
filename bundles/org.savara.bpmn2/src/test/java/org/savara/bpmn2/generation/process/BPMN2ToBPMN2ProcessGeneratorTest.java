@@ -43,6 +43,7 @@ public class BPMN2ToBPMN2ProcessGeneratorTest {
 
         suite.addTest(new BPMN2ChoreoToBPMN2ProcessGeneratorTester("PurchaseGoods"));
         suite.addTest(new BPMN2ChoreoToBPMN2ProcessGeneratorTester("ComplexXORJoin"));
+        suite.addTest(new BPMN2ChoreoToBPMN2ProcessGeneratorTester("ComplexANDJoin"));
 
         return suite;
     }

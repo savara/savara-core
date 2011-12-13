@@ -35,6 +35,7 @@ public class BPMN2ToProtocolParserTest {
 
         suite.addTest(new BPMN2ToProtocolTester("PurchaseGoods"));
         suite.addTest(new BPMN2ToProtocolTester("ComplexXORJoin"));
+        suite.addTest(new BPMN2ToProtocolTester("ComplexANDJoin"));
         
         return suite;
     }
