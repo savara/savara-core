@@ -333,7 +333,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						
 						// Add sync
 						Sync sync=new Sync();
-						sync.setLabel(elem.getOutgoing().get(0).getLocalPart());
+						sync.setLabel(getJoinName(elem.getOutgoing().get(0).getLocalPart()));
 						
 						// Get role
 						getRoles(context, (TFlowNode)target, sync);
@@ -377,7 +377,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 							
 							// Add sync
 							Sync sync=new Sync();
-							sync.setLabel(seqFlowQName.getLocalPart());
+							sync.setLabel(getJoinName(seqFlowQName.getLocalPart()));
 							
 							// Get role
 							getRoles(context, (TFlowNode)seq.getTargetRef(), sync);
@@ -512,7 +512,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 		// Add join
 		Join join=new Join();
 		for (QName qname : elem.getIncoming()) {
-			join.getLabels().add(qname.getLocalPart());
+			join.getLabels().add(getJoinName(qname.getLocalPart()));
 			
 			context.getScope().registerJoin(join);
 		}
@@ -546,5 +546,15 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 		context.getScope().getJoinBlocks().put(elem, container);
 		
 		return(container);
+	}
+	
+	protected String getJoinName(String label) {
+		String ret=label;
+		
+		if (ret != null && ret.startsWith("SequenceFlow_")) {
+			ret = ret.replaceAll("SequenceFlow_", "L");
+		}
+		
+		return(ret);
 	}
 }

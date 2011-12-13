@@ -97,6 +97,10 @@ public class SimpleActivity extends AbstractBPMNActivity {
 		return(m_node);
 	}
 	
+	protected Object getNode() {
+		return(m_node);
+	}
+	
 	/**
 	 * This method returns the start state.
 	 * 

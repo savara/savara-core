@@ -28,6 +28,7 @@ import org.savara.bpmn2.model.ObjectFactory;
 import org.savara.bpmn2.model.TBaseElement;
 import org.savara.bpmn2.model.TBoundaryEvent;
 import org.savara.bpmn2.model.TCallActivity;
+import org.savara.bpmn2.model.TCatchEvent;
 import org.savara.bpmn2.model.TCollaboration;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TEndEvent;
@@ -36,7 +37,9 @@ import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TFlowNode;
 import org.savara.bpmn2.model.TGateway;
 import org.savara.bpmn2.model.TInclusiveGateway;
+import org.savara.bpmn2.model.TIntermediateCatchEvent;
 import org.savara.bpmn2.model.TIntermediateThrowEvent;
+import org.savara.bpmn2.model.TLinkEventDefinition;
 import org.savara.bpmn2.model.TMessageFlow;
 import org.savara.bpmn2.model.TParallelGateway;
 import org.savara.bpmn2.model.TParticipant;
@@ -48,6 +51,7 @@ import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TSubProcess;
 import org.savara.bpmn2.model.TTask;
 import org.savara.protocol.model.Join;
+import org.savara.protocol.model.Sync;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Run;
 import org.scribble.protocol.model.Interaction;
@@ -175,10 +179,17 @@ public class BPMN2ModelFactory {
 	}
 	
 	public Object createSyncTask(Object container, Activity activity) {
+		Sync sync=(Sync)activity;
+		
 		TIntermediateThrowEvent event=new TIntermediateThrowEvent();
+		TLinkEventDefinition led=new TLinkEventDefinition();
+		
+		led.setName(sync.getLabel());
+		event.getEventDefinition().add(m_factory.createLinkEventDefinition(led));
+
 		event.setId(createId());
 		
-		event.setName("Sync");
+		event.setName(sync.getLabel());
 		
 		if (container instanceof TProcess) {
 			((TProcess)container).getFlowElement().add(m_factory.createEvent(event));
@@ -214,6 +225,26 @@ public class BPMN2ModelFactory {
 		gw.setName("Join");
 
 		return(gw);
+	}
+	
+	public Object createLinkTarget(Object container, String label) {
+		TIntermediateCatchEvent linkTarget=new TIntermediateCatchEvent();
+		TLinkEventDefinition led=new TLinkEventDefinition();
+		
+		led.setName(label);
+		linkTarget.getEventDefinition().add(m_factory.createLinkEventDefinition(led));
+		
+		if (container instanceof TProcess) {
+			((TProcess)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
+		}
+		
+		linkTarget.setId(createId());
+		
+		linkTarget.setName(label);
+
+		return(linkTarget);
 	}
 	
 	public Object createSendTask(Object container, Activity activity) {

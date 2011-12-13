@@ -271,8 +271,8 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 				// Remove Junction
 				getModelFactory().delete(endNode);
 				
-			} else {
-				v2.transitionFrom(v1, null);
+			//} else {
+				//v2.transitionFrom(v1, null);
 			}
 		}
 		

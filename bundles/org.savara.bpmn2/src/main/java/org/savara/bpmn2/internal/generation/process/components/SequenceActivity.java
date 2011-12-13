@@ -185,15 +185,5 @@ public class SequenceActivity extends AbstractBPMNActivity {
 		}
 	}
 	
-	/*
-	public void transitionTo(BPMNActivity toNode, String expression, Object parent) {
-		if (getChildStates().size() == 0) {
-			super.transitionTo(toNode, expression, parent);
-		} else {
-			((BPMNActivity)getChildStates().get(getChildStates().size()-1)).transitionTo(toNode, expression, parent);
-		}
-	}
-	*/
-
 	private boolean m_completed=false;
 }

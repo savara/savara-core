@@ -4,58 +4,40 @@
     </collaboration>
     <process id="MID2" name="Store">
         <startEvent id="MID4">
-            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID15</ns5:outgoing>
-            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID22</ns5:outgoing>
+            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID16</ns5:outgoing>
         </startEvent>
         <endEvent id="MID5">
-            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID16</ns5:incoming>
-            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID23</ns5:incoming>
+            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID17</ns5:incoming>
         </endEvent>
         <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: buy(BuyRequest) from Buyer" xsi:type="tReceiveTask">
-            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID15</ns6:incoming>
-            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID22</ns6:incoming>
-            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID13</ns6:outgoing>
-            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID20</ns6:outgoing>
+            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID16</ns6:incoming>
+            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID14</ns6:outgoing>
         </task>
         <inclusiveGateway id="MID7">
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID13</ns5:incoming>
-            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID19</ns5:incoming>
-            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID20</ns5:incoming>
-            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID11</ns5:outgoing>
-            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID14</ns5:outgoing>
-            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID18</ns5:outgoing>
-            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID21</ns5:outgoing>
+            <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID14</ns5:incoming>
+            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID12</ns5:outgoing>
+            <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID15</ns5:outgoing>
         </inclusiveGateway>
         <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID8" name="Send: checkCredit(CreditCheckRequest) to CreditAgency" xsi:type="tSendTask">
-            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID11</ns6:incoming>
-            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID18</ns6:incoming>
-            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID10</ns6:outgoing>
-            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID17</ns6:outgoing>
+            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID12</ns6:incoming>
+            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID11</ns6:outgoing>
         </task>
         <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" name="Receive: checkCredit(CreditRating) from CreditAgency" xsi:type="tReceiveTask">
-            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID10</ns6:incoming>
-            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID17</ns6:incoming>
-            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID19</ns6:outgoing>
+            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID11</ns6:incoming>
+            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID13</ns6:outgoing>
         </task>
-        <sequenceFlow id="MID10" sourceRef="MID8" targetRef="MID9"/>
-        <sequenceFlow id="MID11" sourceRef="MID7" targetRef="MID8"/>
-        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID12" name="Send: buy(BuyConfirmed) to Buyer" xsi:type="tSendTask">
-            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID14</ns6:incoming>
-            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID21</ns6:incoming>
-            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID16</ns6:outgoing>
-            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID23</ns6:outgoing>
+        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Send: buy(BuyConfirmed) to Buyer" xsi:type="tSendTask">
+            <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID15</ns6:incoming>
+            <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID17</ns6:outgoing>
         </task>
-        <sequenceFlow id="MID13" sourceRef="MID6" targetRef="MID7"/>
-        <sequenceFlow id="MID14" sourceRef="MID7" targetRef="MID12"/>
-        <sequenceFlow id="MID15" sourceRef="MID4" targetRef="MID6"/>
-        <sequenceFlow id="MID16" sourceRef="MID12" targetRef="MID5"/>
-        <sequenceFlow id="MID17" sourceRef="MID8" targetRef="MID9"/>
-        <sequenceFlow id="MID18" sourceRef="MID7" targetRef="MID8"/>
-        <sequenceFlow id="MID19" sourceRef="MID9" targetRef="MID7"/>
-        <sequenceFlow id="MID20" sourceRef="MID6" targetRef="MID7"/>
-        <sequenceFlow id="MID21" sourceRef="MID7" targetRef="MID12"/>
-        <sequenceFlow id="MID22" sourceRef="MID4" targetRef="MID6"/>
-        <sequenceFlow id="MID23" sourceRef="MID12" targetRef="MID5"/>
+        <sequenceFlow id="MID11" sourceRef="MID8" targetRef="MID9"/>
+        <sequenceFlow id="MID12" sourceRef="MID7" targetRef="MID8"/>
+        <sequenceFlow id="MID13" sourceRef="MID9" targetRef="MID7"/>
+        <sequenceFlow id="MID14" sourceRef="MID6" targetRef="MID7"/>
+        <sequenceFlow id="MID15" sourceRef="MID7" targetRef="MID10"/>
+        <sequenceFlow id="MID16" sourceRef="MID4" targetRef="MID6"/>
+        <sequenceFlow id="MID17" sourceRef="MID10" targetRef="MID5"/>
     </process>
     <ns4:BPMNDiagram id="NID1">
         <ns4:BPMNPlane>
@@ -77,46 +59,46 @@
             <ns4:BPMNShape xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID9" id="NID7">
                 <ns3:Bounds height="60.0" width="110.0" x="530.0" y="100.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID17" id="NID8" sourceElement="NID6" targetElement="NID7">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID11" id="NID8" sourceElement="NID6" targetElement="NID7">
                 <ns2:waypoint x="480.0" y="130.0"/>
                 <ns2:waypoint x="530.0" y="130.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID18" id="NID9" sourceElement="NID5" targetElement="NID6">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID12" id="NID9" sourceElement="NID5" targetElement="NID6">
                 <ns2:waypoint x="340.0" y="170.0"/>
                 <ns2:waypoint x="355.0" y="170.0"/>
                 <ns2:waypoint x="355.0" y="130.0"/>
                 <ns2:waypoint x="370.0" y="130.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID19" id="NID10" sourceElement="NID7" targetElement="NID5">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID13" id="NID10" sourceElement="NID7" targetElement="NID5">
                 <ns2:waypoint x="640.0" y="130.0"/>
                 <ns2:waypoint x="680.0" y="130.0"/>
                 <ns2:waypoint x="680.0" y="80.0"/>
                 <ns2:waypoint x="312.0" y="80.0"/>
                 <ns2:waypoint x="312.0" y="148.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID20" id="NID11" sourceElement="NID4" targetElement="NID5">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID14" id="NID11" sourceElement="NID4" targetElement="NID5">
                 <ns2:waypoint x="240.0" y="125.0"/>
                 <ns2:waypoint x="265.0" y="125.0"/>
                 <ns2:waypoint x="265.0" y="170.0"/>
                 <ns2:waypoint x="290.0" y="170.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNShape xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID12" id="NID12">
+            <ns4:BPMNShape xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID10" id="NID12">
                 <ns3:Bounds height="60.0" width="110.0" x="770.0" y="95.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID21" id="NID13" sourceElement="NID5" targetElement="NID12">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID15" id="NID13" sourceElement="NID5" targetElement="NID12">
                 <ns2:waypoint x="340.0" y="170.0"/>
                 <ns2:waypoint x="730.0" y="170.0"/>
                 <ns2:waypoint x="730.0" y="125.0"/>
                 <ns2:waypoint x="770.0" y="125.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID22" id="NID14" sourceElement="NID3" targetElement="NID4">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID16" id="NID14" sourceElement="NID3" targetElement="NID4">
                 <ns2:waypoint x="80.0" y="125.0"/>
                 <ns2:waypoint x="130.0" y="125.0"/>
             </ns4:BPMNEdge>
             <ns4:BPMNShape xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID5" id="NID15">
                 <ns3:Bounds height="30.0" width="30.0" x="930.0" y="110.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID23" id="NID16" sourceElement="NID12" targetElement="NID15">
+            <ns4:BPMNEdge xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" bpmnElement="MID17" id="NID16" sourceElement="NID12" targetElement="NID15">
                 <ns2:waypoint x="880.0" y="125.0"/>
                 <ns2:waypoint x="930.0" y="125.0"/>
             </ns4:BPMNEdge>

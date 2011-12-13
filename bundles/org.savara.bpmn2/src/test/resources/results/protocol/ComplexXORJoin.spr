@@ -6,25 +6,25 @@ protocol ComplexXORJoin(role X) {
 	parallel {
 		choice {
 			M2 from Y to Z;
-			sync SequenceFlow_11 at Z,Y;
+			sync L11 at Z,Y;
 		} or {
 			M3 from Y to X;
 			M5 from Y to Z;
 			choice {
-				sync SequenceFlow_9 at Z,Y;
+				sync L9 at Z,Y;
 			} or {
-				sync SequenceFlow_10 at Z,Y;
+				sync L10 at Z,Y;
 			}
 		} or {
 			M4 from Y to X;
 			M6 from Y to Z;
-			sync SequenceFlow_7 at Z,Y;
+			sync L7 at Z,Y;
 		}
 	} and {
-		join SequenceFlow_10 or SequenceFlow_11 at Z,Y;
+		join L10 or L11 at Z,Y;
 		M7 from Z to Y;
 	} and {
-		join SequenceFlow_7 or SequenceFlow_9 at Z,Y;
+		join L7 or L9 at Z,Y;
 		M8 from Z to Y;
 	}
 }
