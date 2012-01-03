@@ -40,7 +40,7 @@ import org.scribble.protocol.parser.antlr.ANTLRProtocolParser;
 public class ProtocolToBPMN2ProcessGeneratorTest {
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("Protocol->BPMN2 Generator Tests");
+        TestSuite suite = new TestSuite("Protocol->BPMN2 Process Generator Tests");
 
         // TODO: SAVARA-244
         suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3"));
@@ -79,7 +79,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     		// Run test
     		result.startTest(this);
     		
-    		String filename="testmodels/protocol/"+m_name+".spr";
+    		String filename="testmodels/protocol/global/"+m_name+".spr";
     		
     		java.net.URL url=
     			ClassLoader.getSystemResource(filename);
@@ -194,7 +194,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     	protected void checkResults(TestResult result, Role role, String protocol) {
     		boolean f_valid=false;
 
-    		String filename="results/bpmn2/"+m_name+"@"+role.getName()+".bpmn2";
+    		String filename="results/bpmn2/process/"+m_name+"@"+role.getName()+".bpmn2";
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);
@@ -229,7 +229,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     		}
     		
     		if (f_valid == false) {
-    			String bpmn2file="testmodels/bpmn2";
+    			String bpmn2file="testmodels/protocol/global";
     			
     			java.net.URL url=ClassLoader.getSystemResource(bpmn2file);
     			
@@ -251,7 +251,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     				if (f != null && f.exists()) {
     					f = f.getParentFile().getParentFile(); //.getParentFile();
     					
-    					java.io.File resultsDir=new java.io.File(f, "results/bpmn2");
+    					java.io.File resultsDir=new java.io.File(f, "results/bpmn2/process");
     					
     					if (resultsDir.exists() == false) {
     						resultsDir.mkdirs();

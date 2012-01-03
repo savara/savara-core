@@ -111,40 +111,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				new BPMN2ModelVisitor(pm.getProtocol().getName(),
 						model, notation);
 			
-			/*
-			if (pm.getProtocol().getRole() == null) {
-				// Global (choreography) model
-				java.util.List<Role> roles=pm.getProtocol().getRoles();
-				
-				for (Role role : roles) {
-					DefaultProtocolContext context=
-							new DefaultProtocolContext(ProtocolServices.getParserManager(),
-											new org.scribble.common.resource.ResourceLocator() {
-						public URI getResourceURI(String uri) throws Exception {
-							return(locator.getResourceURI(uri));
-						}
-					});
-	
-					ProtocolModel local=ProtocolServices.getProtocolProjector().project(pm,
-									role, new JournalProxy(handler), context);
-	
-					if (local != null) {
-						// TODO: SAVARA-167 - issue when projection is based on a sub-protocol
-						if (AnnotationDefinitions.getAnnotation(local.getProtocol().getAnnotations(),
-										AnnotationDefinitions.TYPE) == null &&
-								AnnotationDefinitions.getAnnotation(pm.getProtocol().getAnnotations(),
-												AnnotationDefinitions.TYPE) != null) {				
-							AnnotationDefinitions.copyAnnotations(pm.getProtocol().getAnnotations(),
-									local.getProtocol().getAnnotations(), AnnotationDefinitions.TYPE);
-						}
-						
-						generateProcess(local, visitor, handler, locator);
-					}
-				}
-			} else {
-			*/
-				generateProcess(pm, visitor, handler, locator);
-			//}
+			generateProcess(pm, visitor, handler, locator);
 			
 			visitor.completeModels();
 			

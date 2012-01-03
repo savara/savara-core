@@ -15,13 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpmn2.generation.process;
+package org.savara.bpmn2.generation;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
+import org.savara.bpmn2.generation.process.ProtocolToBPMN2ProcessModelGenerator;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.parser.BPMN2ProtocolParser;
 import org.savara.bpmn2.util.BPMN2ModelUtil;
@@ -36,7 +37,7 @@ import org.scribble.protocol.DefaultProtocolContext;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 
-public class BPMN2ToBPMN2ProcessGeneratorTest {
+public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
 
     public static Test suite() {
         TestSuite suite = new TestSuite("BPMN2 Choreo->BPMN2 Process Generator Tests");
@@ -73,7 +74,7 @@ public class BPMN2ToBPMN2ProcessGeneratorTest {
     		// Run test
     		result.startTest(this);
     		
-    		String filename="testmodels/bpmn2/"+m_name+".bpmn";
+    		String filename="testmodels/bpmn2/choreo/"+m_name+".bpmn";
     		
     		java.net.URL url=
     			ClassLoader.getSystemResource(filename);
@@ -188,7 +189,7 @@ public class BPMN2ToBPMN2ProcessGeneratorTest {
     	protected void checkResults(TestResult result, Role role, String protocol) {
     		boolean f_valid=false;
 
-    		String filename="results/bpmn2/"+m_name+"@"+role.getName()+".bpmn2";
+    		String filename="results/bpmn2/process/"+m_name+"@"+role.getName()+".bpmn2";
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);
@@ -223,7 +224,7 @@ public class BPMN2ToBPMN2ProcessGeneratorTest {
     		}
     		
     		if (f_valid == false) {
-    			String bpmn2file="testmodels/bpmn2";
+    			String bpmn2file="testmodels/bpmn2/process";
     			
     			java.net.URL url=ClassLoader.getSystemResource(bpmn2file);
     			
@@ -245,7 +246,7 @@ public class BPMN2ToBPMN2ProcessGeneratorTest {
     				if (f != null && f.exists()) {
     					f = f.getParentFile().getParentFile(); //.getParentFile();
     					
-    					java.io.File resultsDir=new java.io.File(f, "results/bpmn2");
+    					java.io.File resultsDir=new java.io.File(f, "results/bpmn2/process");
     					
     					if (resultsDir.exists() == false) {
     						resultsDir.mkdirs();

@@ -15,23 +15,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpmn2.parser;
+package org.savara.bpmn2.parser.choreo;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
+import org.savara.bpmn2.parser.BPMN2ProtocolParser;
 import org.savara.protocol.export.text.JoinTextProtocolExporterRule;
 import org.savara.protocol.export.text.SyncTextProtocolExporterRule;
 import org.scribble.common.logging.ConsoleJournal;
 import org.scribble.common.resource.Content;
 import org.scribble.common.resource.ResourceContent;
 
-public class BPMN2ToProtocolParserTest {
+public class BPMN2ChoreoToProtocolParserTest {
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("BPMN2->Protocol Parser Tests");
+        TestSuite suite = new TestSuite("BPMN2 Choreo->Protocol Parser Tests");
 
         suite.addTest(new BPMN2ToProtocolTester("PurchaseGoods"));
         suite.addTest(new BPMN2ToProtocolTester("ComplexXORJoin"));
@@ -65,7 +66,7 @@ public class BPMN2ToProtocolParserTest {
     		// Run test
     		result.startTest(this);
     		
-    		String filename="testmodels/bpmn2/"+m_name+".bpmn";
+    		String filename="testmodels/bpmn2/choreo/"+m_name+".bpmn";
     		
     		java.net.URL url=
     			ClassLoader.getSystemResource(filename);
@@ -129,7 +130,7 @@ public class BPMN2ToProtocolParserTest {
     	protected void checkResults(TestResult result, String protocol) {
     		boolean f_valid=false;
 
-    		String filename="results/protocol/"+m_name+".spr";
+    		String filename="results/protocol/global/"+m_name+".spr";
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);
@@ -161,7 +162,7 @@ public class BPMN2ToProtocolParserTest {
     		}
     		
     		if (f_valid == false) {
-    			String bpmnfile="testmodels/bpmn2/"+m_name+".bpmn";
+    			String bpmnfile="testmodels/bpmn2/choreo/"+m_name+".bpmn";
     			
     			java.net.URL url=ClassLoader.getSystemResource(bpmnfile);
     			
@@ -183,7 +184,7 @@ public class BPMN2ToProtocolParserTest {
     				if (f != null && f.exists()) {
     					f = f.getParentFile().getParentFile().getParentFile();
     					
-    					java.io.File resultsDir=new java.io.File(f, "results/protocol");
+    					java.io.File resultsDir=new java.io.File(f, "results/protocol/global");
     					
     					if (resultsDir.exists() == false) {
     						resultsDir.mkdirs();

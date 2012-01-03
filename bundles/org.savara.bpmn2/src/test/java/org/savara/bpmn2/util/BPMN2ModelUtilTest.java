@@ -31,7 +31,7 @@ public class BPMN2ModelUtilTest {
 	@Test
 	public void testGetDefinitions() {
 		java.io.InputStream is=
-			ClassLoader.getSystemResourceAsStream("testmodels/bpmn2/PurchaseGoods.bpmn");
+			ClassLoader.getSystemResourceAsStream("testmodels/bpmn2/choreo/PurchaseGoods.bpmn");
 
 		try {
 			org.savara.bpmn2.model.TDefinitions defns=BPMN2ModelUtil.deserialize(is);
