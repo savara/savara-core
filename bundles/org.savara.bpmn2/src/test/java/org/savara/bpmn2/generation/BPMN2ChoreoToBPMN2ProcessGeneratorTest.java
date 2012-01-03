@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 
 import org.savara.bpmn2.generation.process.ProtocolToBPMN2ProcessModelGenerator;
 import org.savara.bpmn2.model.TDefinitions;
-import org.savara.bpmn2.parser.BPMN2ProtocolParser;
+import org.savara.bpmn2.parser.choreo.BPMN2ChoreographyProtocolParser;
 import org.savara.bpmn2.util.BPMN2ModelUtil;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
@@ -87,7 +87,7 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
-				BPMN2ProtocolParser parser=new BPMN2ProtocolParser();
+				BPMN2ChoreographyProtocolParser parser=new BPMN2ChoreographyProtocolParser();
 				
     			try {
     				Content content=new ResourceContent(url.toURI());

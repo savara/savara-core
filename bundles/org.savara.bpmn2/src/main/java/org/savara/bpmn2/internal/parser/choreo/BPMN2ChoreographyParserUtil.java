@@ -15,12 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpmn2.parser;
+package org.savara.bpmn2.internal.parser.choreo;
 
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.savara.bpmn2.internal.parser.choreo.rules.Scope;
 import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TFlowElement;
@@ -28,9 +29,8 @@ import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TMessageFlow;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TRootElement;
-import org.savara.bpmn2.parser.rules.Scope;
 
-public class BPMN2ParserUtil {
+public class BPMN2ChoreographyParserUtil {
 
 	/**
 	 * This method creates a scope based on the supplied BPMN2

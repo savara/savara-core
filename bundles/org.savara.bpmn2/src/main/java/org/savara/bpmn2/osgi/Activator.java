@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.savara.bpmn2.parser.BPMN2ProtocolParser;
+import org.savara.bpmn2.parser.choreo.BPMN2ChoreographyProtocolParser;
 import org.scribble.protocol.parser.ProtocolParser;
 
 public class Activator implements BundleActivator {
@@ -28,7 +28,7 @@ public class Activator implements BundleActivator {
 
         Properties props = new Properties();
         
-        BPMN2ProtocolParser pp=new BPMN2ProtocolParser();
+        BPMN2ChoreographyProtocolParser pp=new BPMN2ChoreographyProtocolParser();
         
         context.registerService(ProtocolParser.class.getName(), 
 				pp, props);

@@ -15,21 +15,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpmn2.parser;
+package org.savara.bpmn2.parser.choreo;
 
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
 
+import org.savara.bpmn2.internal.parser.choreo.BPMN2ChoreographyParserUtil;
+import org.savara.bpmn2.internal.parser.choreo.rules.BPMN2ParserContext;
+import org.savara.bpmn2.internal.parser.choreo.rules.BPMN2ParserRule;
+import org.savara.bpmn2.internal.parser.choreo.rules.DefaultBPMN2ParserContext;
+import org.savara.bpmn2.internal.parser.choreo.rules.ParserRuleFactory;
+import org.savara.bpmn2.internal.parser.choreo.rules.Scope;
 import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TImport;
 import org.savara.bpmn2.model.TItemDefinition;
 import org.savara.bpmn2.model.TRootElement;
-import org.savara.bpmn2.parser.rules.BPMN2ParserContext;
-import org.savara.bpmn2.parser.rules.BPMN2ParserRule;
-import org.savara.bpmn2.parser.rules.DefaultBPMN2ParserContext;
-import org.savara.bpmn2.parser.rules.ParserRuleFactory;
-import org.savara.bpmn2.parser.rules.Scope;
 import org.savara.bpmn2.util.BPMN2ModelUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
@@ -51,11 +52,11 @@ import org.scribble.protocol.parser.ProtocolParser;
  * This class provides the model parser for the BPMN2 notation.
  * 
  */
-public class BPMN2ProtocolParser implements ProtocolParser {
+public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 
 	private static final String BPMN_FILE_EXTENSION = "bpmn";
 
-	private static Logger logger = Logger.getLogger(BPMN2ProtocolParser.class.getName());
+	private static Logger logger = Logger.getLogger(BPMN2ChoreographyProtocolParser.class.getName());
 
 	public boolean isSupported(Content content) {
 		return(content.hasExtension(BPMN_FILE_EXTENSION));
@@ -71,9 +72,9 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 		
 		is.close();
 		
-		Scope scope=BPMN2ParserUtil.createScope(defns);
+		Scope scope=BPMN2ChoreographyParserUtil.createScope(defns);
 		
-		BPMN2ParserUtil.initializeScope(scope, defns);		
+		BPMN2ChoreographyParserUtil.initializeScope(scope, defns);		
 		
 		BPMN2ParserContext parserContext=
 				new DefaultBPMN2ParserContext(new FeedbackHandlerProxy(journal), scope);
@@ -103,7 +104,7 @@ public class BPMN2ProtocolParser implements ProtocolParser {
 				// Push scope when processing the choreography
 				parserContext.pushScope();
 				
-				BPMN2ParserUtil.initializeScope(parserContext.getScope(), choreo);
+				BPMN2ChoreographyParserUtil.initializeScope(parserContext.getScope(), choreo);
 				
 				// Process the flow element list
 				BPMN2ParserRule rule=ParserRuleFactory.getParserRule(choreo);

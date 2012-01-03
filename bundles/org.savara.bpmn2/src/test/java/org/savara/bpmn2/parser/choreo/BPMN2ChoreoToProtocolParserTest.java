@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-import org.savara.bpmn2.parser.BPMN2ProtocolParser;
+import org.savara.bpmn2.parser.choreo.BPMN2ChoreographyProtocolParser;
 import org.savara.protocol.export.text.JoinTextProtocolExporterRule;
 import org.savara.protocol.export.text.SyncTextProtocolExporterRule;
 import org.scribble.common.logging.ConsoleJournal;
@@ -79,7 +79,7 @@ public class BPMN2ChoreoToProtocolParserTest {
     			
     			org.scribble.protocol.model.ProtocolModel model=null;
     			
-				BPMN2ProtocolParser parser=new BPMN2ProtocolParser();
+				BPMN2ChoreographyProtocolParser parser=new BPMN2ChoreographyProtocolParser();
 				
     			try {
     				Content content=new ResourceContent(url.toURI());
