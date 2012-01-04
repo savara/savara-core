@@ -224,7 +224,7 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     		}
     		
     		if (f_valid == false) {
-    			String bpmn2file="testmodels/bpmn2/process";
+    			String bpmn2file="results/bpmn2/process";
     			
     			java.net.URL url=ClassLoader.getSystemResource(bpmn2file);
     			
@@ -244,7 +244,7 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     				}
     				
     				if (f != null && f.exists()) {
-    					f = f.getParentFile().getParentFile(); //.getParentFile();
+    					f = f.getParentFile().getParentFile().getParentFile();
     					
     					java.io.File resultsDir=new java.io.File(f, "results/bpmn2/process");
     					

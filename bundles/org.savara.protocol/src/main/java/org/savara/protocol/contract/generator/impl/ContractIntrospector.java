@@ -335,40 +335,47 @@ public class ContractIntrospector extends DefaultVisitor {
 
 		// Check if receiving a request
 		if (InteractionUtil.isRequest(interaction) && !InteractionUtil.isSend(interaction, m_serverRole)) {
-				
-				if (interaction.getMessageSignature().getOperation() != null &&
-						(m_clientRoles == null || interaction.getFromRole() == null ||
+			String op=interaction.getMessageSignature().getOperation();
+			
+			if (op == null) {
+				op = InteractionUtil.getRequestLabel(interaction);
+			}
+			
+			if (op != null && (m_clientRoles == null || interaction.getFromRole() == null ||
 						m_clientRoles.contains(interaction.getFromRole()))) {
 					
-					// Check if message exchange pattern exists for operation
-					MessageExchangePattern mep=intf.getMessageExchangePatternForOperation(
-								interaction.getMessageSignature().getOperation());
-					
-					if (mep == null) {
-						// Create new MEP
-						if (InteractionUtil.getRequestLabel(interaction) != null) {
-							mep = new RequestResponseMEP();
-						} else {
-							mep = new OneWayRequestMEP();
-						}
-						
-						mep.setOperation(interaction.getMessageSignature().getOperation());
-						
-						for (int i=0; i < interaction.getMessageSignature().getTypeReferences().size(); i++) {
-							mep.getTypes().add(convertType(interaction.getMessageSignature().getTypeReferences().get(i)));
-						}
-						
-						intf.getMessageExchangePatterns().add(mep);
+				// Check if message exchange pattern exists for operation
+				MessageExchangePattern mep=intf.getMessageExchangePatternForOperation(op);
+				
+				if (mep == null) {
+					// Create new MEP
+					if (InteractionUtil.getRequestLabel(interaction) != null) {
+						mep = new RequestResponseMEP();
+					} else {
+						mep = new OneWayRequestMEP();
 					}
+					
+					mep.setOperation(op);
+					
+					for (int i=0; i < interaction.getMessageSignature().getTypeReferences().size(); i++) {
+						mep.getTypes().add(convertType(interaction.getMessageSignature().getTypeReferences().get(i)));
+					}
+					
+					intf.getMessageExchangePatterns().add(mep);
 				}
+			}
 				
 		} else if (InteractionUtil.isResponse(interaction) && InteractionUtil.isSend(interaction, m_serverRole)) {
+			String op=interaction.getMessageSignature().getOperation();
 			
-			if (interaction.getMessageSignature().getOperation() != null) {
+			if (op == null) {
+				op = InteractionUtil.getReplyToLabel(interaction);
+			}
+			
+			if (op != null) {
 				
 				// Check if message exchange pattern exists for operation
-				MessageExchangePattern mep=intf.getMessageExchangePatternForOperation(
-							interaction.getMessageSignature().getOperation());
+				MessageExchangePattern mep=intf.getMessageExchangePatternForOperation(op);
 				
 				if (mep instanceof RequestResponseMEP) {
 					RequestResponseMEP rrmep=(RequestResponseMEP)mep;

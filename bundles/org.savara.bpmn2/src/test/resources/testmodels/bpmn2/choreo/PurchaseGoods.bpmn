@@ -153,12 +153,15 @@
     <bpmn2:operation id="Operation_1" name="buy">
       <bpmn2:inMessageRef>Message_1</bpmn2:inMessageRef>
       <bpmn2:outMessageRef>Message_9</bpmn2:outMessageRef>
+      <bpmn2:errorRef>Message_5</bpmn2:errorRef>
+      <bpmn2:errorRef>Message_6</bpmn2:errorRef>
     </bpmn2:operation>
   </bpmn2:interface>
   <bpmn2:interface id="Interface_1" name="CreditAgencyInterface">
     <bpmn2:operation id="Operation_1" name="checkCredit">
       <bpmn2:inMessageRef>Message_2</bpmn2:inMessageRef>
       <bpmn2:outMessageRef>Message_4</bpmn2:outMessageRef>
+      <bpmn2:errorRef>Message_3</bpmn2:errorRef>
     </bpmn2:operation>
   </bpmn2:interface>
   <bpmn2:interface id="Interface_2" name="LogisticsInterface">

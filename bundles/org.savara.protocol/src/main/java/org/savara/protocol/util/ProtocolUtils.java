@@ -111,6 +111,10 @@ public final class ProtocolUtils {
 	public static String getNamespacePrefix(ProtocolModel model, String namespace) {
 		Annotation annotation=null;
 		
+		if (namespace == null || namespace.trim().length() == 0) {
+			return("");
+		}
+		
 		if (model != null && model.getProtocol() != null) {
 			annotation = AnnotationDefinitions.getAnnotationWithProperty(
 					model.getProtocol().getAnnotations(), AnnotationDefinitions.TYPE,

@@ -9,7 +9,7 @@
         <endEvent id="MID5">
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID17</ns5:incoming>
         </endEvent>
-        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: CreditCheck from Store" xsi:type="tReceiveTask">
+        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: checkCredit(CreditCheck) from Store" xsi:type="tReceiveTask">
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID16</ns6:incoming>
             <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID15</ns6:outgoing>
         </task>
@@ -23,11 +23,11 @@
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID14</ns5:incoming>
             <ns5:outgoing xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID17</ns5:outgoing>
         </exclusiveGateway>
-        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" name="Send: CustomerUnknown to Store" xsi:type="tSendTask">
+        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" name="Send: checkCredit(CustomerUnknown) to Store" xsi:type="tSendTask">
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID11</ns6:incoming>
             <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID12</ns6:outgoing>
         </task>
-        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Send: CreditRating to Store" xsi:type="tSendTask">
+        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Send: checkCredit(CreditRating) to Store" xsi:type="tSendTask">
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID13</ns6:incoming>
             <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID14</ns6:outgoing>
         </task>

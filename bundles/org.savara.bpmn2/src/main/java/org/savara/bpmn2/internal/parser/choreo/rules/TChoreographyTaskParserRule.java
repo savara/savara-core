@@ -20,9 +20,13 @@ package org.savara.bpmn2.internal.parser.choreo.rules;
 import javax.xml.namespace.QName;
 
 import org.savara.bpmn2.model.TChoreographyTask;
+import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TMessageFlow;
+import org.savara.bpmn2.model.TOperation;
 import org.savara.bpmn2.model.TParticipant;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Interaction;
 import org.scribble.protocol.model.Introduces;
@@ -134,8 +138,75 @@ public class TChoreographyTaskParserRule implements BPMN2ParserRule {
 			
 			interaction.setMessageSignature(msig);
 		}
+		
+		// Check for correlation information
+		checkForCorrelation(context, interaction, source, target, mflow);
 
 		// Add to containing block
 		container.add(interaction);
+	}
+	
+	protected void checkForCorrelation(BPMN2ParserContext context, Interaction interaction, TParticipant source,
+			TParticipant target, TMessageFlow mflow) {
+		Annotation annotation=null;
+
+		// Check if request
+		for (QName qname : target.getInterfaceRef()) {
+			TInterface intf=(TInterface)context.getScope().getBPMN2Element(qname.getLocalPart());
+			
+			if (intf != null) {
+				for (TOperation op : intf.getOperation()) {
+					if (op.getInMessageRef() != null &&
+							op.getInMessageRef().equals(mflow.getMessageRef())) {
+						annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+						annotation.getProperties().put(AnnotationDefinitions.REQUEST_PROPERTY,
+									op.getName());
+						
+						interaction.getMessageSignature().setOperation(op.getName());
+						break;
+					}
+				}
+				if (annotation != null) {
+					break;
+				}
+			}
+		}
+		
+		if (annotation == null) {
+			// Check if response
+			for (QName qname : source.getInterfaceRef()) {
+				TInterface intf=(TInterface)context.getScope().getBPMN2Element(qname.getLocalPart());
+				
+				if (intf != null) {
+					for (TOperation op : intf.getOperation()) {
+						if (op.getOutMessageRef() != null &&
+								op.getOutMessageRef().equals(mflow.getMessageRef())) {
+							annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+							annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY,
+										op.getName());
+							interaction.getMessageSignature().setOperation(op.getName());
+							break;
+						} else if (op.getErrorRef().contains(mflow.getMessageRef())) {
+							annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+							annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY,
+										op.getName());
+							
+							Annotation intfann=new Annotation(AnnotationDefinitions.FAULT);
+							intfann.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, mflow.getName());
+							interaction.getAnnotations().add(intfann);
+							interaction.getMessageSignature().setOperation(op.getName());
+							break;
+						}
+					}
+				}
+				if (annotation != null) {
+					break;
+				}
+			}
+		}
+			
+		if (annotation != null) {
+			interaction.getAnnotations().add(annotation);
+		}
 	}
 }

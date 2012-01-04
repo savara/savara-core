@@ -30,6 +30,7 @@ import org.savara.bpmn2.internal.parser.choreo.rules.Scope;
 import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TImport;
 import org.savara.bpmn2.model.TItemDefinition;
+import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.util.BPMN2ModelUtil;
 import org.savara.common.model.annotation.Annotation;
@@ -132,11 +133,23 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 		
 		for (JAXBElement<? extends TRootElement> elem : defns.getRootElement()) {
 			
-			if (elem.getDeclaredType() == TItemDefinition.class) {
-				TItemDefinition itemdefn=(TItemDefinition)elem.getValue();
+			if (elem.getDeclaredType() == TMessage.class) {
+				TMessage message=(TMessage)elem.getValue();
+				
+				if (message.getItemRef() == null) {
+					logger.severe("No item definition set for message '"+message.getName()+"'");
+					continue;
+				}
+				
+				TItemDefinition itemdefn=getItemDefinition(message.getItemRef().getLocalPart(), defns);
+				
+				if (itemdefn == null) {
+					logger.severe("No item definition found for message '"+message.getName()+"'");
+					continue;
+				}
 				
 				TypeImport ti=new TypeImport();
-				ti.setName(itemdefn.getStructureRef().getLocalPart());
+				ti.setName(message.getName());
 				
 				DataType dt=new DataType();
 				dt.setDetails(itemdefn.getStructureRef().toString());
@@ -168,5 +181,21 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 				pm.getImports().add(tilist);
 			}
 		}
+	}
+
+	protected TItemDefinition getItemDefinition(String id, org.savara.bpmn2.model.TDefinitions defns) {
+		
+		for (JAXBElement<? extends TRootElement> elem : defns.getRootElement()) {
+			
+			if (elem.getDeclaredType() == TItemDefinition.class) {
+				TItemDefinition itemdefn=(TItemDefinition)elem.getValue();
+				
+				if (itemdefn.getId().equals(id)) {
+					return(itemdefn);
+				}
+			}
+		}
+		
+		return(null);
 	}
 }

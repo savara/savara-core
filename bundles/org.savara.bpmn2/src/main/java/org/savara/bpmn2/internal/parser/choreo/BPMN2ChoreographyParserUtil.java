@@ -25,6 +25,7 @@ import org.savara.bpmn2.internal.parser.choreo.rules.Scope;
 import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TFlowElement;
+import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TMessageFlow;
 import org.savara.bpmn2.model.TParticipant;
@@ -57,6 +58,11 @@ public class BPMN2ChoreographyParserUtil {
 				TMessage mesg=(TMessage)elem.getValue();
 				
 				scope.registerBPMN2Element(mesg.getId(), mesg);
+				
+			} else if (elem.getDeclaredType() == TInterface.class) {
+				TInterface intf=(TInterface)elem.getValue();
+				
+				scope.registerBPMN2Element(intf.getId(), intf);
 			}
 		}
 	}

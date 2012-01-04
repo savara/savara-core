@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" name="PurchaseGoods_Store">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_Store.wsdl"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_CreditAgency.wsdl"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_Logistics.wsdl"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_StoreArtifacts.wsdl"/>
+    <partnerLinks>
+        <ns2:partnerLink xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" myRole="Store" name="BuyerToStore" partnerLinkType="BuyerToStoreServiceLT"/>
+        <ns2:partnerLink xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" name="StoreToCreditAgency" partnerLinkType="StoreToCreditAgencyLT" partnerRole="CreditAgency"/>
+        <ns2:partnerLink xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" name="StoreToLogistics" partnerLinkType="StoreToLogisticsLT" partnerRole="Logistics"/>
+    </partnerLinks>
+    <variables>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="buyRequest" name="buyRequestVar"/>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="checkCreditRequest" name="checkCreditRequestVar"/>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="AccountNotFoundFault" name="AccountNotFoundFaultVar"/>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="checkCreditResponse" name="checkCreditResponseVar"/>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="InsufficientCreditFault" name="InsufficientCreditFaultVar"/>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="deliverRequest" name="deliverRequestVar"/>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="deliverResponse" name="deliverResponseVar"/>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="buyResponse" name="buyResponseVar"/>
+    </variables>
+    <sequence>
+        <ns2:receive xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" createInstance="yes" name="Receive_BuyRequest" operation="buy" partnerLink="BuyerToStore" portType="Store" variable="buyRequestVar"/>
+        <scope>
+            <faultHandlers>
+                <ns2:catch xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" faultMessageType="CustomerUnknownFault" faultName="CustomerUnknown" faultVariable="CustomerUnknownFaultVar">
+                    <ns2:sequence>
+                        <ns2:reply faultName="AccountNotFound" name="Send_AccountNotFound" operation="buy" partnerLink="BuyerToStore" portType="Store" variable="AccountNotFoundFaultVar"/>
+                    </ns2:sequence>
+                </ns2:catch>
+            </faultHandlers>
+            <sequence>
+                <ns2:invoke xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" inputVariable="checkCreditRequestVar" name="Send_CreditCheck" operation="checkCredit" outputVariable="checkCreditResponseVar" partnerLink="StoreToCreditAgency" portType="CreditAgency"/>
+                <if>
+                    <sequence>
+                        <ns2:reply xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" faultName="InsufficientCredit" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="Store" variable="InsufficientCreditFaultVar"/>
+                    </sequence>
+                    <else>
+                        <sequence>
+                            <ns2:invoke xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" inputVariable="deliverRequestVar" name="Send_DeliveryRequest" operation="deliver" outputVariable="deliverResponseVar" partnerLink="StoreToLogistics" portType="Logistics"/>
+                            <ns2:reply xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="Store" variable="buyResponseVar"/>
+                        </sequence>
+                    </else>
+                </if>
+            </sequence>
+        </scope>
+    </sequence>
+</process>

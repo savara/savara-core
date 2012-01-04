@@ -40,6 +40,10 @@ public class ProtocolToBPELGeneratorTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("Protocol->BPEL Generator Tests");
         
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsFromBPMN2", "CreditAgency"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsFromBPMN2", "Store"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsFromBPMN2", "Logistics"));
+        
         // TODO: SAVARA-225 - participant types only used in sub-choreographies need to be
         // declared as roles in just those sub-protocols
         //suite.addTest(new ProtocolToBPELTester("ESBBroker", "CreditAgency"));

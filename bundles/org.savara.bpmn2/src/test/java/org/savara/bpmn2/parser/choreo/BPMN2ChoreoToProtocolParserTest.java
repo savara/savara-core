@@ -182,7 +182,7 @@ public class BPMN2ChoreoToProtocolParserTest {
     				}
     				
     				if (f != null && f.exists()) {
-    					f = f.getParentFile().getParentFile().getParentFile();
+    					f = f.getParentFile().getParentFile().getParentFile().getParentFile();
     					
     					java.io.File resultsDir=new java.io.File(f, "results/protocol/global");
     					

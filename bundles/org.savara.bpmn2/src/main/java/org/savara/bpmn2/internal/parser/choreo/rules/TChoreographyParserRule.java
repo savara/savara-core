@@ -34,6 +34,7 @@ import org.savara.bpmn2.model.TStartEvent;
 import org.savara.common.logging.MessageFormatter;
 import org.savara.protocol.model.Join;
 import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.util.ChoiceUtil;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Choice;
@@ -390,6 +391,13 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						
 						processNode(context, (TFlowNode)seq.getTargetRef(), b);
 					}
+				}
+				
+				// Identify decision making role for choice
+				Role role=ChoiceUtil.getDecisionMaker(choice);
+				
+				if (role != null) {
+					choice.setRole(new Role(role));
 				}
 			} else {
 					

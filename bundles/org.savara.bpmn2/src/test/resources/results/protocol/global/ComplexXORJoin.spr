@@ -4,7 +4,7 @@ protocol ComplexXORJoin(role X) {
 	Y introduces Z;
 	M1 from X to Y;
 	parallel {
-		choice {
+		choice at Y {
 			M2 from Y to Z;
 			sync L11 at Z,Y;
 		} or {

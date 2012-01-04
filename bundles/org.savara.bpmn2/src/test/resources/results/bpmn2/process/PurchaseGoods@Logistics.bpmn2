@@ -9,11 +9,11 @@
         <endEvent id="MID5">
             <ns5:incoming xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL">MID10</ns5:incoming>
         </endEvent>
-        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: DeliveryRequest from Store" xsi:type="tReceiveTask">
+        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: deliver(DeliveryRequest) from Store" xsi:type="tReceiveTask">
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID9</ns6:incoming>
             <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID8</ns6:outgoing>
         </task>
-        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Send: DeliveryConfirmed to Store" xsi:type="tSendTask">
+        <task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Send: deliver(DeliveryConfirmed) to Store" xsi:type="tSendTask">
             <ns6:incoming xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID8</ns6:incoming>
             <ns6:outgoing xmlns="" xmlns:ns6="http://www.omg.org/spec/BPMN/20100524/MODEL">MID10</ns6:outgoing>
         </task>

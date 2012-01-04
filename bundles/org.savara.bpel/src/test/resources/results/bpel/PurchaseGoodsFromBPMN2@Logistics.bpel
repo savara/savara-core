@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" name="PurchaseGoods_Logistics">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_Logistics.wsdl"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_LogisticsArtifacts.wsdl"/>
+    <partnerLinks>
+        <ns2:partnerLink xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" myRole="Logistics" name="StoreToLogistics" partnerLinkType="StoreToLogisticsServiceLT"/>
+    </partnerLinks>
+    <variables>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="deliverRequest" name="deliverRequestVar"/>
+        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="deliverResponse" name="deliverResponseVar"/>
+    </variables>
+    <sequence>
+        <ns2:receive xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" createInstance="yes" name="Receive_DeliveryRequest" operation="deliver" partnerLink="StoreToLogistics" portType="Logistics" variable="deliverRequestVar"/>
+        <ns2:reply xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" name="Send_DeliveryConfirmed" operation="deliver" partnerLink="StoreToLogistics" portType="Logistics" variable="deliverResponseVar"/>
+    </sequence>
+</process>
