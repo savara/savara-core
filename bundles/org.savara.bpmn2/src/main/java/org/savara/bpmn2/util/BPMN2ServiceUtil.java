@@ -358,8 +358,48 @@ public class BPMN2ServiceUtil {
 											get(0).getLocalPart());
 						otherintf.getOperation().add(op);
 					} else {
-						
+						// Merge operations
+						mergeOperation(op, other);
 					}
+				}
+			}
+		}
+	}
+	
+	protected static void mergeOperation(TOperation newOp, TOperation existingOp) {
+		
+		// If request message already set, then confirm that the request message
+		// types are the same - otherwise copy
+		boolean mergeResponse=false;
+		
+		if (existingOp.getInMessageRef() == null) {
+			existingOp.setInMessageRef(newOp.getInMessageRef());
+			mergeResponse = true;
+		} else if (newOp.getInMessageRef() != null) {
+			if (newOp.getInMessageRef().equals(existingOp.getInMessageRef())) {
+				mergeResponse = true;
+			} else {
+				LOG.severe("Incompatible request message type for operation '"+
+							existingOp.getName()+"'");
+			}
+		} else {
+			mergeResponse = true;
+		}
+		
+		if (mergeResponse) {
+			// Check response
+			if (existingOp.getOutMessageRef() == null) {
+				existingOp.setOutMessageRef(newOp.getOutMessageRef());
+			} else if (newOp.getOutMessageRef() != null &&
+					!newOp.getOutMessageRef().equals(existingOp.getOutMessageRef())) {
+				LOG.severe("Incompatible response message type for operation '"+
+								existingOp.getName()+"'");
+			}
+			
+			// Check error messages
+			for (QName errQName : newOp.getErrorRef()) {
+				if (!existingOp.getErrorRef().contains(errQName)) {
+					existingOp.getErrorRef().add(errQName);
 				}
 			}
 		}

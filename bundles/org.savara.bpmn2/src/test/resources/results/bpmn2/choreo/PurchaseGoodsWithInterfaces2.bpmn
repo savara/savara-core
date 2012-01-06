@@ -155,6 +155,8 @@
     <interface name="CreditAgencyInterface" id="CreditAgencyInterface">
         <operation name="creditCheck" id="creditCheck">
             <ns5:inMessageRef xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="">Message_2</ns5:inMessageRef>
+            <ns5:outMessageRef xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="">Message_4</ns5:outMessageRef>
+            <ns5:errorRef xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="">Error_1</ns5:errorRef>
         </operation>
     </interface>
     <interface name="StoreInterface" id="StoreInterface">
@@ -162,6 +164,7 @@
             <ns5:inMessageRef xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="">Message_1</ns5:inMessageRef>
             <ns5:outMessageRef xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="">Message_9</ns5:outMessageRef>
             <ns5:errorRef xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="">Error_2</ns5:errorRef>
+            <ns5:errorRef xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="">Error_3</ns5:errorRef>
         </operation>
     </interface>
     <interface name="LogisticsInterface" id="LogisticsInterface">
