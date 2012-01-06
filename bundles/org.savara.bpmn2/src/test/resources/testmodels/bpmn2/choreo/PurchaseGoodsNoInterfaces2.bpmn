@@ -6,14 +6,12 @@
   <bpmn2:choreography id="Choreography_1" name="PurchaseGoods">
     <bpmn2:participant id="Participant_1" name="Buyer" processRef="Process_1"/>
     <bpmn2:participant id="Participant_2" name="Store" processRef="Process_2">
-      <bpmn2:interfaceRef>StoreInterface</bpmn2:interfaceRef>
+        <bpmn2:interfaceRef>StoreInterface</bpmn2:interfaceRef>
     </bpmn2:participant>
     <bpmn2:participant id="Participant_3" name="CreditAgency">
-      <bpmn2:interfaceRef>Interface_1</bpmn2:interfaceRef>
+        <bpmn2:interfaceRef>CreditAgencyInterface</bpmn2:interfaceRef>
     </bpmn2:participant>
-    <bpmn2:participant id="Participant_4" name="Logistics">
-      <bpmn2:interfaceRef>Interface_2</bpmn2:interfaceRef>
-    </bpmn2:participant>
+    <bpmn2:participant id="Participant_4" name="Logistics"/>
     <bpmn2:messageFlow id="MessageFlow_1" messageRef="Message_1" name="BuyRequest" sourceRef="Participant_1" targetRef="Participant_2"/>
     <bpmn2:messageFlow id="MessageFlow_2" messageRef="Message_2" name="CreditCheck" sourceRef="Participant_2" targetRef="Participant_3"/>
     <bpmn2:messageFlow id="MessageFlow_3" messageRef="Message_3" name="CustomerUnknown" sourceRef="Participant_3" targetRef="Participant_2"/>
@@ -152,26 +150,17 @@
   <bpmn2:error id="Error_1" errorCode="CustomerUnknown" name="CustomerUnknown" structureRef="ItemDefinition_3"/>
   <bpmn2:error id="Error_2" errorCode="AccountNotFound" name="AccountNotFound" structureRef="ItemDefinition_5"/>
   <bpmn2:error id="Error_3" errorCode="InsufficientCredit" name="BuyFailed" structureRef="ItemDefinition_6"/>
-  <bpmn2:interface id="StoreInterface" name="StoreInterface">
-    <bpmn2:operation id="Operation_1" name="buy">
-      <bpmn2:inMessageRef>Message_1</bpmn2:inMessageRef>
-      <bpmn2:outMessageRef>Message_9</bpmn2:outMessageRef>
-      <bpmn2:errorRef>Error_2</bpmn2:errorRef>
-      <bpmn2:errorRef>Error_3</bpmn2:errorRef>
-    </bpmn2:operation>
+  <bpmn2:interface name="CreditAgencyInterface" id="CreditAgencyInterface">
+        <bpmn2:operation name="creditCheck" id="creditCheck">
+            <bpmn2:inMessageRef>Message_2</bpmn2:inMessageRef>
+        </bpmn2:operation>
   </bpmn2:interface>
-  <bpmn2:interface id="Interface_1" name="CreditAgencyInterface">
-    <bpmn2:operation id="Operation_1" name="checkCredit">
-      <bpmn2:inMessageRef>Message_2</bpmn2:inMessageRef>
-      <bpmn2:outMessageRef>Message_4</bpmn2:outMessageRef>
-      <bpmn2:errorRef>Error_1</bpmn2:errorRef>
-    </bpmn2:operation>
-  </bpmn2:interface>
-  <bpmn2:interface id="Interface_2" name="LogisticsInterface">
-    <bpmn2:operation id="Operation_2" name="deliver">
-      <bpmn2:inMessageRef>Message_7</bpmn2:inMessageRef>
-      <bpmn2:outMessageRef>Message_8</bpmn2:outMessageRef>
-    </bpmn2:operation>
+  <bpmn2:interface name="StoreInterface" id="StoreInterface">
+        <bpmn2:operation name="buy" id="buy">
+            <bpmn2:inMessageRef>Message_1</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>Message_9</bpmn2:outMessageRef>
+            <bpmn2:errorRef>Error_2</bpmn2:errorRef>
+        </bpmn2:operation>
   </bpmn2:interface>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Choreography_1">

@@ -143,6 +143,9 @@
   <bpmn2:message id="Message_8" itemRef="ItemDefinition_8" name="DeliveryConfirmed"/>
   <bpmn2:itemDefinition id="ItemDefinition_9" structureRef="ns1:BuyConfirmed"/>
   <bpmn2:message id="Message_9" itemRef="ItemDefinition_9" name="BuyConfirmed"/>
+  <bpmn2:error id="Error_1" errorCode="CustomerUnknown" name="CustomerUnknown" structureRef="ItemDefinition_3"/>
+  <bpmn2:error id="Error_2" errorCode="AccountNotFound" name="AccountNotFound" structureRef="ItemDefinition_5"/>
+  <bpmn2:error id="Error_3" errorCode="InsufficientCredit" name="BuyFailed" structureRef="ItemDefinition_6"/>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Choreography_1">
       <bpmndi:BPMNShape id="BPMNShape_1" bpmnElement="ChoreographyTask_1">

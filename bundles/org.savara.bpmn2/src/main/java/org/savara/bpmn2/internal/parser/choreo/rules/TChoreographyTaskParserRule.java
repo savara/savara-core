@@ -17,14 +17,17 @@
  */
 package org.savara.bpmn2.internal.parser.choreo.rules;
 
+import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.savara.bpmn2.model.TChoreographyTask;
+import org.savara.bpmn2.model.TError;
 import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TMessageFlow;
 import org.savara.bpmn2.model.TOperation;
 import org.savara.bpmn2.model.TParticipant;
+import org.savara.bpmn2.model.TRootElement;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.Block;
@@ -173,6 +176,23 @@ public class TChoreographyTaskParserRule implements BPMN2ParserRule {
 		}
 		
 		if (annotation == null) {
+			// Check if an Error exists with the same ItemDefinition
+			TError err=null;
+			TMessage mesg=(TMessage)context.getScope().getBPMN2Element(mflow.getMessageRef().getLocalPart());
+			
+			if (mesg != null) {
+				for (JAXBElement<? extends TRootElement> re :
+							context.getScope().getDefinitions().getRootElement()) {
+					if (re.getValue() instanceof TError) {
+						TError te=(TError)re.getValue();
+						if (te.getStructureRef().equals(mesg.getItemRef())) {
+							err = te;
+							break;
+						}
+					}
+				}
+			}
+			
 			// Check if response
 			for (QName qname : source.getInterfaceRef()) {
 				TInterface intf=(TInterface)context.getScope().getBPMN2Element(qname.getLocalPart());
@@ -186,13 +206,14 @@ public class TChoreographyTaskParserRule implements BPMN2ParserRule {
 										op.getName());
 							interaction.getMessageSignature().setOperation(op.getName());
 							break;
-						} else if (op.getErrorRef().contains(mflow.getMessageRef())) {
+						} else if (err != null &&
+								op.getErrorRef().contains(new QName(null, err.getId()))) {
 							annotation=new Annotation(AnnotationDefinitions.CORRELATION);
 							annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY,
 										op.getName());
 							
 							Annotation intfann=new Annotation(AnnotationDefinitions.FAULT);
-							intfann.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, mflow.getName());
+							intfann.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, err.getErrorCode());
 							interaction.getAnnotations().add(intfann);
 							interaction.getMessageSignature().setOperation(op.getName());
 							break;

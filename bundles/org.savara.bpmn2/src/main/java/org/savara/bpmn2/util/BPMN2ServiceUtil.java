@@ -17,15 +17,19 @@
  */
 package org.savara.bpmn2.util;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import org.savara.bpmn2.model.ObjectFactory;
 import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TChoreographyTask;
 import org.savara.bpmn2.model.TDefinitions;
+import org.savara.bpmn2.model.TError;
 import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TFlowNode;
 import org.savara.bpmn2.model.TInterface;
@@ -134,7 +138,7 @@ public class BPMN2ServiceUtil {
 		// Check if both initiating and responding interactions set
 		if (initiatingii != null && respondingii != null) {
 			// Assume matched pair
-			storeMEP(initiatingii, respondingii, intfs);
+			storeMEP(initiatingii, respondingii, intfs, modelInfo);
 			
 		} else if (initiatingii != null) {
 			// Attempt to match with previous interaction
@@ -149,7 +153,7 @@ public class BPMN2ServiceUtil {
 			}
 			
 			if (match != null) {
-				storeMEP(match, initiatingii, intfs);
+				storeMEP(match, initiatingii, intfs, modelInfo);
 				
 				ii.remove(match);
 			} else {
@@ -166,7 +170,7 @@ public class BPMN2ServiceUtil {
 				// If previous interaction found with same from/to, then
 				// record previous as one-way op
 				if (match != null) {
-					storeMEP(match, null, intfs);
+					storeMEP(match, null, intfs, modelInfo);
 					
 					ii.remove(match);
 				}
@@ -184,7 +188,7 @@ public class BPMN2ServiceUtil {
 	}
 	
 	protected static void storeMEP(InteractionInfo req, InteractionInfo resp,
-					java.util.Map<TParticipant,TInterface> intfs) {
+					java.util.Map<TParticipant,TInterface> intfs, ModelInfo modelInfo) {
 		TParticipant participant=req.getTo();
 		TInterface intf=intfs.get(participant);
 		
@@ -221,20 +225,43 @@ public class BPMN2ServiceUtil {
 		}
 		
 		if (resp != null) {
-			// Check if response message already exists on operation
-			if (operation.getOutMessageRef() == null) {
-				operation.setOutMessageRef(new QName(null, resp.getMessage().getId()));
-			} else {
-				boolean found=operation.getOutMessageRef().getLocalPart().equals(
-								resp.getMessage().getId());
-								
-				for (int i=0; !found && i < operation.getErrorRef().size(); i++) {
-					found = operation.getErrorRef().get(i).getLocalPart().equals(
-										resp.getMessage().getId());
+			// Check if Error exists for same ItemDefinition as the response Message
+			TError err=modelInfo.getErrorForItemDefinition(resp.getMessage().getItemRef());
+			
+			if (err != null) {
+				QName errQName=new QName(null, err.getId());
+				if (!operation.getErrorRef().contains(errQName)) {
+					operation.getErrorRef().add(errQName);
 				}
+			} else {
+				// Could be normal response, or fault without an error object
 				
-				if (!found) {
-					operation.getErrorRef().add(new QName(null, resp.getMessage().getId()));
+				// Check if response message already exists on operation
+				if (operation.getOutMessageRef() == null) {
+					operation.setOutMessageRef(new QName(null, resp.getMessage().getId()));
+					
+				/* NOTE: Currently don't handle adding error objects, as this would
+				 * modify the model. User has to ensure fault message types have an appropriate
+				 * Error object.
+				 *
+				} else if (!operation.getOutMessageRef().getLocalPart().equals(resp.getMessage().getId())){
+					boolean found=false;
+									
+					for (int i=0; !found && i < operation.getErrorRef().size(); i++) {
+						found = operation.getErrorRef().get(i).getLocalPart().equals(
+											resp.getMessage().getId());
+					}
+					
+					if (!found) {
+						err = new TError();
+						err.setErrorCode(resp.getMessage().getName());
+						err.setId(resp.getMessage().getName()+"Err");
+						err.setStructureRef(resp.getMessage().getItemRef());
+						modelInfo.addError(err);
+						
+						operation.getErrorRef().add(new QName(null, err.getId()));
+					}
+				*/
 				}
 			}
 		}
@@ -279,7 +306,63 @@ public class BPMN2ServiceUtil {
 	 * @param interfaces The map of participants to interfaces
 	 */
 	public static void merge(TDefinitions defns, java.util.Map<TParticipant,TInterface> interfaces) {
+		ObjectFactory factory=new ObjectFactory();
 		
+		java.util.List<TParticipant> participants=
+					new java.util.Vector<TParticipant>(interfaces.keySet());
+		
+		Collections.sort(participants, new Comparator<TParticipant>() {
+			public int compare(TParticipant o1, TParticipant o2) {
+				return(o1.getName().compareTo(o2.getName()));
+			}
+		});
+		
+		ModelInfo modelInfo=new ModelInfo(null, null, null, defns.getRootElement());
+		
+		for (TParticipant participant : participants) {
+			TInterface intf=interfaces.get(participant);
+			
+			// Check whether participant already has an interface
+			if (participant.getInterfaceRef().size() == 0) {
+				// Add interface to model and reference it from participant
+				defns.getRootElement().add(factory.createInterface(intf));
+				
+				participant.getInterfaceRef().add(new QName(null, intf.getId()));
+			} else {				
+				for (TOperation op : intf.getOperation()) {
+					// Find operation
+					TOperation other=null;
+					
+					for (QName qname : participant.getInterfaceRef()) {
+						TInterface otherintf=(TInterface)
+									modelInfo.getRootElement(qname.getLocalPart());
+						
+						if (otherintf != null) {
+							for (TOperation otherOp : otherintf.getOperation()) {
+								if (op.getName().equals(otherOp.getName())) {
+									other = otherOp;
+									break;
+								}
+							}
+							
+							if (other != null) {
+								break;
+							}
+						}
+					}
+					
+					if (other == null) {
+						// Install operation on first interface
+						TInterface otherintf=(TInterface)
+								modelInfo.getRootElement(participant.getInterfaceRef().
+											get(0).getLocalPart());
+						otherintf.getOperation().add(op);
+					} else {
+						
+					}
+				}
+			}
+		}
 	}
 	
 	/**
@@ -318,6 +401,7 @@ public class BPMN2ServiceUtil {
 		private List<TMessageFlow> _messageFlows=null;
 		private List<JAXBElement<? extends TFlowElement>> _flowElements;
 		private List<JAXBElement<? extends TRootElement>> _rootElements;
+		private ObjectFactory _factory=new ObjectFactory();
 		
 		public ModelInfo(List<TParticipant> participants, List<TMessageFlow> messageFlows,
 				List<JAXBElement<? extends TFlowElement>> flowElements,
@@ -328,6 +412,24 @@ public class BPMN2ServiceUtil {
 			_rootElements = rootElements;
 		}
 		
+		public void addError(TError err) {
+			_rootElements.add(_factory.createError(err));
+		}
+
+		public TError getErrorForItemDefinition(QName itemRef) {
+			TError ret=null;
+			
+			for (JAXBElement<? extends TRootElement> fejaxb : _rootElements) {
+				TRootElement fe=fejaxb.getValue();
+				if (fe instanceof TError && ((TError)fe).getStructureRef().equals(itemRef)) {
+					ret = (TError)fe;
+					break;
+				}
+			}
+			
+			return(ret);
+		}
+
 		public TParticipant getParticipant(String id) {
 			TParticipant ret=null;
 			
@@ -384,6 +486,10 @@ public class BPMN2ServiceUtil {
 			}
 			
 			return (ret);
+		}
+
+		public TError getError(String id) {
+			return((TError)getRootElement(id));
 		}
 		
 	}

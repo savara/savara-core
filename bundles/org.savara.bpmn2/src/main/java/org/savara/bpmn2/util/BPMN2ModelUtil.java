@@ -51,6 +51,13 @@ public class BPMN2ModelUtil {
 		return(ret);
 	}
 	
+	protected static void addNamespacePrefix(java.util.Map<String, String> prefixes,
+							String prefix, String namespace) {
+		if (!prefixes.containsKey(namespace)) {
+			prefixes.put(namespace, prefix);
+		}
+	}
+	
 	public static void serialize(TDefinitions defns, java.io.OutputStream os,
 					java.util.Map<String, String> prefixes) throws IOException {
 		
@@ -87,7 +94,7 @@ public class BPMN2ModelUtil {
 					doc.getDocumentElement().setAttribute("xmlns:"+prefix, ns); 
 				}
 				
-				java.io.ByteArrayOutputStream baos2=new java.io.ByteArrayOutputStream();
+				doc.normalizeDocument();
 				
 				javax.xml.transform.dom.DOMSource source=new javax.xml.transform.dom.DOMSource(doc);
 				javax.xml.transform.stream.StreamResult result=new javax.xml.transform.stream.StreamResult(os);
