@@ -86,13 +86,15 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 				
 				ProtocolModel pm=new ProtocolModel();
 				
-				initialize(pm, defns);
-				
 				// Construct the choreography behaviour
 				Protocol p=new Protocol();
 				p.setName(choreo.getName());
 				
 				p.setBlock(new Block());
+				
+				pm.setProtocol(p);
+				
+				initialize(pm, defns);
 				
 				// Create annotation to link the protocol to the source choreography
 				Annotation pann=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
@@ -114,8 +116,6 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 				
 				parserContext.popScope();
 				
-				pm.setProtocol(p);
-				
 				ret = pm;
 				
 				break;
@@ -130,6 +130,7 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 	}
 	
 	protected void initialize(ProtocolModel pm, org.savara.bpmn2.model.TDefinitions defns) {
+		java.util.Map<String, String> nsprefix=new java.util.HashMap<String, String>();
 		
 		for (JAXBElement<? extends TRootElement> elem : defns.getRootElement()) {
 			
@@ -146,6 +147,12 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 				if (itemdefn == null) {
 					logger.severe("No item definition found for message '"+message.getName()+"'");
 					continue;
+				}
+				
+				// Store namespace
+				if (itemdefn.getStructureRef().getPrefix() != null) {
+					nsprefix.put(itemdefn.getStructureRef().getPrefix(),
+									itemdefn.getStructureRef().getNamespaceURI());
 				}
 				
 				TypeImport ti=new TypeImport();
@@ -180,6 +187,19 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 				
 				pm.getImports().add(tilist);
 			}
+		}
+		
+		for (String prefix : nsprefix.keySet()) {
+			String ns=nsprefix.get(prefix);
+			
+			Annotation pann=new Annotation(AnnotationDefinitions.TYPE);
+
+			pann.getProperties().put(AnnotationDefinitions.PREFIX_PROPERTY,
+					prefix);
+			pann.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+					ns);
+			
+			pm.getProtocol().getAnnotations().add(pann);
 		}
 	}
 

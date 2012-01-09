@@ -249,7 +249,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     				}
     				
     				if (f != null && f.exists()) {
-    					f = f.getParentFile().getParentFile(); //.getParentFile();
+    					f = f.getParentFile().getParentFile().getParentFile();
     					
     					java.io.File resultsDir=new java.io.File(f, "results/bpmn2/process");
     					

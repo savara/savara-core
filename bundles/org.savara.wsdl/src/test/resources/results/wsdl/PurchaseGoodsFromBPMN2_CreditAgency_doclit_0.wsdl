@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CreditAgency" targetNamespace="http://www.savara.org" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.savara.org" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:message name="checkCreditRequest">
+    <wsdl:part name="content" type="ns3:CreditCheckRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CustomerUnknownFault">
+    <wsdl:part name="content" type="ns3:CustomerUnknown">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkCreditResponse">
+    <wsdl:part name="content" type="ns3:CreditRating">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CreditAgency">
+    <wsdl:operation name="checkCredit">
+      <wsdl:input message="tns:checkCreditRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:checkCreditResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomerUnknown" message="tns:CustomerUnknownFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CreditAgencyBinding" type="tns:CreditAgency">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="checkCredit">
+      <soap:operation soapAction="http://www.savara.org/checkCredit"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomerUnknown">
+        <soap:fault name="CustomerUnknown" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CreditAgencyService">
+    <wsdl:port name="CreditAgencyPort" binding="tns:CreditAgencyBinding">
+      <soap:address location="http://localhost:8080/CreditAgencyService/CreditAgencyPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

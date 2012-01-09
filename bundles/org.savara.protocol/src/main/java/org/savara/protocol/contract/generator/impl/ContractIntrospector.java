@@ -534,44 +534,16 @@ public class ContractIntrospector extends DefaultVisitor {
 					td.setTypeSystem(til.getFormat());
 					
 					if (til.getFormat() != null && TypeSystem.XSD.equals(til.getFormat()) &&
-								til.getLocation() != null) {
-						
-						addNamespace(tref.getModel(), til.getLocation());
+							ti.getDataType() != null && ti.getDataType().getDetails() != null) {
+						QName qname=QName.valueOf(ti.getDataType().getDetails());
+
+						addNamespace(tref.getModel(), qname.getNamespaceURI());
 					}
-					
-					/*
-							getContract().getNamespaceForURI(til.getLocation()) == null) {
-						
-						// Check if namespace has been defined for location
-						//tref.getModel().getProtocol().
-						java.util.List<Annotation> annotations=
-							AnnotationDefinitions.getAnnotations(tref.getModel().getProtocol().getAnnotations(),
-										AnnotationDefinitions.TYPE);
-						
-						for (Annotation ann : annotations) {
-							String nstxt=(String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY);
-							
-							if (nstxt != null && nstxt.equals(til.getLocation())) {
-								Namespace ns=new Namespace();
-								ns.setURI(til.getLocation());
-								ns.setPrefix((String)ann.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-								ns.setSchemaLocation((String)ann.getProperties().get(AnnotationDefinitions.LOCATION_PROPERTY));
-								getContract().getNamespaces().add(ns);
-								
-								break;
-							}
-						}
-					}
-					*/
 				}
 			}
 			
-			//td.setDataType((String)tref.getProperties().get(PropertyName.DATA_TYPE));
-			
 			// Copy properties that may provide additional information about the type
 			td.getProperties().putAll(tref.getProperties());
-			
-			//td.setTypeSystem((String)tref.getProperties().get(PropertyName.TYPE_SYSTEM));
 			
 			getContract().getTypeDefinitions().add(td);
 		}

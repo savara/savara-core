@@ -27,11 +27,12 @@ import org.savara.bpmn2.model.TChoreographyTask;
 import org.savara.bpmn2.model.TExclusiveGateway;
 import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TFlowNode;
-import org.savara.bpmn2.model.TParallelGateway;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
 import org.savara.common.logging.MessageFormatter;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.model.Join;
 import org.savara.protocol.model.Sync;
 import org.savara.protocol.model.util.ChoiceUtil;
@@ -98,6 +99,8 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 			cleanUpJoins(context);
 			
 			localiseIntroductions(context, container);
+			
+			defineNamespaces(context, container);
 		}
 	}
 	
@@ -433,6 +436,42 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 					}
 				}
 			}
+		}
+	}
+	
+	/**
+	 * This method identifies the namespaces for the roles associated with the
+	 * containing protocol.
+	 *  
+	 * @param context The BPMN2 context
+	 * @param container The container
+	 */
+	protected void defineNamespaces(BPMN2ParserContext context, Block container) {
+		Protocol protocol=container.getEnclosingProtocol();
+		
+		String tns=context.getScope().getDefinitions().getTargetNamespace();
+		
+		if (protocol != null && tns != null && tns.trim().length() > 0) {
+			for (Role role : protocol.getRoles()) {
+				Annotation pann=new Annotation(AnnotationDefinitions.NAMESPACE);
+	
+				pann.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+						tns);
+				pann.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY,
+						role.getName());
+				
+				protocol.getAnnotations().add(pann);
+			}
+			
+			// Add Type import to define namespace prefix for targetNamespace
+			Annotation pann=new Annotation(AnnotationDefinitions.TYPE);
+			
+			pann.getProperties().put(AnnotationDefinitions.PREFIX_PROPERTY,
+					"tns");
+			pann.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+					tns);
+			
+			protocol.getAnnotations().add(pann);
 		}
 	}
 	

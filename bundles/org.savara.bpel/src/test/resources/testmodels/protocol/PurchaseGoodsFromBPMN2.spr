@@ -8,6 +8,11 @@ import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as Deliver
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed from "platform:/resource/purchasing/logistics.xsd";
 import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed from "platform:/resource/purchasing/store.xsd";
 [[ SourceComponent(id=Choreography_1) ]]
+[[ Namespace(name=http://www.savara.org,role=Buyer) ]]
+[[ Namespace(name=http://www.savara.org,role=CreditAgency) ]]
+[[ Namespace(name=http://www.savara.org,role=Store) ]]
+[[ Namespace(name=http://www.savara.org,role=Logistics) ]]
+[[ Type(prefix=tns,namespace=http://www.savara.org) ]]
 protocol PurchaseGoods(role Buyer) {
 	Store introduces CreditAgency;
 	Buyer introduces Store;

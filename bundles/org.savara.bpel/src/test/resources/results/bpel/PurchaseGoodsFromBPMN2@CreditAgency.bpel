@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" name="PurchaseGoods_CreditAgency">
-    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_CreditAgency.wsdl"/>
-    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_CreditAgencyArtifacts.wsdl"/>
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:tns="http://www.savara.org" name="PurchaseGoods_CreditAgency" targetNamespace="http://www.savara.org">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_CreditAgency.wsdl" namespace="http://www.savara.org"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_CreditAgencyArtifacts.wsdl" namespace="http://www.savara.org"/>
     <partnerLinks>
-        <ns2:partnerLink xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" myRole="CreditAgency" name="StoreToCreditAgency" partnerLinkType="StoreToCreditAgencyServiceLT"/>
+        <partnerLink myRole="CreditAgency" name="StoreToCreditAgency" partnerLinkType="tns:StoreToCreditAgencyServiceLT"/>
     </partnerLinks>
     <variables>
-        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="checkCreditRequest" name="checkCreditRequestVar"/>
-        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="CustomerUnknownFault" name="CustomerUnknownFaultVar"/>
-        <ns2:variable xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" messageType="checkCreditResponse" name="checkCreditResponseVar"/>
+        <variable messageType="tns:checkCreditRequest" name="checkCreditRequestVar"/>
+        <variable messageType="tns:CustomerUnknownFault" name="CustomerUnknownFaultVar"/>
+        <variable messageType="tns:checkCreditResponse" name="checkCreditResponseVar"/>
     </variables>
     <sequence>
-        <ns2:receive xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" createInstance="yes" name="Receive_CreditCheck" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="CreditAgency" variable="checkCreditRequestVar"/>
+        <receive createInstance="yes" name="Receive_CreditCheck" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="tns:CreditAgency" variable="checkCreditRequestVar"/>
         <if>
             <sequence>
-                <ns2:reply xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" faultName="CustomerUnknown" name="Send_CustomerUnknown" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="CreditAgency" variable="CustomerUnknownFaultVar"/>
+                <reply faultName="tns:CustomerUnknown" name="Send_CustomerUnknown" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="tns:CreditAgency" variable="CustomerUnknownFaultVar"/>
             </sequence>
             <else>
                 <sequence>
-                    <ns2:reply xmlns="" xmlns:ns2="http://docs.oasis-open.org/wsbpel/2.0/process/executable" name="Send_CreditRating" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="CreditAgency" variable="checkCreditResponseVar"/>
+                    <reply name="Send_CreditRating" operation="checkCredit" partnerLink="StoreToCreditAgency" portType="tns:CreditAgency" variable="checkCreditResponseVar"/>
                 </sequence>
             </else>
         </if>

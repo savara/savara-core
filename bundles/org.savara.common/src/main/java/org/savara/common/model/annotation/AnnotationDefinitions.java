@@ -36,8 +36,6 @@ public class AnnotationDefinitions {
 	// Fault annotation (has name property)
 	public static final String FAULT = "Fault";
 	
-	public static final String TYPE="Type";
-	
 	
 	// XSD sub types
 	public static final String XSD_ELEMENT = "XSDElement";
@@ -51,8 +49,12 @@ public class AnnotationDefinitions {
 	public static final String REPLY_TO_PROPERTY = "replyTo";
 
 	
-	// Namespace annotation and properties
+	// Namespace annotation (has 'name' and 'role' properties)
 	public static final String NAMESPACE = "Namespace";
+
+	
+	// Type annotation and properties
+	public static final String TYPE="Type";
 	
 	public static final String PREFIX_PROPERTY="prefix";
 	public static final String NAMESPACE_PROPERTY="namespace";

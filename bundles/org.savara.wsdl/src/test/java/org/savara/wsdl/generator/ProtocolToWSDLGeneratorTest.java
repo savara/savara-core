@@ -41,6 +41,11 @@ public class ProtocolToWSDLGeneratorTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("Protocol->WSDL Generator Tests");
 
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsFromBPMN2", "Buyer"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsFromBPMN2", "Store"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsFromBPMN2", "CreditAgency"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsFromBPMN2", "Logistics"));
+        
         suite.addTest(new ProtocolToWSDLTester("PolicyQuote", "CreditCheckService"));
         suite.addTest(new ProtocolToWSDLTester("PolicyQuote", "PolicyQuoteProcessService"));
         

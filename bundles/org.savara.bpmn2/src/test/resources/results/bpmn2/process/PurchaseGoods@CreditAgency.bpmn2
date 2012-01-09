@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ns2="http://www.omg.org/spec/DD/20100524/DI" xmlns:ns3="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/BPMN/20100524/DI">
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:ns4="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:tns="http://www.savara.org" targetNamespace="http://www.savara.org">
     <collaboration id="MID1">
         <ns5:participant xmlns="" xmlns:ns5="http://www.omg.org/spec/BPMN/20100524/MODEL" id="MID3" name="CreditAgency" processRef="MID2"/>
     </collaboration>

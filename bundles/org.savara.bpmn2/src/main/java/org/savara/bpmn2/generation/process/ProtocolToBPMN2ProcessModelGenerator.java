@@ -41,6 +41,8 @@ import org.savara.bpmn2.internal.generation.process.components.DoBlockActivity;
 import org.savara.bpmn2.internal.generation.process.components.SyncActivity;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.generator.ModelGenerator;
 import org.savara.common.resources.ResourceLocator;
 import org.savara.protocol.model.Join;
@@ -99,6 +101,9 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			TDefinitions defns=new TDefinitions();
 			
+			// Find namespace for role
+			initNamespace(defns, pm);
+			
 			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model=
 				new org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory(defns);
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation=
@@ -119,6 +124,17 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		}
 		
 		return(ret);
+	}
+	
+	protected void initNamespace(TDefinitions defns, ProtocolModel pm) {
+		String role=pm.getProtocol().getLocatedRole().getName();
+		
+		Annotation ann=AnnotationDefinitions.getAnnotationWithProperty(pm.getProtocol().getAnnotations(),
+				AnnotationDefinitions.NAMESPACE, AnnotationDefinitions.ROLE_PROPERTY, role);
+		
+		if (ann != null) {
+			defns.setTargetNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAME_PROPERTY));
+		}
 	}
 	
 	protected void generateProcess(ProtocolModel local, BPMN2ModelVisitor visitor,
