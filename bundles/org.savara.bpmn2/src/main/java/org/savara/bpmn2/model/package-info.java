@@ -5,5 +5,11 @@
 // Generated on: 2011.04.12 at 12:36:45 PM BST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.omg.org/spec/BPMN/20100524/MODEL",
+xmlns = {
+	    @javax.xml.bind.annotation.XmlNs(prefix = "bpmn2", namespaceURI = "http://www.omg.org/spec/BPMN/20100524/MODEL"),
+	    @javax.xml.bind.annotation.XmlNs(prefix = "bpmndi", namespaceURI = "http://www.omg.org/spec/BPMN/20100524/DI"),
+	    @javax.xml.bind.annotation.XmlNs(prefix = "dc", namespaceURI = "http://www.omg.org/spec/DD/20100524/DC")
+	},
+	elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package org.savara.bpmn2.model;

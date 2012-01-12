@@ -43,19 +43,11 @@ public class BPMN2ModelUtil {
 			if (xmlObject instanceof JAXBElement) {
 				ret = (TDefinitions)((JAXBElement<?>)xmlObject).getValue();
 			}
-			
 		} catch(Exception e) {
 			throw new IOException("Failed to deserialize BPMN2 definitions", e);
 		}
 		
 		return(ret);
-	}
-	
-	protected static void addNamespacePrefix(java.util.Map<String, String> prefixes,
-							String prefix, String namespace) {
-		if (!prefixes.containsKey(namespace)) {
-			prefixes.put(namespace, prefix);
-		}
 	}
 	
 	public static void serialize(TDefinitions defns, java.io.OutputStream os,
