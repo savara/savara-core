@@ -51,13 +51,21 @@ public class BPMN2ModelUtil {
 	}
 	
 	public static void serialize(TDefinitions defns, java.io.OutputStream os,
-					java.util.Map<String, String> prefixes) throws IOException {
+			java.util.Map<String, String> prefixes) throws IOException {
+		serialize(defns, os, prefixes, BPMN2ModelUtil.class.getClassLoader());
+	}
+
+	public static void serialize(TDefinitions defns, java.io.OutputStream os,
+					java.util.Map<String, String> prefixes,
+					java.lang.ClassLoader classLoader) throws IOException {
 		
 		try {
 			org.savara.bpmn2.model.ObjectFactory factory=
 						new org.savara.bpmn2.model.ObjectFactory();
 			
-			JAXBContext context = JAXBContext.newInstance(TDefinitions.class);
+			//JAXBContext context = JAXBContext.newInstance(TDefinitions.class);
+			JAXBContext context = JAXBContext.newInstance("org.savara.bpmn2.model",
+					classLoader);
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
