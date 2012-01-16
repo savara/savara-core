@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.savara.org" targetNamespace="http://www.savara.org">
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.savara.org/examples" targetNamespace="http://www.savara.org/examples">
     <bpmn2:collaboration id="MID1">
         <bpmn2:participant id="MID3" name="CreditAgency" processRef="MID2"/>
     </bpmn2:collaboration>
@@ -9,7 +9,7 @@
         <bpmn2:endEvent id="MID5">
             <bpmn2:incoming>MID17</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: checkCredit(CreditCheck) from Store" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: creditCheck(CreditCheck) from Store" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID16</bpmn2:incoming>
             <bpmn2:outgoing>MID15</bpmn2:outgoing>
         </bpmn2:task>
@@ -23,11 +23,11 @@
             <bpmn2:incoming>MID14</bpmn2:incoming>
             <bpmn2:outgoing>MID17</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" name="Send: checkCredit(CustomerUnknown) to Store" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" name="Send: creditCheck(CustomerUnknown) to Store" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID11</bpmn2:incoming>
             <bpmn2:outgoing>MID12</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Send: checkCredit(CreditRating) to Store" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Send: creditCheck(CreditRating) to Store" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID13</bpmn2:incoming>
             <bpmn2:outgoing>MID14</bpmn2:outgoing>
         </bpmn2:task>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" id="Definitions_1" name="Definitions 1" targetNamespace="http://www.savara.org">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.savara.org/examples" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" name="PurchaseGoods" targetNamespace="http://www.savara.org/examples">
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="platform:/resource/purchasing/store.xsd" namespace="http://www.jboss.org/examples/store"/>
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="platform:/resource/purchasing/logistics.xsd" namespace="http://www.jboss.org/examples/logistics"/>
   <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="platform:/resource/purchasing/creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
@@ -9,10 +9,10 @@
       <bpmn2:interfaceRef>StoreInterface</bpmn2:interfaceRef>
     </bpmn2:participant>
     <bpmn2:participant id="Participant_3" name="CreditAgency">
-      <bpmn2:interfaceRef>Interface_1</bpmn2:interfaceRef>
+      <bpmn2:interfaceRef>CreditAgencyInterface</bpmn2:interfaceRef>
     </bpmn2:participant>
     <bpmn2:participant id="Participant_4" name="Logistics">
-      <bpmn2:interfaceRef>Interface_2</bpmn2:interfaceRef>
+      <bpmn2:interfaceRef>LogisticsInterface</bpmn2:interfaceRef>
     </bpmn2:participant>
     <bpmn2:messageFlow id="MessageFlow_1" messageRef="Message_1" name="BuyRequest" sourceRef="Participant_1" targetRef="Participant_2"/>
     <bpmn2:messageFlow id="MessageFlow_2" messageRef="Message_2" name="CreditCheck" sourceRef="Participant_2" targetRef="Participant_3"/>
@@ -151,26 +151,26 @@
   <bpmn2:message id="Message_9" itemRef="ItemDefinition_9" name="BuyConfirmed"/>
   <bpmn2:error id="Error_1" errorCode="CustomerUnknown" name="CustomerUnknown" structureRef="ItemDefinition_3"/>
   <bpmn2:error id="Error_2" errorCode="AccountNotFound" name="AccountNotFound" structureRef="ItemDefinition_5"/>
-  <bpmn2:error id="Error_3" errorCode="InsufficientCredit" name="BuyFailed" structureRef="ItemDefinition_6"/>
-  <bpmn2:interface id="StoreInterface" name="StoreInterface">
-    <bpmn2:operation id="Operation_1" name="buy">
-      <bpmn2:inMessageRef>Message_1</bpmn2:inMessageRef>
-      <bpmn2:outMessageRef>Message_9</bpmn2:outMessageRef>
-      <bpmn2:errorRef>Error_2</bpmn2:errorRef>
-      <bpmn2:errorRef>Error_3</bpmn2:errorRef>
-    </bpmn2:operation>
-  </bpmn2:interface>
-  <bpmn2:interface id="Interface_1" name="CreditAgencyInterface">
-    <bpmn2:operation id="Operation_1" name="checkCredit">
+  <bpmn2:error id="Error_3" errorCode="InsufficientCredit" name="InsufficientCredit" structureRef="ItemDefinition_6"/>
+  <bpmn2:interface id="CreditAgencyInterface" name="CreditAgencyInterface">
+    <bpmn2:operation id="creditCheck" name="creditCheck">
       <bpmn2:inMessageRef>Message_2</bpmn2:inMessageRef>
       <bpmn2:outMessageRef>Message_4</bpmn2:outMessageRef>
       <bpmn2:errorRef>Error_1</bpmn2:errorRef>
     </bpmn2:operation>
   </bpmn2:interface>
-  <bpmn2:interface id="Interface_2" name="LogisticsInterface">
-    <bpmn2:operation id="Operation_2" name="deliver">
+  <bpmn2:interface id="LogisticsInterface" name="LogisticsInterface">
+    <bpmn2:operation id="delivery" name="delivery">
       <bpmn2:inMessageRef>Message_7</bpmn2:inMessageRef>
       <bpmn2:outMessageRef>Message_8</bpmn2:outMessageRef>
+    </bpmn2:operation>
+  </bpmn2:interface>
+  <bpmn2:interface id="StoreInterface" name="StoreInterface">
+    <bpmn2:operation id="buy" name="buy">
+      <bpmn2:inMessageRef>Message_1</bpmn2:inMessageRef>
+      <bpmn2:outMessageRef>Message_9</bpmn2:outMessageRef>
+      <bpmn2:errorRef>Error_2</bpmn2:errorRef>
+      <bpmn2:errorRef>Error_3</bpmn2:errorRef>
     </bpmn2:operation>
   </bpmn2:interface>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
@@ -275,76 +275,76 @@
         <dc:Bounds height="20.0" width="150.0" x="1580.0" y="720.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_1" bpmnElement="SequenceFlow_1" sourceElement="BPMNShape_StartEvent_1" targetElement="BPMNShape_1">
-        <di:waypoint xsi:type="dc:Point" x="86.0" y="316.0"/>
-        <di:waypoint xsi:type="dc:Point" x="140.0" y="315.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="86.0" y="316.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="140.0" y="315.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2" sourceElement="BPMNShape_1" targetElement="BPMNShape_ChoreographyTask_1">
-        <di:waypoint xsi:type="dc:Point" x="290.0" y="315.0"/>
-        <di:waypoint xsi:type="dc:Point" x="390.0" y="315.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="290.0" y="315.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="390.0" y="315.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_3" bpmnElement="SequenceFlow_3" sourceElement="BPMNShape_ChoreographyTask_1" targetElement="BPMNShape_ExclusiveGateway_1">
-        <di:waypoint xsi:type="dc:Point" x="540.0" y="315.0"/>
-        <di:waypoint xsi:type="dc:Point" x="600.0" y="315.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="540.0" y="315.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="600.0" y="315.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_4" bpmnElement="SequenceFlow_4" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ChoreographyTask_2">
-        <di:waypoint xsi:type="dc:Point" x="625.0" y="290.0"/>
-        <di:waypoint xsi:type="dc:Point" x="625.0" y="174.0"/>
-        <di:waypoint xsi:type="dc:Point" x="740.0" y="175.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="625.0" y="290.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="625.0" y="174.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="740.0" y="175.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_ExclusiveGateway_1" targetElement="BPMNShape_ChoreographyTask_3">
-        <di:waypoint xsi:type="dc:Point" x="625.0" y="341.0"/>
-        <di:waypoint xsi:type="dc:Point" x="625.0" y="527.0"/>
-        <di:waypoint xsi:type="dc:Point" x="740.0" y="528.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="625.0" y="341.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="625.0" y="527.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="740.0" y="528.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_6" bpmnElement="SequenceFlow_6" sourceElement="BPMNShape_ChoreographyTask_3" targetElement="BPMNShape_ExclusiveGateway_2">
-        <di:waypoint xsi:type="dc:Point" x="890.0" y="528.0"/>
-        <di:waypoint xsi:type="dc:Point" x="970.0" y="528.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="890.0" y="528.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="970.0" y="528.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_7" bpmnElement="SequenceFlow_7" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_ChoreographyTask_5">
-        <di:waypoint xsi:type="dc:Point" x="995.0" y="503.0"/>
-        <di:waypoint xsi:type="dc:Point" x="995.0" y="395.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1120.0" y="395.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="995.0" y="503.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="995.0" y="395.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1120.0" y="395.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_8" bpmnElement="SequenceFlow_8" sourceElement="BPMNShape_ExclusiveGateway_2" targetElement="BPMNShape_ChoreographyTask_6">
-        <di:waypoint xsi:type="dc:Point" x="995.0" y="554.0"/>
-        <di:waypoint xsi:type="dc:Point" x="995.0" y="664.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1120.0" y="665.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="995.0" y="554.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="995.0" y="664.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1120.0" y="665.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9" sourceElement="BPMNShape_ChoreographyTask_2" targetElement="BPMNShape_ChoreographyTask_4">
-        <di:waypoint xsi:type="dc:Point" x="890.0" y="175.0"/>
-        <di:waypoint xsi:type="dc:Point" x="990.0" y="175.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="890.0" y="175.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="990.0" y="175.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_10" bpmnElement="SequenceFlow_10" sourceElement="BPMNShape_ExclusiveGateway_3" targetElement="BPMNShape_ExclusiveGateway_4">
-        <di:waypoint xsi:type="dc:Point" x="1841.0" y="521.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1884.0" y="523.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1885.0" y="381.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1841.0" y="521.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1884.0" y="523.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1885.0" y="381.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_11" bpmnElement="SequenceFlow_11" sourceElement="BPMNShape_ChoreographyTask_4" targetElement="BPMNShape_ExclusiveGateway_4">
-        <di:waypoint xsi:type="dc:Point" x="1140.0" y="175.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1885.0" y="175.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1885.0" y="330.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1140.0" y="175.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1885.0" y="175.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1885.0" y="330.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_12" bpmnElement="SequenceFlow_12" sourceElement="BPMNShape_ChoreographyTask_8" targetElement="BPMNShape_ExclusiveGateway_3">
-        <di:waypoint xsi:type="dc:Point" x="1730.0" y="665.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1815.0" y="664.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1815.0" y="547.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1730.0" y="665.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1815.0" y="664.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1815.0" y="547.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_13" bpmnElement="SequenceFlow_13" sourceElement="BPMNShape_ChoreographyTask_5" targetElement="BPMNShape_ExclusiveGateway_3">
-        <di:waypoint xsi:type="dc:Point" x="1270.0" y="395.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1815.0" y="395.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1815.0" y="496.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1270.0" y="395.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1815.0" y="395.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1815.0" y="496.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_14" bpmnElement="SequenceFlow_14" sourceElement="BPMNShape_ChoreographyTask_6" targetElement="BPMNShape_ChoreographyTask_7">
-        <di:waypoint xsi:type="dc:Point" x="1270.0" y="665.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1350.0" y="665.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1270.0" y="665.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1350.0" y="665.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_15" bpmnElement="SequenceFlow_15" sourceElement="BPMNShape_ChoreographyTask_7" targetElement="BPMNShape_ChoreographyTask_8">
-        <di:waypoint xsi:type="dc:Point" x="1500.0" y="665.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1580.0" y="665.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1500.0" y="665.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1580.0" y="665.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_16" bpmnElement="SequenceFlow_16" sourceElement="BPMNShape_ExclusiveGateway_4" targetElement="BPMNShape_EndEvent_1">
-        <di:waypoint xsi:type="dc:Point" x="1911.0" y="355.0"/>
-        <di:waypoint xsi:type="dc:Point" x="1990.0" y="354.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1911.0" y="355.0"/>
+        <ns4:waypoint xsi:type="dc:Point" x="1990.0" y="354.0"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

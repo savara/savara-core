@@ -67,7 +67,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 		
 		try {
 			// Create definition for contract's target namespace
-			javax.wsdl.Definition main=getDefinition(ret, contract, contract.getNamespace(), wsdlBinding);
+			javax.wsdl.Definition main=getDefinition(ret, contract, contract.getNamespace(),
+									wsdlBinding, handler);
 			
 			// If no definition, then return
 			if (main == null) {
@@ -120,11 +121,12 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 	 * @param contract The contract
 	 * @param targetNamespace The target namespace
 	 * @param wsdlBinding The WSDL binding to use, or null if no binding
+	 * @param handler The feedback handler
 	 * @return The WSDL definition for the target namespace, or null if unable to find or create
 	 */
 	protected javax.wsdl.Definition getDefinition(java.util.List<javax.wsdl.Definition> wsdls,
 				org.savara.contract.model.Contract contract, String targetNamespace,
-				WSDLBinding wsdlBinding) {
+				WSDLBinding wsdlBinding, FeedbackHandler handler) {
 		javax.wsdl.Definition ret=null;
 		
 		if (targetNamespace != null) {
@@ -150,6 +152,10 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 					wsdls.add(ret);
 				}
 			}
+		} else {
+			handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
+					"org.savara.wsdl.Messages"),
+						"SAVARA-WSDL-00002"), null);
 		}
 		
 		return(ret);
@@ -216,7 +222,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 		javax.wsdl.PortType ret=null;
 		
 		if (intf != null) {
-			javax.wsdl.Definition defn=getDefinition(wsdls, contract, intf.getNamespace(), wsdlBinding);
+			javax.wsdl.Definition defn=getDefinition(wsdls, contract, intf.getNamespace(),
+										wsdlBinding, handler);
 
 			if (defn != null) {
 				ret = defn.createPortType();
@@ -265,7 +272,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 		javax.wsdl.Binding ret=null;
 		
 		if (intf != null) {
-			javax.wsdl.Definition defn=getDefinition(wsdls, contract, intf.getNamespace(), wsdlBinding);
+			javax.wsdl.Definition defn=getDefinition(wsdls, contract, intf.getNamespace(),
+									wsdlBinding, handler);
 
 			if (defn != null) {
 				ret = defn.createBinding();
@@ -322,7 +330,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 		javax.wsdl.Definition defn=null;
 		
 		if (portType != null) {
-			defn = getDefinition(wsdls, contract, portType.getQName().getNamespaceURI(), wsdlBinding);
+			defn = getDefinition(wsdls, contract, portType.getQName().getNamespaceURI(),
+								wsdlBinding, handler);
 		}
 
 		if (defn != null && mep != null) {
@@ -404,7 +413,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 		javax.wsdl.Definition defn=null;
 		
 		if (binding != null) {
-			defn = getDefinition(wsdls, contract, binding.getQName().getNamespaceURI(), wsdlBinding);
+			defn = getDefinition(wsdls, contract, binding.getQName().getNamespaceURI(),
+									wsdlBinding, handler);
 		}
 
 		if (defn != null && mep != null) {
@@ -523,7 +533,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 				javax.xml.namespace.QName qname=
 					javax.xml.namespace.QName.valueOf(td.getDataType());
 				javax.wsdl.Definition defn=
-					getDefinition(wsdls, contract, msgname.getNamespaceURI(), wsdlBinding);
+					getDefinition(wsdls, contract, msgname.getNamespaceURI(),
+							wsdlBinding, handler);
 						
 				if (defn != null && qname != null &&
 						(ret = defn.getMessage(msgname)) == null) {

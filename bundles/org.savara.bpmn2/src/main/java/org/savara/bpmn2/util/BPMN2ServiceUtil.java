@@ -85,7 +85,7 @@ public class BPMN2ServiceUtil {
 					processNode(startEvent, ret, new java.util.Vector<InteractionInfo>(),
 								new ModelInfo(choreo.getParticipant(),
 									choreo.getMessageFlow(), choreo.getFlowElement(),
-									defns.getRootElement()));
+									defns.getRootElement(), defns.getTargetNamespace()));
 				}
 			}
 		}
@@ -219,7 +219,7 @@ public class BPMN2ServiceUtil {
 			operation.setId(opname);
 			operation.setName(opname);
 			
-			operation.setInMessageRef(new QName(null, req.getMessage().getId()));
+			operation.setInMessageRef(new QName(modelInfo.getTargetNamespace(), req.getMessage().getId()));
 			
 			intf.getOperation().add(operation);
 		}
@@ -229,7 +229,7 @@ public class BPMN2ServiceUtil {
 			TError err=modelInfo.getErrorForItemDefinition(resp.getMessage().getItemRef());
 			
 			if (err != null) {
-				QName errQName=new QName(null, err.getId());
+				QName errQName=new QName(modelInfo.getTargetNamespace(), err.getId());
 				if (!operation.getErrorRef().contains(errQName)) {
 					operation.getErrorRef().add(errQName);
 				}
@@ -238,7 +238,8 @@ public class BPMN2ServiceUtil {
 				
 				// Check if response message already exists on operation
 				if (operation.getOutMessageRef() == null) {
-					operation.setOutMessageRef(new QName(null, resp.getMessage().getId()));
+					operation.setOutMessageRef(new QName(modelInfo.getTargetNamespace(),
+								resp.getMessage().getId()));
 					
 				/* NOTE: Currently don't handle adding error objects, as this would
 				 * modify the model. User has to ensure fault message types have an appropriate
@@ -259,7 +260,7 @@ public class BPMN2ServiceUtil {
 						err.setStructureRef(resp.getMessage().getItemRef());
 						modelInfo.addError(err);
 						
-						operation.getErrorRef().add(new QName(null, err.getId()));
+						operation.getErrorRef().add(new QName(modelInfo.getTargetNamespace(), err.getId()));
 					}
 				*/
 				}
@@ -317,7 +318,8 @@ public class BPMN2ServiceUtil {
 			}
 		});
 		
-		ModelInfo modelInfo=new ModelInfo(null, null, null, defns.getRootElement());
+		ModelInfo modelInfo=new ModelInfo(null, null, null, defns.getRootElement(),
+							defns.getTargetNamespace());
 		
 		for (TParticipant participant : participants) {
 			TInterface intf=interfaces.get(participant);
@@ -327,7 +329,8 @@ public class BPMN2ServiceUtil {
 				// Add interface to model and reference it from participant
 				defns.getRootElement().add(factory.createInterface(intf));
 				
-				participant.getInterfaceRef().add(new QName(null, intf.getId()));
+				participant.getInterfaceRef().add(
+						new QName(modelInfo.getTargetNamespace(), intf.getId()));
 			} else {				
 				for (TOperation op : intf.getOperation()) {
 					// Find operation
@@ -441,15 +444,22 @@ public class BPMN2ServiceUtil {
 		private List<TMessageFlow> _messageFlows=null;
 		private List<JAXBElement<? extends TFlowElement>> _flowElements;
 		private List<JAXBElement<? extends TRootElement>> _rootElements;
+		private String _targetNamespace=null;
 		private ObjectFactory _factory=new ObjectFactory();
 		
 		public ModelInfo(List<TParticipant> participants, List<TMessageFlow> messageFlows,
 				List<JAXBElement<? extends TFlowElement>> flowElements,
-				List<JAXBElement<? extends TRootElement>> rootElements) {
+				List<JAXBElement<? extends TRootElement>> rootElements,
+				String targetNamespace) {
 			_participants = participants;
 			_messageFlows = messageFlows;
 			_flowElements = flowElements;
 			_rootElements = rootElements;
+			_targetNamespace = targetNamespace;
+		}
+		
+		public String getTargetNamespace() {
+			return (_targetNamespace);
 		}
 		
 		public void addError(TError err) {

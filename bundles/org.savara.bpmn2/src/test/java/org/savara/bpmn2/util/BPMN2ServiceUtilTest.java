@@ -53,7 +53,8 @@ public class BPMN2ServiceUtilTest {
 				fail("Expected 3 participants: "+intfs.size());
 			}
 			
-			ModelInfo modelInfo=new ModelInfo(null, null, null, defns.getRootElement());
+			ModelInfo modelInfo=new ModelInfo(null, null, null, defns.getRootElement(),
+								defns.getTargetNamespace());
 			
 			for (TParticipant p : intfs.keySet()) {
 				TInterface intf=intfs.get(p);

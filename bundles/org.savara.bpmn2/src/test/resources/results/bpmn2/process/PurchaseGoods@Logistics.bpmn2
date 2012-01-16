@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.savara.org" targetNamespace="http://www.savara.org">
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.savara.org/examples" targetNamespace="http://www.savara.org/examples">
     <bpmn2:collaboration id="MID1">
         <bpmn2:participant id="MID3" name="Logistics" processRef="MID2"/>
     </bpmn2:collaboration>
@@ -9,11 +9,11 @@
         <bpmn2:endEvent id="MID5">
             <bpmn2:incoming>MID10</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: deliver(DeliveryRequest) from Store" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: delivery(DeliveryRequest) from Store" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID9</bpmn2:incoming>
             <bpmn2:outgoing>MID8</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Send: deliver(DeliveryConfirmed) to Store" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Send: delivery(DeliveryConfirmed) to Store" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID8</bpmn2:incoming>
             <bpmn2:outgoing>MID10</bpmn2:outgoing>
         </bpmn2:task>

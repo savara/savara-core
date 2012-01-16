@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.savara.org" targetNamespace="http://www.savara.org">
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.savara.org/examples" targetNamespace="http://www.savara.org/examples">
     <bpmn2:collaboration id="MID1">
         <bpmn2:participant id="MID3" name="Store" processRef="MID2"/>
     </bpmn2:collaboration>
@@ -13,7 +13,7 @@
             <bpmn2:incoming>MID33</bpmn2:incoming>
             <bpmn2:outgoing>MID19</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Send: checkCredit(CreditCheck) to CreditAgency" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Send: creditCheck(CreditCheck) to CreditAgency" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID19</bpmn2:incoming>
             <bpmn2:outgoing>MID32</bpmn2:outgoing>
         </bpmn2:task>
@@ -27,7 +27,7 @@
             <bpmn2:incoming>MID31</bpmn2:incoming>
             <bpmn2:outgoing>MID34</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Receive: checkCredit(CustomerUnknown) from CreditAgency" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Receive: creditCheck(CustomerUnknown) from CreditAgency" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID28</bpmn2:incoming>
             <bpmn2:outgoing>MID20</bpmn2:outgoing>
         </bpmn2:task>
@@ -35,7 +35,7 @@
             <bpmn2:incoming>MID20</bpmn2:incoming>
             <bpmn2:outgoing>MID29</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID12" name="Receive: checkCredit(CreditRating) from CreditAgency" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID12" name="Receive: creditCheck(CreditRating) from CreditAgency" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID30</bpmn2:incoming>
             <bpmn2:outgoing>MID27</bpmn2:outgoing>
         </bpmn2:task>
@@ -53,11 +53,11 @@
             <bpmn2:incoming>MID23</bpmn2:incoming>
             <bpmn2:outgoing>MID24</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" name="Send: deliver(DeliveryRequest) to Logistics" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" name="Send: delivery(DeliveryRequest) to Logistics" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID25</bpmn2:incoming>
             <bpmn2:outgoing>MID21</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" name="Receive: deliver(DeliveryConfirmed) from Logistics" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" name="Receive: delivery(DeliveryConfirmed) from Logistics" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID21</bpmn2:incoming>
             <bpmn2:outgoing>MID22</bpmn2:outgoing>
         </bpmn2:task>

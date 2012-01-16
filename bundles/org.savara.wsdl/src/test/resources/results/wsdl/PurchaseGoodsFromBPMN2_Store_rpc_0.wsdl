@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="Store" targetNamespace="http://www.savara.org" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.savara.org" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="Store" targetNamespace="http://www.savara.org/examples" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.savara.org/examples" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:message name="buyResponse">
+    <wsdl:part name="content" type="ns1:BuyConfirmed">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="InsufficientCreditFault">
     <wsdl:part name="content" type="ns1:BuyFailed">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="AccountNotFoundFault">
     <wsdl:part name="content" type="ns1:AccountNotFound">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="buyResponse">
-    <wsdl:part name="content" type="ns1:BuyConfirmed">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="buyRequest">
@@ -33,16 +33,16 @@
     <wsdl:operation name="buy">
       <soap:operation soapAction="" style="rpc"/>
       <wsdl:input>
-        <soap:body use="literal" namespace="http://www.savara.org"/>
+        <soap:body use="literal" namespace="http://www.savara.org/examples"/>
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://www.savara.org"/>
+        <soap:body use="literal" namespace="http://www.savara.org/examples"/>
       </wsdl:output>
       <wsdl:fault name="AccountNotFound">
-        <soap:fault name="AccountNotFound" use="literal" namespace="http://www.savara.org"/>
+        <soap:fault name="AccountNotFound" use="literal" namespace="http://www.savara.org/examples"/>
       </wsdl:fault>
       <wsdl:fault name="InsufficientCredit">
-        <soap:fault name="InsufficientCredit" use="literal" namespace="http://www.savara.org"/>
+        <soap:fault name="InsufficientCredit" use="literal" namespace="http://www.savara.org/examples"/>
       </wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>

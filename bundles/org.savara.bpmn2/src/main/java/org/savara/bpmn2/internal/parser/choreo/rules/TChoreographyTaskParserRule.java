@@ -207,7 +207,9 @@ public class TChoreographyTaskParserRule implements BPMN2ParserRule {
 							interaction.getMessageSignature().setOperation(op.getName());
 							break;
 						} else if (err != null &&
-								op.getErrorRef().contains(new QName(null, err.getId()))) {
+								op.getErrorRef().contains(new QName(
+										context.getScope().getDefinitions().getTargetNamespace(),
+										err.getId()))) {
 							annotation=new Annotation(AnnotationDefinitions.CORRELATION);
 							annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY,
 										op.getName());
