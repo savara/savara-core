@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions name="CreditAgency" targetNamespace="http://www.savara.org/examples" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.savara.org/examples" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:message name="CustomerUnknownFault">
-    <wsdl:part name="content" type="ns3:CustomerUnknown">
+    <wsdl:part name="content" element="ns3:CustomerUnknown">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="creditCheckRequest">
-    <wsdl:part name="content" type="ns3:CreditCheckRequest">
+    <wsdl:part name="content" element="ns3:CreditCheckRequest">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="creditCheckResponse">
-    <wsdl:part name="content" type="ns3:CreditRating">
+    <wsdl:part name="content" element="ns3:CreditRating">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="CreditAgency">

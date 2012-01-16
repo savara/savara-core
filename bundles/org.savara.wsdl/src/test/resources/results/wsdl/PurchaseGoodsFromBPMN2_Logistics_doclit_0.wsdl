@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions name="Logistics" targetNamespace="http://www.savara.org/examples" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.savara.org/examples" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:message name="deliveryRequest">
-    <wsdl:part name="content" type="ns2:DeliveryRequest">
+    <wsdl:part name="content" element="ns2:DeliveryRequest">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="deliveryResponse">
-    <wsdl:part name="content" type="ns2:DeliveryConfirmed">
+    <wsdl:part name="content" element="ns2:DeliveryConfirmed">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="Logistics">

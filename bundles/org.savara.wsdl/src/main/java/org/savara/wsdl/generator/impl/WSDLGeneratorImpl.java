@@ -565,7 +565,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 		if (AnnotationDefinitions.getAnnotation(td.getAnnotations(),
 						AnnotationDefinitions.XSD_ELEMENT) != null) {
 			part.setElementName(qname);					
-		} else {
+		} else if (AnnotationDefinitions.getAnnotation(td.getAnnotations(),
+				AnnotationDefinitions.XSD_TYPE) != null) {
 			part.setTypeName(qname);
 			
 			if (!wsdlBinding.isXSDTypeMessagePartSupported()) {
@@ -573,6 +574,13 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 				handler.error(MessageFormatter.format(java.util.PropertyResourceBundle.getBundle(
 						"org.savara.wsdl.Messages"),
 							"SAVARA-WSDL-00001", wsdlBinding.getName(), qname.toString()), null);
+			}
+		} else {
+			// No annotation, so use the appropriate attribute for the binding type
+			if (wsdlBinding.isXSDTypeMessagePartSupported()) {
+				part.setTypeName(qname);
+			} else {
+				part.setElementName(qname);					
 			}
 		}
 

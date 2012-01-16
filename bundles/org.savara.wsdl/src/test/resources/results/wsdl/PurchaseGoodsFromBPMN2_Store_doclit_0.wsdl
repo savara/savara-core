@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions name="Store" targetNamespace="http://www.savara.org/examples" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.savara.org/examples" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:message name="buyResponse">
-    <wsdl:part name="content" type="ns1:BuyConfirmed">
+    <wsdl:part name="content" element="ns1:BuyConfirmed">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="InsufficientCreditFault">
-    <wsdl:part name="content" type="ns1:BuyFailed">
+    <wsdl:part name="content" element="ns1:BuyFailed">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="AccountNotFoundFault">
-    <wsdl:part name="content" type="ns1:AccountNotFound">
+    <wsdl:part name="content" element="ns1:AccountNotFound">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="buyRequest">
-    <wsdl:part name="content" type="ns1:BuyRequest">
+    <wsdl:part name="content" element="ns1:BuyRequest">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="Store">
