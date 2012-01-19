@@ -1,0 +1,10 @@
+Contract {http://www.savara.org/examples/CreditAgency}CreditAgency {
+	Namespace prefix=ns3 uri=http://www.jboss.org/examples/creditAgency schemaLocation=creditAgency.xsd
+	Namespace prefix=pns2 uri=http://www.savara.org/examples/CreditAgency schemaLocation=null
+	TypeDef CreditCheck type={http://www.jboss.org/examples/creditAgency}CreditCheckRequest location=null typeSystem=xsd
+	TypeDef CreditRating type={http://www.jboss.org/examples/creditAgency}CreditRating location=null typeSystem=xsd
+	TypeDef CustomerUnknown type={http://www.jboss.org/examples/creditAgency}CustomerUnknown location=null typeSystem=xsd
+	Interface {http://www.savara.org/examples/CreditAgency}CreditAgency {
+		RequestResponseMEP creditCheck( CreditCheck ) : CreditRating Fault CustomerUnknown( CustomerUnknown ) 
+	}
+}

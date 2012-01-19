@@ -131,6 +131,7 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 	
 	protected void initialize(ProtocolModel pm, org.savara.bpmn2.model.TDefinitions defns) {
 		java.util.Map<String, String> nsprefix=new java.util.HashMap<String, String>();
+		java.util.Map<String, String> nslocation=new java.util.HashMap<String, String>();
 		
 		for (JAXBElement<? extends TRootElement> elem : defns.getRootElement()) {
 			
@@ -172,7 +173,7 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 					if (imp.getNamespace().equals(itemdefn.getStructureRef().getNamespaceURI())) {
 						
 						if (imp.getLocation() != null) {
-							location = imp.getLocation();	
+							location = imp.getLocation();
 						}
 						
 						break;
@@ -181,6 +182,7 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 				
 				if (location != null) {
 					tilist.setLocation(location);
+					nslocation.put(itemdefn.getStructureRef().getPrefix(), location);
 				}
 				
 				tilist.getTypeImports().add(ti);
@@ -191,6 +193,7 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 		
 		for (String prefix : nsprefix.keySet()) {
 			String ns=nsprefix.get(prefix);
+			String location=nslocation.get(prefix);
 			
 			Annotation pann=new Annotation(AnnotationDefinitions.TYPE);
 
@@ -198,6 +201,11 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 					prefix);
 			pann.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
 					ns);
+			
+			if (location != null) {
+				pann.getProperties().put(AnnotationDefinitions.LOCATION_PROPERTY,
+							location);
+			}
 			
 			pm.getProtocol().getAnnotations().add(pann);
 		}

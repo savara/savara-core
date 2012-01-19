@@ -38,6 +38,15 @@ public class ProtocolToContractGeneratorTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("Protocol->Contract Generator Tests");
 
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromBPMN2", "Buyer", null));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromBPMN2", "Buyer", "CreditAgency"));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromBPMN2", "CreditAgency", null));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromBPMN2", "Logistics", null));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromBPMN2", "Store", null));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromBPMN2", "Store", "Buyer"));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromBPMN2", "Store", "CreditAgency"));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromBPMN2", "Store", "Logistics"));
+        
         suite.addTest(new ProtocolToContractTester("PolicyQuote", "CreditCheckService", null));
         suite.addTest(new ProtocolToContractTester("PolicyQuote", "PolicyQuoteProcessService", null));
         

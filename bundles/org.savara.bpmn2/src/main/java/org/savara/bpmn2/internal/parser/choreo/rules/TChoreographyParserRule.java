@@ -50,6 +50,7 @@ import org.scribble.protocol.util.RoleUtil;
 
 public class TChoreographyParserRule implements BPMN2ParserRule {
 
+	private static final String PARTICIPANT_NAMESPACE_PREFIX = "pns";
 	private static Logger LOG=Logger.getLogger(TChoreographyParserRule.class.getName());
 	
 	/**
@@ -452,26 +453,31 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 		String tns=context.getScope().getDefinitions().getTargetNamespace();
 		
 		if (protocol != null && tns != null && tns.trim().length() > 0) {
+			int count=1;
+			
 			for (Role role : protocol.getRoles()) {
+				String namespace=tns+"/"+role.getName();
+				String prefix=PARTICIPANT_NAMESPACE_PREFIX+count++;
+				
 				Annotation pann=new Annotation(AnnotationDefinitions.NAMESPACE);
 	
 				pann.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
-						tns);
+						namespace);
 				pann.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY,
 						role.getName());
 				
 				protocol.getAnnotations().add(pann);
+				
+				// Add Type import to define namespace prefix for targetNamespace
+				pann = new Annotation(AnnotationDefinitions.TYPE);
+				
+				pann.getProperties().put(AnnotationDefinitions.PREFIX_PROPERTY,
+						prefix);
+				pann.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+						namespace);
+				
+				protocol.getAnnotations().add(pann);
 			}
-			
-			// Add Type import to define namespace prefix for targetNamespace
-			Annotation pann=new Annotation(AnnotationDefinitions.TYPE);
-			
-			pann.getProperties().put(AnnotationDefinitions.PREFIX_PROPERTY,
-					"tns");
-			pann.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
-					tns);
-			
-			protocol.getAnnotations().add(pann);
 		}
 	}
 	

@@ -1,0 +1,3 @@
+Contract {http://www.savara.org/examples/Store}Store {
+	Namespace prefix=pns3 uri=http://www.savara.org/examples/Store schemaLocation=null
+}

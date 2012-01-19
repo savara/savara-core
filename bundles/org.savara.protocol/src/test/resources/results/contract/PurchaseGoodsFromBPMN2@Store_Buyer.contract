@@ -1,0 +1,11 @@
+Contract {http://www.savara.org/examples/Store}Store {
+	Namespace prefix=ns1 uri=http://www.jboss.org/examples/store schemaLocation=store.xsd
+	Namespace prefix=pns3 uri=http://www.savara.org/examples/Store schemaLocation=null
+	TypeDef AccountNotFound type={http://www.jboss.org/examples/store}AccountNotFound location=null typeSystem=xsd
+	TypeDef BuyConfirmed type={http://www.jboss.org/examples/store}BuyConfirmed location=null typeSystem=xsd
+	TypeDef BuyFailed type={http://www.jboss.org/examples/store}BuyFailed location=null typeSystem=xsd
+	TypeDef BuyRequest type={http://www.jboss.org/examples/store}BuyRequest location=null typeSystem=xsd
+	Interface {http://www.savara.org/examples/Store}Store {
+		RequestResponseMEP buy( BuyRequest ) : BuyConfirmed Fault AccountNotFound( AccountNotFound ) Fault InsufficientCredit( BuyFailed ) 
+	}
+}
