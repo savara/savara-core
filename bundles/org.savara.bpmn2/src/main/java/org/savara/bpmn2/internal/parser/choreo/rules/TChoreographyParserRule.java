@@ -191,6 +191,8 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						parParent.getContents().addAll(parIndex,
 									par.getPaths().get(0).getContents());
 						
+						context.getScope().getParallelReviewList().remove(par);
+
 						// Substitute labels in join with sync label in connected join
 						Join otherJoin=(Join)context.getScope().getJoin(sync.getLabel());
 						
@@ -232,6 +234,8 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 					parParent.getContents().addAll(parIndex,
 								par.getPaths().get(0).getContents());
 
+					context.getScope().getParallelReviewList().remove(par);
+
 					// Need to find and remove sync's for join
 					Join join=(Join)joinBlock.getContents().get(0);
 					
@@ -241,6 +245,22 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						((Block)sync.getParent()).remove(sync);
 					}
 				}
+			}
+		}
+		
+		// Check remaining parallels
+		for (Parallel par : context.getScope().getParallelReviewList()) {
+			if (par.getPaths().size() < 2) {
+				Block parParent=(Block)par.getParent();
+				int parIndex=parParent.indexOf(par);
+
+				if (par.getPaths().size() == 1) {
+					parParent.getContents().addAll(parIndex,
+							par.getPaths().get(0).getContents());					
+				}
+				
+				// Remove parallel
+				parParent.remove(par);
 			}
 		}
 	}
@@ -276,7 +296,6 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 							// Find parallel
 							parent = common.getParent();
 							
-							
 							while (parent != null && (parent instanceof Parallel) == false
 									&& (parent instanceof Protocol) == false) {
 								parent = parent.getParent();
@@ -302,6 +321,8 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 												oldParallel.getPaths().get(0).getContents());
 									}
 									((Block)oldParallel.getParent()).remove(oldParallel);
+									
+									context.getScope().getParallelReviewList().remove(oldParallel);
 								}
 							} else {
 								LOG.severe("Unable to find a containing parallel construct");

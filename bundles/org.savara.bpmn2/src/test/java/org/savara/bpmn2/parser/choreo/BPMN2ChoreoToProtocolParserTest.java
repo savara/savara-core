@@ -35,6 +35,8 @@ public class BPMN2ChoreoToProtocolParserTest {
         TestSuite suite = new TestSuite("BPMN2 Choreo->Protocol Parser Tests");
 
         suite.addTest(new BPMN2ToProtocolTester("PurchaseGoods"));
+        suite.addTest(new BPMN2ToProtocolTester("PurchaseGoodsWithXORJoin"));
+        suite.addTest(new BPMN2ToProtocolTester("PurchaseGoodsWithXORJoinActivity"));
         suite.addTest(new BPMN2ToProtocolTester("ComplexXORJoin"));
         suite.addTest(new BPMN2ToProtocolTester("ComplexANDJoin"));
         
