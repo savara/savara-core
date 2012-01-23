@@ -77,6 +77,12 @@
 				<module>docs</module>
 		    	</modules>
 		</profile>
+		<profile>
+			<id>qa</id>
+		    	<modules>
+				<module>qa</module>
+		    	</modules>
+		</profile>
   	</profiles>
 
 	<modules>
