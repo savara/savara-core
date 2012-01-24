@@ -22,6 +22,8 @@ import org.scribble.protocol.model.CustomActivity;
 /**
  * This class represents the Join construct.
  * 
+ * NOTE: This class is in experimental status. Once join/fork concept has become
+ * stable it will be included in the scribble model.
  */
 public class Join extends CustomActivity {
 

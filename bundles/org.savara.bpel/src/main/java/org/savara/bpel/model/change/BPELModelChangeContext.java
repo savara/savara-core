@@ -39,6 +39,9 @@ public class BPELModelChangeContext extends AbstractModelChangeContext {
 		m_rules.add(new ProtocolModelModelChangeRule());
 		m_rules.add(new RepeatModelChangeRule());
 		m_rules.add(new RunModelChangeRule());
+		m_rules.add(new ParallelModelChangeRule());
+		m_rules.add(new SyncModelChangeRule());
+		m_rules.add(new JoinModelChangeRule());
 	}
 	
 	/**

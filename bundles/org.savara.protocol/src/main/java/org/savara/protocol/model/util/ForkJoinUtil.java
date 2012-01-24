@@ -15,35 +15,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.protocol.model;
+package org.savara.protocol.model.util;
 
+import org.savara.protocol.model.Join;
+import org.savara.protocol.model.Sync;
 import org.scribble.protocol.model.CustomActivity;
+import org.scribble.protocol.model.DefaultVisitor;
+import org.scribble.protocol.model.Parallel;
 
 /**
- * This class represents the Sync construct.
+ * This class provides utility functions related to the join/fork constructs.
  * 
  * NOTE: This class is in experimental status. Once join/fork concept has become
  * stable it will be included in the scribble model.
+ *
  */
-public class Sync extends CustomActivity {
+public class ForkJoinUtil {
 
-	private String _label=null;
-	
 	/**
-	 * This method sets the label associated with the sync.
+	 * This method returns the unique link names associated with the parallel
+	 * construct.
 	 * 
-	 * @param label The label
+	 * @param parallel The parallel construct
+	 * @return The list of unique link names
 	 */
-	public void setLabel(String label) {
-		_label = label;
-	}
-	
-	/**
-	 * This method returns the label associated with the sync.
-	 * 
-	 * @return The label
-	 */
-	public String getLabel() {
-		return (_label);
+	public static java.util.List<String> getLinkNames(Parallel parallel) {
+		final java.util.List<String> ret=new java.util.Vector<String>();
+		
+		parallel.visit(new DefaultVisitor() {
+			
+			public void accept(CustomActivity act) {
+				if (act instanceof Sync) {
+					String linkName = ((Sync)act).getLabel();
+					if (!ret.contains(linkName)) {
+						ret.add(linkName);
+					}
+				} else if (act instanceof Join) {
+					for (String linkName : ((Join)act).getLabels()) {
+						if (!ret.contains(linkName)) {
+							ret.add(linkName);
+						}
+					}
+				}
+			}
+		});
+		
+		return (ret);
 	}
 }
