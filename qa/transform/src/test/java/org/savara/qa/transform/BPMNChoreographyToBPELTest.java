@@ -40,6 +40,8 @@ public class BPMNChoreographyToBPELTest {
         TestSuite suite = new TestSuite("BPMN2 Choreo->BPEL Transform Tests");
 
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "Store"));
+        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency"));
+        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
         
         return suite;
     }
@@ -71,7 +73,7 @@ public class BPMNChoreographyToBPELTest {
     		// Run test
     		result.startTest(this);
     		
-    		String filename="models/bpmn/"+m_name+".bpmn";
+    		String filename="qamodels/bpmn/"+m_name+".bpmn";
     		
     		java.net.URL url=
     			ClassLoader.getSystemResource(filename);
@@ -186,7 +188,7 @@ public class BPMNChoreographyToBPELTest {
     	protected void checkResults(TestResult result, String bpel) {
     		boolean f_valid=false;
 
-    		String filename="results/bpel/"+m_name+"@"+m_role+".bpel";
+    		String filename="qaresults/bpel/"+m_name+"@"+m_role+".bpel";
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);
@@ -218,7 +220,7 @@ public class BPMNChoreographyToBPELTest {
     		}
     		
     		if (f_valid == false) {
-    			String srcfile="models/bpmn/"+m_name+".bpmn";
+    			String srcfile="qamodels/bpmn/"+m_name+".bpmn";
     			
     			java.net.URL url=ClassLoader.getSystemResource(srcfile);
     			
@@ -240,7 +242,7 @@ public class BPMNChoreographyToBPELTest {
     				if (f != null && f.exists()) {
     					f = f.getParentFile().getParentFile().getParentFile();
     					
-    					java.io.File resultsDir=new java.io.File(f, "results/bpel");
+    					java.io.File resultsDir=new java.io.File(f, "qaresults/bpel");
     					
     					if (resultsDir.exists() == false) {
     						resultsDir.mkdirs();

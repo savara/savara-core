@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:pns1="http://www.savara.org/examples/Buyer" xmlns:pns2="http://www.savara.org/examples/CreditAgency" xmlns:pns3="http://www.savara.org/examples/Store" xmlns:pns4="http://www.savara.org/examples/Logistics" name="PurchaseGoods_Logistics" targetNamespace="http://www.savara.org/examples/Logistics">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_Logistics.wsdl" namespace="http://www.savara.org/examples/Logistics"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_LogisticsArtifacts.wsdl" namespace="http://www.savara.org/examples/Logistics"/>
+    <partnerLinks>
+        <partnerLink myRole="Logistics" name="StoreToLogistics" partnerLinkType="pns4:StoreToLogisticsServiceLT"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="pns4:deliveryRequest" name="deliveryRequestVar"/>
+        <variable messageType="pns4:deliveryResponse" name="deliveryResponseVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_DeliveryRequest" operation="delivery" partnerLink="StoreToLogistics" portType="pns4:Logistics" variable="deliveryRequestVar"/>
+        <reply name="Send_DeliveryConfirmed" operation="delivery" partnerLink="StoreToLogistics" portType="pns4:Logistics" variable="deliveryResponseVar"/>
+    </sequence>
+</process>
