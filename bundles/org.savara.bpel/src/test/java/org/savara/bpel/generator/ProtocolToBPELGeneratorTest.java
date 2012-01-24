@@ -42,7 +42,6 @@ public class ProtocolToBPELGeneratorTest {
         
         // TODO Currently fail due to Savara specific sync/fork constructs - have commented them out
         suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency"));
-        /*
         suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "Store"));
         suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
         
@@ -72,7 +71,7 @@ public class ProtocolToBPELGeneratorTest {
         suite.addTest(new ProtocolToBPELTester("ReqRespFault", "Seller"));
         
         suite.addTest(new ProtocolToBPELTester("PolicyQuote", "PolicyQuoteProcessService"));  
-*/
+
         return suite;
     }
     
