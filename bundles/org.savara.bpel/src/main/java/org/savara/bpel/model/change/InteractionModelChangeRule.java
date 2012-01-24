@@ -239,6 +239,10 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 					if (context.getParent() instanceof TSequence) {
 						((TSequence)context.getParent()).getActivity().add(scope);
 					}
+										
+					context.getProperties().put(BPELDefinitions.BPEL_FAULT_SCOPE_PROPERTY, scope);
+					context.getProperties().put(BPELDefinitions.BPEL_FAULT_SCOPE_PARENT_PROPERTY,
+												context.getParent());
 					
 					TFaultHandlers fhs=new TFaultHandlers();
 					
@@ -248,8 +252,6 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 					scope.setFaultHandlers(fhs);
 					
 					context.setParent(seq);
-					
-					context.getProperties().put(BPELDefinitions.BPEL_SCOPE_PROPERTY, scope);
 				}
 				
 				act = new TInvoke();
@@ -376,6 +378,34 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 					((TReceive)act).setCreateInstance(TBoolean.YES);
 				}
 			}
+		} else if (!InteractionUtil.isFaultResponse(interaction)) {
+			
+			// Make sure variable exists
+			getVariable(bpelModel, varName, qname);
+			
+			// Retrieve the fault scope and parent
+			TScope scope=(TScope)context.getProperties().get(BPELDefinitions.BPEL_FAULT_SCOPE_PROPERTY);
+			TSequence parent=(TSequence)context.getProperties().get(BPELDefinitions.BPEL_FAULT_SCOPE_PARENT_PROPERTY);
+			
+			int pos=parent.getActivity().indexOf(scope);
+			
+			// Move scope to current location, and place the second+ activities in the scope
+			// at the location where the scope was originally - having the effort of
+			// relocating the scope/fault handlers/invoke to the location of the normal
+			// response
+			parent.getActivity().remove(scope);
+			((TSequence)context.getParent()).getActivity().add(scope);
+			
+			TSequence scopedSeq=scope.getSequence();
+			
+			while (scopedSeq.getActivity().size() > 1) {
+				TActivity scopedAct=(TActivity)scopedSeq.getActivity().get(1);
+				scopedSeq.getActivity().remove(1);
+				
+				parent.getActivity().add(pos++, scopedAct);
+			}
+			
+			context.setParent(scopedSeq);
 		}
 		
 		// TODO: Possibly if the channel is set, then

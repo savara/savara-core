@@ -40,10 +40,10 @@ public class ProtocolToBPELGeneratorTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("Protocol->BPEL Generator Tests");
         
-        // TODO Currently fail due to Savara specific sync/fork constructs
-        //suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency"));
-        //suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "Store"));
-        //suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
+        // TODO Currently fail due to Savara specific sync/fork constructs - have commented them out
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "Store"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
         
         suite.addTest(new ProtocolToBPELTester("PurchaseGoodsFromBPMN2", "CreditAgency"));
         suite.addTest(new ProtocolToBPELTester("PurchaseGoodsFromBPMN2", "Store"));

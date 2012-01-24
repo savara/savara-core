@@ -21,20 +21,12 @@
     <sequence>
         <receive createInstance="yes" name="Receive_BuyRequest" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="buyRequestVar"/>
         <flow>
-            <links>
-                <link name="L11"/>
-                <link name="L13"/>
-            </links>
             <sequence>
                 <scope>
                     <faultHandlers>
                         <catch faultMessageType="pns2:CustomerUnknownFault" faultName="pns2:CustomerUnknown" faultVariable="CustomerUnknownFaultVar">
                             <sequence>
-<reply faultName="pns3:AccountNotFound" name="Send_AccountNotFound" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="AccountNotFoundFaultVar">
-    <sources>
-        <source linkName="L11"/>
-    </sources>
-</reply>
+<reply faultName="pns3:AccountNotFound" name="Send_AccountNotFound" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="AccountNotFoundFaultVar"/>
                             </sequence>
                         </catch>
                     </faultHandlers>
@@ -42,11 +34,7 @@
                         <invoke inputVariable="creditCheckRequestVar" name="Send_CreditCheck" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgency"/>
                         <if>
                             <sequence>
-<reply faultName="pns3:InsufficientCredit" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="InsufficientCreditFaultVar">
-    <sources>
-        <source linkName="L13"/>
-    </sources>
-</reply>
+<reply faultName="pns3:InsufficientCredit" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="InsufficientCreditFaultVar"/>
                             </sequence>
                             <else>
 <sequence>
@@ -59,10 +47,6 @@
                 </scope>
             </sequence>
             <sequence>
-                <targets>
-                    <target linkName="L11"/>
-                    <target linkName="L13"/>
-                </targets>
                 <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="buyResponseVar"/>
             </sequence>
         </flow>

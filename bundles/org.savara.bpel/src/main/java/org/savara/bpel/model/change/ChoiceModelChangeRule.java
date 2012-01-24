@@ -145,7 +145,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 			if (context.getParent() instanceof TSequence) {
 				// Find fault handler
 				TSequence seq=(TSequence)context.getParent();
-				TScope scope=(TScope)context.getProperties().get(BPELDefinitions.BPEL_SCOPE_PROPERTY);
+				TScope scope=(TScope)context.getProperties().get(BPELDefinitions.BPEL_FAULT_SCOPE_PROPERTY);
 				
 				if (scope == null) {
 					TSequence newseq = new TSequence();
@@ -165,7 +165,8 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 					scope = new TScope();
 					scope.setFaultHandlers(new TFaultHandlers());
 
-					context.getProperties().put(BPELDefinitions.BPEL_SCOPE_PROPERTY, scope);
+					context.getProperties().put(BPELDefinitions.BPEL_FAULT_SCOPE_PROPERTY, scope);
+					context.getProperties().put(BPELDefinitions.BPEL_FAULT_SCOPE_PARENT_PROPERTY, seq);
 					
 					seq.getActivity().add(scope);
 					

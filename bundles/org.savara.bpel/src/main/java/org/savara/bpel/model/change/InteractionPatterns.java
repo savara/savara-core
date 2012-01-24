@@ -62,32 +62,49 @@ public class InteractionPatterns {
 					org.scribble.protocol.model.Activity act=
 						block.getContents().get(pos+1);
 					
-					if (act instanceof org.scribble.protocol.model.Choice) {
-						
-						// Need to check if each path receives a
-						// response (normal and fault)
-						org.scribble.protocol.model.Choice choice=
-							(org.scribble.protocol.model.Choice)act;
-						
-						if (choice.getPaths().size() > 0) {
-							ret = true;							
-						}
-						
-						for (int i=0; ret &&
-								i < choice.getPaths().size(); i++) {
-							
-							// Get initial interaction
-							Interaction intn=getFirstInteraction(choice.getPaths().get(0));
-
-							if (intn != null) {
-								ret = !InteractionUtil.isRequest(intn);
-							}							
-						}
-					}
+					ret = isFaultHandlerChoice(act);
 				}
 			}
 		}
 		
+		return(ret);
+	}
+	
+	protected static boolean isFaultHandlerChoice(Activity act) {
+		boolean ret=false;
+		
+		if (act instanceof org.scribble.protocol.model.Choice) {
+			
+			// Need to check if each path receives a
+			// response (normal and fault)
+			org.scribble.protocol.model.Choice choice=
+				(org.scribble.protocol.model.Choice)act;
+			
+			if (choice.getPaths().size() > 0) {
+				ret = true;							
+			}
+			
+			for (int i=0; ret &&
+					i < choice.getPaths().size(); i++) {
+				
+				// Get initial interaction
+				Interaction intn=getFirstInteraction(choice.getPaths().get(0));
+
+				if (intn != null) {
+					ret = !InteractionUtil.isRequest(intn);
+				}							
+			}
+		} else if (act instanceof org.scribble.protocol.model.Parallel) {
+			org.scribble.protocol.model.Parallel par=(org.scribble.protocol.model.Parallel)act;
+			
+			for (Block b : par.getPaths()) {
+				if (b.size() > 0 && isFaultHandlerChoice(b.get(0))) {
+					ret = true;
+					break;
+				}
+			}
+		}
+
 		return(ret);
 	}
 	
@@ -260,6 +277,28 @@ public class InteractionPatterns {
 								InteractionUtil.getReplyToLabel(interaction).equals(
 										InteractionUtil.getRequestLabel((Interaction)act))) {
 							ret = (Interaction)act;
+						}
+						
+						// Otherwise check if choice wrapped in parallel construct (possibly
+						// due to fork/join support)
+					} else if (block.getParent() instanceof Parallel &&
+							block.getParent().getParent() instanceof Block) {
+						Parallel par=(Parallel)block.getParent();
+						block = (org.scribble.protocol.model.Block)block.getParent().getParent();
+					
+						pos = block.getContents().indexOf(par);
+					
+						if (pos != -1 && pos > 0) {
+							org.scribble.protocol.model.Activity act=
+								block.getContents().get(pos-1);
+						
+							if (act instanceof Interaction &&
+									InteractionUtil.isRequest((Interaction)act) &&
+									InteractionUtil.getRequestLabel((Interaction)act) != null &&
+									InteractionUtil.getReplyToLabel(interaction).equals(
+											InteractionUtil.getRequestLabel((Interaction)act))) {
+								ret = (Interaction)act;
+							}
 						}
 					}
 				}

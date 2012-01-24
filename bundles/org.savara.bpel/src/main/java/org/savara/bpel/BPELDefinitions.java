@@ -23,6 +23,8 @@ public class BPELDefinitions {
 	
 	public static final String BPEL_TYPE="bpel";
 	
-	public static final String BPEL_SCOPE_PROPERTY="bpel.scope";
+	public static final String BPEL_FAULT_SCOPE_PROPERTY="bpel.fault.scope";
+	
+	public static final String BPEL_FAULT_SCOPE_PARENT_PROPERTY="bpel.fault.scope.parent";
 
 }

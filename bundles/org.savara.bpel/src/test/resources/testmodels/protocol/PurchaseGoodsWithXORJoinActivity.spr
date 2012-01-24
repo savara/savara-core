@@ -34,7 +34,7 @@ protocol PurchaseGoods(role Buyer) {
 			[[ Fault(name=AccountNotFound) ]]
 			[[ Correlation(replyTo=buy) ]]
 			buy(AccountNotFound) from Store to Buyer;
-			sync L11 at Buyer,Store;
+			//sync L11 at Buyer,Store;
 		} or {
 			[[ Correlation(replyTo=creditCheck) ]]
 			creditCheck(CreditRating) from CreditAgency to Store;
@@ -42,7 +42,7 @@ protocol PurchaseGoods(role Buyer) {
 				[[ Fault(name=InsufficientCredit) ]]
 				[[ Correlation(replyTo=buy) ]]
 				buy(BuyFailed) from Store to Buyer;
-				sync L13 at Buyer,Store;
+				//sync L13 at Buyer,Store;
 			} or {
 				Store introduces Logistics;
 				[[ Correlation(request=delivery) ]]
@@ -54,7 +54,7 @@ protocol PurchaseGoods(role Buyer) {
 			}
 		}
 	} and {
-		join L11 or L13 at Buyer,Store;
+		//join L11 or L13 at Buyer,Store;
 		[[ Correlation(replyTo=buy) ]]
 		buy(BuyConfirmed) from Store to Buyer;
 	}
