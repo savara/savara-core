@@ -260,16 +260,6 @@ public class ParallelActivity extends AbstractBPMNActivity {
 	protected boolean shouldConnect(BPMNActivity act) {
 		boolean ret=act != m_joinState;
 		
-		if (ret && act instanceof JoinActivity) {
-			ret = false;
-		}
-		
-		if (ret && act instanceof SequenceActivity &&
-				((SequenceActivity)act).getChildStates().size() > 0 &&
-				((SequenceActivity)act).getChildStates().get(0) instanceof JoinActivity) {
-			ret = false;
-		}
-		
 		return(ret);
 	}
 

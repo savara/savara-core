@@ -17,7 +17,6 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
-import org.savara.bpmn2.model.BPMNEdge;
 import org.savara.protocol.model.Join;
 import org.scribble.protocol.model.Activity;
 
@@ -49,10 +48,16 @@ public class JoinActivity extends SimpleActivity {
 		
 		java.util.List<Object> ret=new java.util.Vector<Object>();
 		
-		ret.add(getModelFactory().createJoinTask(getContainer(), act));
+		if (join.getLabels().size() > 1) {
+			ret.add(getModelFactory().createJoinTask(getContainer(), act));
+		}
 		
 		for (String label : join.getLabels()) {
 			ret.add(getModelFactory().createLinkTarget(getContainer(), label));
+		}
+		
+		if (join.getLabels().size() > 1) {
+			ret.add(getModelFactory().createJoinTask(getContainer(), act));
 		}
 		
 		return(ret);
@@ -69,7 +74,7 @@ public class JoinActivity extends SimpleActivity {
 	
 	public int getWidth() {
 		if (getNodeList().size() > 1) {
-			return(120);
+			return(200);
 		}
 		return(30);
 	}
@@ -77,7 +82,7 @@ public class JoinActivity extends SimpleActivity {
 	public int getHeight() {
 		int count=getNodeList().size();
 		if (count > 1) {
-			count--;
+			count -= 2;
 		}
 		return(30*count+((count-1)*20));
 	}
@@ -95,24 +100,37 @@ public class JoinActivity extends SimpleActivity {
 	
 	@Override
 	public Object getEndNode() {
-		return(getNodeList().get(0));
+		return(getNodeList().get(getNodeList().size()-1));
 	}
 	
 	@Override
 	public void draw(Object parent) {
 		java.util.List<Object> list=getNodeList();
 
-		getNotationFactory().createTask(getModelFactory(),
-				list.get(0), parent, getX()+90, getY()+(getHeight()-30)/2, 30, 30);
-
-		for (int i=1; i < list.size(); i++) {
+		if (list.size() > 1) {
+			getNotationFactory().createTask(getModelFactory(),
+					list.get(0), parent, getX(), getY()+(getHeight()-50)/2, 30, 30);
+			
+			getNotationFactory().createTask(getModelFactory(),
+					list.get(list.size()-1), parent, getX()+170, getY()+(getHeight()-50)/2, 30, 30);
+	
+			for (int i=1; i < list.size()-1; i++) {
+				getNotationFactory().createEvent(getModelFactory(),
+						list.get(i), parent, getX()+90, getY()+((i-1)*50), 30, 30);
+				
+				Object link=getModelFactory().createControlLink(getContainer(),
+						list.get(0), list.get(i), null);
+				
+				getNotationFactory().createSequenceLink(getModelFactory(), link, parent);
+				
+				link = getModelFactory().createControlLink(getContainer(),
+						list.get(i), list.get(list.size()-1), null);
+				
+				getNotationFactory().createSequenceLink(getModelFactory(), link, parent);
+			}
+		} else {
 			getNotationFactory().createEvent(getModelFactory(),
-					list.get(i), parent, getX(), getY()+((i-1)*50), 30, 30);
-			
-			Object link=getModelFactory().createControlLink(getContainer(),
-					list.get(i), list.get(0), null);
-			
-			getNotationFactory().createSequenceLink(getModelFactory(), link, parent);
+					list.get(0), parent, getX(), getY()+(getHeight()-50)/2, 30, 30);
 		}
 	}
 

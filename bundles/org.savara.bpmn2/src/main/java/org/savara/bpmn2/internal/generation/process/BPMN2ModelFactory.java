@@ -222,8 +222,6 @@ public class BPMN2ModelFactory {
 		
 		gw.setId(createId());
 		
-		gw.setName("Join");
-
 		return(gw);
 	}
 	
