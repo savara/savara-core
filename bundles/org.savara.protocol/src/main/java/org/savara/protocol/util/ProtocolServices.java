@@ -93,6 +93,11 @@ public class ProtocolServices {
 				
 				if (obj instanceof ProtocolProjector) {
 					m_protocolProjector = (ProtocolProjector)obj;
+					
+					((org.scribble.protocol.projection.impl.ProtocolProjectorImpl)m_protocolProjector).
+							getCustomRules().add(new org.savara.protocol.projection.JoinProjectorRule());
+					((org.scribble.protocol.projection.impl.ProtocolProjectorImpl)m_protocolProjector).
+							getCustomRules().add(new org.savara.protocol.projection.SyncProjectorRule());
 				}
 			} catch(Exception e) {
 				// Ignore

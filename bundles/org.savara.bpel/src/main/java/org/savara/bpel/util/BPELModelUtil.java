@@ -103,34 +103,4 @@ public class BPELModelUtil {
 			throw new IOException("Failed to serialize model", e);
 		}
 	}
-
-	static class NamespacePrefixMapperImpl extends com.sun.xml.bind.marshaller.NamespacePrefixMapper {
-		java.util.Map<String,String> m_prefixes=null;
-		
-		public NamespacePrefixMapperImpl(java.util.Map<String,String> prefixes) {
-			m_prefixes = prefixes;
-		}
-		
-		public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
-			String ret=m_prefixes.get(namespaceUri);
-			
-			if (ret == null) {
-				ret = suggestion;
-			}
-			
-			return(ret);
-		}
-
-		public String[] getPreDeclaredNamespaceUris() {
-			String[] ret=new String[m_prefixes.size()];
-			int count=0;
-			
-			java.util.Iterator<String> iter=m_prefixes.keySet().iterator();
-			while (iter.hasNext()) {
-				ret[count++] = iter.next();
-			}
-			
-	        return(ret);
-		}
-	}
 }
