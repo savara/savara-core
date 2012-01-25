@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:pns1="http://www.savara.org/examples/Buyer" xmlns:pns2="http://www.savara.org/examples/Store" xmlns:pns3="http://www.savara.org/examples/CreditAgency" xmlns:pns4="http://www.savara.org/examples/Logistics" name="PurchaseGoods_CreditAgency" targetNamespace="http://www.savara.org/examples/CreditAgency">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_CreditAgency.wsdl" namespace="http://www.savara.org/examples/CreditAgency"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_CreditAgencyArtifacts.wsdl" namespace="http://www.savara.org/examples/CreditAgency"/>
+    <partnerLinks>
+        <partnerLink myRole="CreditAgency" name="StoreToCreditAgency" partnerLinkType="pns3:StoreToCreditAgencyServiceLT"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="pns3:creditCheckRequest" name="creditCheckRequestVar"/>
+        <variable messageType="pns3:CustomerUnknownFault" name="CustomerUnknownFaultVar"/>
+        <variable messageType="pns3:creditCheckResponse" name="creditCheckResponseVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_CreditCheck" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns3:CreditAgency" variable="creditCheckRequestVar"/>
+        <if>
+            <sequence>
+                <reply faultName="pns3:CustomerUnknown" name="Send_CustomerUnknown" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns3:CreditAgency" variable="CustomerUnknownFaultVar"/>
+            </sequence>
+            <else>
+                <sequence>
+                    <reply name="Send_CreditRating" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns3:CreditAgency" variable="creditCheckResponseVar"/>
+                </sequence>
+            </else>
+        </if>
+    </sequence>
+</process>

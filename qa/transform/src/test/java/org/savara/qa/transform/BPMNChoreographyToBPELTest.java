@@ -39,10 +39,13 @@ public class BPMNChoreographyToBPELTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("BPMN2 Choreo->BPEL Transform Tests");
 
+        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "Store"));
+        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "CreditAgency"));
+        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "Logistics"));
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "Store"));
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency"));
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
-        
+
         return suite;
     }
     

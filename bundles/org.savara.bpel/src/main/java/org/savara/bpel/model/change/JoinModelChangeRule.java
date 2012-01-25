@@ -18,6 +18,7 @@
 package org.savara.bpel.model.change;
 
 import org.savara.bpel.model.TActivity;
+import org.savara.bpel.model.TCondition;
 import org.savara.bpel.model.TSequence;
 import org.savara.bpel.model.TTarget;
 import org.savara.bpel.model.TTargets;
@@ -100,11 +101,25 @@ public class JoinModelChangeRule extends AbstractBPELModelChangeRule {
 				targetActivity.setTargets(new TTargets());
 			}
 			
+			String joinCondition=null;
+			
 			for (String linkName : elem.getLabels()) {
 				TTarget target=new TTarget();
 				target.setLinkName(linkName);
 				
 				targetActivity.getTargets().getTarget().add(target);
+				
+				if (joinCondition == null) {
+					joinCondition = "$"+linkName;
+				} else {
+					joinCondition += " and $"+linkName;
+				}
+			}
+			
+			if (!elem.getXOR()) {
+				TCondition cond=new TCondition();
+				cond.getContent().add(joinCondition);
+				targetActivity.getTargets().setJoinCondition(cond);
 			}
 		}
 

@@ -37,9 +37,10 @@ public class BPMN2ChoreoToProtocolParserTest {
         suite.addTest(new BPMN2ToProtocolTester("PurchaseGoods"));
         suite.addTest(new BPMN2ToProtocolTester("PurchaseGoodsWithXORJoin"));
         suite.addTest(new BPMN2ToProtocolTester("PurchaseGoodsWithXORJoinActivity"));
+        suite.addTest(new BPMN2ToProtocolTester("PurchaseGoodsWithANDJoinActivity"));
         suite.addTest(new BPMN2ToProtocolTester("ComplexXORJoin"));
         suite.addTest(new BPMN2ToProtocolTester("ComplexANDJoin"));
-        
+
         return suite;
     }
     
