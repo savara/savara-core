@@ -4,6 +4,7 @@ bin/
 .project
 .settings/
 .bpmn2/
+.bpmn/
 *.ipr
 *.iml
 *.iws
