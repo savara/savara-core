@@ -22,9 +22,6 @@ import junit.framework.TestCase;
 import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
-import org.savara.bpel.generator.ProtocolToBPELModelGenerator;
-import org.savara.bpel.model.TProcess;
-import org.savara.bpel.util.BPELModelUtil;
 import org.savara.bpmn2.generation.process.ProtocolToBPMN2ProcessModelGenerator;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.parser.choreo.BPMN2ChoreographyProtocolParser;
@@ -32,7 +29,6 @@ import org.savara.bpmn2.util.BPMN2ModelUtil;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.savara.common.model.generator.ModelGenerator;
 import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
 import org.scribble.common.logging.ConsoleJournal;
@@ -47,11 +43,9 @@ public class BPMNChoreographyToBPMNProcessTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("BPMN2 Choreo->BPEL Transform Tests");
 
-        /*
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "Store"));
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "CreditAgency"));
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "Logistics"));
-        */
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "Store"));
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency"));
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
