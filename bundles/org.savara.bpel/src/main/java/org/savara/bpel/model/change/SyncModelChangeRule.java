@@ -18,6 +18,7 @@
 package org.savara.bpel.model.change;
 
 import org.savara.bpel.model.TActivity;
+import org.savara.bpel.model.TEmpty;
 import org.savara.bpel.model.TSequence;
 import org.savara.bpel.model.TSource;
 import org.savara.bpel.model.TSources;
@@ -104,6 +105,11 @@ public class SyncModelChangeRule extends AbstractBPELModelChangeRule {
 			source.setLinkName(elem.getLabel());
 			
 			sourceActivity.getSources().getSource().add(source);
+		}
+		
+		// Check if contained sequence only contains the sync
+		if (elem.getParent() instanceof Block && ((Block)elem.getParent()).size() == 1) {
+			((TSequence)context.getParent()).getActivity().add(new TEmpty());
 		}
 
 		return(true);
