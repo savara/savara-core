@@ -1,0 +1,11 @@
+protocol PurchaseGoodsProcess_Store at StoreInterface {
+	buy(BuyRequest) from Buyer;
+	checkCredit(CreditCheckRequest) to CreditAgency;
+	choice at CreditAgency {
+		checkCredit(CreditCheckOk) from CreditAgency;
+		buy(BuyConfirmed) to Buyer;
+	} or {
+		checkCredit(CreditCheckInvalid) from CreditAgency;
+		buy(BuyFailed) to Buyer;
+	}
+}

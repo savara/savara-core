@@ -25,6 +25,8 @@ import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.TypeReferenceUtil;
 import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 
 /**
@@ -76,6 +78,11 @@ public class ReceiveParserRule implements ProtocolParserRule {
 		//}
 		
 		interaction.setMessageSignature(ms);
+		
+		Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+		annotation.getProperties().put(AnnotationDefinitions.REQUEST_PROPERTY,
+					elem.getOperation());
+		interaction.getAnnotations().add(annotation);
 		
 		activities.add(interaction);
 	}

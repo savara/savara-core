@@ -111,7 +111,7 @@ public class ProcessParserRule implements ProtocolParserRule {
 				
 				InvokeParserRule.convertFaultResponse(invoke,
 						fcb.getContents(), catchBlock.getFaultVariable(),
-									mesgType, context);
+									catchBlock.getFaultName(), mesgType, context);
 				
 				TActivity cbact=ActivityUtil.getActivity(catchBlock);
 				

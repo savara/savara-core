@@ -1,11 +1,29 @@
-protocol PurchaseGoodsProcess_Store at StoreInterface {
+protocol PurchaseGoods_Store at Store {
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer;
-	checkCredit(CreditCheckRequest) to CreditAgency;
+	[[ Correlation(request=creditCheck) ]]
+	creditCheck(CreditCheckRequest) to CreditAgency;
 	choice at CreditAgency {
-		checkCredit(CreditCheckOk) from CreditAgency;
-		buy(BuyConfirmed) to Buyer;
+		[[ Correlation(replyTo=creditCheck) ]]
+		creditCheck(CreditRating) from CreditAgency;
+		choice {
+			[[ Fault(name=InsufficientCredit) ]]
+			[[ Correlation(replyTo=buy) ]]
+			buy(BuyFailed) to Buyer;
+		} or {
+			[[ Correlation(request=delivery) ]]
+			delivery(DeliveryRequest) to Logistics;
+			[[ Correlation(replyTo=delivery) ]]
+			delivery(DeliveryConfirmed) from Logistics;
+			[[ Correlation(replyTo=buy) ]]
+			buy(BuyConfirmed) to Buyer;
+		}
 	} or {
-		checkCredit(CreditCheckInvalid) from CreditAgency;
-		buy(BuyFailed) to Buyer;
+		[[ Fault(name=CustomerUnknown) ]]
+		[[ Correlation(replyTo=creditCheck) ]]
+		creditCheck(CustomerUnknown) from CreditAgency;
+		[[ Fault(name=AccountNotFound) ]]
+		[[ Correlation(replyTo=buy) ]]
+		buy(AccountNotFound) to Buyer;
 	}
 }

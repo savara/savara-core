@@ -36,6 +36,13 @@ public class ParserTest extends TestCase {
 	public static TestSuite suite() {
         TestSuite suite = new TestSuite("BPEL->Protocol Parser Tests");
         
+        suite.addTest(new BPELToProtocolTest("PurchaseGoods@Store", "PurchaseGoods@Store"));
+        
+        /*
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsProcess_Buyer", "PurchaseGoods@Buyer"));
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsProcess_CreditAgency", "PurchaseGoods@CreditAgency"));
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsProcess_Store", "PurchaseGoods@Store"));
+
         suite.addTest(new BPELToProtocolTest("ESBBrokerProcess_Broker", "ESBBroker@Broker"));       
         suite.addTest(new BPELToProtocolTest("ESBBrokerProcess_Buyer", "ESBBroker@Buyer"));  
         suite.addTest(new BPELToProtocolTest("ESBBrokerProcess_CreditAgency", "ESBBroker@CreditAgency"));
@@ -43,13 +50,13 @@ public class ParserTest extends TestCase {
         suite.addTest(new BPELToProtocolTest("RequestForQuote_SupplierQuoteEngine", "ESBBroker@SupplierQuoteEngine"));
         suite.addTest(new BPELToProtocolTest("CompleteTransaction_SupplierTxnProcessor", "ESBBroker@SupplierTxnProcessor"));
 
-        suite.addTest(new BPELToProtocolTest("PurchaseGoodsProcess_Buyer", "PurchaseGoods@Buyer"));
-        suite.addTest(new BPELToProtocolTest("PurchaseGoodsProcess_CreditAgency", "PurchaseGoods@CreditAgency"));
-        suite.addTest(new BPELToProtocolTest("PurchaseGoodsProcess_Store", "PurchaseGoods@Store"));
-        
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsProcess_Buyer", "PurchaseGoodsProcess@Buyer"));
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsProcess_CreditAgency", "PurchaseGoodsProcess@CreditAgency"));
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsProcess_Store", "PurchaseGoodsProcess@Store"));
+
         suite.addTest(new BPELToProtocolTest("ReqRespFaultProcess_Buyer", "ReqRespFault@Buyer"));
         suite.addTest(new BPELToProtocolTest("ReqRespFaultProcess_Seller", "ReqRespFault@Seller"));
-
+        */
         /**
          * TODO: (SAVARA-150) Commenting out this test for now, as we now need the accompanying WSDL to be able to
          * resolve the message type's underlying XSD element or type.

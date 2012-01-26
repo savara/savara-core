@@ -119,7 +119,8 @@ public class ScopeParserRule implements ProtocolParserRule {
 				}
 				
 				InvokeParserRule.convertFaultResponse(invoke, fcb.getContents(),
-							catchBlock.getFaultVariable(), mesgType, context);
+							catchBlock.getFaultVariable(), catchBlock.getFaultName(),
+								mesgType, context);
 
 				if (fcb.getContents().size() > 0) {
 					Interaction resp=(Interaction)fcb.getContents().get(0);

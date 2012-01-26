@@ -29,6 +29,8 @@ import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.TypeReferenceUtil;
 import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
 
 /**
@@ -93,7 +95,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 				}
 				
 				convertFaultResponse(invoke, fcb.getContents(), catchBlock.getFaultVariable(),
-									mesgType, context);
+									catchBlock.getFaultName(), mesgType, context);
 				
 				/* TODO: What to do about raise?
 				org.scribble.protocol.model.Raise raise=
@@ -149,6 +151,11 @@ public class InvokeParserRule implements ProtocolParserRule {
 		
 		interaction.setMessageSignature(ms);
 		
+		Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+		annotation.getProperties().put(AnnotationDefinitions.REQUEST_PROPERTY,
+					invoke.getOperation());
+		interaction.getAnnotations().add(annotation);
+		
 		activities.add(interaction);
 	}
 
@@ -182,11 +189,16 @@ public class InvokeParserRule implements ProtocolParserRule {
 		
 		interaction.setMessageSignature(ms);
 		
+		Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+		annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY,
+					invoke.getOperation());
+		interaction.getAnnotations().add(annotation);
+		
 		activities.add(interaction);
 	}
 	
 	protected static void convertFaultResponse(TInvoke invoke, java.util.List<Activity> activities,
-			String faultVar, QName faultMesgType, ParserContext context) {
+			String faultVar, QName faultName, QName faultMesgType, ParserContext context) {
 		
 		// Create interaction for request
 		Interaction interaction=new Interaction();
@@ -227,6 +239,16 @@ public class InvokeParserRule implements ProtocolParserRule {
 		//}
 		
 		interaction.setMessageSignature(ms);
+		
+		Annotation annotation=new Annotation(AnnotationDefinitions.FAULT);
+		annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+					faultName.getLocalPart());
+		interaction.getAnnotations().add(annotation);
+
+		annotation = new Annotation(AnnotationDefinitions.CORRELATION);
+		annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY,
+					invoke.getOperation());
+		interaction.getAnnotations().add(annotation);
 		
 		activities.add(interaction);
 	}

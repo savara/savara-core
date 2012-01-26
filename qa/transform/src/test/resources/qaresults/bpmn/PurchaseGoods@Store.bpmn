@@ -27,7 +27,7 @@
             <bpmn2:incoming>MID31</bpmn2:incoming>
             <bpmn2:outgoing>MID34</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Receive: creditCheck(CreditRating) from CreditAgency" operationRef="OP_Store_creditCheck" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Receive: creditCheck(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID28</bpmn2:incoming>
             <bpmn2:outgoing>MID26</bpmn2:outgoing>
         </bpmn2:task>
@@ -41,7 +41,7 @@
             <bpmn2:incoming>MID25</bpmn2:incoming>
             <bpmn2:outgoing>MID29</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID13" name="Send: buy(BuyFailed) to Buyer" operationRef="OP_Buyer_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID13" name="Send: buy(BuyFailed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID22</bpmn2:incoming>
             <bpmn2:outgoing>MID23</bpmn2:outgoing>
         </bpmn2:task>
@@ -49,19 +49,19 @@
             <bpmn2:incoming>MID24</bpmn2:incoming>
             <bpmn2:outgoing>MID20</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID15" name="Receive: delivery(DeliveryConfirmed) from Logistics" operationRef="OP_Store_delivery" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID15" name="Receive: delivery(DeliveryConfirmed) from Logistics" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID20</bpmn2:incoming>
             <bpmn2:outgoing>MID21</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Buyer_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID21</bpmn2:incoming>
             <bpmn2:outgoing>MID25</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" name="Receive: creditCheck(CustomerUnknown) from CreditAgency" operationRef="OP_Store_creditCheck" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" name="Receive: creditCheck(CustomerUnknown) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID30</bpmn2:incoming>
             <bpmn2:outgoing>MID27</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID18" name="Send: buy(AccountNotFound) to Buyer" operationRef="OP_Buyer_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID18" name="Send: buy(AccountNotFound) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID27</bpmn2:incoming>
             <bpmn2:outgoing>MID31</bpmn2:outgoing>
         </bpmn2:task>
@@ -84,14 +84,9 @@
     </bpmn2:process>
     <bpmn2:interface id="StoreInterface" name="StoreInterface">
         <bpmn2:operation id="OP_Store_buy" name="buy"/>
-        <bpmn2:operation id="OP_Store_creditCheck" name="creditCheck"/>
-        <bpmn2:operation id="OP_Store_delivery" name="delivery"/>
     </bpmn2:interface>
     <bpmn2:interface id="CreditAgencyInterface" name="CreditAgencyInterface">
         <bpmn2:operation id="OP_CreditAgency_creditCheck" name="creditCheck"/>
-    </bpmn2:interface>
-    <bpmn2:interface id="BuyerInterface" name="BuyerInterface">
-        <bpmn2:operation id="OP_Buyer_buy" name="buy"/>
     </bpmn2:interface>
     <bpmn2:interface id="LogisticsInterface" name="LogisticsInterface">
         <bpmn2:operation id="OP_Logistics_delivery" name="delivery"/>
