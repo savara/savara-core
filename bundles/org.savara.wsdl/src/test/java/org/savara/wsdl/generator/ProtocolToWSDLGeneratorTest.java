@@ -41,10 +41,10 @@ public class ProtocolToWSDLGeneratorTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("Protocol->WSDL Generator Tests");
 
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsFromBPMN2", "Buyer"));
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsFromBPMN2", "Store"));
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsFromBPMN2", "CreditAgency"));
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsFromBPMN2", "Logistics"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods", "Buyer"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods", "Store"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods", "CreditAgency"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods", "Logistics"));
         
         suite.addTest(new ProtocolToWSDLTester("PolicyQuote", "CreditCheckService"));
         suite.addTest(new ProtocolToWSDLTester("PolicyQuote", "PolicyQuoteProcessService"));
@@ -55,9 +55,9 @@ public class ProtocolToWSDLGeneratorTest {
         suite.addTest(new ProtocolToWSDLTester("ESBBroker", "CreditAgency"));
         suite.addTest(new ProtocolToWSDLTester("ESBBroker", "SupplierQuoteEngine"));
         
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods1", "Buyer"));
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods1", "CreditAgency"));
-        suite.addTest(new ProtocolToWSDLTester("PurchaseGoods1", "Store"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsCDL", "Buyer"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsCDL", "CreditAgency"));
+        suite.addTest(new ProtocolToWSDLTester("PurchaseGoodsCDL", "Store"));
         
         suite.addTest(new ProtocolToWSDLTester("ReqRespFault", "Buyer"));
         suite.addTest(new ProtocolToWSDLTester("ReqRespFault", "Seller"));

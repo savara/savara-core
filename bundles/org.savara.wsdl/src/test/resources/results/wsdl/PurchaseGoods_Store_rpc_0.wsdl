@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="Store" targetNamespace="http://www.savara.org/examples" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.savara.org/examples" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
-  <wsdl:message name="buyResponse">
-    <wsdl:part name="content" type="ns1:BuyConfirmed">
-    </wsdl:part>
-  </wsdl:message>
+<wsdl:definitions name="Store" targetNamespace="http://www.savara.org/examples/Store" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns3="http://www.savara.org/examples/Store" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:message name="InsufficientCreditFault">
     <wsdl:part name="content" type="ns1:BuyFailed">
     </wsdl:part>
@@ -12,42 +8,46 @@
     <wsdl:part name="content" type="ns1:AccountNotFound">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="buyResponse">
+    <wsdl:part name="content" type="ns1:BuyConfirmed">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="buyRequest">
     <wsdl:part name="content" type="ns1:BuyRequest">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="Store">
     <wsdl:operation name="buy">
-      <wsdl:input message="tns:buyRequest">
+      <wsdl:input message="pns3:buyRequest">
     </wsdl:input>
-      <wsdl:output message="tns:buyResponse">
+      <wsdl:output message="pns3:buyResponse">
     </wsdl:output>
-      <wsdl:fault name="AccountNotFound" message="tns:AccountNotFoundFault">
+      <wsdl:fault name="AccountNotFound" message="pns3:AccountNotFoundFault">
     </wsdl:fault>
-      <wsdl:fault name="InsufficientCredit" message="tns:InsufficientCreditFault">
+      <wsdl:fault name="InsufficientCredit" message="pns3:InsufficientCreditFault">
     </wsdl:fault>
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="StoreBinding" type="tns:Store">
+  <wsdl:binding name="StoreBinding" type="pns3:Store">
     <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="buy">
       <soap:operation soapAction="" style="rpc"/>
       <wsdl:input>
-        <soap:body use="literal" namespace="http://www.savara.org/examples"/>
+        <soap:body use="literal" namespace="http://www.savara.org/examples/Store"/>
       </wsdl:input>
       <wsdl:output>
-        <soap:body use="literal" namespace="http://www.savara.org/examples"/>
+        <soap:body use="literal" namespace="http://www.savara.org/examples/Store"/>
       </wsdl:output>
       <wsdl:fault name="AccountNotFound">
-        <soap:fault name="AccountNotFound" use="literal" namespace="http://www.savara.org/examples"/>
+        <soap:fault name="AccountNotFound" use="literal" namespace="http://www.savara.org/examples/Store"/>
       </wsdl:fault>
       <wsdl:fault name="InsufficientCredit">
-        <soap:fault name="InsufficientCredit" use="literal" namespace="http://www.savara.org/examples"/>
+        <soap:fault name="InsufficientCredit" use="literal" namespace="http://www.savara.org/examples/Store"/>
       </wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="StoreService">
-    <wsdl:port name="StorePort" binding="tns:StoreBinding">
+    <wsdl:port name="StorePort" binding="pns3:StoreBinding">
       <soap:address location="http://localhost:8080/StoreService/StorePort"/>
     </wsdl:port>
   </wsdl:service>

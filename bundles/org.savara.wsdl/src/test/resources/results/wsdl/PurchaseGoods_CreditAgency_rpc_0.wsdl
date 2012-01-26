@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CreditAgency" targetNamespace="http://www.savara.org/examples/CreditAgency" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns2="http://www.savara.org/examples/CreditAgency" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:message name="CustomerUnknownFault">
+    <wsdl:part name="content" type="ns3:CustomerUnknown">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="creditCheckResponse">
+    <wsdl:part name="content" type="ns3:CreditRating">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="creditCheckRequest">
+    <wsdl:part name="content" type="ns3:CreditCheckRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CreditAgency">
+    <wsdl:operation name="creditCheck">
+      <wsdl:input message="pns2:creditCheckRequest">
+    </wsdl:input>
+      <wsdl:output message="pns2:creditCheckResponse">
+    </wsdl:output>
+      <wsdl:fault name="CustomerUnknown" message="pns2:CustomerUnknownFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CreditAgencyBinding" type="pns2:CreditAgency">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="creditCheck">
+      <soap:operation soapAction="" style="rpc"/>
+      <wsdl:input>
+        <soap:body use="literal" namespace="http://www.savara.org/examples/CreditAgency"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" namespace="http://www.savara.org/examples/CreditAgency"/>
+      </wsdl:output>
+      <wsdl:fault name="CustomerUnknown">
+        <soap:fault name="CustomerUnknown" use="literal" namespace="http://www.savara.org/examples/CreditAgency"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CreditAgencyService">
+    <wsdl:port name="CreditAgencyPort" binding="pns2:CreditAgencyBinding">
+      <soap:address location="http://localhost:8080/CreditAgencyService/CreditAgencyPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

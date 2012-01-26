@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="Logistics" targetNamespace="http://www.savara.org/examples" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.savara.org/examples" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
-  <wsdl:message name="deliveryRequest">
-    <wsdl:part name="content" element="ns2:DeliveryRequest">
-    </wsdl:part>
-  </wsdl:message>
+<wsdl:definitions name="Logistics" targetNamespace="http://www.savara.org/examples/Logistics" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns4="http://www.savara.org/examples/Logistics" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:message name="deliveryResponse">
     <wsdl:part name="content" element="ns2:DeliveryConfirmed">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="deliveryRequest">
+    <wsdl:part name="content" element="ns2:DeliveryRequest">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="Logistics">
     <wsdl:operation name="delivery">
-      <wsdl:input message="tns:deliveryRequest">
+      <wsdl:input message="pns4:deliveryRequest">
     </wsdl:input>
-      <wsdl:output message="tns:deliveryResponse">
+      <wsdl:output message="pns4:deliveryResponse">
     </wsdl:output>
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="LogisticsBinding" type="tns:Logistics">
+  <wsdl:binding name="LogisticsBinding" type="pns4:Logistics">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <wsdl:operation name="delivery">
-      <soap:operation soapAction="http://www.savara.org/examples/delivery"/>
+      <soap:operation soapAction="http://www.savara.org/examples/Logistics/delivery"/>
       <wsdl:input>
         <soap:body use="literal"/>
       </wsdl:input>
@@ -29,7 +29,7 @@
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="LogisticsService">
-    <wsdl:port name="LogisticsPort" binding="tns:LogisticsBinding">
+    <wsdl:port name="LogisticsPort" binding="pns4:LogisticsBinding">
       <soap:address location="http://localhost:8080/LogisticsService/LogisticsPort"/>
     </wsdl:port>
   </wsdl:service>
