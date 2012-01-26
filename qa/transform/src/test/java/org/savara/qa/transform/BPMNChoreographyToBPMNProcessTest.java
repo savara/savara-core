@@ -41,7 +41,7 @@ import org.scribble.protocol.model.Role;
 public class BPMNChoreographyToBPMNProcessTest {
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("BPMN2 Choreo->BPEL Transform Tests");
+        TestSuite suite = new TestSuite("BPMN2 Choreo->BPMN2 Process Transform Tests");
 
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "Store"));
         suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "CreditAgency"));

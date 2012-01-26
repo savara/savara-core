@@ -21,6 +21,9 @@ package org.savara.bpmn2.generation.process;
 
 import java.util.logging.Logger;
 
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
+
 import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
 import org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory;
 import org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory;
@@ -40,6 +43,15 @@ import org.savara.bpmn2.internal.generation.process.components.DoActivity;
 import org.savara.bpmn2.internal.generation.process.components.DoBlockActivity;
 import org.savara.bpmn2.internal.generation.process.components.SyncActivity;
 import org.savara.bpmn2.model.TDefinitions;
+import org.savara.bpmn2.model.TError;
+import org.savara.bpmn2.model.TImport;
+import org.savara.bpmn2.model.TInterface;
+import org.savara.bpmn2.model.TItemDefinition;
+import org.savara.bpmn2.model.TMessage;
+import org.savara.bpmn2.model.TOperation;
+import org.savara.bpmn2.model.TReceiveTask;
+import org.savara.bpmn2.model.TRootElement;
+import org.savara.bpmn2.model.TSendTask;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.annotation.Annotation;
@@ -47,6 +59,7 @@ import org.savara.common.model.generator.ModelGenerator;
 import org.savara.common.resources.ResourceLocator;
 import org.savara.protocol.model.Join;
 import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.util.InteractionUtil;
 import org.scribble.protocol.model.*;
 
 /**
@@ -55,7 +68,9 @@ import org.scribble.protocol.model.*;
  */
 public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 
+	private static final String INTERFACE_SUFFIX = "Interface";
 	private boolean m_consecutiveIds=false;
+	private org.savara.bpmn2.model.ObjectFactory _objectFactory=new org.savara.bpmn2.model.ObjectFactory();
 	
 	private static final Logger logger=Logger.getLogger(ProtocolToBPMN2ProcessModelGenerator.class.getName());
 	
@@ -104,6 +119,10 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			// Find namespace for role
 			initNamespace(defns, pm);
 			
+			initImports(defns, pm);
+			
+			initMessages(defns, pm);
+			
 			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model=
 				new org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory(defns);
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation=
@@ -135,6 +154,67 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		if (ann != null) {
 			defns.setTargetNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAME_PROPERTY));
 		}
+	}
+	
+	protected void initImports(TDefinitions defns, ProtocolModel pm) {
+		java.util.List<Annotation> anns=AnnotationDefinitions.getAnnotations(pm.getProtocol().getAnnotations(),
+						AnnotationDefinitions.TYPE);
+
+		for (Annotation ann : anns) {
+			// Add import
+			TImport imp=new TImport();
+			imp.setImportType("http://www.w3.org/2001/XMLSchema"); // Assume xsd for now
+			imp.setLocation((String)ann.getProperties().get(AnnotationDefinitions.LOCATION_PROPERTY));
+			imp.setNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY));
+			
+			defns.getImport().add(imp);
+		}
+	}
+	
+	protected void initMessages(TDefinitions defns, ProtocolModel pm) {
+
+		for (ImportList il : pm.getImports()) {
+
+			if (il instanceof TypeImportList) {
+				TypeImportList til=(TypeImportList)il;
+				
+				for (TypeImport ti : til.getTypeImports()) {
+					TItemDefinition itemDef=new TItemDefinition();
+					itemDef.setId("ITEM"+ti.getName());
+					itemDef.setStructureRef(QName.valueOf(ti.getDataType().getDetails()));
+					defns.getRootElement().add(_objectFactory.createItemDefinition(itemDef));
+					
+					TMessage mesg=new TMessage();
+					mesg.setId("ID"+ti.getName());
+					mesg.setName(ti.getName());
+					mesg.setItemRef(new QName(defns.getTargetNamespace(),itemDef.getId()));
+					defns.getRootElement().add(_objectFactory.createMessage(mesg));
+				}
+			}
+		}
+	}
+	
+	protected TInterface getInterface(TDefinitions defns, Role role) {
+		TInterface ret=null;
+		String intfName=role.getName()+INTERFACE_SUFFIX;
+		
+		for (JAXBElement<? extends TRootElement> rootElem : defns.getRootElement()) {
+			if (rootElem.getValue() instanceof TInterface &&
+					((TInterface)rootElem.getValue()).getName().equals(intfName)) {
+				ret = (TInterface)rootElem.getValue();
+				break;
+			}
+		}
+		
+		if (ret == null) {
+			ret = new TInterface();
+			ret.setId(intfName);
+			ret.setName(ret.getId());
+			
+			defns.getRootElement().add(_objectFactory.createInterface(ret));
+		}
+		
+		return(ret);
 	}
 	
 	protected void generateProcess(ProtocolModel local, BPMN2ModelVisitor visitor,
@@ -275,38 +355,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
-				//state =
 				new RunActivity(elem, umls, m_modelFactory, m_notationFactory);					
-				
-				/* TODO: See if possible to determine who is the initiating party
-				 * in the performed protocol, to establish a link
-				 *
-				if (elem instanceof LookaheadElement) {
-					LookaheadElement lookahead=(LookaheadElement)elem;
-					boolean f_send=false;
-					boolean f_receive=false;
-					
-					java.util.Iterator iter=lookahead.getPreConditions().iterator();
-					while (iter.hasNext()) {
-						Predicate pred=(Predicate)iter.next();
-						
-						if (pred.isMessagePredicate()) {
-							
-							if (pred.isReceiveLookaheadPredicate()) {
-								f_receive = true;
-							} else {
-								f_send = true;
-							}
-						}
-					}
-					
-					if (f_send && !f_receive) {
-						umls.getBPMNDiagram().registerInitiatingPerform(elem, state);
-					} else if (!f_send && f_receive) {
-						umls.getBPMNDiagram().registerInitiatedPerform(elem, state);
-					}
-				}
-				*/
 			}
 		}
 		
@@ -382,7 +431,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 */
 		public void accept(Interaction elem) {
 			
-			// Check if a receive
+			// Check if a send
 			if (elem.getFromRole() == null ||
 					elem.getFromRole().equals(elem.getEnclosingProtocol().getLocatedRole())) {
 				
@@ -395,6 +444,13 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 					// with an appropriate receive
 					BPMNDiagram amodel=umls.getBPMNDiagram();		
 					amodel.registerSendActivity(elem, sa);
+					
+					TSendTask task=sa.getSendTask();
+					
+					if (task != null) {
+						task.setMessageRef(getMessageReference(elem));
+						task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
+					}
 				}
 			} else {
 				BPMNActivity umls=getBPMNActivity();
@@ -406,6 +462,13 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 					// with an appropriate send
 					BPMNDiagram amodel=umls.getBPMNDiagram();		
 					amodel.registerReceiveActivity(elem, sa);
+					
+					TReceiveTask task=sa.getReceiveTask();
+					
+					if (task != null) {
+						task.setMessageRef(getMessageReference(elem));
+						task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
+					}
 				}
 			}
 		}
@@ -419,62 +482,6 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			try {
 				pushBPMNActivity(new SequenceActivity(getBPMNActivity(), m_modelFactory, m_notationFactory));
-				
-				/*
-				if (elem.getParent() instanceof When &&
-						((When)elem.getParent()).getMessageSignature().getTypeReferences().size() > 0 &&
-						elem.getParent().getParent() instanceof Choice) {
-					When parent=(When)elem.getParent();
-					Choice choice=(Choice)elem.getParent().getParent();
-					
-					Interaction interaction=new Interaction();
-					interaction.getAnnotations().addAll(parent.getAnnotations());
-					
-					interaction.setFromRole(choice.getFromRole());
-					
-					if (choice.getToRole() != null) {
-						interaction.getToRoles().add(choice.getToRole());
-					}
-					
-					interaction.setMessageSignature(new MessageSignature(parent.getMessageSignature()));
-		
-					// Check if a receive
-					if (choice.getToRole() == null ||
-								choice.getToRole().equals(elem.enclosingProtocol().getRole())) {
-						BPMNActivity umls=getBPMNActivity();
-						
-						if (umls != null) {
-							ReceiveActivity sa=
-								new ReceiveActivity(interaction, umls, m_modelFactory, m_notationFactory);
-							
-							// Register the receive to enable links to be established
-							// with an appropriate send
-							BPMNDiagram amodel=umls.getBPMNDiagram();		
-							amodel.registerReceiveActivity(interaction, sa);
-						}
-					} else {
-						
-						BPMNActivity umls=getBPMNActivity();
-						if (umls != null) {
-							SendActivity sa=
-								new SendActivity(interaction, umls, m_modelFactory, m_notationFactory);
-							
-							// Register the send to enable links to be established
-							// with an appropriate receive
-							BPMNDiagram amodel=umls.getBPMNDiagram();		
-							amodel.registerSendActivity(interaction, sa);
-						}
-					}
-
-				} else */
-				/* No longer any interactions associated with the interrupt (old catch) block
-				if (elem.getParent() instanceof Interrupt) {
-					
-					for (Interaction interaction : ((Interrupt)elem.getParent()).getInteractions()) {
-						accept(interaction);
-					}
-				}
-				*/
 				
 			} catch(Exception e) {
 				logger.severe("Failed to create sequence state: "+e);
@@ -616,6 +623,180 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				
 				amodel.completeModel();
 			}
+		}
+		
+		/**
+		 * This method establishes the associated message details,
+		 * if not defined, and returns a reference to it.
+		 * 
+		 * @param interaction The interaction
+		 * @return The message reference
+		 */
+		protected QName getMessageReference(Interaction interaction) {
+			QName ret=null;
+			
+			if (interaction.getMessageSignature() == null ||
+					interaction.getMessageSignature().getTypeReferences().size() == 0) {
+				return(null);
+			}
+			
+			// Check for Message definition
+			for (JAXBElement<? extends TRootElement> rootElem :
+							m_modelFactory.getDefinitions().getRootElement()) {
+				if (rootElem.getValue() instanceof TMessage) {
+					TMessage mesg=(TMessage)rootElem.getValue();
+					
+					if (mesg.getName().equals(interaction.getMessageSignature().
+									getTypeReferences().get(0).getName())) {
+						ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+											mesg.getId());
+						
+						// Check if fault, and if so, that an error has been defined
+						if (InteractionUtil.isFaultResponse(interaction)) {
+							String faultName=InteractionUtil.getFaultName(interaction);
+							boolean found=false;
+							
+							for (JAXBElement<? extends TRootElement> subRootElem :
+								m_modelFactory.getDefinitions().getRootElement()) {
+								
+								if (subRootElem.getValue() instanceof TError &&
+										((TError)subRootElem.getValue()).getStructureRef().equals(
+												mesg.getItemRef()) &&
+										((TError)subRootElem.getValue()).getName().equals(faultName)) {
+									found = true;
+								}
+							}
+							
+							if (!found) {
+								TError error=new TError();
+								error.setId("ERR"+faultName);
+								error.setName(faultName);
+								error.setErrorCode(faultName);
+								error.setStructureRef(mesg.getItemRef());
+								m_modelFactory.getDefinitions().getRootElement().add(
+										_objectFactory.createError(error));
+							}
+						}
+						
+						break;
+					}
+				}
+			}
+			
+			return(ret);
+		}
+		
+		/**
+		 * This method establishes the associated operation details,
+		 * if not defined, and returns a reference to it.
+		 * 
+		 * @param interaction The interaction
+		 * @return The operation reference
+		 */
+		protected QName getOperationReference(Interaction interaction, QName messageRef) {
+			QName ret=null;
+			
+			// Check that interaction has an operation name
+			if (interaction.getMessageSignature().getOperation() == null) {
+				return(null);
+			}
+			
+			// Find interface
+			Role serverRole=null;
+			
+			if (InteractionUtil.isRequest(interaction)) {
+				if (interaction.getToRoles().size() > 0) {
+					serverRole = interaction.getToRoles().get(0);
+				}
+				
+				if (serverRole == null) {
+					serverRole = interaction.getEnclosingProtocol().getLocatedRole();
+				}
+			} else {
+				serverRole = interaction.getFromRole();
+				
+				if (serverRole == null) {
+					serverRole = interaction.getEnclosingProtocol().getLocatedRole();
+				}
+			}
+			
+			if (serverRole == null) {
+				// TODO: REPORT ERROR
+				return (null);
+			}
+			
+			TInterface intf=getInterface(m_modelFactory.getDefinitions(), serverRole);
+			
+			if (intf == null) {
+				// TODO: REPORT ERROR
+				return (null);
+			}
+			
+			// Find operation
+			TOperation op=null;
+			
+			for (TOperation curop : intf.getOperation()) {
+				if (interaction.getMessageSignature().getOperation() != null &&
+						curop.getName().equals(interaction.getMessageSignature().getOperation())) {
+					op = curop;
+					break;
+				}
+			}
+			
+			if (op == null) {
+				op = new TOperation();
+				op.setName(interaction.getMessageSignature().getOperation());
+				op.setId("OP_"+serverRole.getName()+"_"+op.getName());
+				
+				intf.getOperation().add(op);
+			}
+			
+			ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(), op.getId());
+			
+			if (InteractionUtil.isRequest(interaction)) {
+				if (op.getInMessageRef() == null) {
+					op.setInMessageRef(messageRef);
+				} else if (!op.getInMessageRef().equals(messageRef)) {
+					// TODO: Report mismatch
+				}
+			} else if (InteractionUtil.isFaultResponse(interaction)) {
+				String faultName=InteractionUtil.getFaultName(interaction);
+				TError error=null;
+				
+				// Check for Error definition with associated fault name and message ref
+				for (JAXBElement<? extends TRootElement> rootElem :
+							m_modelFactory.getDefinitions().getRootElement()) {
+					if (rootElem.getValue() instanceof TError) {
+						TError cur=(TError)rootElem.getValue();
+						
+						// Check if error has same fault name
+						// TODO: may need to also check same item def??
+						if (cur.getErrorCode().equals(faultName)) {
+							error = cur;
+							break;
+						}
+					}
+				}
+				
+				if (error != null) {
+					QName qname=new QName(m_modelFactory.getDefinitions().getTargetNamespace(), error.getId());
+					
+					if (!op.getErrorRef().contains(qname)) {
+						op.getErrorRef().add(qname);
+					}
+				} else {
+					// TODO: Report unable to find Error for fault name
+				}
+			} else {
+				// Normal response
+				if (op.getOutMessageRef() == null) {
+					op.setOutMessageRef(messageRef);
+				} else if (!op.getOutMessageRef().equals(messageRef)) {
+					// TODO: Report mismatch
+				}
+			}
+			
+			return(ret);
 		}
 	}
 }

@@ -28,7 +28,6 @@ import org.savara.bpmn2.model.ObjectFactory;
 import org.savara.bpmn2.model.TBaseElement;
 import org.savara.bpmn2.model.TBoundaryEvent;
 import org.savara.bpmn2.model.TCallActivity;
-import org.savara.bpmn2.model.TCatchEvent;
 import org.savara.bpmn2.model.TCollaboration;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TEndEvent;
@@ -507,12 +506,14 @@ public class BPMN2ModelFactory {
 	public java.util.List<Object> getInboundControlLinks(Object node) {
 		java.util.List<Object> ret=new java.util.Vector<Object>();
 		
+		/*
 		if (node instanceof TFlowNode) {
 			for (QName qname : ((TFlowNode)node).getIncoming()) {
 				
 			}
 			
 		}
+		*/
 		
 		return(ret);
 	}
@@ -520,12 +521,14 @@ public class BPMN2ModelFactory {
 	public java.util.List<Object> getOutboundControlLinks(Object node) {
 		java.util.List<Object> ret=new java.util.Vector<Object>();
 		
+		/*
 		if (node instanceof TFlowNode) {
 			for (QName qname : ((TFlowNode)node).getOutgoing()) {
 				
 			}
 			
 		}
+		*/
 		
 		return(ret);
 	}

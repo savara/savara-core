@@ -19,6 +19,7 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
+import org.savara.bpmn2.model.TSendTask;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Interaction;
 
@@ -58,4 +59,12 @@ public class SendActivity extends SimpleActivity {
 		return(m_send);
 	}
 	
+	/**
+	 * This method returns the send task.
+	 * 
+	 * @return The send task
+	 */
+	public TSendTask getSendTask() {
+		return((TSendTask)getNode());
+	}
 }

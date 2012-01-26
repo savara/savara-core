@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:ca="http://www.jboss.org/examples/creditAgency" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:lg="http://www.jboss.org/examples/logistics" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.jboss.org/examples/logistics">
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.jboss.org/savara/examples"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.w3.org/2001/XMLSchema"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="store.xsd" namespace="http://www.jboss.org/examples/store"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="logistics.xsd" namespace="http://www.jboss.org/examples/logistics"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMAccountNotFound" structureRef="AccountNotFound"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDAccountNotFound" itemRef="ITEMAccountNotFound" name="AccountNotFound"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyConfirmed" structureRef="BuyConfirmed"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDBuyConfirmed" itemRef="ITEMBuyConfirmed" name="BuyConfirmed"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyFailed" structureRef="BuyFailed"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDBuyFailed" itemRef="ITEMBuyFailed" name="BuyFailed"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyRequest" structureRef="BuyRequest"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDBuyRequest" itemRef="ITEMBuyRequest" name="BuyRequest"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCreditCheckRequest" structureRef="CreditCheckRequest"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDCreditCheckRequest" itemRef="ITEMCreditCheckRequest" name="CreditCheckRequest"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCreditRating" structureRef="CreditRating"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDCreditRating" itemRef="ITEMCreditRating" name="CreditRating"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCustomerUnknown" structureRef="CustomerUnknown"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDCustomerUnknown" itemRef="ITEMCustomerUnknown" name="CustomerUnknown"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryConfirmed" structureRef="DeliveryConfirmed"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDDeliveryConfirmed" itemRef="ITEMDeliveryConfirmed" name="DeliveryConfirmed"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryRequest" structureRef="DeliveryRequest"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDDeliveryRequest" itemRef="ITEMDeliveryRequest" name="DeliveryRequest"/>
+    <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMIDType" structureRef="xs:string"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDIDType" itemRef="ITEMIDType" name="IDType"/>
+    <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMURITokenType" structureRef="xs:anyURI"/>
+    <bpmn2:message xmlns="http://www.jboss.org/examples/logistics" id="IDURITokenType" itemRef="ITEMURITokenType" name="URITokenType"/>
     <bpmn2:collaboration id="MID1">
         <bpmn2:participant id="MID3" name="Logistics" processRef="MID2"/>
     </bpmn2:collaboration>
@@ -9,18 +36,24 @@
         <bpmn2:endEvent id="MID5">
             <bpmn2:incoming>MID10</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: deliver(DeliveryRequest) from Store" xsi:type="bpmn2:tReceiveTask">
-            <bpmn2:incoming>MID9</bpmn2:incoming>
-            <bpmn2:outgoing>MID8</bpmn2:outgoing>
+        <bpmn2:task xmlns="http://www.jboss.org/examples/logistics" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="IDDeliveryRequest" name="Receive: deliver(DeliveryRequest) from Store" operationRef="OP_Logistics_deliver" xsi:type="bpmn2:tReceiveTask">
+            <bpmn2:incoming xmlns="" xmlns:ns7="http://www.jboss.org/examples/logistics">MID9</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="" xmlns:ns7="http://www.jboss.org/examples/logistics">MID8</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Send: deliver(DeliveryConfirmed) to Store" xsi:type="bpmn2:tSendTask">
-            <bpmn2:incoming>MID8</bpmn2:incoming>
-            <bpmn2:outgoing>MID10</bpmn2:outgoing>
+        <bpmn2:task xmlns="http://www.jboss.org/examples/logistics" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" messageRef="IDDeliveryConfirmed" name="Send: deliver(DeliveryConfirmed) to Store" operationRef="OP_Logistics_deliver" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming xmlns="" xmlns:ns7="http://www.jboss.org/examples/logistics">MID8</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="" xmlns:ns7="http://www.jboss.org/examples/logistics">MID10</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:sequenceFlow id="MID8" sourceRef="MID6" targetRef="MID7"/>
         <bpmn2:sequenceFlow id="MID9" sourceRef="MID4" targetRef="MID6"/>
         <bpmn2:sequenceFlow id="MID10" sourceRef="MID7" targetRef="MID5"/>
     </bpmn2:process>
+    <bpmn2:interface id="LogisticsInterface" name="LogisticsInterface">
+        <bpmn2:operation id="OP_Logistics_deliver" name="deliver">
+            <bpmn2:inMessageRef xmlns="http://www.jboss.org/examples/logistics">IDDeliveryRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="http://www.jboss.org/examples/logistics">IDDeliveryConfirmed</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
     <bpmndi:BPMNDiagram id="NID1">
         <bpmndi:BPMNPlane>
             <bpmndi:BPMNShape bpmnElement="MID3" id="NID2">

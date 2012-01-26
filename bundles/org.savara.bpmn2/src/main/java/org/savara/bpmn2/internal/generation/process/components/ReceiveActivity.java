@@ -19,6 +19,7 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
+import org.savara.bpmn2.model.TReceiveTask;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Interaction;
 
@@ -57,7 +58,16 @@ public class ReceiveActivity extends SimpleActivity {
 	public Interaction getReceive() {
 		return(m_receive);
 	}
-	
+
+	/**
+	 * This method returns the receive task.
+	 * 
+	 * @return The send task
+	 */
+	public TReceiveTask getReceiveTask() {
+		return((TReceiveTask)getNode());
+	}
+
 	/**
 	 * This method causes the receive activity to break any
 	 * existing control links, including removing preceeding
