@@ -45,9 +45,9 @@ public class ProtocolToBPELGeneratorTest {
         suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "Store"));
         suite.addTest(new ProtocolToBPELTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
         
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsFromBPMN2", "CreditAgency"));
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsFromBPMN2", "Store"));
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsFromBPMN2", "Logistics"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods", "CreditAgency"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods", "Store"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoods", "Logistics"));
         
         // TODO: SAVARA-225 - participant types only used in sub-choreographies need to be
         // declared as roles in just those sub-protocols
@@ -58,14 +58,14 @@ public class ProtocolToBPELGeneratorTest {
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierQuoteEngine"));
         suite.addTest(new ProtocolToBPELTester("ESBBroker", "SupplierTxnProcessor"));
         
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "Buyer"));
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "CreditAgency"));
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods1", "Store"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsCDL1", "Buyer"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsCDL1", "CreditAgency"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsCDL1", "Store"));
 
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Buyer"));
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "CreditAgency"));
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Store"));
-        suite.addTest(new ProtocolToBPELTester("PurchaseGoods3", "Logistics"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsCDL3", "Buyer"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsCDL3", "CreditAgency"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsCDL3", "Store"));
+        suite.addTest(new ProtocolToBPELTester("PurchaseGoodsCDL3", "Logistics"));
         
         suite.addTest(new ProtocolToBPELTester("ReqRespFault", "Buyer"));
         suite.addTest(new ProtocolToBPELTester("ReqRespFault", "Seller"));
