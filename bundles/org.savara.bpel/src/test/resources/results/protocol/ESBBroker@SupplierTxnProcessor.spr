@@ -1,4 +1,10 @@
+import "orderConfirmed" as orderConfirmed;
+import "bookingReference" as bookingReference;
+[[ Type(location=CompleteTransaction_SupplierTxnProcessor.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
+[[ Type(location=CompleteTransaction_SupplierTxnProcessorArtifacts.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 protocol CompleteTransaction_SupplierTxnProcessor at SupplierTxnProcessor {
+	[[ Correlation(request=confirm) ]]
 	confirm(orderConfirmed) from Broker;
+	[[ Correlation(replyTo=confirm) ]]
 	confirm(bookingReference) to Broker;
 }

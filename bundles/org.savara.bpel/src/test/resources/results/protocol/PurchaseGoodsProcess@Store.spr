@@ -1,11 +1,28 @@
+import "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
+import "{java:org.jboss.savara.examples.purchasing}CreditCheckRequest" as CreditCheckRequest;
+import "{java:org.jboss.savara.examples.purchasing}CreditCheckOk" as CreditCheckOk;
+import "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
+import "{java:org.jboss.savara.examples.purchasing}CreditCheckInvalid" as CreditCheckInvalid;
+import "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
+[[ Type(location=PurchaseGoodsProcess_Store.wsdl,namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(location=PurchaseGoodsProcess_CreditAgency.wsdl,namespace=java:org.jboss.savara.examples.purchasing) ]]
+[[ Type(location=PurchaseGoodsProcess_StoreArtifacts.wsdl,namespace=http://www.jboss.org/examples/store) ]]
 protocol PurchaseGoodsProcess_Store at StoreInterface {
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer;
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) to CreditAgency;
 	choice at CreditAgency {
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckOk) from CreditAgency;
+		[[ Correlation(replyTo=buy) ]]
 		buy(BuyConfirmed) to Buyer;
 	} or {
+		[[ Fault(name=CreditCheckFailed) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckInvalid) from CreditAgency;
+		[[ Fault(name=BuyFailed) ]]
+		[[ Correlation(replyTo=buy) ]]
 		buy(BuyFailed) to Buyer;
 	}
 }

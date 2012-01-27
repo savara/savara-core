@@ -1,0 +1,10 @@
+import "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest;
+import "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
+[[ Type(location=PurchaseGoods_Logistics.wsdl,namespace=http://www.savara.org/examples/Logistics) ]]
+[[ Type(location=PurchaseGoods_LogisticsArtifacts.wsdl,namespace=http://www.savara.org/examples/Logistics) ]]
+protocol PurchaseGoods_Logistics at Logistics {
+	[[ Correlation(request=delivery) ]]
+	delivery(DeliveryRequest) from Store;
+	[[ Correlation(replyTo=delivery) ]]
+	delivery(DeliveryConfirmed) to Store;
+}

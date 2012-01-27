@@ -44,6 +44,8 @@ public class BPELToBPMNProcessTest extends TestCase {
         TestSuite suite = new TestSuite("BPEL->BPMN Process Transform Tests");
         
         suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Store"));       
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@CreditAgency"));       
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Logistics"));       
 
         return suite;
     }

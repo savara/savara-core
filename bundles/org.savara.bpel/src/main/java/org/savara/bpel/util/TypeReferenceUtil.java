@@ -20,7 +20,11 @@ package org.savara.bpel.util;
 import javax.xml.namespace.QName;
 
 import org.savara.bpel.parser.rules.ParserContext;
+import org.scribble.protocol.model.DataType;
+import org.scribble.protocol.model.TypeImport;
+import org.scribble.protocol.model.TypeImportList;
 import org.scribble.protocol.model.TypeReference;
+import org.scribble.protocol.util.TypesUtil;
 
 public class TypeReferenceUtil {
 
@@ -58,6 +62,25 @@ public class TypeReferenceUtil {
 					// TODO: Log error
 				}
 				*/
+			}
+			
+			// Check that type name is registered as imported
+			TypeImport ti=TypesUtil.getTypeImport(context.getProtocolModel(), ret.getName());
+			
+			if (ti == null) {
+				// Create a new type import
+				ti = new TypeImport();
+				ti.setName(ret.getName());
+				
+				DataType dtype=new DataType();
+				dtype.setDetails(type);
+				
+				ti.setDataType(dtype);
+				
+				TypeImportList til=new TypeImportList();
+				til.getTypeImports().add(ti);
+				
+				context.getProtocolModel().getImports().add(til);
 			}
 		}
 		

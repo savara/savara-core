@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI">
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_Store.wsdl" namespace="http://www.savara.org/examples/Store"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_CreditAgency.wsdl" namespace="http://www.savara.org/examples/CreditAgency"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_Logistics.wsdl" namespace="http://www.savara.org/examples/Logistics"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_StoreArtifacts.wsdl" namespace="http://www.savara.org/examples/Store"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyRequest" structureRef="BuyRequest"/>
+    <bpmn2:message id="IDBuyRequest" itemRef="ITEMBuyRequest" name="BuyRequest"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCreditCheckRequest" structureRef="CreditCheckRequest"/>
+    <bpmn2:message id="IDCreditCheckRequest" itemRef="ITEMCreditCheckRequest" name="CreditCheckRequest"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCreditRating" structureRef="CreditRating"/>
+    <bpmn2:message id="IDCreditRating" itemRef="ITEMCreditRating" name="CreditRating"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyFailed" structureRef="BuyFailed"/>
+    <bpmn2:message id="IDBuyFailed" itemRef="ITEMBuyFailed" name="BuyFailed"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryRequest" structureRef="DeliveryRequest"/>
+    <bpmn2:message id="IDDeliveryRequest" itemRef="ITEMDeliveryRequest" name="DeliveryRequest"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryConfirmed" structureRef="DeliveryConfirmed"/>
+    <bpmn2:message id="IDDeliveryConfirmed" itemRef="ITEMDeliveryConfirmed" name="DeliveryConfirmed"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyConfirmed" structureRef="BuyConfirmed"/>
+    <bpmn2:message id="IDBuyConfirmed" itemRef="ITEMBuyConfirmed" name="BuyConfirmed"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCustomerUnknown" structureRef="CustomerUnknown"/>
+    <bpmn2:message id="IDCustomerUnknown" itemRef="ITEMCustomerUnknown" name="CustomerUnknown"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMAccountNotFound" structureRef="AccountNotFound"/>
+    <bpmn2:message id="IDAccountNotFound" itemRef="ITEMAccountNotFound" name="AccountNotFound"/>
     <bpmn2:collaboration id="MID1">
         <bpmn2:participant id="MID3" name="Store" processRef="MID2"/>
     </bpmn2:collaboration>
@@ -9,11 +31,11 @@
         <bpmn2:endEvent id="MID5">
             <bpmn2:incoming>MID34</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Receive: buy(BuyRequest) from Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="IDBuyRequest" name="Receive: buy(BuyRequest) from Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID33</bpmn2:incoming>
             <bpmn2:outgoing>MID19</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Send: creditCheck(CreditCheckRequest) to CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" messageRef="IDCreditCheckRequest" name="Send: creditCheck(CreditCheckRequest) to CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID19</bpmn2:incoming>
             <bpmn2:outgoing>MID32</bpmn2:outgoing>
         </bpmn2:task>
@@ -27,7 +49,7 @@
             <bpmn2:incoming>MID31</bpmn2:incoming>
             <bpmn2:outgoing>MID34</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" name="Receive: creditCheck(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" messageRef="IDCreditRating" name="Receive: creditCheck(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID28</bpmn2:incoming>
             <bpmn2:outgoing>MID26</bpmn2:outgoing>
         </bpmn2:task>
@@ -41,27 +63,27 @@
             <bpmn2:incoming>MID25</bpmn2:incoming>
             <bpmn2:outgoing>MID29</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID13" name="Send: buy(BuyFailed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID13" messageRef="IDBuyFailed" name="Send: buy(BuyFailed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID22</bpmn2:incoming>
             <bpmn2:outgoing>MID23</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID14" name="Send: delivery(DeliveryRequest) to Logistics" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID14" messageRef="IDDeliveryRequest" name="Send: delivery(DeliveryRequest) to Logistics" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID24</bpmn2:incoming>
             <bpmn2:outgoing>MID20</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID15" name="Receive: delivery(DeliveryConfirmed) from Logistics" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID15" messageRef="IDDeliveryConfirmed" name="Receive: delivery(DeliveryConfirmed) from Logistics" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID20</bpmn2:incoming>
             <bpmn2:outgoing>MID21</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID21</bpmn2:incoming>
             <bpmn2:outgoing>MID25</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" name="Receive: creditCheck(CustomerUnknown) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" messageRef="IDCustomerUnknown" name="Receive: creditCheck(CustomerUnknown) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID30</bpmn2:incoming>
             <bpmn2:outgoing>MID27</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID18" name="Send: buy(AccountNotFound) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID18" messageRef="IDAccountNotFound" name="Send: buy(AccountNotFound) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID27</bpmn2:incoming>
             <bpmn2:outgoing>MID31</bpmn2:outgoing>
         </bpmn2:task>
@@ -83,14 +105,29 @@
         <bpmn2:sequenceFlow id="MID34" sourceRef="MID9" targetRef="MID5"/>
     </bpmn2:process>
     <bpmn2:interface id="StoreInterface" name="StoreInterface">
-        <bpmn2:operation id="OP_Store_buy" name="buy"/>
+        <bpmn2:operation id="OP_Store_buy" name="buy">
+            <bpmn2:inMessageRef>IDBuyRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDBuyConfirmed</bpmn2:outMessageRef>
+            <bpmn2:errorRef>ERRInsufficientCredit</bpmn2:errorRef>
+            <bpmn2:errorRef>ERRAccountNotFound</bpmn2:errorRef>
+        </bpmn2:operation>
     </bpmn2:interface>
     <bpmn2:interface id="CreditAgencyInterface" name="CreditAgencyInterface">
-        <bpmn2:operation id="OP_CreditAgency_creditCheck" name="creditCheck"/>
+        <bpmn2:operation id="OP_CreditAgency_creditCheck" name="creditCheck">
+            <bpmn2:inMessageRef>IDCreditCheckRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDCreditRating</bpmn2:outMessageRef>
+            <bpmn2:errorRef>ERRCustomerUnknown</bpmn2:errorRef>
+        </bpmn2:operation>
     </bpmn2:interface>
+    <bpmn2:error errorCode="InsufficientCredit" id="ERRInsufficientCredit" name="InsufficientCredit" structureRef="ITEMBuyFailed"/>
     <bpmn2:interface id="LogisticsInterface" name="LogisticsInterface">
-        <bpmn2:operation id="OP_Logistics_delivery" name="delivery"/>
+        <bpmn2:operation id="OP_Logistics_delivery" name="delivery">
+            <bpmn2:inMessageRef>IDDeliveryRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDDeliveryConfirmed</bpmn2:outMessageRef>
+        </bpmn2:operation>
     </bpmn2:interface>
+    <bpmn2:error errorCode="CustomerUnknown" id="ERRCustomerUnknown" name="CustomerUnknown" structureRef="ITEMCustomerUnknown"/>
+    <bpmn2:error errorCode="AccountNotFound" id="ERRAccountNotFound" name="AccountNotFound" structureRef="ITEMAccountNotFound"/>
     <bpmndi:BPMNDiagram id="NID1">
         <bpmndi:BPMNPlane>
             <bpmndi:BPMNShape bpmnElement="MID3" id="NID2">

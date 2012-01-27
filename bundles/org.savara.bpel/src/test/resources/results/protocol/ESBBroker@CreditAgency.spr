@@ -1,8 +1,20 @@
+import "CreditCheckRequest" as CreditCheckRequest;
+import "CreditCheckOk" as CreditCheckOk;
+import "CreditCheckInvalid" as CreditCheckInvalid;
+[[ Type(location=ESBBrokerProcess_CreditAgency.wsdl,namespace=http://www.pi4soa.org/ESBBroker/CreditAgency) ]]
+[[ Type(location=ESBBrokerProcess_Broker.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Broker) ]]
+[[ Type(location=ESBBrokerProcess_Supplier.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
+[[ Type(location=ESBBrokerProcess_SupplierTxnProcessor.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
+[[ Type(location=ESBBrokerProcess_CreditAgencyArtifacts.wsdl,namespace=http://www.pi4soa.org/ESBBroker/CreditAgency) ]]
 protocol ESBBrokerProcess_CreditAgency at CreditAgency {
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Broker;
 	choice {
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckOk) to Broker;
 	} or {
+		[[ Fault(name=invalidCredit) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckInvalid) to Broker;
 	}
 }

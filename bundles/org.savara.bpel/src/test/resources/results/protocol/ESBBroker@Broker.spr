@@ -1,20 +1,49 @@
+import "enquiry" as enquiry;
+import "requestForQuote" as requestForQuote;
+import "quote" as quote;
+import "quoteList" as quoteList;
+import "buy" as buy;
+import "CreditCheckRequest" as CreditCheckRequest;
+import "CreditCheckOk" as CreditCheckOk;
+import "orderConfirmed" as orderConfirmed;
+import "bookingReference" as bookingReference;
+import "CreditCheckInvalid" as CreditCheckInvalid;
+import "orderRejected" as orderRejected;
+import "cancel" as cancel;
+[[ Type(location=ESBBrokerProcess_Broker.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Broker) ]]
+[[ Type(location=ESBBrokerProcess_CreditAgency.wsdl,namespace=http://www.pi4soa.org/ESBBroker/CreditAgency) ]]
+[[ Type(location=ESBBrokerProcess_Supplier.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
+[[ Type(location=ESBBrokerProcess_BrokerArtifacts.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Broker) ]]
 protocol ESBBrokerProcess_Broker at BrokerBehavior {
+	[[ Correlation(request=makeEnquiry) ]]
 	makeEnquiry(enquiry) from Buyer;
 	repeat {
+		[[ Correlation(request=getQuote) ]]
 		getQuote(requestForQuote) to SupplierQuoteEngine;
+		[[ Correlation(replyTo=getQuote) ]]
 		getQuote(quote) from SupplierQuoteEngine;
 	}
+	[[ Correlation(replyTo=makeEnquiry) ]]
 	makeEnquiry(quoteList) to Buyer;
 	choice at Buyer {
 		buy(buy) from Buyer;
+		[[ Correlation(request=checkCredit) ]]
 		checkCredit(CreditCheckRequest) to CreditAgency;
 		choice at CreditAgency {
+			[[ Correlation(replyTo=checkCredit) ]]
 			checkCredit(CreditCheckOk) from CreditAgency;
+			[[ Correlation(request=confirm) ]]
 			confirm(orderConfirmed) to SupplierTxnProcessor;
+			[[ Correlation(replyTo=confirm) ]]
 			confirm(bookingReference) from SupplierTxnProcessor;
+			[[ Correlation(replyTo=buy) ]]
 			buy(bookingReference) to Buyer;
 		} or {
+			[[ Fault(name=invalidCredit) ]]
+			[[ Correlation(replyTo=checkCredit) ]]
 			checkCredit(CreditCheckInvalid) from CreditAgency;
+			[[ Fault(name=rejected) ]]
+			[[ Correlation(replyTo=buy) ]]
 			buy(orderRejected) to Buyer;
 		}
 	} or {

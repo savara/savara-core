@@ -1,8 +1,17 @@
+import "CreditCheckRequest" as CreditCheckRequest;
+import "CreditCheckOk" as CreditCheckOk;
+import "CreditCheckInvalid" as CreditCheckInvalid;
+[[ Type(location=ReqRespFaultProcess_Seller.wsdl,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
+[[ Type(location=ReqRespFaultProcess_SellerArtifacts.wsdl,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
 protocol ReqRespFaultProcess_Seller at SellerBehavior {
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Buyer;
 	choice {
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckOk) to Buyer;
 	} or {
+		[[ Fault(name=insufficientCredit) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckInvalid) to Buyer;
 	}
 }

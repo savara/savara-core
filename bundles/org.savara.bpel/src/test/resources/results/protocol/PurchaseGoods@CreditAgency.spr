@@ -1,0 +1,17 @@
+import "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest;
+import "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown;
+import "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
+[[ Type(location=PurchaseGoods_CreditAgency.wsdl,namespace=http://www.savara.org/examples/CreditAgency) ]]
+[[ Type(location=PurchaseGoods_CreditAgencyArtifacts.wsdl,namespace=http://www.savara.org/examples/CreditAgency) ]]
+protocol PurchaseGoods_CreditAgency at CreditAgency {
+	[[ Correlation(request=creditCheck) ]]
+	creditCheck(CreditCheckRequest) from Store;
+	choice {
+		[[ Fault(name=CustomerUnknown) ]]
+		[[ Correlation(replyTo=creditCheck) ]]
+		creditCheck(CustomerUnknown) to Store;
+	} or {
+		[[ Correlation(replyTo=creditCheck) ]]
+		creditCheck(CreditRating) to Store;
+	}
+}

@@ -1,4 +1,10 @@
+import "requestForQuote" as requestForQuote;
+import "quote" as quote;
+[[ Type(location=RequestForQuote_SupplierQuoteEngine.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
+[[ Type(location=RequestForQuote_SupplierQuoteEngineArtifacts.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 protocol RequestForQuote_SupplierQuoteEngine at SupplierBehavior {
+	[[ Correlation(request=getQuote) ]]
 	getQuote(requestForQuote) from Broker;
+	[[ Correlation(replyTo=getQuote) ]]
 	getQuote(quote) to Broker;
 }

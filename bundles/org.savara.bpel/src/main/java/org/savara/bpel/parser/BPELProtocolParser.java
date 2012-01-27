@@ -20,10 +20,13 @@
 package org.savara.bpel.parser;
 
 import org.savara.bpel.BPELDefinitions;
+import org.savara.bpel.model.TImport;
 import org.savara.bpel.model.TPartnerLink;
 import org.savara.bpel.model.TProcess;
 import org.savara.bpel.parser.rules.DefaultParserContext;
 import org.savara.bpel.util.BPELModelUtil;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.util.FeedbackHandlerProxy;
 import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.common.logging.Journal;
@@ -62,7 +65,7 @@ public class BPELProtocolParser implements ProtocolParser {
 		
 		// Configure model name
 		protocol.setName(process.getName());
-				
+
 		// Define implements reference for conversation type
 		//String convType=getConversationType();
 		String role=null;
@@ -78,14 +81,37 @@ public class BPELProtocolParser implements ProtocolParser {
 			}
 		}
 		
+		// Parse the imports
+		parseImports(process, protocol);
+		
 		// Convert the process contents
-		DefaultParserContext convContext=new DefaultParserContext(role, process,
+		DefaultParserContext convContext=new DefaultParserContext(role, process, ret,
 							new SavaraResourceLocatorProxy(context.getResourceLocator()));
 		
 		convContext.parse(process, protocol.getBlock().getContents(),
 							new FeedbackHandlerProxy(journal));
 		
 		return(ret);
+	}
+	
+	protected void parseImports(TProcess process, Protocol protocol) {
+		
+		for (TImport imp : process.getImport()) {
+			
+			Annotation annotation=new Annotation(AnnotationDefinitions.TYPE);
+			
+			if (imp.getLocation() != null) {
+				annotation.getProperties().put(AnnotationDefinitions.LOCATION_PROPERTY,
+						imp.getLocation());
+			}
+			
+			if (imp.getNamespace() != null) {
+				annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+						imp.getNamespace());
+			}
+			
+			protocol.getAnnotations().add(annotation);
+		}
 	}
 
 	public void setAnnotationProcessor(AnnotationProcessor ap) {
