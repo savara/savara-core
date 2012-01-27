@@ -44,7 +44,7 @@
 </catch>
                             </faultHandlers>
                             <sequence>
-<invoke inputVariable="creditCheckRequestVar" name="Send_CreditCheck" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns3:CreditAgency"/>
+<invoke inputVariable="creditCheckRequestVar" name="Send_CreditCheck" operation="creditCheck" outputVariable="creditCheckResponseVar" partnerLink="StoreToCreditAgency" portType="pns3:CreditAgency"/>
 <reply faultName="pns2:InsufficientCredit" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="pns2:Store" variable="InsufficientCreditFaultVar"/>
 <flow>
     <links>

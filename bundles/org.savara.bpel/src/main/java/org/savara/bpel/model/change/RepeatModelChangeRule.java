@@ -95,7 +95,7 @@ public class RepeatModelChangeRule extends AbstractBPELModelChangeRule {
 		// Process the activities within the conversation
 		java.util.List<Activity> acts=elem.getBlock().getContents();
 		
-		Object parent=context.getParent();
+		context.pushScope();
 		
 		context.setParent(seq);
 		
@@ -106,7 +106,7 @@ public class RepeatModelChangeRule extends AbstractBPELModelChangeRule {
 		act.setSequence(seq);
 
 		// Reset old parent
-		context.setParent(parent);
+		context.popScope();
 		
 		return(true);
 	}

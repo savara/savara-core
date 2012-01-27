@@ -58,6 +58,18 @@ public interface ModelChangeContext {
 	public void setParent(Object parent);
 	
 	/**
+	 * This method pushes the current scope onto a stack, to be
+	 * restored at a later stage in the processing.
+	 */
+	public void pushScope();
+	
+	/**
+	 * This method pops a previous instance of the scope from a
+	 * stack..
+	 */
+	public void popScope();
+	
+	/**
 	 * This method adds a new model object, within a
 	 * parent model object, with the details supplied in
 	 * another model object. The supplied model object

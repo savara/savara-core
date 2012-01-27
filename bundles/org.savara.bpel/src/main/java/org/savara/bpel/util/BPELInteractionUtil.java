@@ -41,8 +41,34 @@ import org.savara.common.util.XMLUtils;
  */
 public class BPELInteractionUtil {
 	
+	private static final String BPEL_INVOKE_PREFIX = "BPELInvoke_";
 	private static Logger logger = Logger.getLogger(BPELInteractionUtil.class.getName());
 
+	/**
+	 * This method stores the supplied invoke in the properties for later retrieval
+	 * by its operation name.
+	 * 
+	 * @param invoke The invoke
+	 * @param props The properties in which to store the invoke
+	 */
+	public static void registerInvoke(TInvoke invoke, java.util.Map<String, Object> props) {
+		if (invoke.getOperation() != null) {
+			props.put(BPEL_INVOKE_PREFIX+invoke.getOperation(), invoke);
+		}
+	}
+	
+	/**
+	 * Thie method returns the Invoke activity, stored in the supplied properties,
+	 * against a particular operation name.
+	 * 
+	 * @param operation The operation name
+	 * @param props The properties
+	 * @return The invoke activity, or null if not found
+	 */
+	public static TInvoke getInvoke(String operation, java.util.Map<String, Object> props) {
+		return((TInvoke)props.get(BPEL_INVOKE_PREFIX+operation));
+	}
+	
 	/**
 	 * This method determines whether the supplied activity
 	 * is either an invoke, or a sequence that has an

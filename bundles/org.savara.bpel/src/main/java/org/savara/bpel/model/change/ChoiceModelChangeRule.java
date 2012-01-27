@@ -34,6 +34,7 @@ import org.savara.bpel.model.TProcess;
 import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TSequence;
 import org.savara.bpel.model.TVariable;
+import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.VariableUtil;
 import org.savara.protocol.model.change.ModelChangeContext;
@@ -188,8 +189,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 					//	Activity act=path.getBlock().getContents().get(0);
 						TSequence subseq=null;
 						
-						if (interaction instanceof Interaction &&
-								InteractionUtil.isFaultResponse(interaction)) {
+						if (InteractionUtil.isFaultResponse(interaction)) {
 							String faultName=InteractionUtil.getFaultName(interaction);
 							
 							Contract fromContract = ModelChangeUtils.getContract(context,
@@ -231,11 +231,11 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 						} else {
 							subseq = seq;
 
-							java.util.List<Object> acts=
-								((TSequence)context.getParent()).getActivity();
+							TInvoke invoke=BPELInteractionUtil.getInvoke(
+										interaction.getMessageSignature().getOperation(),
+										context.getProperties());
 							
-							if (acts.size() > 0 && interaction instanceof Interaction &&
-									acts.get(acts.size()-1) instanceof TInvoke) {
+							if (invoke != null) {
 								Contract fromContract = ModelChangeUtils.getContract(context,
 										interaction.getFromRole());
 							
@@ -255,7 +255,6 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 								}
 
 								String varName=qname.getLocalPart()+"Var"; //InteractionPatterns.getVariableName((Interaction)act);
-								TInvoke invoke=(TInvoke)acts.get(acts.size()-1);
 								
 								invoke.setOutputVariable(varName);
 
@@ -266,7 +265,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 							}
 						}
 						
-						Object parent=context.getParent();
+						context.pushScope();
 						
 						context.setParent(subseq);
 						
@@ -274,7 +273,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 							context.insert(model, path.getContents().get(j), null);
 						}
 						
-						context.setParent(parent);
+						context.popScope();
 					//}
 				}
 			} else {
@@ -299,7 +298,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 					// Process the activities within the conversation
 					java.util.List<Activity> acts=path.getContents();
 								
-					Object parent=context.getParent();
+					context.pushScope();
 					
 					context.setParent(seq);
 					
@@ -307,7 +306,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 						context.insert(model, acts.get(j), null);
 					}
 					
-					context.setParent(parent);
+					context.popScope();
 					
 					//Interaction recv=InteractionPatterns.getPickPathInteraction(path);
 					
@@ -660,7 +659,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 				// Process the activities within the conversation
 				java.util.List<Activity> acts=path.getContents();
 							
-				Object parent=context.getParent();
+				context.pushScope();
 				
 				context.setParent(seq);
 				
@@ -668,7 +667,7 @@ public class ChoiceModelChangeRule extends AbstractBPELModelChangeRule {
 					context.insert(model, acts.get(j), null);
 				}
 				
-				context.setParent(parent);
+				context.popScope();
 	
 				if (i == 0) {
 					act.setSequence(seq);

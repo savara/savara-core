@@ -29,10 +29,10 @@ import org.scribble.protocol.model.*;
  */
 public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	
-	private Object m_parent=null;
 	private ProtocolContext m_context=null;
 	private FeedbackHandler m_feedbackHandler=null;
-	private java.util.Map<String,Object> m_properties=new java.util.HashMap<String,Object>();
+	
+	private java.util.Stack<Scope> _scopes=new java.util.Stack<Scope>();
 
 	/**
 	 * This is the constructor for the model change context.
@@ -43,6 +43,8 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	public AbstractModelChangeContext(ProtocolContext context, FeedbackHandler journal) {
 		m_context = context;
 		m_feedbackHandler = journal;
+		
+		_scopes.add(new Scope());
 	}
 	
 	/**
@@ -77,7 +79,7 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	 * @return The parent
 	 */
 	public Object getParent() {
-		return(m_parent);
+		return(getScope().getParentComponent());
 	}
 	
 	/**
@@ -86,7 +88,7 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	 * @param parent The parent
 	 */
 	public void setParent(Object parent) {
-		m_parent = parent;
+		getScope().setParentComponent(parent);
 	}
 	
 	/**
@@ -181,6 +183,61 @@ public abstract class AbstractModelChangeContext implements ModelChangeContext {
 	 * @return The properties
 	 */
 	public java.util.Map<String,Object> getProperties() {
-		return(m_properties);
+		return(getScope().getProperties());
+	}
+	
+	protected Scope getScope() {
+		return(_scopes.peek());
+	}
+	
+	public void pushScope() {
+		_scopes.push(new Scope(getScope()));
+	}
+	
+	public void popScope() {
+		_scopes.pop();
+	}
+	
+	public static class Scope {
+		
+		private Object _parent=null;
+		private java.util.Map<String,Object> _properties=new java.util.HashMap<String,Object>();
+
+		public Scope() {
+		}
+		
+		public Scope(Scope scope) {
+			_parent = scope.getParentComponent();
+			_properties.putAll(scope.getProperties());
+		}
+		
+		/**
+		 * This method returns the current parent component.
+		 * 
+		 * @return The parent
+		 */
+		public Object getParentComponent() {
+			return(_parent);
+		}
+		
+		/**
+		 * This method sets the new parent component.
+		 * 
+		 * @param parent The parent
+		 */
+		public void setParentComponent(Object parent) {
+			_parent = parent;
+		}
+		
+		/**
+		 * This method returns a set of properties used during model change
+		 * processing.
+		 * 
+		 * @return The properties
+		 */
+		public java.util.Map<String,Object> getProperties() {
+			return(_properties);
+		}
+
 	}
 }

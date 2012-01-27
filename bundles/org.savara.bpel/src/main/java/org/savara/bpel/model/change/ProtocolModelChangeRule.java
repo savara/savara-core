@@ -146,7 +146,7 @@ public class ProtocolModelChangeRule extends AbstractBPELModelChangeRule {
 			// Process the activities within the conversation
 			java.util.List<Activity> acts=conv.getBlock().getContents();
 			
-			Object parent=context.getParent();
+			context.pushScope();
 			
 			context.setParent(seq);
 			
@@ -157,7 +157,7 @@ public class ProtocolModelChangeRule extends AbstractBPELModelChangeRule {
 			}
 			
 			// Reset old parent
-			context.setParent(parent);
+			context.popScope();
 			
 			return(true);
 		} else {

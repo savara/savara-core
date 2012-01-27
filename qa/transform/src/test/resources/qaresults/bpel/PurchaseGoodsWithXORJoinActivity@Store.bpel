@@ -39,7 +39,7 @@
                         </catch>
                     </faultHandlers>
                     <sequence>
-                        <invoke inputVariable="creditCheckRequestVar" name="Send_CreditCheck" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgency"/>
+                        <invoke inputVariable="creditCheckRequestVar" name="Send_CreditCheck" operation="creditCheck" outputVariable="creditCheckResponseVar" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgency"/>
                         <if>
                             <sequence>
 <reply faultName="pns3:InsufficientCredit" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="InsufficientCreditFaultVar">

@@ -115,7 +115,7 @@ public class ParallelModelChangeRule extends AbstractBPELModelChangeRule {
 			// Process the activities within the conversation
 			java.util.List<Activity> acts=path.getContents();
 						
-			Object parent=context.getParent();
+			context.pushScope();
 			
 			context.setParent(seq);
 			
@@ -123,7 +123,7 @@ public class ParallelModelChangeRule extends AbstractBPELModelChangeRule {
 				context.insert(model, acts.get(j), null);
 			}
 			
-			context.setParent(parent);
+			context.popScope();
 
 			act.getActivity().add(seq);
 		}

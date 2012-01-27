@@ -31,6 +31,7 @@ import org.savara.bpel.model.TReply;
 import org.savara.bpel.model.TScope;
 import org.savara.bpel.model.TSequence;
 import org.savara.bpel.model.TVariable;
+import org.savara.bpel.util.BPELInteractionUtil;
 import org.savara.bpel.util.PartnerLinkUtil;
 import org.savara.bpel.util.VariableUtil;
 import org.savara.protocol.model.change.ModelChangeContext;
@@ -449,6 +450,8 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 						ProtocolUtils.getNamespacePrefix(interaction.getModel(), intf.getNamespace())));	
 				if (interaction.getMessageSignature() != null) {
 					((TInvoke)act).setOperation(interaction.getMessageSignature().getOperation());
+					
+					BPELInteractionUtil.registerInvoke((TInvoke)act, context.getProperties());
 				}
 			} else if (act instanceof TReceive) {
 				((TReceive)act).setPartnerLink(pl.getName());			

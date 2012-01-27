@@ -162,6 +162,11 @@ public class InvokeParserRule implements ProtocolParserRule {
 	protected static void convertResponse(TInvoke invoke, java.util.List<Activity> activities,
 			ParserContext context) {
 		
+		// Check if should be converted
+		if (invoke.getOutputVariable() == null) {
+			return;
+		}
+		
 		// Create interaction for request
 		Interaction interaction=new Interaction();
 		//interaction.derivedFrom(this);
