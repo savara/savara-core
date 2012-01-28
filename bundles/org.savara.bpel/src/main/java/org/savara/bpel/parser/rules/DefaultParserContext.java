@@ -17,11 +17,16 @@
  */
 package org.savara.bpel.parser.rules;
 
+import org.savara.bpel.model.TActivity;
 import org.savara.bpel.model.TProcess;
 import org.savara.bpel.model.TScope;
+import org.savara.bpel.model.TSource;
+import org.savara.bpel.model.TTarget;
 import org.savara.bpel.model.TVariable;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.resources.ResourceLocator;
+import org.savara.protocol.model.Join;
+import org.savara.protocol.model.Sync;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.ProtocolModel;
 
@@ -91,7 +96,40 @@ public class DefaultParserContext implements ParserContext {
 		}
 		
 		if (rule != null) {
+			// Check if join should be defined
+			if (component instanceof TActivity) {
+				TActivity act=(TActivity)component;
+				
+				if (act.getTargets() != null) {
+					Join join=new Join();
+					if (act.getTargets().getJoinCondition() == null ||
+							act.getTargets().getJoinCondition().getContent().
+									get(0).toString().indexOf(" and ") == -1) {
+						join.setXOR(true);
+					}
+					
+					for (TTarget target : act.getTargets().getTarget()) {
+						join.getLabels().add(target.getLinkName());
+					}
+					
+					activities.add(join);
+				}
+			}
+
 			rule.parse(this, component, activities, handler);
+			
+			// Check if sync should be defined
+			if (component instanceof TActivity) {
+				TActivity act=(TActivity)component;
+				
+				if (act.getSources() != null) {
+					for (TSource src : act.getSources().getSource()) {
+						Sync sync=new Sync();
+						sync.setLabel(src.getLinkName());
+						activities.add(sync);
+					}
+				}
+			}
 		}
 	}
 	

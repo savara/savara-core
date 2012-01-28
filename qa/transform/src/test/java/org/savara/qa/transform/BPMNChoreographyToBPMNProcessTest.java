@@ -200,7 +200,7 @@ public class BPMNChoreographyToBPMNProcessTest {
     	protected void checkResults(TestResult result, Role role, String protocol) {
     		boolean f_valid=false;
 
-    		String filename="qaresults/bpmn/"+m_name+"@"+role.getName()+".bpmn";
+    		String filename="qaresults/bpmn_from_bpmn_choreo/"+m_name+"@"+role.getName()+".bpmn";
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);
@@ -257,7 +257,7 @@ public class BPMNChoreographyToBPMNProcessTest {
     				if (f != null && f.exists()) {
     					f = f.getParentFile().getParentFile();
     					
-    					java.io.File resultsDir=new java.io.File(f, "qaresults/bpmn");
+    					java.io.File resultsDir=new java.io.File(f, "qaresults/bpmn_from_bpmn_choreo");
     					
     					if (resultsDir.exists() == false) {
     						resultsDir.mkdirs();

@@ -40,13 +40,15 @@ public class SyncTextProtocolExporterRule implements TextProtocolExporterRule {
 		
 		ret = "sync "+sync.getLabel();
 		
-		ret += " at ";
-		
-		for (int i=0; i < sync.getRoles().size(); i++) {
-			if (i > 0) {
-				ret += ",";
+		if (sync.getRoles().size() > 0) {
+			ret += " at ";
+			
+			for (int i=0; i < sync.getRoles().size(); i++) {
+				if (i > 0) {
+					ret += ",";
+				}
+				ret += sync.getRoles().get(i).getName();
 			}
-			ret += sync.getRoles().get(i).getName();
 		}
 		
 		return (ret);

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:pns1="http://www.savara.org/examples/Buyer" xmlns:pns2="http://www.savara.org/examples/Store" xmlns:pns3="http://www.savara.org/examples/CreditAgency" xmlns:pns4="http://www.savara.org/examples/Logistics" name="PurchaseGoods_Store" targetNamespace="http://www.savara.org/examples/Store">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_Store.wsdl" namespace="http://www.savara.org/examples/Store"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_CreditAgency.wsdl" namespace="http://www.savara.org/examples/CreditAgency"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_Logistics.wsdl" namespace="http://www.savara.org/examples/Logistics"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_StoreArtifacts.wsdl" namespace="http://www.savara.org/examples/Store"/>
+    <partnerLinks>
+        <partnerLink myRole="Store" name="BuyerToStore" partnerLinkType="pns2:BuyerToStoreServiceLT"/>
+        <partnerLink name="StoreToCreditAgency" partnerLinkType="pns2:StoreToCreditAgencyLT" partnerRole="CreditAgency"/>
+        <partnerLink name="StoreToLogistics" partnerLinkType="pns2:StoreToLogisticsLT" partnerRole="Logistics"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="pns2:buyRequest" name="buyRequestVar"/>
+        <variable messageType="pns3:creditCheckRequest" name="creditCheckRequestVar"/>
+        <variable messageType="pns2:AccountNotFoundFault" name="AccountNotFoundFaultVar"/>
+        <variable messageType="pns3:creditCheckResponse" name="creditCheckResponseVar"/>
+        <variable messageType="pns2:InsufficientCreditFault" name="InsufficientCreditFaultVar"/>
+        <variable messageType="pns2:buyResponse" name="buyResponseVar"/>
+        <variable messageType="pns4:deliveryRequest" name="deliveryRequestVar"/>
+        <variable messageType="pns4:deliveryResponse" name="deliveryResponseVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_BuyRequest" operation="buy" partnerLink="BuyerToStore" portType="pns2:Store" variable="buyRequestVar"/>
+        <flow>
+            <links>
+                <link name="L23"/>
+            </links>
+            <sequence>
+                <flow>
+                    <links>
+                        <link name="L11"/>
+                        <link name="L13"/>
+                    </links>
+                    <sequence>
+                        <scope>
+                            <faultHandlers>
+<catch faultMessageType="pns3:CustomerUnknownFault" faultName="pns3:CustomerUnknown" faultVariable="CustomerUnknownFaultVar">
+    <sequence>
+        <reply faultName="pns2:AccountNotFound" name="Send_AccountNotFound" operation="buy" partnerLink="BuyerToStore" portType="pns2:Store" variable="AccountNotFoundFaultVar">
+            <sources>
+                <source linkName="L11"/>
+            </sources>
+        </reply>
+    </sequence>
+</catch>
+                            </faultHandlers>
+                            <sequence>
+<invoke inputVariable="creditCheckRequestVar" name="Send_CreditCheck" operation="creditCheck" outputVariable="creditCheckResponseVar" partnerLink="StoreToCreditAgency" portType="pns3:CreditAgency"/>
+<reply faultName="pns2:InsufficientCredit" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="pns2:Store" variable="InsufficientCreditFaultVar"/>
+<flow>
+    <links>
+        <link name="L22"/>
+    </links>
+    <sequence>
+        <sources>
+            <source linkName="L13"/>
+        </sources>
+        <empty/>
+    </sequence>
+    <sequence>
+        <sources>
+            <source linkName="L22"/>
+        </sources>
+        <empty/>
+    </sequence>
+    <sequence>
+        <targets>
+            <joinCondition>$L22 and $L23</joinCondition>
+            <target linkName="L22"/>
+            <target linkName="L23"/>
+        </targets>
+        <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="pns2:Store" variable="buyResponseVar"/>
+    </sequence>
+</flow>
+                            </sequence>
+                        </scope>
+                    </sequence>
+                    <sequence>
+                        <targets>
+                            <target linkName="L11"/>
+                            <target linkName="L13"/>
+                        </targets>
+                        <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="pns2:Store" variable="buyResponseVar"/>
+                    </sequence>
+                </flow>
+            </sequence>
+            <sequence>
+                <invoke inputVariable="deliveryRequestVar" name="Send_DeliveryRequest" operation="delivery" outputVariable="deliveryResponseVar" partnerLink="StoreToLogistics" portType="pns4:Logistics">
+                    <sources>
+                        <source linkName="L23"/>
+                    </sources>
+                </invoke>
+            </sequence>
+        </flow>
+    </sequence>
+</process>

@@ -43,6 +43,9 @@ public class BPELToBPMNProcessTest extends TestCase {
 	public static TestSuite suite() {
         TestSuite suite = new TestSuite("BPEL->BPMN Process Transform Tests");
         
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoodsWithANDJoinActivity@Store"));
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoodsWithXORJoinActivity@Store"));
+        
         suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Store"));       
         suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@CreditAgency"));       
         suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Logistics"));       
@@ -173,7 +176,7 @@ public class BPELToBPMNProcessTest extends TestCase {
 		protected void checkResults(TestResult result, String conv) {
 			boolean f_valid=false;
 
-			String filename="qaresults/bpmn/"+_name+".bpmn";
+			String filename="qaresults/bpmn_from_bpel/"+_name+".bpmn";
 			
 			java.io.InputStream is=
 				//ParserTest.class.getResourceAsStream(filename);
@@ -237,7 +240,7 @@ public class BPELToBPMNProcessTest extends TestCase {
 					if (f != null && f.exists()) {
 						f = f.getParentFile().getParentFile().getParentFile();
 						
-						java.io.File resultsDir=new java.io.File(f, "qaresults/bpmn");
+						java.io.File resultsDir=new java.io.File(f, "qaresults/bpmn_from_bpel");
 						
 						if (resultsDir.exists() == false) {
 							resultsDir.mkdirs();

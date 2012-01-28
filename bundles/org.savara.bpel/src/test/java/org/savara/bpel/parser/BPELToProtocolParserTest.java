@@ -20,6 +20,8 @@ package org.savara.bpel.parser;
 import java.net.URI;
 
 import org.savara.bpel.parser.BPELProtocolParser;
+import org.savara.protocol.export.text.JoinTextProtocolExporterRule;
+import org.savara.protocol.export.text.SyncTextProtocolExporterRule;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.common.resource.Content;
 import org.scribble.common.resource.ResourceContent;
@@ -36,7 +38,13 @@ public class BPELToProtocolParserTest extends TestCase {
 	public static TestSuite suite() {
         TestSuite suite = new TestSuite("BPEL->Protocol Parser Tests");
         
-        //suite.addTest(new BPELToProtocolTest("PurchaseGoodsWithXORJoinActivity@Store", "PurchaseGoodsWithXORJoinActivity@Store"));
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsWithANDJoinActivity@Store", "PurchaseGoodsWithANDJoinActivity@Store"));
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsWithANDJoinActivity@CreditAgency", "PurchaseGoodsWithANDJoinActivity@CreditAgency"));
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsWithANDJoinActivity@Logistics", "PurchaseGoodsWithANDJoinActivity@Logistics"));
+
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsWithXORJoinActivity@Store", "PurchaseGoodsWithXORJoinActivity@Store"));
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsWithXORJoinActivity@CreditAgency", "PurchaseGoodsWithXORJoinActivity@CreditAgency"));
+        suite.addTest(new BPELToProtocolTest("PurchaseGoodsWithXORJoinActivity@Logistics", "PurchaseGoodsWithXORJoinActivity@Logistics"));
         
         suite.addTest(new BPELToProtocolTest("PurchaseGoods@Store", "PurchaseGoods@Store"));
         suite.addTest(new BPELToProtocolTest("PurchaseGoods@CreditAgency", "PurchaseGoods@CreditAgency"));
@@ -55,7 +63,7 @@ public class BPELToProtocolParserTest extends TestCase {
 
         suite.addTest(new BPELToProtocolTest("ReqRespFaultProcess_Buyer", "ReqRespFault@Buyer"));
         suite.addTest(new BPELToProtocolTest("ReqRespFaultProcess_Seller", "ReqRespFault@Seller"));
-        
+
         /**
          * TODO: (SAVARA-150) Commenting out this test for now, as we now need the accompanying WSDL to be able to
          * resolve the message type's underlying XSD element or type.
@@ -133,6 +141,10 @@ public class BPELToProtocolParserTest extends TestCase {
 						org.scribble.protocol.export.text.TextProtocolExporter exporter=
 							new org.scribble.protocol.export.text.TextProtocolExporter();
 				
+	    				// TODO: Temporary until supported in scribble protocol model
+	    				exporter.register(new SyncTextProtocolExporterRule());
+	    				exporter.register(new JoinTextProtocolExporterRule());
+	    				
 						java.io.ByteArrayOutputStream os=
 							new java.io.ByteArrayOutputStream();
 						

@@ -191,7 +191,7 @@ public class BPMNChoreographyToBPELTest {
     	protected void checkResults(TestResult result, String bpel) {
     		boolean f_valid=false;
 
-    		String filename="qaresults/bpel/"+m_name+"@"+m_role+".bpel";
+    		String filename="qaresults/bpel_from_bpmn_choreo/"+m_name+"@"+m_role+".bpel";
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);
@@ -245,7 +245,7 @@ public class BPMNChoreographyToBPELTest {
     				if (f != null && f.exists()) {
     					f = f.getParentFile().getParentFile().getParentFile();
     					
-    					java.io.File resultsDir=new java.io.File(f, "qaresults/bpel");
+    					java.io.File resultsDir=new java.io.File(f, "qaresults/bpel_from_bpmn_choreo");
     					
     					if (resultsDir.exists() == false) {
     						resultsDir.mkdirs();
