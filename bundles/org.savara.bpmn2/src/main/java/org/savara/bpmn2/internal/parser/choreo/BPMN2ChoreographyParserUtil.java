@@ -75,6 +75,9 @@ public class BPMN2ChoreographyParserUtil {
 	 * @param choreo The choreography
 	 */
 	public static void initializeScope(Scope scope, TChoreography choreo) {
+		
+		scope.setChoreography(choreo);
+		
 		initializeParticipants(scope, choreo.getParticipant());
 		
 		initializeFlowElements(scope, choreo.getFlowElement());

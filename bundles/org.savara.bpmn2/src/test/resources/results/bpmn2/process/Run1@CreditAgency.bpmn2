@@ -43,12 +43,12 @@
         <bpmn2:sequenceFlow id="MID9" sourceRef="MID4" targetRef="MID6"/>
         <bpmn2:sequenceFlow id="MID10" sourceRef="MID7" targetRef="MID5"/>
     </bpmn2:process>
-    <bpmn2:interface id="CreditAgencyInterface" name="CreditAgencyInterface">
+    <bpmn2:interface id="CreditAgencyInterface" name="CreditAgency">
         <bpmn2:operation id="OP_CreditAgency_checkCredit" name="checkCredit">
             <bpmn2:inMessageRef>IDCreditCheckRequest</bpmn2:inMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface id="StoreInterface" name="StoreInterface">
+    <bpmn2:interface id="StoreInterface" name="Store">
         <bpmn2:operation id="OP_Store_checkCredit" name="checkCredit">
             <bpmn2:inMessageRef>IDCreditRating</bpmn2:inMessageRef>
         </bpmn2:operation>

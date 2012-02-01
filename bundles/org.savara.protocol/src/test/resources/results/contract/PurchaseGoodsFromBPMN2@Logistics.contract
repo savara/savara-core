@@ -3,7 +3,7 @@ Contract {http://www.savara.org/examples/Logistics}Logistics {
 	Namespace prefix=pns4 uri=http://www.savara.org/examples/Logistics schemaLocation=null
 	TypeDef DeliveryConfirmed type={http://www.jboss.org/examples/logistics}DeliveryConfirmed location=null typeSystem=xsd
 	TypeDef DeliveryRequest type={http://www.jboss.org/examples/logistics}DeliveryRequest location=null typeSystem=xsd
-	Interface {http://www.savara.org/examples/Logistics}Logistics {
+	Interface {http://www.savara.org/examples/Logistics}LogisticsInterface {
 		RequestResponseMEP delivery( DeliveryRequest ) : DeliveryConfirmed 
 	}
 }

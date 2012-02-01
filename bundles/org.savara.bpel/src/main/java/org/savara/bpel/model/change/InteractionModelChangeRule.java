@@ -175,12 +175,22 @@ public class InteractionModelChangeRule extends AbstractBPELModelChangeRule {
 				if ((annotation=AnnotationDefinitions.getAnnotation(interaction.getAnnotations(),
 									AnnotationDefinitions.INTERFACE)) != null) {
 					String intfName=(String)annotation.getProperties().get(AnnotationDefinitions.NAME_PROPERTY);
-					intf = contract.getInterface(intfName);
+					String intfNamespace=(String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY);
+					
+					intf = contract.getInterface(intfNamespace, intfName);
 					
 					if (intf == null) {
-						// Try localpart
 						javax.xml.namespace.QName qname=javax.xml.namespace.QName.valueOf(intfName);
-						intf = contract.getInterface(qname.getLocalPart());
+						
+						if (intfNamespace == null) {
+							// Check if name field used to encode qname
+							intf = contract.getInterface(qname.getNamespaceURI(), qname.getLocalPart());
+						}
+						
+						if (intf == null) {
+							// Try localpart
+							intf = contract.getInterface(null, qname.getLocalPart());
+						}
 					}
 				} else if (contract.getInterfaces().size() > 0) {
 					intf = contract.getInterfaces().iterator().next();

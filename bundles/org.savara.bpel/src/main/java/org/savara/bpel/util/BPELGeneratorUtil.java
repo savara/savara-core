@@ -177,7 +177,7 @@ public class BPELGeneratorUtil {
 					Interface intf=null;
 					
 					if (pl.getMyRole() != null) {
-						intf = contract.getInterface(pl.getMyRole());
+						intf = contract.getInterface(null, pl.getMyRole());
 					}
 						
 					if (intf == null && contract.getInterfaces().size() > 0) {
@@ -228,7 +228,7 @@ public class BPELGeneratorUtil {
 					Interface intf=null;
 					
 					if (pl.getMyRole() != null) {
-						intf = contract.getInterface(pl.getMyRole());
+						intf = contract.getInterface(null, pl.getMyRole());
 					}
 						
 					if (intf == null && contract.getInterfaces().size() > 0) {

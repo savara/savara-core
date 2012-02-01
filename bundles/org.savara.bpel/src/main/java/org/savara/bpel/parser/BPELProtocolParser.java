@@ -76,6 +76,15 @@ public class BPELProtocolParser implements ProtocolParser {
 				if (pl.getMyRole() != null && pl.getMyRole().trim().length() > 0) {
 					role = pl.getMyRole();
 					protocol.setLocatedRole(new Role(role));
+					
+					// Define 'Interface' annotation for this role
+					Annotation ann=new Annotation(AnnotationDefinitions.INTERFACE);
+					ann.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+							process.getTargetNamespace());
+					ann.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, role);
+					ann.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, role);
+					
+					protocol.getAnnotations().add(ann);
 					break;
 				}
 			}

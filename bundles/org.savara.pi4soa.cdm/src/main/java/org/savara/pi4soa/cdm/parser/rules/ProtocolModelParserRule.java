@@ -152,7 +152,7 @@ public class ProtocolModelParserRule implements ParserRule {
 					public boolean start(Protocol elem) {
 						if (elem != top) {
 							AnnotationDefinitions.copyAnnotations(elem.getAnnotations(),
-									top.getAnnotations(), AnnotationDefinitions.NAMESPACE);
+									top.getAnnotations(), AnnotationDefinitions.INTERFACE);
 							
 						}
 						return(true);

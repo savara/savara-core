@@ -120,7 +120,8 @@ public class DoActivity extends AbstractBPMNActivity {
 			if (i > 0) {
 				TBoundaryEvent boundaryEvent=(TBoundaryEvent)getModelFactory().createBoundaryEvent(getContainer());
 				
-				boundaryEvent.setAttachedToRef(new QName(tryblock.getSubProcess().getId()));
+				boundaryEvent.setAttachedToRef(new QName(getModelFactory().getDefinitions().getTargetNamespace(),
+										tryblock.getSubProcess().getId()));
 				
 				getNotationFactory().createEvent(getModelFactory(), boundaryEvent,
 						parent, tryblock.getX()+((getChildStates().size()-i-1)*CATCH_OFFSET),

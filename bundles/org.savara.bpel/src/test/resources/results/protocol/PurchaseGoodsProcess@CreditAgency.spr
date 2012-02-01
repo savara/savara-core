@@ -1,6 +1,7 @@
 import "{java:org.jboss.savara.examples.purchasing}CreditCheckRequest" as CreditCheckRequest;
 import "{java:org.jboss.savara.examples.purchasing}CreditCheckOk" as CreditCheckOk;
 import "{java:org.jboss.savara.examples.purchasing}CreditCheckInvalid" as CreditCheckInvalid;
+[[ Interface(name=CreditAgencyInterface,role=CreditAgencyInterface,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Type(location=PurchaseGoodsProcess_CreditAgency.wsdl,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Type(location=PurchaseGoodsProcess_Store.wsdl,namespace=http://www.jboss.org/examples/store) ]]
 [[ Type(location=PurchaseGoodsProcess_CreditAgencyArtifacts.wsdl,namespace=java:org.jboss.savara.examples.purchasing) ]]

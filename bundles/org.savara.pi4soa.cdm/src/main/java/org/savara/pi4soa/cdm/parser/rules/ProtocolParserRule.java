@@ -86,10 +86,10 @@ public class ProtocolParserRule implements ParserRule {
 				
 				// Associate Namespace annotation with protocol
 				Annotation annotation=AnnotationDefinitions.getAnnotation(r.getAnnotations(),
-							AnnotationDefinitions.NAMESPACE);
+							AnnotationDefinitions.INTERFACE);
 				
 				if (annotation != null) {
-					Annotation pa=new Annotation(AnnotationDefinitions.NAMESPACE);
+					Annotation pa=new Annotation(AnnotationDefinitions.INTERFACE);
 					pa.getProperties().putAll(annotation.getProperties());
 					pa.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, r.getName());
 					ret.getAnnotations().add(pa);
@@ -142,10 +142,10 @@ public class ProtocolParserRule implements ParserRule {
 					
 					// Associate Namespace annotation with protocol
 					Annotation annotation=AnnotationDefinitions.getAnnotation(r.getAnnotations(),
-								AnnotationDefinitions.NAMESPACE);
+								AnnotationDefinitions.INTERFACE);
 					
 					if (annotation != null) {
-						Annotation pa=new Annotation(AnnotationDefinitions.NAMESPACE);
+						Annotation pa=new Annotation(AnnotationDefinitions.INTERFACE);
 						pa.getProperties().putAll(annotation.getProperties());
 						pa.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, r.getName());
 						ret.getAnnotations().add(pa);

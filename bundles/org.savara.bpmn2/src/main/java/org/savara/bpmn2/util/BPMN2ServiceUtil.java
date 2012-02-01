@@ -48,7 +48,7 @@ import org.savara.bpmn2.model.TStartEvent;
  */
 public class BPMN2ServiceUtil {
 
-	private static final String INTERFACE_NAME_SUFFIX = "Interface";
+	public static final String INTERFACE_ID_SUFFIX = "Interface";
 	private static final Logger LOG=Logger.getLogger(BPMN2ServiceUtil.class.getName());
 	
 	/**
@@ -194,9 +194,11 @@ public class BPMN2ServiceUtil {
 		
 		// Check if interface has been defined - if not, then create
 		if (intf == null) {
+			String intfName=getInterfaceName(participant);
+			
 			intf = new TInterface();
-			intf.setId(getInterfaceName(participant));
-			intf.setName(intf.getId());
+			intf.setId(intfName+INTERFACE_ID_SUFFIX);
+			intf.setName(intfName);
 			
 			intfs.put(participant, intf);
 		}
@@ -276,7 +278,7 @@ public class BPMN2ServiceUtil {
 	 * @return The interface name
 	 */
 	public static String getInterfaceName(TParticipant participant) {
-		return(participant.getName()+INTERFACE_NAME_SUFFIX);
+		return(participant.getName());
 	}
 	
 	/**

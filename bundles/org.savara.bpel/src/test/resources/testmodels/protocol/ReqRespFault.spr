@@ -1,8 +1,8 @@
 [[ XSDElement ]]
 import xsd "CreditCheckRequest" as CreditInformation, "CreditCheckInvalid" as CreditInvalid, "CreditCheckOk" as CreditValid;
 [[ SourceComponent(id=//@choreographies.0) ]]
-[[ Namespace(name=http://www.pi4soa.org/ReqRespFault/Buyer,role=Buyer) ]]
-[[ Namespace(name=http://www.pi4soa.org/ReqRespFault/Seller,role=Seller) ]]
+[[ Interface(namespace=http://www.pi4soa.org/ReqRespFault/Buyer,name=BuyerInterface,role=Buyer) ]]
+[[ Interface(namespace=http://www.pi4soa.org/ReqRespFault/Seller,name=SellerInterface,role=Seller) ]]
 [[ Type(prefix=tns,namespace=http://www.pi4soa.org/ReqRespFault) ]]
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(prefix=byr,namespace=http://www.pi4soa.org/ReqRespFault/Buyer) ]]
@@ -10,19 +10,19 @@ import xsd "CreditCheckRequest" as CreditInformation, "CreditCheckInvalid" as Cr
 protocol ReqRespFaultProcess(role Buyer) {
 	Buyer introduces Seller;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
-	[[ Interface(name={http://www.pi4soa.org/ReqRespFault/Seller}SellerBehavior) ]]
+	[[ Interface(namespace=http://www.pi4soa.org/ReqRespFault/Seller,name=SellerBehavior) ]]
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditInformation) from Buyer to Seller;
 	[[ SourceComponent(id=//@choreographies.0/@activities.1) ]]
 	choice at Seller {
 		[[ SourceComponent(id=//@choreographies.0/@activities.1/@activities.0/@activities.0/@exchangeDetails.0) ]]
-		[[ Interface(name={http://www.pi4soa.org/ReqRespFault/Seller}SellerBehavior) ]]
+		[[ Interface(namespace=http://www.pi4soa.org/ReqRespFault/Seller,name=SellerBehavior) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditValid) from Seller to Buyer;
 	} or {
 		[[ SourceComponent(id=//@choreographies.0/@activities.1/@activities.1/@activities.0/@exchangeDetails.0) ]]
 		[[ Fault(name=insufficientCredit) ]]
-		[[ Interface(name={http://www.pi4soa.org/ReqRespFault/Seller}SellerBehavior) ]]
+		[[ Interface(namespace=http://www.pi4soa.org/ReqRespFault/Seller,name=SellerBehavior) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditInvalid) from Seller to Buyer;
 	}

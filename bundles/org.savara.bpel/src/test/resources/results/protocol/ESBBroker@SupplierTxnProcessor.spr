@@ -1,5 +1,6 @@
 import "orderConfirmed" as orderConfirmed;
 import "bookingReference" as bookingReference;
+[[ Interface(name=SupplierTxnProcessor,role=SupplierTxnProcessor,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 [[ Type(location=CompleteTransaction_SupplierTxnProcessor.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 [[ Type(location=CompleteTransaction_SupplierTxnProcessorArtifacts.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 protocol CompleteTransaction_SupplierTxnProcessor at SupplierTxnProcessor {

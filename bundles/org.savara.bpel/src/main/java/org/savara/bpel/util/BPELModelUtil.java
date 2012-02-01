@@ -76,7 +76,7 @@ public class BPELModelUtil {
 				// Convert to DOM
 				javax.xml.parsers.DocumentBuilderFactory dbfactory=
 								javax.xml.parsers.DocumentBuilderFactory.newInstance();
-				dbfactory.setNamespaceAware(false);
+				dbfactory.setNamespaceAware(true);
 				
 				org.w3c.dom.Document doc=
 					dbfactory.newDocumentBuilder().parse(new java.io.ByteArrayInputStream(baos.toByteArray()));
@@ -87,7 +87,7 @@ public class BPELModelUtil {
 					doc.getDocumentElement().setAttribute("xmlns:"+prefix, ns); 
 				}
 				
-				//java.io.ByteArrayOutputStream baos2=new java.io.ByteArrayOutputStream();
+				doc.normalizeDocument();
 				
 				javax.xml.transform.dom.DOMSource source=new javax.xml.transform.dom.DOMSource(doc);
 				javax.xml.transform.stream.StreamResult result=new javax.xml.transform.stream.StreamResult(os);

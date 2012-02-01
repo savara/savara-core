@@ -92,13 +92,13 @@
         <bpmn2:sequenceFlow id="MID29" sourceRef="MID4" targetRef="MID6"/>
         <bpmn2:sequenceFlow id="MID30" sourceRef="MID7" targetRef="MID5"/>
     </bpmn2:process>
-    <bpmn2:interface id="StoreInterface" name="StoreInterface">
+    <bpmn2:interface id="StoreInterface" name="Store">
         <bpmn2:operation id="OP_Store_buy" name="buy">
             <bpmn2:inMessageRef>IDBuyRequest</bpmn2:inMessageRef>
         </bpmn2:operation>
         <bpmn2:operation id="OP_Store_cancel" name="cancel"/>
     </bpmn2:interface>
-    <bpmn2:interface id="BuyerInterface" name="BuyerInterface">
+    <bpmn2:interface id="BuyerInterface" name="Buyer">
         <bpmn2:operation id="OP_Buyer_buy" name="buy">
             <bpmn2:inMessageRef>IDBuyConfirmed</bpmn2:inMessageRef>
         </bpmn2:operation>

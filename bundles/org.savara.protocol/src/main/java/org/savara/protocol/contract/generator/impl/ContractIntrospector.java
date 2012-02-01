@@ -106,10 +106,10 @@ public class ContractIntrospector extends DefaultVisitor {
 			m_contract.setName(m_serverRole.getName());
 					
 			java.util.List<Annotation> annotations=AnnotationDefinitions.getAnnotations(protocol.getAnnotations(),
-								AnnotationDefinitions.NAMESPACE);
+								AnnotationDefinitions.INTERFACE);
 			if (annotations != null) {
 				for (Annotation annotation : annotations) {
-					String namespace=(String)annotation.getProperties().get(AnnotationDefinitions.NAME_PROPERTY);
+					String namespace=(String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY);
 					String role=(String)annotation.getProperties().get(AnnotationDefinitions.ROLE_PROPERTY);
 				
 					if (namespace != null && role != null && role.equals(m_serverRole.getName())) {
@@ -150,20 +150,32 @@ public class ContractIntrospector extends DefaultVisitor {
 	/**
 	 * This method returns the interface.
 	 * 
+	 * @param model The protocol model
+	 * @param intfNamespace The namespace
+	 * @param intfName The name
 	 * @return The interface
 	 */
-	public Interface getInterface(ProtocolModel model, String intfName) {
+	public Interface getInterface(ProtocolModel model, String intfNamespace, String intfName) {
 		QName qname=null;
 		
 		// TODO: Check Contract/Interface - whether should have separate name/namespace?
 		
 		if (intfName == null || intfName.trim().length() == 0) {
-			qname = new QName(m_contract.getNamespace(), m_serverRole.getName());
+			// Search for interface annotation on protocol
+			Annotation ann=AnnotationDefinitions.getAnnotationWithProperty(model.getProtocol().getAnnotations(),
+							AnnotationDefinitions.INTERFACE, "role", m_serverRole.getName());
+			
+			if (ann != null) {
+				qname = new QName((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
+						(String)ann.getProperties().get(AnnotationDefinitions.NAME_PROPERTY));
+			} else {
+				qname = new QName(m_contract.getNamespace(), m_serverRole.getName());
+			}
 		} else {
-			qname = QName.valueOf(intfName);
+			qname = new QName(intfNamespace, intfName);
 		}
 		
-		Interface ret=getContract().getInterface(qname.getLocalPart());
+		Interface ret=getContract().getInterface(qname.getNamespaceURI(), qname.getLocalPart());
 		
 		if (ret == null) {
 			// Create interface for the role
@@ -324,14 +336,16 @@ public class ContractIntrospector extends DefaultVisitor {
 		
 		// Check if interface has been specified
 		String intfName=null;
+		String intfNamespace=null;
 		
 		Annotation intfAnn=AnnotationDefinitions.getAnnotation(interaction.getAnnotations(), AnnotationDefinitions.INTERFACE);
 		if (intfAnn != null) {
 			intfName = (String)intfAnn.getProperties().get(AnnotationDefinitions.NAME_PROPERTY);
+			intfNamespace = (String)intfAnn.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY);
 		}
 		
 		// Receiving a request - so record this in the contract
-		Interface intf=getInterface(interaction.getModel(), intfName);
+		Interface intf=getInterface(interaction.getModel(), intfNamespace, intfName);
 
 		// Check if receiving a request
 		if (InteractionUtil.isRequest(interaction) && !InteractionUtil.isSend(interaction, m_serverRole)) {

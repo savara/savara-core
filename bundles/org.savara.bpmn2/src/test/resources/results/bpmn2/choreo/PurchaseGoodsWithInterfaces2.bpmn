@@ -152,14 +152,14 @@
     <bpmn2:error xmlns="" name="CustomerUnknown" errorCode="CustomerUnknown" structureRef="ItemDefinition_3" id="Error_1"/>
     <bpmn2:error xmlns="" name="AccountNotFound" errorCode="AccountNotFound" structureRef="ItemDefinition_5" id="Error_2"/>
     <bpmn2:error xmlns="" name="BuyFailed" errorCode="InsufficientCredit" structureRef="ItemDefinition_6" id="Error_3"/>
-    <bpmn2:interface name="CreditAgencyInterface" id="CreditAgencyInterface">
+    <bpmn2:interface name="CreditAgency" id="CreditAgencyInterface">
         <bpmn2:operation name="creditCheck" id="creditCheck">
             <bpmn2:inMessageRef xmlns="">Message_2</bpmn2:inMessageRef>
             <bpmn2:outMessageRef xmlns="">Message_4</bpmn2:outMessageRef>
             <bpmn2:errorRef xmlns="">Error_1</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface name="StoreInterface" id="StoreInterface">
+    <bpmn2:interface name="Store" id="StoreInterface">
         <bpmn2:operation name="buy" id="buy">
             <bpmn2:inMessageRef xmlns="">Message_1</bpmn2:inMessageRef>
             <bpmn2:outMessageRef xmlns="">Message_9</bpmn2:outMessageRef>
@@ -167,7 +167,7 @@
             <bpmn2:errorRef xmlns="">Error_3</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface name="LogisticsInterface" id="LogisticsInterface">
+    <bpmn2:interface name="Logistics" id="LogisticsInterface">
         <bpmn2:operation name="delivery" id="delivery">
             <bpmn2:inMessageRef xmlns="">Message_7</bpmn2:inMessageRef>
             <bpmn2:outMessageRef xmlns="">Message_8</bpmn2:outMessageRef>

@@ -17,6 +17,7 @@
  */
 package org.savara.bpmn2.internal.parser.choreo.rules;
 
+import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TFlowNode;
 import org.savara.protocol.model.Join;
@@ -29,6 +30,7 @@ import org.scribble.protocol.model.Role;
 public class Scope {
 	
 	private TDefinitions m_definitions=null;
+	private TChoreography _choreography=null;
 	private Scope m_parent=null;
 	private java.util.Map<String,Object> m_elements=new java.util.HashMap<String,Object>();
 	private java.util.Map<String,Role> _roles=new java.util.HashMap<String,Role>();
@@ -57,6 +59,24 @@ public class Scope {
 			return(m_parent.getDefinitions());
 		}
 		return(m_definitions);
+	}
+	
+	/**
+	 * This method sets the choreography associated with the scope.
+	 * 
+	 * @param choreo The choreography
+	 */
+	public void setChoreography(TChoreography choreo) {
+		_choreography = choreo;
+	}
+	
+	/**
+	 * This method returns the choreography associated with the scope.
+	 * 
+	 * @return The choreography
+	 */
+	public TChoreography getChoreography() {
+		return(_choreography);
 	}
 	
 	/**

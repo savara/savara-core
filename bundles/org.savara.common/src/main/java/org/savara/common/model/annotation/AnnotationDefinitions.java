@@ -27,49 +27,41 @@ public class AnnotationDefinitions {
 	public static final String NAME_PROPERTY="name";
 	public static final String ROLE_PROPERTY="role";
 	public static final String ID_PROPERTY="id";
+	public static final String PREFIX_PROPERTY="prefix";
+	public static final String NAMESPACE_PROPERTY="namespace";
+	public static final String LOCATION_PROPERTY="location";
+	public static final String REQUEST_PROPERTY = "request";
+	public static final String REPLY_TO_PROPERTY = "replyTo";
+	public static final String EXPRESSION_PROPERTY="expression";
+	public static final String LANGUAGE_PROPERTY="language";
+		
 	
-	
-	// Interface annotation (has name property)
+	// Interface annotation (has name property, and optional namespace and role properties)
+	// Can be used at the protocol level, to define the interface qname associated with
+	// a role, and also at the interaction level to indicate the specific interface name
+	// where a role has multiple interfaces.
 	public static final String INTERFACE = "Interface";
-	
-	
+		
 	// Fault annotation (has name property)
 	public static final String FAULT = "Fault";
-	
-	
+
 	// XSD sub types
 	public static final String XSD_ELEMENT = "XSDElement";
 	public static final String XSD_TYPE = "XSDType";
 	
-	
-	// Correlation properties
+	// Correlation properties (request and replyTo)
 	public static final String CORRELATION = "Correlation";
-	
-	public static final String REQUEST_PROPERTY = "request";
-	public static final String REPLY_TO_PROPERTY = "replyTo";
 
-	
-	// Namespace annotation (has 'name' and 'role' properties)
-	public static final String NAMESPACE = "Namespace";
-
-	
-	// Type annotation and properties
+	// Type annotation and properties (prefix, namespace and location)
 	public static final String TYPE="Type";
-	
-	public static final String PREFIX_PROPERTY="prefix";
-	public static final String NAMESPACE_PROPERTY="namespace";
-	public static final String LOCATION_PROPERTY="location";
-	
-	
+
 	// Source Component annotation (uses id property)
 	public static final String SOURCE_COMPONENT="SourceComponent";
 
-	// Assertion
+	// Assertion properties (expression and language)
 	public static final String ASSERTION="Assertion";
 	
-	public static final String EXPRESSION_PROPERTY="expression";
-	public static final String LANGUAGE_PROPERTY="language";
-
+	
 	/**
 	 * This method returns the annotation, from the supplied list, with the
 	 * supplied name.

@@ -167,9 +167,10 @@ public class CDMProtocolParserUtil {
 			Role role=new Role();
 			role.setName(XMLUtils.getLocalname(ptype.getName()));
 			
-			Annotation annotation=new Annotation(AnnotationDefinitions.NAMESPACE);
-			annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+			Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
+			annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
 						CDLTypeUtil.getNamespace(ptype.getName(), ptype, true));
+			annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, role.getName());
 			role.getAnnotations().add(annotation);
 			
 			ret.add(role);
@@ -186,9 +187,10 @@ public class CDMProtocolParserUtil {
 				Role role=new Role();
 				role.setName(XMLUtils.getLocalname(pinst.getName()));
 				
-				Annotation annotation=new Annotation(AnnotationDefinitions.NAMESPACE);
-				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+				Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
+				annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
 							CDLTypeUtil.getNamespace(pinst.getName(), pinst, true));
+				annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, role.getName());
 				role.getAnnotations().add(annotation);
 				
 				ret.add(role);
@@ -281,9 +283,11 @@ public class CDMProtocolParserUtil {
 				Role role=new Role();
 				role.setName(XMLUtils.getLocalname(ptype.getName()));
 				
-				Annotation annotation=new Annotation(AnnotationDefinitions.NAMESPACE);
-				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+				Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
+				annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
 							CDLTypeUtil.getNamespace(ptype.getName(), ptype, true));
+				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, role.getName());
+				annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, role.getName());
 				role.getAnnotations().add(annotation);
 				
 				roles.add(role);
@@ -301,9 +305,11 @@ public class CDMProtocolParserUtil {
 				Role role=new Role();
 				role.setName(XMLUtils.getLocalname(pinst.getName()));
 				
-				Annotation annotation=new Annotation(AnnotationDefinitions.NAMESPACE);
-				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+				Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
+				annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
 							CDLTypeUtil.getNamespace(pinst.getName(), pinst, true));
+				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, role.getName());
+				annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, role.getName());
 				role.getAnnotations().add(annotation);
 				
 				roles.add(role);

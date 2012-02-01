@@ -7,6 +7,7 @@ import "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryC
 import "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
 import "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown;
 import "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound;
+[[ Interface(name=Store,role=Store,namespace=http://www.savara.org/examples/Store) ]]
 [[ Type(location=PurchaseGoods_Store.wsdl,namespace=http://www.savara.org/examples/Store) ]]
 [[ Type(location=PurchaseGoods_CreditAgency.wsdl,namespace=http://www.savara.org/examples/CreditAgency) ]]
 [[ Type(location=PurchaseGoods_Logistics.wsdl,namespace=http://www.savara.org/examples/Logistics) ]]

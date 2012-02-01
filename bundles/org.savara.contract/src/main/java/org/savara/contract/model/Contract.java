@@ -19,7 +19,6 @@ package org.savara.contract.model;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -124,17 +123,19 @@ public class Contract extends ContractObject {
 	 * This method returns the interface associated
 	 * with the supplied name.
 	 * 
+	 * @oaram namespace The optional namespace
 	 * @param name The interface name
 	 * @return The interface, or null if not found.
 	 */
-	public Interface getInterface(String name) {
+	public Interface getInterface(String namespace, String name) {
 		Interface ret=null;
 		
 		java.util.Iterator<Interface> iter=getInterfaces().iterator();
 		while (ret == null && iter.hasNext()) {
 			ret = iter.next();
 			
-			if (ret.getName().equals(name) == false) {
+			if (ret.getName().equals(name) == false ||
+					(namespace != null && ret.getNamespace().equals(namespace) == false)) {
 				ret = null;
 			}
 		}

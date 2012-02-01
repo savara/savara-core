@@ -2,6 +2,7 @@ import "enquiry" as enquiry;
 import "quoteList" as quoteList;
 import "bookingReference" as bookingReference;
 import "orderRejected" as orderRejected;
+[[ Interface(name=Buyer,role=Buyer,namespace=http://www.pi4soa.org/ESBBroker/Buyer) ]]
 [[ Type(location=ESBBrokerProcess_Broker.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Broker) ]]
 [[ Type(location=ESBBrokerProcess_CreditAgency.wsdl,namespace=http://www.pi4soa.org/ESBBroker/CreditAgency) ]]
 [[ Type(location=ESBBrokerProcess_Supplier.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]

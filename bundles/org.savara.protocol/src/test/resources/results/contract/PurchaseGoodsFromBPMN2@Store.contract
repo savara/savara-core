@@ -5,7 +5,7 @@ Contract {http://www.savara.org/examples/Store}Store {
 	TypeDef BuyConfirmed type={http://www.jboss.org/examples/store}BuyConfirmed location=null typeSystem=xsd
 	TypeDef BuyFailed type={http://www.jboss.org/examples/store}BuyFailed location=null typeSystem=xsd
 	TypeDef BuyRequest type={http://www.jboss.org/examples/store}BuyRequest location=null typeSystem=xsd
-	Interface {http://www.savara.org/examples/Store}Store {
+	Interface {http://www.savara.org/examples/Store}StoreInterface {
 		RequestResponseMEP buy( BuyRequest ) : BuyConfirmed Fault AccountNotFound( AccountNotFound ) Fault InsufficientCredit( BuyFailed ) 
 	}
 }

@@ -1,140 +1,140 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI">
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" targetNamespace="http://www.savara.org/examples/Store">
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_Store.wsdl" namespace="http://www.savara.org/examples/Store"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_CreditAgency.wsdl" namespace="http://www.savara.org/examples/CreditAgency"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_Logistics.wsdl" namespace="http://www.savara.org/examples/Logistics"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_StoreArtifacts.wsdl" namespace="http://www.savara.org/examples/Store"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyRequest" structureRef="BuyRequest"/>
-    <bpmn2:message id="IDBuyRequest" itemRef="ITEMBuyRequest" name="BuyRequest"/>
+    <bpmn2:message xmlns="http://www.savara.org/examples/Store" id="IDBuyRequest" itemRef="ITEMBuyRequest" name="BuyRequest"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCreditCheckRequest" structureRef="CreditCheckRequest"/>
-    <bpmn2:message id="IDCreditCheckRequest" itemRef="ITEMCreditCheckRequest" name="CreditCheckRequest"/>
+    <bpmn2:message xmlns="http://www.savara.org/examples/Store" id="IDCreditCheckRequest" itemRef="ITEMCreditCheckRequest" name="CreditCheckRequest"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCreditRating" structureRef="CreditRating"/>
-    <bpmn2:message id="IDCreditRating" itemRef="ITEMCreditRating" name="CreditRating"/>
+    <bpmn2:message xmlns="http://www.savara.org/examples/Store" id="IDCreditRating" itemRef="ITEMCreditRating" name="CreditRating"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyFailed" structureRef="BuyFailed"/>
-    <bpmn2:message id="IDBuyFailed" itemRef="ITEMBuyFailed" name="BuyFailed"/>
+    <bpmn2:message xmlns="http://www.savara.org/examples/Store" id="IDBuyFailed" itemRef="ITEMBuyFailed" name="BuyFailed"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryRequest" structureRef="DeliveryRequest"/>
-    <bpmn2:message id="IDDeliveryRequest" itemRef="ITEMDeliveryRequest" name="DeliveryRequest"/>
+    <bpmn2:message xmlns="http://www.savara.org/examples/Store" id="IDDeliveryRequest" itemRef="ITEMDeliveryRequest" name="DeliveryRequest"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryConfirmed" structureRef="DeliveryConfirmed"/>
-    <bpmn2:message id="IDDeliveryConfirmed" itemRef="ITEMDeliveryConfirmed" name="DeliveryConfirmed"/>
+    <bpmn2:message xmlns="http://www.savara.org/examples/Store" id="IDDeliveryConfirmed" itemRef="ITEMDeliveryConfirmed" name="DeliveryConfirmed"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyConfirmed" structureRef="BuyConfirmed"/>
-    <bpmn2:message id="IDBuyConfirmed" itemRef="ITEMBuyConfirmed" name="BuyConfirmed"/>
+    <bpmn2:message xmlns="http://www.savara.org/examples/Store" id="IDBuyConfirmed" itemRef="ITEMBuyConfirmed" name="BuyConfirmed"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCustomerUnknown" structureRef="CustomerUnknown"/>
-    <bpmn2:message id="IDCustomerUnknown" itemRef="ITEMCustomerUnknown" name="CustomerUnknown"/>
+    <bpmn2:message xmlns="http://www.savara.org/examples/Store" id="IDCustomerUnknown" itemRef="ITEMCustomerUnknown" name="CustomerUnknown"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMAccountNotFound" structureRef="AccountNotFound"/>
-    <bpmn2:message id="IDAccountNotFound" itemRef="ITEMAccountNotFound" name="AccountNotFound"/>
+    <bpmn2:message xmlns="http://www.savara.org/examples/Store" id="IDAccountNotFound" itemRef="ITEMAccountNotFound" name="AccountNotFound"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID3" name="Store" processRef="MID2"/>
+        <bpmn2:participant xmlns="http://www.savara.org/examples/Store" id="MID3" name="Store" processRef="MID2"/>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="Store">
         <bpmn2:startEvent id="MID4">
-            <bpmn2:outgoing>MID57</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID57</bpmn2:outgoing>
         </bpmn2:startEvent>
         <bpmn2:endEvent id="MID5">
-            <bpmn2:incoming>MID58</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID58</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="IDBuyRequest" name="Receive: buy(BuyRequest) from Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="IDBuyRequest" name="Receive: buy(BuyRequest) from Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID57</bpmn2:incoming>
             <bpmn2:outgoing>MID56</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:parallelGateway id="MID7">
-            <bpmn2:incoming>MID56</bpmn2:incoming>
-            <bpmn2:outgoing>MID28</bpmn2:outgoing>
-            <bpmn2:outgoing>MID30</bpmn2:outgoing>
-            <bpmn2:outgoing>MID52</bpmn2:outgoing>
-            <bpmn2:outgoing>MID54</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID56</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID28</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID30</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID52</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID54</bpmn2:outgoing>
         </bpmn2:parallelGateway>
         <bpmn2:parallelGateway id="MID8">
-            <bpmn2:incoming>MID29</bpmn2:incoming>
-            <bpmn2:incoming>MID31</bpmn2:incoming>
-            <bpmn2:incoming>MID53</bpmn2:incoming>
-            <bpmn2:incoming>MID55</bpmn2:incoming>
-            <bpmn2:outgoing>MID58</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID29</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID31</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID53</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID55</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID58</bpmn2:outgoing>
         </bpmn2:parallelGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" messageRef="IDCreditCheckRequest" name="Send: creditCheck(CreditCheckRequest) to CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" messageRef="IDCreditCheckRequest" name="Send: creditCheck(CreditCheckRequest) to CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID28</bpmn2:incoming>
             <bpmn2:incoming>MID52</bpmn2:incoming>
             <bpmn2:outgoing>MID46</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:exclusiveGateway id="MID10">
-            <bpmn2:incoming>MID46</bpmn2:incoming>
-            <bpmn2:outgoing>MID42</bpmn2:outgoing>
-            <bpmn2:outgoing>MID44</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID46</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID42</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID44</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
         <bpmn2:exclusiveGateway id="MID11">
-            <bpmn2:incoming>MID43</bpmn2:incoming>
-            <bpmn2:incoming>MID45</bpmn2:incoming>
-            <bpmn2:outgoing>MID29</bpmn2:outgoing>
-            <bpmn2:outgoing>MID53</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID43</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID45</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID29</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID53</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID12" messageRef="IDCreditRating" name="Receive: creditCheck(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID12" messageRef="IDCreditRating" name="Receive: creditCheck(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID42</bpmn2:incoming>
             <bpmn2:outgoing>MID39</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:exclusiveGateway id="MID13">
-            <bpmn2:incoming>MID39</bpmn2:incoming>
-            <bpmn2:outgoing>MID35</bpmn2:outgoing>
-            <bpmn2:outgoing>MID37</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID39</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID35</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID37</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
         <bpmn2:exclusiveGateway id="MID14">
-            <bpmn2:incoming>MID36</bpmn2:incoming>
-            <bpmn2:incoming>MID38</bpmn2:incoming>
-            <bpmn2:outgoing>MID43</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID36</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID38</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID43</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID15" messageRef="IDBuyFailed" name="Send: buy(BuyFailed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID15" messageRef="IDBuyFailed" name="Send: buy(BuyFailed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID35</bpmn2:incoming>
             <bpmn2:outgoing>MID32</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" name="L13" xsi:type="bpmn2:tIntermediateThrowEvent">
-            <bpmn2:incoming>MID32</bpmn2:incoming>
-            <bpmn2:outgoing>MID36</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID32</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID36</bpmn2:outgoing>
             <bpmn2:linkEventDefinition name="L13"/>
         </bpmn2:event>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" messageRef="IDDeliveryRequest" name="Send: delivery(DeliveryRequest) to Logistics" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" messageRef="IDDeliveryRequest" name="Send: delivery(DeliveryRequest) to Logistics" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID37</bpmn2:incoming>
             <bpmn2:outgoing>MID33</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID18" messageRef="IDDeliveryConfirmed" name="Receive: delivery(DeliveryConfirmed) from Logistics" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID18" messageRef="IDDeliveryConfirmed" name="Receive: delivery(DeliveryConfirmed) from Logistics" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID33</bpmn2:incoming>
             <bpmn2:outgoing>MID34</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID19" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID19" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID34</bpmn2:incoming>
             <bpmn2:outgoing>MID38</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID20" messageRef="IDCustomerUnknown" name="Receive: creditCheck(CustomerUnknown) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID20" messageRef="IDCustomerUnknown" name="Receive: creditCheck(CustomerUnknown) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID44</bpmn2:incoming>
             <bpmn2:outgoing>MID40</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID21" messageRef="IDAccountNotFound" name="Send: buy(AccountNotFound) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID21" messageRef="IDAccountNotFound" name="Send: buy(AccountNotFound) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID40</bpmn2:incoming>
             <bpmn2:outgoing>MID41</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID22" name="L11" xsi:type="bpmn2:tIntermediateThrowEvent">
-            <bpmn2:incoming>MID41</bpmn2:incoming>
-            <bpmn2:outgoing>MID45</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID41</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID45</bpmn2:outgoing>
             <bpmn2:linkEventDefinition name="L11"/>
         </bpmn2:event>
         <bpmn2:exclusiveGateway id="MID23">
-            <bpmn2:incoming>MID30</bpmn2:incoming>
-            <bpmn2:incoming>MID54</bpmn2:incoming>
-            <bpmn2:outgoing>MID47</bpmn2:outgoing>
-            <bpmn2:outgoing>MID49</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID30</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID54</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID47</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID49</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
         <bpmn2:intermediateCatchEvent id="MID24" name="L11">
-            <bpmn2:incoming>MID47</bpmn2:incoming>
-            <bpmn2:outgoing>MID48</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID47</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID48</bpmn2:outgoing>
             <bpmn2:linkEventDefinition name="L11"/>
         </bpmn2:intermediateCatchEvent>
         <bpmn2:intermediateCatchEvent id="MID25" name="L13">
-            <bpmn2:incoming>MID49</bpmn2:incoming>
-            <bpmn2:outgoing>MID50</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID49</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID50</bpmn2:outgoing>
             <bpmn2:linkEventDefinition name="L13"/>
         </bpmn2:intermediateCatchEvent>
         <bpmn2:exclusiveGateway id="MID26">
-            <bpmn2:incoming>MID48</bpmn2:incoming>
-            <bpmn2:incoming>MID50</bpmn2:incoming>
-            <bpmn2:outgoing>MID51</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID48</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID50</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID51</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID27" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID27" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID51</bpmn2:incoming>
             <bpmn2:outgoing>MID31</bpmn2:outgoing>
             <bpmn2:outgoing>MID55</bpmn2:outgoing>
@@ -171,236 +171,236 @@
         <bpmn2:sequenceFlow id="MID57" sourceRef="MID4" targetRef="MID6"/>
         <bpmn2:sequenceFlow id="MID58" sourceRef="MID8" targetRef="MID5"/>
     </bpmn2:process>
-    <bpmn2:interface id="StoreInterface" name="StoreInterface">
+    <bpmn2:interface id="StoreInterface" name="Store">
         <bpmn2:operation id="OP_Store_buy" name="buy">
-            <bpmn2:inMessageRef>IDBuyRequest</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef>IDBuyConfirmed</bpmn2:outMessageRef>
-            <bpmn2:errorRef>ERRInsufficientCredit</bpmn2:errorRef>
-            <bpmn2:errorRef>ERRAccountNotFound</bpmn2:errorRef>
+            <bpmn2:inMessageRef xmlns="http://www.savara.org/examples/Store">IDBuyRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="http://www.savara.org/examples/Store">IDBuyConfirmed</bpmn2:outMessageRef>
+            <bpmn2:errorRef xmlns="http://www.savara.org/examples/Store">ERRInsufficientCredit</bpmn2:errorRef>
+            <bpmn2:errorRef xmlns="http://www.savara.org/examples/Store">ERRAccountNotFound</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface id="CreditAgencyInterface" name="CreditAgencyInterface">
+    <bpmn2:interface id="CreditAgencyInterface" name="CreditAgency">
         <bpmn2:operation id="OP_CreditAgency_creditCheck" name="creditCheck">
-            <bpmn2:inMessageRef>IDCreditCheckRequest</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef>IDCreditRating</bpmn2:outMessageRef>
-            <bpmn2:errorRef>ERRCustomerUnknown</bpmn2:errorRef>
+            <bpmn2:inMessageRef xmlns="http://www.savara.org/examples/Store">IDCreditCheckRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="http://www.savara.org/examples/Store">IDCreditRating</bpmn2:outMessageRef>
+            <bpmn2:errorRef xmlns="http://www.savara.org/examples/Store">ERRCustomerUnknown</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:error errorCode="InsufficientCredit" id="ERRInsufficientCredit" name="InsufficientCredit" structureRef="ITEMBuyFailed"/>
-    <bpmn2:interface id="LogisticsInterface" name="LogisticsInterface">
+    <bpmn2:error xmlns="http://www.savara.org/examples/Store" errorCode="InsufficientCredit" id="ERRInsufficientCredit" name="InsufficientCredit" structureRef="ITEMBuyFailed"/>
+    <bpmn2:interface id="LogisticsInterface" name="Logistics">
         <bpmn2:operation id="OP_Logistics_delivery" name="delivery">
-            <bpmn2:inMessageRef>IDDeliveryRequest</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef>IDDeliveryConfirmed</bpmn2:outMessageRef>
+            <bpmn2:inMessageRef xmlns="http://www.savara.org/examples/Store">IDDeliveryRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="http://www.savara.org/examples/Store">IDDeliveryConfirmed</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:error errorCode="CustomerUnknown" id="ERRCustomerUnknown" name="CustomerUnknown" structureRef="ITEMCustomerUnknown"/>
-    <bpmn2:error errorCode="AccountNotFound" id="ERRAccountNotFound" name="AccountNotFound" structureRef="ITEMAccountNotFound"/>
+    <bpmn2:error xmlns="http://www.savara.org/examples/Store" errorCode="CustomerUnknown" id="ERRCustomerUnknown" name="CustomerUnknown" structureRef="ITEMCustomerUnknown"/>
+    <bpmn2:error xmlns="http://www.savara.org/examples/Store" errorCode="AccountNotFound" id="ERRAccountNotFound" name="AccountNotFound" structureRef="ITEMAccountNotFound"/>
     <bpmndi:BPMNDiagram id="NID1">
         <bpmndi:BPMNPlane>
-            <bpmndi:BPMNShape bpmnElement="MID3" id="NID2">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID3" id="NID2">
                 <dc:Bounds height="450.0" width="1650.0" x="0.0" y="0.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID4" id="NID3">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID4" id="NID3">
                 <dc:Bounds height="30.0" width="30.0" x="50.0" y="210.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID6" id="NID4">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID6" id="NID4">
                 <dc:Bounds height="60.0" width="110.0" x="130.0" y="195.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" id="NID5">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID7" id="NID5">
                 <dc:Bounds height="30.0" width="30.0" x="290.0" y="200.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID9" id="NID6">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID9" id="NID6">
                 <dc:Bounds height="60.0" width="110.0" x="370.0" y="140.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID10" id="NID7">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID10" id="NID7">
                 <dc:Bounds height="30.0" width="30.0" x="530.0" y="145.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID12" id="NID8">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID12" id="NID8">
                 <dc:Bounds height="60.0" width="110.0" x="610.0" y="90.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID13" id="NID9">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID13" id="NID9">
                 <dc:Bounds height="30.0" width="30.0" x="770.0" y="95.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID15" id="NID10">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID15" id="NID10">
                 <dc:Bounds height="60.0" width="345.0" x="853.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID16" id="NID11">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID16" id="NID11">
                 <dc:Bounds height="30.0" width="30.0" x="1248.0" y="55.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID32" id="NID12" sourceElement="NID10" targetElement="NID11">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID32" id="NID12" sourceElement="NID10" targetElement="NID11">
                 <ns4:waypoint x="1198.0" y="70.0"/>
                 <ns4:waypoint x="1248.0" y="70.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID17" id="NID13">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID17" id="NID13">
                 <dc:Bounds height="60.0" width="110.0" x="850.0" y="140.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID18" id="NID14">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID18" id="NID14">
                 <dc:Bounds height="60.0" width="110.0" x="1010.0" y="140.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID33" id="NID15" sourceElement="NID13" targetElement="NID14">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID33" id="NID15" sourceElement="NID13" targetElement="NID14">
                 <ns4:waypoint x="960.0" y="170.0"/>
                 <ns4:waypoint x="1010.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID19" id="NID16">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID19" id="NID16">
                 <dc:Bounds height="60.0" width="110.0" x="1170.0" y="140.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID34" id="NID17" sourceElement="NID14" targetElement="NID16">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID34" id="NID17" sourceElement="NID14" targetElement="NID16">
                 <ns4:waypoint x="1120.0" y="170.0"/>
                 <ns4:waypoint x="1170.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID14" id="NID18">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID14" id="NID18">
                 <dc:Bounds height="30.0" width="30.0" x="1330.0" y="95.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID35" id="NID19" sourceElement="NID9" targetElement="NID10">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID35" id="NID19" sourceElement="NID9" targetElement="NID10">
                 <ns4:waypoint x="820.0" y="120.0"/>
                 <ns4:waypoint x="836.5" y="120.0"/>
                 <ns4:waypoint x="836.5" y="70.0"/>
                 <ns4:waypoint x="853.0" y="70.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID36" id="NID20" sourceElement="NID11" targetElement="NID18">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID36" id="NID20" sourceElement="NID11" targetElement="NID18">
                 <ns4:waypoint x="1278.0" y="70.0"/>
                 <ns4:waypoint x="1304.0" y="70.0"/>
                 <ns4:waypoint x="1304.0" y="120.0"/>
                 <ns4:waypoint x="1330.0" y="120.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID37" id="NID21" sourceElement="NID9" targetElement="NID13">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID37" id="NID21" sourceElement="NID9" targetElement="NID13">
                 <ns4:waypoint x="820.0" y="120.0"/>
                 <ns4:waypoint x="835.0" y="120.0"/>
                 <ns4:waypoint x="835.0" y="170.0"/>
                 <ns4:waypoint x="850.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID38" id="NID22" sourceElement="NID16" targetElement="NID18">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID38" id="NID22" sourceElement="NID16" targetElement="NID18">
                 <ns4:waypoint x="1280.0" y="170.0"/>
                 <ns4:waypoint x="1305.0" y="170.0"/>
                 <ns4:waypoint x="1305.0" y="120.0"/>
                 <ns4:waypoint x="1330.0" y="120.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID39" id="NID23" sourceElement="NID8" targetElement="NID9">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID39" id="NID23" sourceElement="NID8" targetElement="NID9">
                 <ns4:waypoint x="720.0" y="120.0"/>
                 <ns4:waypoint x="770.0" y="120.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID20" id="NID24">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID20" id="NID24">
                 <dc:Bounds height="60.0" width="293.0" x="627.0" y="240.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID21" id="NID25">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID21" id="NID25">
                 <dc:Bounds height="60.0" width="293.0" x="970.0" y="240.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID40" id="NID26" sourceElement="NID24" targetElement="NID25">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID40" id="NID26" sourceElement="NID24" targetElement="NID25">
                 <ns4:waypoint x="920.0" y="270.0"/>
                 <ns4:waypoint x="970.0" y="270.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID22" id="NID27">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID22" id="NID27">
                 <dc:Bounds height="30.0" width="30.0" x="1313.0" y="255.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID41" id="NID28" sourceElement="NID25" targetElement="NID27">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID41" id="NID28" sourceElement="NID25" targetElement="NID27">
                 <ns4:waypoint x="1263.0" y="270.0"/>
                 <ns4:waypoint x="1313.0" y="270.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID11" id="NID29">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID11" id="NID29">
                 <dc:Bounds height="30.0" width="30.0" x="1410.0" y="145.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID42" id="NID30" sourceElement="NID7" targetElement="NID8">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID42" id="NID30" sourceElement="NID7" targetElement="NID8">
                 <ns4:waypoint x="580.0" y="170.0"/>
                 <ns4:waypoint x="595.0" y="170.0"/>
                 <ns4:waypoint x="595.0" y="120.0"/>
                 <ns4:waypoint x="610.0" y="120.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID43" id="NID31" sourceElement="NID18" targetElement="NID29">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID43" id="NID31" sourceElement="NID18" targetElement="NID29">
                 <ns4:waypoint x="1380.0" y="120.0"/>
                 <ns4:waypoint x="1395.0" y="120.0"/>
                 <ns4:waypoint x="1395.0" y="170.0"/>
                 <ns4:waypoint x="1410.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID44" id="NID32" sourceElement="NID7" targetElement="NID24">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID44" id="NID32" sourceElement="NID7" targetElement="NID24">
                 <ns4:waypoint x="580.0" y="170.0"/>
                 <ns4:waypoint x="603.5" y="170.0"/>
                 <ns4:waypoint x="603.5" y="270.0"/>
                 <ns4:waypoint x="627.0" y="270.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID45" id="NID33" sourceElement="NID27" targetElement="NID29">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID45" id="NID33" sourceElement="NID27" targetElement="NID29">
                 <ns4:waypoint x="1343.0" y="270.0"/>
                 <ns4:waypoint x="1376.5" y="270.0"/>
                 <ns4:waypoint x="1376.5" y="170.0"/>
                 <ns4:waypoint x="1410.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID46" id="NID34" sourceElement="NID6" targetElement="NID7">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID46" id="NID34" sourceElement="NID6" targetElement="NID7">
                 <ns4:waypoint x="480.0" y="170.0"/>
                 <ns4:waypoint x="530.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID23" id="NID35">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID23" id="NID35">
                 <dc:Bounds height="30.0" width="30.0" x="617.0" y="355.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID26" id="NID36">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID26" id="NID36">
                 <dc:Bounds height="30.0" width="30.0" x="787.0" y="355.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID24" id="NID37">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID24" id="NID37">
                 <dc:Bounds height="30.0" width="30.0" x="707.0" y="340.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID47" id="NID38" sourceElement="NID35" targetElement="NID37">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID47" id="NID38" sourceElement="NID35" targetElement="NID37">
                 <ns4:waypoint x="667.0" y="380.0"/>
                 <ns4:waypoint x="707.0" y="355.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID48" id="NID39" sourceElement="NID37" targetElement="NID36">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID48" id="NID39" sourceElement="NID37" targetElement="NID36">
                 <ns4:waypoint x="737.0" y="355.0"/>
                 <ns4:waypoint x="787.0" y="380.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID25" id="NID40">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID25" id="NID40">
                 <dc:Bounds height="30.0" width="30.0" x="707.0" y="390.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID49" id="NID41" sourceElement="NID35" targetElement="NID40">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID49" id="NID41" sourceElement="NID35" targetElement="NID40">
                 <ns4:waypoint x="667.0" y="380.0"/>
                 <ns4:waypoint x="707.0" y="405.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID50" id="NID42" sourceElement="NID40" targetElement="NID36">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID50" id="NID42" sourceElement="NID40" targetElement="NID36">
                 <ns4:waypoint x="737.0" y="405.0"/>
                 <ns4:waypoint x="787.0" y="380.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID27" id="NID43">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID27" id="NID43">
                 <dc:Bounds height="60.0" width="326.0" x="867.0" y="350.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID51" id="NID44" sourceElement="NID36" targetElement="NID43">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID51" id="NID44" sourceElement="NID36" targetElement="NID43">
                 <ns4:waypoint x="837.0" y="380.0"/>
                 <ns4:waypoint x="867.0" y="380.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID8" id="NID45">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID8" id="NID45">
                 <dc:Bounds height="30.0" width="30.0" x="1490.0" y="200.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID52" id="NID46" sourceElement="NID5" targetElement="NID6">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID52" id="NID46" sourceElement="NID5" targetElement="NID6">
                 <ns4:waypoint x="340.0" y="225.0"/>
                 <ns4:waypoint x="355.0" y="225.0"/>
                 <ns4:waypoint x="355.0" y="170.0"/>
                 <ns4:waypoint x="370.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID53" id="NID47" sourceElement="NID29" targetElement="NID45">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID53" id="NID47" sourceElement="NID29" targetElement="NID45">
                 <ns4:waypoint x="1460.0" y="170.0"/>
                 <ns4:waypoint x="1475.0" y="170.0"/>
                 <ns4:waypoint x="1475.0" y="225.0"/>
                 <ns4:waypoint x="1490.0" y="225.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID54" id="NID48" sourceElement="NID5" targetElement="NID35">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID54" id="NID48" sourceElement="NID5" targetElement="NID35">
                 <ns4:waypoint x="340.0" y="225.0"/>
                 <ns4:waypoint x="567.0" y="225.0"/>
                 <ns4:waypoint x="567.0" y="380.0"/>
                 <ns4:waypoint x="617.0" y="380.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID55" id="NID49" sourceElement="NID43" targetElement="NID45">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID55" id="NID49" sourceElement="NID43" targetElement="NID45">
                 <ns4:waypoint x="1193.0" y="380.0"/>
                 <ns4:waypoint x="1440.0" y="380.0"/>
                 <ns4:waypoint x="1440.0" y="225.0"/>
                 <ns4:waypoint x="1490.0" y="225.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID56" id="NID50" sourceElement="NID4" targetElement="NID5">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID56" id="NID50" sourceElement="NID4" targetElement="NID5">
                 <ns4:waypoint x="240.0" y="225.0"/>
                 <ns4:waypoint x="290.0" y="225.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID57" id="NID51" sourceElement="NID3" targetElement="NID4">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID57" id="NID51" sourceElement="NID3" targetElement="NID4">
                 <ns4:waypoint x="80.0" y="225.0"/>
                 <ns4:waypoint x="130.0" y="225.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID5" id="NID52">
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID5" id="NID52">
                 <dc:Bounds height="30.0" width="30.0" x="1570.0" y="210.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID58" id="NID53" sourceElement="NID45" targetElement="NID52">
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID58" id="NID53" sourceElement="NID45" targetElement="NID52">
                 <ns4:waypoint x="1540.0" y="225.0"/>
                 <ns4:waypoint x="1570.0" y="225.0"/>
             </bpmndi:BPMNEdge>

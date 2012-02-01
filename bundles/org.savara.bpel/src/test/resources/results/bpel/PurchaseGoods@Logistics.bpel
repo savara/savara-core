@@ -9,7 +9,7 @@
         <variable messageType="pns4:deliveryResponse" name="deliveryResponseVar"/>
     </variables>
     <sequence>
-        <receive createInstance="yes" name="Receive_DeliveryRequest" operation="delivery" partnerLink="StoreToLogistics" portType="pns4:Logistics" variable="deliveryRequestVar"/>
-        <reply name="Send_DeliveryConfirmed" operation="delivery" partnerLink="StoreToLogistics" portType="pns4:Logistics" variable="deliveryResponseVar"/>
+        <receive createInstance="yes" name="Receive_DeliveryRequest" operation="delivery" partnerLink="StoreToLogistics" portType="pns4:LogisticsInterface" variable="deliveryRequestVar"/>
+        <reply name="Send_DeliveryConfirmed" operation="delivery" partnerLink="StoreToLogistics" portType="pns4:LogisticsInterface" variable="deliveryResponseVar"/>
     </sequence>
 </process>

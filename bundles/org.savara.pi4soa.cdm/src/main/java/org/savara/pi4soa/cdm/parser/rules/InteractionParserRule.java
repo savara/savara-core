@@ -349,7 +349,14 @@ public class InteractionParserRule implements ParserRule {
 			if (cdl.getToRoleType() != null) {
 				// TODO: Deal with interfaces that have multiple behaviours	
 				Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
-				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, getInterfaceName(cdl));
+				
+				String qname=getInterfaceName(cdl);
+				
+				annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+						NameSpaceUtil.getNamespace(qname));
+				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+						NameSpaceUtil.getLocalPart(qname));
+				
 				interaction.getAnnotations().add(annotation);
 			}
 			

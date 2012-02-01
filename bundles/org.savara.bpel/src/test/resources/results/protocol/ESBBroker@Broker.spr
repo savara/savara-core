@@ -10,6 +10,7 @@ import "bookingReference" as bookingReference;
 import "CreditCheckInvalid" as CreditCheckInvalid;
 import "orderRejected" as orderRejected;
 import "cancel" as cancel;
+[[ Interface(name=BrokerBehavior,role=BrokerBehavior,namespace=http://www.pi4soa.org/ESBBroker/Broker) ]]
 [[ Type(location=ESBBrokerProcess_Broker.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Broker) ]]
 [[ Type(location=ESBBrokerProcess_CreditAgency.wsdl,namespace=http://www.pi4soa.org/ESBBroker/CreditAgency) ]]
 [[ Type(location=ESBBrokerProcess_Supplier.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]

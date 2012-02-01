@@ -5,42 +5,44 @@ import xsd "{java:org.jboss.savara.examples.purchasing}CreditCheckInvalid" as Cr
 [[ XSDType ]]
 import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http://www.w3.org/2001/XMLSchema";
 [[ SourceComponent(id=//@choreographies.0) ]]
-[[ Namespace(name=http://www.jboss.org/savara/examples,role=Buyer) ]]
-[[ Namespace(name=java:org.jboss.savara.examples.purchasing,role=CreditAgency) ]]
-[[ Namespace(name=http://www.jboss.org/examples/store,role=Store) ]]
+[[ Interface(namespace=http://www.jboss.org/savara/examples,name=BuyerInterface,role=Buyer) ]]
+[[ Interface(namespace=java:org.jboss.savara.examples.purchasing,name=CreditAgencyInterface,role=CreditAgency) ]]
+[[ Interface(namespace=http://www.jboss.org/examples/store,name=StoreInterface,role=Store) ]]
 [[ Type(prefix=tns,namespace=http://www.jboss.org/savara/examples) ]]
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(prefix=pur,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Type(prefix=sto,namespace=http://www.jboss.org/examples/store) ]]
 protocol PurchaseGoodsProcess(role Buyer) {
-	Buyer introduces CreditAgency, Store;
+	Buyer introduces Store;
+	Store introduces CreditAgency;
+	
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
-	[[ Interface(name={http://www.jboss.org/examples/store}StoreInterface) ]]
+	[[ Interface(namespace=http://www.jboss.org/examples/store,name=StoreInterface) ]]
 	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer to Store;
 	[[ SourceComponent(id=//@choreographies.0/@activities.1/@exchangeDetails.0) ]]
-	[[ Interface(name={java:org.jboss.savara.examples.purchasing}CreditAgencyInterface) ]]
+	[[ Interface(namespace=java:org.jboss.savara.examples.purchasing,name=CreditAgencyInterface) ]]
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Store to CreditAgency;
 	[[ SourceComponent(id=//@choreographies.0/@activities.2) ]]
 	choice at CreditAgency {
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@activities.0/@exchangeDetails.0) ]]
-		[[ Interface(name={java:org.jboss.savara.examples.purchasing}CreditAgencyInterface) ]]
+		[[ Interface(namespace=java:org.jboss.savara.examples.purchasing,name=CreditAgencyInterface) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckOk) from CreditAgency to Store;
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.0) ]]
-		[[ Interface(name={http://www.jboss.org/examples/store}StoreInterface) ]]
+		[[ Interface(namespace=http://www.jboss.org/examples/store,name=StoreInterface) ]]
 		[[ Correlation(replyTo=buy) ]]
 		buy(BuyConfirmed) from Store to Buyer;
 	} or {
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.1/@activities.0/@exchangeDetails.0) ]]
 		[[ Fault(name=CreditCheckFailed) ]]
-		[[ Interface(name={java:org.jboss.savara.examples.purchasing}CreditAgencyInterface) ]]
+		[[ Interface(namespace=java:org.jboss.savara.examples.purchasing,name=CreditAgencyInterface) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckInvalid) from CreditAgency to Store;
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.1/@activities.1/@exchangeDetails.0) ]]
 		[[ Fault(name=BuyFailed) ]]
-		[[ Interface(name={http://www.jboss.org/examples/store}StoreInterface) ]]
+		[[ Interface(namespace=http://www.jboss.org/examples/store,name=StoreInterface) ]]
 		[[ Correlation(replyTo=buy) ]]
 		buy(BuyFailed) from Store to Buyer;
 	}

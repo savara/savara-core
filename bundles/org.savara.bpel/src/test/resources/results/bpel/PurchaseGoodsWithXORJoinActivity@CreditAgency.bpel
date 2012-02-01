@@ -10,14 +10,14 @@
         <variable messageType="pns2:creditCheckResponse" name="creditCheckResponseVar"/>
     </variables>
     <sequence>
-        <receive createInstance="yes" name="Receive_CreditCheck" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgency" variable="creditCheckRequestVar"/>
+        <receive createInstance="yes" name="Receive_CreditCheck" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgencyInterface" variable="creditCheckRequestVar"/>
         <if>
             <sequence>
-                <reply faultName="pns2:CustomerUnknown" name="Send_CustomerUnknown" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgency" variable="CustomerUnknownFaultVar"/>
+                <reply faultName="pns2:CustomerUnknown" name="Send_CustomerUnknown" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgencyInterface" variable="CustomerUnknownFaultVar"/>
             </sequence>
             <else>
                 <sequence>
-                    <reply name="Send_CreditRating" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgency" variable="creditCheckResponseVar"/>
+                    <reply name="Send_CreditRating" operation="creditCheck" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgencyInterface" variable="creditCheckResponseVar"/>
                 </sequence>
             </else>
         </if>

@@ -1,6 +1,7 @@
 import "CreditCheckRequest" as CreditCheckRequest;
 import "CreditCheckOk" as CreditCheckOk;
 import "CreditCheckInvalid" as CreditCheckInvalid;
+[[ Interface(name=SellerBehavior,role=SellerBehavior,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
 [[ Type(location=ReqRespFaultProcess_Seller.wsdl,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
 [[ Type(location=ReqRespFaultProcess_SellerArtifacts.wsdl,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
 protocol ReqRespFaultProcess_Seller at SellerBehavior {

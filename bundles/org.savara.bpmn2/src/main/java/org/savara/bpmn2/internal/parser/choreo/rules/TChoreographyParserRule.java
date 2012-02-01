@@ -27,6 +27,7 @@ import org.savara.bpmn2.model.TChoreographyTask;
 import org.savara.bpmn2.model.TExclusiveGateway;
 import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TFlowNode;
+import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
@@ -51,6 +52,7 @@ import org.scribble.protocol.util.RoleUtil;
 public class TChoreographyParserRule implements BPMN2ParserRule {
 
 	private static final String PARTICIPANT_NAMESPACE_PREFIX = "pns";
+	
 	private static Logger LOG=Logger.getLogger(TChoreographyParserRule.class.getName());
 	
 	/**
@@ -477,13 +479,24 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 			int count=1;
 			
 			for (Role role : protocol.getRoles()) {
+				
 				String namespace=tns+"/"+role.getName();
+				String name=role.getName();
+				
+				QName intf=getInterfaceName(context, role);
+				if (intf != null) {
+					namespace = intf.getNamespaceURI();
+					name = intf.getLocalPart();
+				}
+				
 				String prefix=PARTICIPANT_NAMESPACE_PREFIX+count++;
 				
-				Annotation pann=new Annotation(AnnotationDefinitions.NAMESPACE);
+				Annotation pann=new Annotation(AnnotationDefinitions.INTERFACE);
 	
-				pann.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+				pann.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
 						namespace);
+				pann.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+						name);
 				pann.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY,
 						role.getName());
 				
@@ -500,6 +513,39 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 				protocol.getAnnotations().add(pann);
 			}
 		}
+	}
+	
+	/**
+	 * This method determines the interface qname associated with the supplied
+	 * role.
+	 * 
+	 * @param context The context
+	 * @param role The role
+	 * @return The QName for the interface, or null if not found
+	 */
+	protected QName getInterfaceName(BPMN2ParserContext context, Role role) {
+		QName ret=null;
+		
+		for (TParticipant part : context.getScope().getChoreography().getParticipant()) {
+			
+			if (part.getName().equals(role.getName())) {
+				
+				// TODO: What if multiple interfaces??
+				if (part.getInterfaceRef().size() > 0) {
+					QName intfQName=part.getInterfaceRef().get(0);
+					
+					Object intf=context.getScope().getBPMN2Element(intfQName.getLocalPart());
+					
+					if (intf instanceof TInterface) {
+						ret = ((TInterface)intf).getImplementationRef();
+					}
+				}
+				
+				break;
+			}
+		}
+		
+		return(ret);
 	}
 	
 	protected void getRoles(BPMN2ParserContext context, TFlowNode node, CustomActivity activity) {

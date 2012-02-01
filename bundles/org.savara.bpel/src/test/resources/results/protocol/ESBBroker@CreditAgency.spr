@@ -1,6 +1,7 @@
 import "CreditCheckRequest" as CreditCheckRequest;
 import "CreditCheckOk" as CreditCheckOk;
 import "CreditCheckInvalid" as CreditCheckInvalid;
+[[ Interface(name=CreditAgency,role=CreditAgency,namespace=http://www.pi4soa.org/ESBBroker/CreditAgency) ]]
 [[ Type(location=ESBBrokerProcess_CreditAgency.wsdl,namespace=http://www.pi4soa.org/ESBBroker/CreditAgency) ]]
 [[ Type(location=ESBBrokerProcess_Broker.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Broker) ]]
 [[ Type(location=ESBBrokerProcess_Supplier.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]

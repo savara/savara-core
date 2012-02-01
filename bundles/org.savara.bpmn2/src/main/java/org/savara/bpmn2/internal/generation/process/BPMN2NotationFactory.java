@@ -100,7 +100,8 @@ public class BPMN2NotationFactory {
 			}
 			
 			if (participant != null) {
-				shape.setBpmnElement(new QName(participant.getId()));
+				shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+									participant.getId()));
 			}
 		}
 		
@@ -130,7 +131,8 @@ public class BPMN2NotationFactory {
 		if (taskModel instanceof TBaseElement) {
 			TBaseElement base=(TBaseElement)taskModel;
 			
-			shape.setBpmnElement(new QName(base.getId()));
+			shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+										base.getId()));
 		}
 		
 		Bounds b=new Bounds();
@@ -159,7 +161,8 @@ public class BPMN2NotationFactory {
 		if (eventModel instanceof TBaseElement) {
 			TBaseElement base=(TBaseElement)eventModel;
 			
-			shape.setBpmnElement(new QName(base.getId()));
+			shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+									base.getId()));
 		}
 
 		Bounds b=new Bounds();
@@ -194,7 +197,8 @@ public class BPMN2NotationFactory {
 		if (junctionModel instanceof TBaseElement) {
 			TBaseElement base=(TBaseElement)junctionModel;
 			
-			shape.setBpmnElement(new QName(base.getId()));
+			shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+									base.getId()));
 		}
 		
 		Bounds b=new Bounds();
@@ -227,7 +231,8 @@ public class BPMN2NotationFactory {
 		if (linkModel instanceof TSequenceFlow) {
 			TSequenceFlow seqflow=(TSequenceFlow)linkModel;
 			
-			edge.setBpmnElement(new QName(seqflow.getId()));
+			edge.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+									seqflow.getId()));
 			
 			// Find source and target diagram shapes
 			if (diagramNotation instanceof BPMNPlane &&
@@ -263,8 +268,10 @@ public class BPMN2NotationFactory {
 		if (diagramNotation instanceof BPMNPlane && source != null && target != null) {
 			BPMNPlane plane=(BPMNPlane)diagramNotation;
 			
-			edge.setSourceElement(new QName(source.getId()));
-			edge.setTargetElement(new QName(target.getId()));
+			edge.setSourceElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+										source.getId()));
+			edge.setTargetElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+										target.getId()));
 			
 			Point sourcep=new Point();
 			sourcep.setX(source.getBounds().getX()+source.getBounds().getWidth()+extrax);

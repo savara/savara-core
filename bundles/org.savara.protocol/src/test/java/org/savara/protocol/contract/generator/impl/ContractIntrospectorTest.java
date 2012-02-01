@@ -34,6 +34,7 @@ import org.savara.contract.model.RequestResponseMEP;
 import org.savara.contract.model.Type;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.Interaction;
+import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.ProtocolReference;
 import org.scribble.protocol.model.Run;
 import org.scribble.protocol.model.MessageSignature;
@@ -147,7 +148,9 @@ public class ContractIntrospectorTest {
 	
 	@org.junit.Test
 	public void testCreateSingleInterface() {
+		ProtocolModel pm=new ProtocolModel();
 		Protocol protocol=new Protocol();
+		pm.setProtocol(protocol);
 		Role role=new Role();
 		role.setName(MY_ROLE);
 		protocol.setLocatedRole(role);
@@ -160,7 +163,7 @@ public class ContractIntrospectorTest {
 			fail("Should be 0 interfaces: "+introspector.getContract().getInterfaces().size());
 		}
 		
-		Interface intf=introspector.getInterface(null, null);
+		Interface intf=introspector.getInterface(pm, null, null);
 		
 		if (intf == null) {
 			fail("Interface not created");
@@ -170,7 +173,7 @@ public class ContractIntrospectorTest {
 			fail("Should be 1 interface: "+introspector.getContract().getInterfaces().size());
 		}
 		
-		Interface intf2=introspector.getInterface(null, null);
+		Interface intf2=introspector.getInterface(pm, null, null);
 		
 		if (intf2 != intf) {
 			fail("Interfaces are different");
@@ -183,7 +186,9 @@ public class ContractIntrospectorTest {
 	
 	@org.junit.Test
 	public void testVisitInteractionOneWayRequestRPC() {
+		ProtocolModel pm=new ProtocolModel();
 		Protocol protocol=new Protocol();
+		pm.setProtocol(protocol);
 		Role role=new Role();
 		role.setName(MY_ROLE);
 		protocol.setLocatedRole(role);
@@ -211,7 +216,7 @@ public class ContractIntrospectorTest {
 		
 		Contract contract=introspector.getContract();
 		
-		Interface intf=contract.getInterface(role.getName());
+		Interface intf=contract.getInterface(null, role.getName());
 		
 		if (intf == null) {
 			fail("Interface '"+role.getName()+"' not found");
@@ -241,7 +246,9 @@ public class ContractIntrospectorTest {
 	
 	@org.junit.Test
 	public void testVisitInteractionRequestResponseRPCOnlyRequest() {
+		ProtocolModel pm=new ProtocolModel();
 		Protocol protocol=new Protocol();
+		pm.setProtocol(protocol);
 		Role role=new Role();
 		role.setName(MY_ROLE);
 		protocol.setLocatedRole(role);
@@ -273,7 +280,7 @@ public class ContractIntrospectorTest {
 		
 		Contract contract=introspector.getContract();
 		
-		Interface intf=contract.getInterface(role.getName());
+		Interface intf=contract.getInterface(null, role.getName());
 		
 		if (intf == null) {
 			fail("Interface '"+role.getName()+"' not found");

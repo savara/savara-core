@@ -27,36 +27,36 @@
     <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMURITokenType" structureRef="xs:anyURI"/>
     <bpmn2:message xmlns="http://www.jboss.org/examples/store" id="IDURITokenType" itemRef="ITEMURITokenType" name="URITokenType"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID3" name="Store" processRef="MID2"/>
+        <bpmn2:participant xmlns="http://www.jboss.org/examples/store" id="MID3" name="Store" processRef="MID2"/>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="Store">
         <bpmn2:startEvent id="MID4">
-            <bpmn2:outgoing>MID16</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.jboss.org/examples/store">MID16</bpmn2:outgoing>
         </bpmn2:startEvent>
         <bpmn2:endEvent id="MID5">
-            <bpmn2:incoming>MID17</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.jboss.org/examples/store">MID17</bpmn2:incoming>
         </bpmn2:endEvent>
         <bpmn2:task xmlns="http://www.jboss.org/examples/store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="IDBuyRequest" name="Receive: buy(BuyRequest) from Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tReceiveTask">
-            <bpmn2:incoming xmlns="" xmlns:ns7="http://www.jboss.org/examples/store">MID16</bpmn2:incoming>
-            <bpmn2:outgoing xmlns="" xmlns:ns7="http://www.jboss.org/examples/store">MID14</bpmn2:outgoing>
+            <bpmn2:incoming>MID16</bpmn2:incoming>
+            <bpmn2:outgoing>MID14</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:inclusiveGateway id="MID7">
-            <bpmn2:incoming>MID13</bpmn2:incoming>
-            <bpmn2:incoming>MID14</bpmn2:incoming>
-            <bpmn2:outgoing>MID12</bpmn2:outgoing>
-            <bpmn2:outgoing>MID15</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://www.jboss.org/examples/store">MID13</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.jboss.org/examples/store">MID14</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.jboss.org/examples/store">MID12</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.jboss.org/examples/store">MID15</bpmn2:outgoing>
         </bpmn2:inclusiveGateway>
         <bpmn2:task xmlns="http://www.jboss.org/examples/store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID8" messageRef="IDCreditCheckRequest" name="Send: checkCredit(CreditCheckRequest) to CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tSendTask">
-            <bpmn2:incoming xmlns="" xmlns:ns7="http://www.jboss.org/examples/store">MID12</bpmn2:incoming>
-            <bpmn2:outgoing xmlns="" xmlns:ns7="http://www.jboss.org/examples/store">MID11</bpmn2:outgoing>
+            <bpmn2:incoming>MID12</bpmn2:incoming>
+            <bpmn2:outgoing>MID11</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:task xmlns="http://www.jboss.org/examples/store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" messageRef="IDCreditRating" name="Receive: checkCredit(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tReceiveTask">
-            <bpmn2:incoming xmlns="" xmlns:ns7="http://www.jboss.org/examples/store">MID11</bpmn2:incoming>
-            <bpmn2:outgoing xmlns="" xmlns:ns7="http://www.jboss.org/examples/store">MID13</bpmn2:outgoing>
+            <bpmn2:incoming>MID11</bpmn2:incoming>
+            <bpmn2:outgoing>MID13</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:task xmlns="http://www.jboss.org/examples/store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
-            <bpmn2:incoming xmlns="" xmlns:ns7="http://www.jboss.org/examples/store">MID15</bpmn2:incoming>
-            <bpmn2:outgoing xmlns="" xmlns:ns7="http://www.jboss.org/examples/store">MID17</bpmn2:outgoing>
+            <bpmn2:incoming>MID15</bpmn2:incoming>
+            <bpmn2:outgoing>MID17</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:sequenceFlow id="MID11" sourceRef="MID8" targetRef="MID9"/>
         <bpmn2:sequenceFlow id="MID12" sourceRef="MID7" targetRef="MID8"/>
@@ -66,13 +66,13 @@
         <bpmn2:sequenceFlow id="MID16" sourceRef="MID4" targetRef="MID6"/>
         <bpmn2:sequenceFlow id="MID17" sourceRef="MID10" targetRef="MID5"/>
     </bpmn2:process>
-    <bpmn2:interface id="StoreInterface" name="StoreInterface">
+    <bpmn2:interface id="StoreInterface" name="Store">
         <bpmn2:operation id="OP_Store_buy" name="buy">
             <bpmn2:inMessageRef xmlns="http://www.jboss.org/examples/store">IDBuyRequest</bpmn2:inMessageRef>
             <bpmn2:outMessageRef xmlns="http://www.jboss.org/examples/store">IDBuyConfirmed</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface id="CreditAgencyInterface" name="CreditAgencyInterface">
+    <bpmn2:interface id="CreditAgencyInterface" name="CreditAgency">
         <bpmn2:operation id="OP_CreditAgency_checkCredit" name="checkCredit">
             <bpmn2:inMessageRef xmlns="http://www.jboss.org/examples/store">IDCreditCheckRequest</bpmn2:inMessageRef>
             <bpmn2:outMessageRef xmlns="http://www.jboss.org/examples/store">IDCreditRating</bpmn2:outMessageRef>
@@ -80,64 +80,64 @@
     </bpmn2:interface>
     <bpmndi:BPMNDiagram id="NID1">
         <bpmndi:BPMNPlane>
-            <bpmndi:BPMNShape bpmnElement="MID3" id="NID2">
+            <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID3" id="NID2">
                 <dc:Bounds height="250.0" width="1010.0" x="0.0" y="0.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID4" id="NID3">
+            <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID4" id="NID3">
                 <dc:Bounds height="30.0" width="30.0" x="50.0" y="110.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID6" id="NID4">
+            <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID6" id="NID4">
                 <dc:Bounds height="60.0" width="110.0" x="130.0" y="95.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" id="NID5">
+            <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID7" id="NID5">
                 <dc:Bounds height="30.0" width="30.0" x="290.0" y="145.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID8" id="NID6">
+            <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID8" id="NID6">
                 <dc:Bounds height="60.0" width="110.0" x="370.0" y="100.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID9" id="NID7">
+            <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID9" id="NID7">
                 <dc:Bounds height="60.0" width="110.0" x="530.0" y="100.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID11" id="NID8" sourceElement="NID6" targetElement="NID7">
+            <bpmndi:BPMNEdge xmlns="http://www.jboss.org/examples/store" bpmnElement="MID11" id="NID8" sourceElement="NID6" targetElement="NID7">
                 <ns4:waypoint x="480.0" y="130.0"/>
                 <ns4:waypoint x="530.0" y="130.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID12" id="NID9" sourceElement="NID5" targetElement="NID6">
+            <bpmndi:BPMNEdge xmlns="http://www.jboss.org/examples/store" bpmnElement="MID12" id="NID9" sourceElement="NID5" targetElement="NID6">
                 <ns4:waypoint x="340.0" y="170.0"/>
                 <ns4:waypoint x="355.0" y="170.0"/>
                 <ns4:waypoint x="355.0" y="130.0"/>
                 <ns4:waypoint x="370.0" y="130.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID13" id="NID10" sourceElement="NID7" targetElement="NID5">
+            <bpmndi:BPMNEdge xmlns="http://www.jboss.org/examples/store" bpmnElement="MID13" id="NID10" sourceElement="NID7" targetElement="NID5">
                 <ns4:waypoint x="640.0" y="130.0"/>
                 <ns4:waypoint x="680.0" y="130.0"/>
                 <ns4:waypoint x="680.0" y="80.0"/>
                 <ns4:waypoint x="312.0" y="80.0"/>
                 <ns4:waypoint x="312.0" y="148.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID14" id="NID11" sourceElement="NID4" targetElement="NID5">
+            <bpmndi:BPMNEdge xmlns="http://www.jboss.org/examples/store" bpmnElement="MID14" id="NID11" sourceElement="NID4" targetElement="NID5">
                 <ns4:waypoint x="240.0" y="125.0"/>
                 <ns4:waypoint x="265.0" y="125.0"/>
                 <ns4:waypoint x="265.0" y="170.0"/>
                 <ns4:waypoint x="290.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID10" id="NID12">
+            <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID10" id="NID12">
                 <dc:Bounds height="60.0" width="110.0" x="770.0" y="95.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID15" id="NID13" sourceElement="NID5" targetElement="NID12">
+            <bpmndi:BPMNEdge xmlns="http://www.jboss.org/examples/store" bpmnElement="MID15" id="NID13" sourceElement="NID5" targetElement="NID12">
                 <ns4:waypoint x="340.0" y="170.0"/>
                 <ns4:waypoint x="730.0" y="170.0"/>
                 <ns4:waypoint x="730.0" y="125.0"/>
                 <ns4:waypoint x="770.0" y="125.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID16" id="NID14" sourceElement="NID3" targetElement="NID4">
+            <bpmndi:BPMNEdge xmlns="http://www.jboss.org/examples/store" bpmnElement="MID16" id="NID14" sourceElement="NID3" targetElement="NID4">
                 <ns4:waypoint x="80.0" y="125.0"/>
                 <ns4:waypoint x="130.0" y="125.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID5" id="NID15">
+            <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID5" id="NID15">
                 <dc:Bounds height="30.0" width="30.0" x="930.0" y="110.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID17" id="NID16" sourceElement="NID12" targetElement="NID15">
+            <bpmndi:BPMNEdge xmlns="http://www.jboss.org/examples/store" bpmnElement="MID17" id="NID16" sourceElement="NID12" targetElement="NID15">
                 <ns4:waypoint x="880.0" y="125.0"/>
                 <ns4:waypoint x="930.0" y="125.0"/>
             </bpmndi:BPMNEdge>

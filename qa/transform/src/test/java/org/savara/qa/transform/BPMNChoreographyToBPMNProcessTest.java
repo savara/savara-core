@@ -43,17 +43,17 @@ public class BPMNChoreographyToBPMNProcessTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("BPMN2 Choreo->BPMN2 Process Transform Tests");
 
-        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "Store"));
-        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "CreditAgency"));
-        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithANDJoinActivity", "Logistics"));
-        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "Store"));
-        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency"));
-        suite.addTest(new BPMN2ChoreographyToBPELTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "Store"));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "CreditAgency"));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "Logistics"));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "Store"));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency"));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
 
         return suite;
     }
     
-    protected static class BPMN2ChoreographyToBPELTester extends TestCase {
+    protected static class BPMN2ChoreographyToBPMNProcessTester extends TestCase {
 
     	private String m_name=null;
     	private String m_role=null;
@@ -64,7 +64,7 @@ public class BPMNChoreographyToBPMNProcessTest {
     	 * 
     	 * @param name The test name
     	 */
-    	public BPMN2ChoreographyToBPELTester(String name, String role) {
+    	public BPMN2ChoreographyToBPMNProcessTester(String name, String role) {
     		super(name+"["+role+"]");
     		m_name = name;
     		m_role = role;

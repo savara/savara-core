@@ -19,27 +19,27 @@
         <variable messageType="pns3:buyResponse" name="buyResponseVar"/>
     </variables>
     <sequence>
-        <receive createInstance="yes" name="Receive_BuyRequest" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="buyRequestVar"/>
+        <receive createInstance="yes" name="Receive_BuyRequest" operation="buy" partnerLink="BuyerToStore" portType="pns3:StoreInterface" variable="buyRequestVar"/>
         <flow>
             <sequence>
                 <scope>
                     <faultHandlers>
                         <catch faultMessageType="pns2:CustomerUnknownFault" faultName="pns2:CustomerUnknown" faultVariable="CustomerUnknownFaultVar">
                             <sequence>
-<reply faultName="pns3:AccountNotFound" name="Send_AccountNotFound" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="AccountNotFoundFaultVar"/>
+<reply faultName="pns3:AccountNotFound" name="Send_AccountNotFound" operation="buy" partnerLink="BuyerToStore" portType="pns3:StoreInterface" variable="AccountNotFoundFaultVar"/>
                             </sequence>
                         </catch>
                     </faultHandlers>
                     <sequence>
-                        <invoke inputVariable="creditCheckRequestVar" name="Send_CreditCheck" operation="creditCheck" outputVariable="creditCheckResponseVar" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgency"/>
+                        <invoke inputVariable="creditCheckRequestVar" name="Send_CreditCheck" operation="creditCheck" outputVariable="creditCheckResponseVar" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgencyInterface"/>
                         <if>
                             <sequence>
-<reply faultName="pns3:InsufficientCredit" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="InsufficientCreditFaultVar"/>
+<reply faultName="pns3:InsufficientCredit" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="pns3:StoreInterface" variable="InsufficientCreditFaultVar"/>
                             </sequence>
                             <else>
 <sequence>
-    <invoke inputVariable="deliveryRequestVar" name="Send_DeliveryRequest" operation="delivery" outputVariable="deliveryResponseVar" partnerLink="StoreToLogistics" portType="pns4:Logistics"/>
-    <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="buyResponseVar"/>
+    <invoke inputVariable="deliveryRequestVar" name="Send_DeliveryRequest" operation="delivery" outputVariable="deliveryResponseVar" partnerLink="StoreToLogistics" portType="pns4:LogisticsInterface"/>
+    <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="pns3:StoreInterface" variable="buyResponseVar"/>
 </sequence>
                             </else>
                         </if>
@@ -47,7 +47,7 @@
                 </scope>
             </sequence>
             <sequence>
-                <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="buyResponseVar"/>
+                <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="pns3:StoreInterface" variable="buyResponseVar"/>
             </sequence>
         </flow>
     </sequence>

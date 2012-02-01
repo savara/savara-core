@@ -17,9 +17,10 @@
  */
 package org.savara.scenario.simulator.scribble;
 
+import java.util.List;
 import java.util.UUID;
 
-import org.savara.monitor.ConversationInstanceId;
+import org.savara.monitor.ConversationId;
 import org.savara.monitor.Message;
 import org.savara.monitor.Monitor;
 import org.savara.scenario.model.Event;
@@ -30,6 +31,9 @@ import org.savara.scenario.model.Role;
 import org.savara.scenario.model.Scenario;
 import org.savara.scenario.model.SendEvent;
 import org.savara.scenario.simulation.RoleSimulator;
+import org.savara.scenario.simulation.SimulationContext;
+import org.savara.scenario.simulation.SimulationHandler;
+import org.savara.scenario.simulation.SimulationModel;
 
 /**
  * This class provides the scribble implementation of the Role Simulator interface.
@@ -58,7 +62,7 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 	 */
 	public void simulate(Scenario scenario, SimulationHandler handler) {
 		
-		ConversationInstanceId cid=new ConversationInstanceId(UUID.randomUUID().toString());
+		ConversationId cid=new ConversationId(UUID.randomUUID().toString());
 		
 		simulateEvents(cid, scenario.getEvent(), handler);
 	}
@@ -70,7 +74,7 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 	 * @param events The list of events
 	 * @param handler The handler
 	 */
-	protected void simulateEvents(ConversationInstanceId cid,
+	protected void simulateEvents(ConversationId cid,
 					java.util.List<Event> events, SimulationHandler handler) {
 		
 		for (Event event : events) {
@@ -79,7 +83,7 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 			} else if (event instanceof ReceiveEvent) {
 				handleReceiveEvent(cid, (ReceiveEvent)event, handler);
 			} else {
-				handler.unknownEvent(event);
+				handler.unexpected(event);
 			}
 		}
 	}
@@ -96,7 +100,7 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 		return(mesg);
 	}
 	
-	protected void handleSendEvent(ConversationInstanceId cid,
+	protected void handleSendEvent(ConversationId cid,
 					SendEvent event, SimulationHandler handler) {
 		try {
 			Message mesg=getMessageForEvent(event);
@@ -105,11 +109,11 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 
 			m_monitor.process(null, cid, mesg);
 		} catch(Exception e) {
-			handler.exception("Failed when handling send event", event, e);
+			handler.error("Failed when handling send event", event, e);
 		}
 	}
 	
-	protected void handleReceiveEvent(ConversationInstanceId cid,
+	protected void handleReceiveEvent(ConversationId cid,
 					ReceiveEvent event, SimulationHandler handler) {
 		try {
 			Message mesg=getMessageForEvent(event);
@@ -118,7 +122,48 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 
 			m_monitor.process(null, cid, mesg);
 		} catch(Exception e) {
-			handler.exception("Failed when handling receive event", event, e);
+			handler.error("Failed when handling receive event", event, e);
 		}		
+	}
+
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void initialize(SimulationContext context) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public boolean isSupported(SimulationModel model) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public Object getModel(SimulationModel model) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<Role> getModelRoles(Object model) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object getModelForRole(Object model, Role role) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void onEvent(SimulationContext context, Event event,
+			SimulationHandler handler) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void close(SimulationContext context) throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 }

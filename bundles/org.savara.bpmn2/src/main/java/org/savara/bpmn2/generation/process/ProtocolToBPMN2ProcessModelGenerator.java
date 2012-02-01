@@ -52,6 +52,7 @@ import org.savara.bpmn2.model.TOperation;
 import org.savara.bpmn2.model.TReceiveTask;
 import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.model.TSendTask;
+import org.savara.bpmn2.util.BPMN2ServiceUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.annotation.Annotation;
@@ -68,7 +69,6 @@ import org.scribble.protocol.model.*;
  */
 public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 
-	private static final String INTERFACE_SUFFIX = "Interface";
 	private boolean m_consecutiveIds=false;
 	private org.savara.bpmn2.model.ObjectFactory _objectFactory=new org.savara.bpmn2.model.ObjectFactory();
 	
@@ -149,10 +149,10 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		String role=pm.getProtocol().getLocatedRole().getName();
 		
 		Annotation ann=AnnotationDefinitions.getAnnotationWithProperty(pm.getProtocol().getAnnotations(),
-				AnnotationDefinitions.NAMESPACE, AnnotationDefinitions.ROLE_PROPERTY, role);
+				AnnotationDefinitions.INTERFACE, AnnotationDefinitions.ROLE_PROPERTY, role);
 		
 		if (ann != null) {
-			defns.setTargetNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAME_PROPERTY));
+			defns.setTargetNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY));
 		}
 	}
 	
@@ -196,7 +196,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 	
 	protected TInterface getInterface(TDefinitions defns, Role role) {
 		TInterface ret=null;
-		String intfName=role.getName()+INTERFACE_SUFFIX;
+		String intfName=role.getName();
 		
 		for (JAXBElement<? extends TRootElement> rootElem : defns.getRootElement()) {
 			if (rootElem.getValue() instanceof TInterface &&
@@ -208,8 +208,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		
 		if (ret == null) {
 			ret = new TInterface();
-			ret.setId(intfName);
-			ret.setName(ret.getId());
+			ret.setId(intfName+BPMN2ServiceUtil.INTERFACE_ID_SUFFIX);
+			ret.setName(intfName);
 			
 			defns.getRootElement().add(_objectFactory.createInterface(ret));
 		}

@@ -111,7 +111,8 @@ public class BPMN2ModelFactory {
 		participant.setId(createId());
 		participant.setName(name);
 		
-		participant.setProcessRef(new QName(process.getId()));
+		participant.setProcessRef(new QName(m_definitions.getTargetNamespace(),
+							process.getId()));
 		
 		m_collaboration.getParticipant().add(participant);
 
@@ -355,11 +356,13 @@ public class BPMN2ModelFactory {
 		link.setName(conditionalExpression);
 		
 		if (fromNode instanceof TFlowNode) {
-			((TFlowNode)fromNode).getOutgoing().add(new QName(link.getId()));
+			((TFlowNode)fromNode).getOutgoing().add(new QName(getDefinitions().getTargetNamespace(),
+								link.getId()));
 		}
 		
 		if (toNode instanceof TFlowNode) {
-			((TFlowNode)toNode).getIncoming().add(new QName(link.getId()));
+			((TFlowNode)toNode).getIncoming().add(new QName(getDefinitions().getTargetNamespace(),
+								link.getId()));
 		}
 		
 		if (container instanceof TProcess) {
@@ -378,11 +381,13 @@ public class BPMN2ModelFactory {
 		link.setId(createId());
 		
 		if (fromNode instanceof TBaseElement) {
-			link.setSourceRef(new QName(((TBaseElement)fromNode).getId()));
+			link.setSourceRef(new QName(getDefinitions().getTargetNamespace(),
+								((TBaseElement)fromNode).getId()));
 		}
 		
 		if (toNode instanceof TBaseElement) {
-			link.setTargetRef(new QName(((TBaseElement)toNode).getId()));
+			link.setTargetRef(new QName(getDefinitions().getTargetNamespace(),
+								((TBaseElement)toNode).getId()));
 		}
 		
 		// TODO: Define message and message ref
@@ -537,7 +542,7 @@ public class BPMN2ModelFactory {
 		java.util.List<Object> ret=new java.util.Vector<Object>();
 		
 		if (node instanceof TBaseElement) {
-			QName id=new QName(((TBaseElement)node).getId());
+			QName id=new QName(getDefinitions().getTargetNamespace(),((TBaseElement)node).getId());
 			
 			for (TMessageFlow mf : m_collaboration.getMessageFlow()) {
 				if (mf.getTargetRef() != null &&
@@ -555,7 +560,7 @@ public class BPMN2ModelFactory {
 		java.util.List<Object> ret=new java.util.Vector<Object>();
 		
 		if (node instanceof TBaseElement) {
-			QName id=new QName(((TBaseElement)node).getId());
+			QName id=new QName(getDefinitions().getTargetNamespace(),((TBaseElement)node).getId());
 			
 			for (TMessageFlow mf : m_collaboration.getMessageFlow()) {
 				if (mf.getSourceRef() != null &&

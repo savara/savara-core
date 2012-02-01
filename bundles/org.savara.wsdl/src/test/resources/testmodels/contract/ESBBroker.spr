@@ -1,22 +1,23 @@
 [[ XSDElement ]]
 import xsd "bookingReference" as BookingReference, "buy" as Buy, "cancel" as Cancel, "CreditCheckRequest" as CreditInformation, "CreditCheckInvalid" as CreditInvalid, "CreditCheckOk" as CreditValid, "enquiry" as Enquiry, "orderConfirmed" as OrderConfirmed, "orderRejected" as OrderRejected, "quote" as Quote, "quoteList" as QuoteList, "requestForQuote" as RequestForQuote;
 [[ SourceComponent(id=//@choreographies.0) ]]
-[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Broker,role=Broker) ]]
-[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Buyer,role=Buyer) ]]
-[[ Namespace(name=http://www.pi4soa.org/ESBBroker/CreditAgency,role=CreditAgency) ]]
-[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=Supplier) ]]
+[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Broker,name=BrokerInterface,role=Broker) ]]
+[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Buyer,name=BuyerInterface,role=Buyer) ]]
+[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/CreditAgency,name=CreditAgencyInterface,role=CreditAgency) ]]
+[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Supplier,name=SupplierInterface,role=Supplier) ]]
 [[ Type(prefix=tns,namespace=http://www.pi4soa.org/ESBBroker) ]]
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(prefix=brk,namespace=http://www.pi4soa.org/ESBBroker/Broker) ]]
 [[ Type(prefix=byr,namespace=http://www.pi4soa.org/ESBBroker/Buyer) ]]
 [[ Type(prefix=cay,namespace=http://www.pi4soa.org/ESBBroker/CreditAgency) ]]
 [[ Type(prefix=spr,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
-[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierTxnProcessor) ]]
-[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierQuoteEngine) ]]
+[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Supplier,name=SupplierTxnProcessorInterface,role=SupplierTxnProcessor) ]]
+[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Supplier,name=SupplierQuoteEngineInterface,role=SupplierQuoteEngine) ]]
 protocol ESBBrokerProcess(role Buyer) {
-	Buyer introduces Broker, CreditAgency, Supplier;
+	Buyer introduces Broker;
+	Broker introduces CreditAgency, Supplier;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
-	[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
+	[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Broker,name=BrokerBehavior) ]]
 	[[ Correlation(request=makeEnquiry) ]]
 	makeEnquiry(Enquiry) from Buyer to Broker;
 	[[ SourceComponent(id=//@choreographies.0/@activities.1) ]]
@@ -25,7 +26,7 @@ protocol ESBBrokerProcess(role Buyer) {
 		run RequestForQuote(Broker) from Broker;
 	}
 	[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@exchangeDetails.0) ]]
-	[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
+	[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Broker,name=BrokerBehavior) ]]
 	[[ Correlation(replyTo=makeEnquiry) ]]
 	makeEnquiry(QuoteList) from Broker to Buyer;
 	[[ SourceComponent(id=//@choreographies.0/@activities.3) ]]
@@ -34,62 +35,62 @@ protocol ESBBrokerProcess(role Buyer) {
 		run CompleteTransaction(Buyer, Broker, CreditAgency) from Buyer;
 	} or {
 		[[ SourceComponent(id=//@choreographies.0/@activities.3/@activities.1/@activities.0/@exchangeDetails.0) ]]
-		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
+		[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Broker,name=BrokerBehavior) ]]
 		cancel(Cancel) from Buyer to Broker;
 	}
 	[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0) ]]
-	[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierTxnProcessor) ]]
+	[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Supplier,name=SupplierTxnProcessorInterface,role=SupplierTxnProcessor) ]]
 	protocol CompleteTransaction(role Buyer, role Broker, role CreditAgency) {
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.0/@exchangeDetails.0) ]]
-		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
+		[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Broker,name=BrokerBehavior) ]]
 		[[ Correlation(request=buy) ]]
 		buy(Buy) from Buyer to Broker;
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.1/@exchangeDetails.0) ]]
-		[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
+		[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/CreditAgency,name=CreditAgencyBehavior) ]]
 		[[ Correlation(request=checkCredit) ]]
 		checkCredit(CreditInformation) from Broker to CreditAgency;
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2) ]]
 		choice at CreditAgency {
 			Broker introduces SupplierTxnProcessor;
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.0/@exchangeDetails.0) ]]
-			[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
+			[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/CreditAgency,name=CreditAgencyBehavior) ]]
 			[[ Correlation(replyTo=checkCredit) ]]
 			checkCredit(CreditValid) from CreditAgency to Broker;
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.0) ]]
-			[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
+			[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Supplier,name=SupplierBehavior) ]]
 			[[ Correlation(request=confirm) ]]
 			confirm(OrderConfirmed) from Broker to SupplierTxnProcessor;
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.1) ]]
-			[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
+			[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Supplier,name=SupplierBehavior) ]]
 			[[ Correlation(replyTo=confirm) ]]
 			confirm(BookingReference) from SupplierTxnProcessor to Broker;
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.0/@activities.2/@exchangeDetails.0) ]]
-			[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
+			[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Broker,name=BrokerBehavior) ]]
 			[[ Correlation(replyTo=buy) ]]
 			buy(BookingReference) from Broker to Buyer;
 		} or {
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.1/@activities.0/@exchangeDetails.0) ]]
 			[[ Fault(name=invalidCredit) ]]
-			[[ Interface(name={http://www.pi4soa.org/ESBBroker/CreditAgency}CreditAgencyBehavior) ]]
+			[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/CreditAgency,name=CreditAgencyBehavior) ]]
 			[[ Correlation(replyTo=checkCredit) ]]
 			checkCredit(CreditInvalid) from CreditAgency to Broker;
 			[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.0/@activities.2/@activities.1/@activities.1/@exchangeDetails.0) ]]
 			[[ Fault(name=rejected) ]]
-			[[ Interface(name={http://www.pi4soa.org/ESBBroker/Broker}BrokerBehavior) ]]
+			[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Broker,name=BrokerBehavior) ]]
 			[[ Correlation(replyTo=buy) ]]
 			buy(OrderRejected) from Broker to Buyer;
 		}
 	}
 	[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.1) ]]
-	[[ Namespace(name=http://www.pi4soa.org/ESBBroker/Supplier,role=SupplierQuoteEngine) ]]
+	[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Supplier,name=SupplierQuoteEngineInterface,role=SupplierQuoteEngine) ]]
 	protocol RequestForQuote(role Broker) {
 		Broker introduces SupplierQuoteEngine;
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.1/@activities.0/@exchangeDetails.0) ]]
-		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
+		[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Supplier,name=SupplierBehavior) ]]
 		[[ Correlation(request=getQuote) ]]
 		getQuote(RequestForQuote) from Broker to SupplierQuoteEngine;
 		[[ SourceComponent(id=//@choreographies.0/@enclosedChoreographies.1/@activities.0/@exchangeDetails.1) ]]
-		[[ Interface(name={http://www.pi4soa.org/ESBBroker/Supplier}SupplierBehavior) ]]
+		[[ Interface(namespace=http://www.pi4soa.org/ESBBroker/Supplier,name=SupplierBehavior) ]]
 		[[ Correlation(replyTo=getQuote) ]]
 		getQuote(Quote) from SupplierQuoteEngine to Broker;
 	}

@@ -1,6 +1,7 @@
 import "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
 import "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
 import "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
+[[ Interface(name=Buyer,role=Buyer,namespace=http://www.jboss.org/savara/examples) ]]
 [[ Type(location=PurchaseGoodsProcess_CreditAgency.wsdl,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Type(location=PurchaseGoodsProcess_Store.wsdl,namespace=http://www.jboss.org/examples/store) ]]
 [[ Type(location=PurchaseGoodsProcess_BuyerArtifacts.wsdl,namespace=http://www.jboss.org/savara/examples) ]]
