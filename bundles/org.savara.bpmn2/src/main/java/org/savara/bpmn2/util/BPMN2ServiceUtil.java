@@ -200,6 +200,10 @@ public class BPMN2ServiceUtil {
 			intf.setId(intfName+INTERFACE_ID_SUFFIX);
 			intf.setName(intfName);
 			
+			QName impl=new QName(modelInfo.getTargetNamespace()+"/"+participant.getName(),
+										participant.getName());
+			intf.setImplementationRef(impl);
+			
 			intfs.put(participant, intf);
 		}
 		

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<bpmn2:definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" name="Definitions 1">
+<bpmn2:definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" name="Definitions 1" targetNamespace="http://myns">
     <bpmn2:import namespace="http://www.jboss.org/examples/store" location="platform:/resource/purchasing/store.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
     <bpmn2:import namespace="http://www.jboss.org/examples/logistics" location="platform:/resource/purchasing/logistics.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
     <bpmn2:import namespace="http://www.jboss.org/examples/creditAgency" location="platform:/resource/purchasing/creditAgency.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
     <bpmn2:choreography name="PurchaseGoods" id="Choreography_1">
         <bpmn2:participant xmlns="" name="Buyer" processRef="Process_1" id="Participant_1"/>
         <bpmn2:participant xmlns="" name="Store" processRef="Process_2" id="Participant_2">
-            <bpmn2:interfaceRef>StoreInterface</bpmn2:interfaceRef>
+            <bpmn2:interfaceRef xmlns:ns6="http://myns">ns6:StoreInterface</bpmn2:interfaceRef>
         </bpmn2:participant>
         <bpmn2:participant name="CreditAgency" id="Participant_3">
-            <bpmn2:interfaceRef xmlns="">CreditAgencyInterface</bpmn2:interfaceRef>
+            <bpmn2:interfaceRef xmlns="http://myns">CreditAgencyInterface</bpmn2:interfaceRef>
         </bpmn2:participant>
         <bpmn2:participant name="Logistics" id="Participant_4">
-            <bpmn2:interfaceRef xmlns="">LogisticsInterface</bpmn2:interfaceRef>
+            <bpmn2:interfaceRef xmlns="http://myns">LogisticsInterface</bpmn2:interfaceRef>
         </bpmn2:participant>
         <bpmn2:messageFlow xmlns="" name="BuyRequest" sourceRef="Participant_1" targetRef="Participant_2" messageRef="Message_1" id="MessageFlow_1"/>
         <bpmn2:messageFlow xmlns="" name="CreditCheck" sourceRef="Participant_2" targetRef="Participant_3" messageRef="Message_2" id="MessageFlow_2"/>
@@ -152,25 +152,25 @@
     <bpmn2:error xmlns="" name="CustomerUnknown" errorCode="CustomerUnknown" structureRef="ItemDefinition_3" id="Error_1"/>
     <bpmn2:error xmlns="" name="AccountNotFound" errorCode="AccountNotFound" structureRef="ItemDefinition_5" id="Error_2"/>
     <bpmn2:error xmlns="" name="BuyFailed" errorCode="InsufficientCredit" structureRef="ItemDefinition_6" id="Error_3"/>
-    <bpmn2:interface name="CreditAgency" id="CreditAgencyInterface">
+    <bpmn2:interface xmlns="http://myns/CreditAgency" name="CreditAgency" implementationRef="CreditAgency" id="CreditAgencyInterface">
         <bpmn2:operation name="creditCheck" id="creditCheck">
-            <bpmn2:inMessageRef xmlns="">Message_2</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="">Message_4</bpmn2:outMessageRef>
-            <bpmn2:errorRef xmlns="">Error_1</bpmn2:errorRef>
+            <bpmn2:inMessageRef xmlns:ns6="http://myns">ns6:Message_2</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns:ns6="http://myns">ns6:Message_4</bpmn2:outMessageRef>
+            <bpmn2:errorRef xmlns:ns6="http://myns">ns6:Error_1</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface name="Logistics" id="LogisticsInterface">
+    <bpmn2:interface xmlns="http://myns/Logistics" name="Logistics" implementationRef="Logistics" id="LogisticsInterface">
         <bpmn2:operation name="delivery" id="delivery">
-            <bpmn2:inMessageRef xmlns="">Message_7</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="">Message_8</bpmn2:outMessageRef>
+            <bpmn2:inMessageRef xmlns:ns6="http://myns">ns6:Message_7</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns:ns6="http://myns">ns6:Message_8</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface name="Store" id="StoreInterface">
+    <bpmn2:interface xmlns="http://myns/Store" name="Store" implementationRef="Store" id="StoreInterface">
         <bpmn2:operation name="buy" id="buy">
-            <bpmn2:inMessageRef xmlns="">Message_1</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="">Message_9</bpmn2:outMessageRef>
-            <bpmn2:errorRef xmlns="">Error_2</bpmn2:errorRef>
-            <bpmn2:errorRef xmlns="">Error_3</bpmn2:errorRef>
+            <bpmn2:inMessageRef xmlns:ns6="http://myns">ns6:Message_1</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns:ns6="http://myns">ns6:Message_9</bpmn2:outMessageRef>
+            <bpmn2:errorRef xmlns:ns6="http://myns">ns6:Error_2</bpmn2:errorRef>
+            <bpmn2:errorRef xmlns:ns6="http://myns">ns6:Error_3</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
     <bpmndi:BPMNDiagram id="BPMNDiagram_1">

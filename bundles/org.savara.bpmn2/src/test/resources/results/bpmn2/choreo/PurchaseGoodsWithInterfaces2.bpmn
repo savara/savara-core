@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<bpmn2:definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" name="Definitions 1">
+<bpmn2:definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" name="Definitions 1" targetNamespace="http://myns">
     <bpmn2:import namespace="http://www.jboss.org/examples/store" location="platform:/resource/purchasing/store.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
     <bpmn2:import namespace="http://www.jboss.org/examples/logistics" location="platform:/resource/purchasing/logistics.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
     <bpmn2:import namespace="http://www.jboss.org/examples/creditAgency" location="platform:/resource/purchasing/creditAgency.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
     <bpmn2:choreography name="PurchaseGoods" id="Choreography_1">
-        <bpmn2:participant xmlns="" name="Buyer" processRef="Process_1" id="Participant_1"/>
-        <bpmn2:participant xmlns="" name="Store" processRef="Process_2" id="Participant_2">
+        <bpmn2:participant xmlns="http://myns" name="Buyer" processRef="Process_1" id="Participant_1"/>
+        <bpmn2:participant xmlns="http://myns" name="Store" processRef="Process_2" id="Participant_2">
             <bpmn2:interfaceRef>StoreInterface</bpmn2:interfaceRef>
         </bpmn2:participant>
         <bpmn2:participant name="CreditAgency" id="Participant_3">
-            <bpmn2:interfaceRef xmlns="">CreditAgencyInterface</bpmn2:interfaceRef>
+            <bpmn2:interfaceRef xmlns="http://myns">CreditAgencyInterface</bpmn2:interfaceRef>
         </bpmn2:participant>
         <bpmn2:participant name="Logistics" id="Participant_4">
-            <bpmn2:interfaceRef xmlns="">LogisticsInterface</bpmn2:interfaceRef>
+            <bpmn2:interfaceRef xmlns="http://myns">LogisticsInterface</bpmn2:interfaceRef>
         </bpmn2:participant>
-        <bpmn2:messageFlow xmlns="" name="BuyRequest" sourceRef="Participant_1" targetRef="Participant_2" messageRef="Message_1" id="MessageFlow_1"/>
-        <bpmn2:messageFlow xmlns="" name="CreditCheck" sourceRef="Participant_2" targetRef="Participant_3" messageRef="Message_2" id="MessageFlow_2"/>
-        <bpmn2:messageFlow xmlns="" name="CustomerUnknown" sourceRef="Participant_3" targetRef="Participant_2" messageRef="Message_3" id="MessageFlow_3"/>
-        <bpmn2:messageFlow xmlns="" name="AccountNotFound" sourceRef="Participant_2" targetRef="Participant_1" messageRef="Message_5" id="MessageFlow_4"/>
-        <bpmn2:messageFlow xmlns="" name="CreditRating" sourceRef="Participant_3" targetRef="Participant_2" messageRef="Message_4" id="MessageFlow_5"/>
-        <bpmn2:messageFlow xmlns="" name="InsufficientCredit" sourceRef="Participant_2" targetRef="Participant_1" messageRef="Message_6" id="MessageFlow_6"/>
-        <bpmn2:messageFlow xmlns="" name="DeliveryRequest" sourceRef="Participant_2" targetRef="Participant_4" messageRef="Message_7" id="MessageFlow_7"/>
-        <bpmn2:messageFlow xmlns="" name="DeliveryConfirmed" sourceRef="Participant_4" targetRef="Participant_2" messageRef="Message_8" id="MessageFlow_8"/>
-        <bpmn2:messageFlow xmlns="" name="BuyConfirmed" sourceRef="Participant_2" targetRef="Participant_1" messageRef="Message_9" id="MessageFlow_9"/>
-        <bpmn2:choreographyTask xmlns="" initiatingParticipantRef="Participant_1" name="Buy Request" id="ChoreographyTask_1">
+        <bpmn2:messageFlow xmlns="http://myns" name="BuyRequest" sourceRef="Participant_1" targetRef="Participant_2" messageRef="Message_1" id="MessageFlow_1"/>
+        <bpmn2:messageFlow xmlns="http://myns" name="CreditCheck" sourceRef="Participant_2" targetRef="Participant_3" messageRef="Message_2" id="MessageFlow_2"/>
+        <bpmn2:messageFlow xmlns="http://myns" name="CustomerUnknown" sourceRef="Participant_3" targetRef="Participant_2" messageRef="Message_3" id="MessageFlow_3"/>
+        <bpmn2:messageFlow xmlns="http://myns" name="AccountNotFound" sourceRef="Participant_2" targetRef="Participant_1" messageRef="Message_5" id="MessageFlow_4"/>
+        <bpmn2:messageFlow xmlns="http://myns" name="CreditRating" sourceRef="Participant_3" targetRef="Participant_2" messageRef="Message_4" id="MessageFlow_5"/>
+        <bpmn2:messageFlow xmlns="http://myns" name="InsufficientCredit" sourceRef="Participant_2" targetRef="Participant_1" messageRef="Message_6" id="MessageFlow_6"/>
+        <bpmn2:messageFlow xmlns="http://myns" name="DeliveryRequest" sourceRef="Participant_2" targetRef="Participant_4" messageRef="Message_7" id="MessageFlow_7"/>
+        <bpmn2:messageFlow xmlns="http://myns" name="DeliveryConfirmed" sourceRef="Participant_4" targetRef="Participant_2" messageRef="Message_8" id="MessageFlow_8"/>
+        <bpmn2:messageFlow xmlns="http://myns" name="BuyConfirmed" sourceRef="Participant_2" targetRef="Participant_1" messageRef="Message_9" id="MessageFlow_9"/>
+        <bpmn2:choreographyTask xmlns="http://myns" initiatingParticipantRef="Participant_1" name="Buy Request" id="ChoreographyTask_1">
             <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
             <bpmn2:outgoing>SequenceFlow_2</bpmn2:outgoing>
             <bpmn2:participantRef>Participant_1</bpmn2:participantRef>
@@ -32,10 +32,10 @@
         </bpmn2:choreographyTask>
         <bpmn2:sequenceFlow sourceRef="ChoreographyTask_1" targetRef="ChoreographyTask_2" name="" id="SequenceFlow_2"/>
         <bpmn2:startEvent name="Start" id="StartEvent_1">
-            <bpmn2:outgoing xmlns="">SequenceFlow_1</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://myns">SequenceFlow_1</bpmn2:outgoing>
         </bpmn2:startEvent>
         <bpmn2:sequenceFlow sourceRef="StartEvent_1" targetRef="ChoreographyTask_1" name="" id="SequenceFlow_1"/>
-        <bpmn2:choreographyTask xmlns="" initiatingParticipantRef="Participant_2" name="Check Credit" id="ChoreographyTask_2">
+        <bpmn2:choreographyTask xmlns="http://myns" initiatingParticipantRef="Participant_2" name="Check Credit" id="ChoreographyTask_2">
             <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
             <bpmn2:outgoing>SequenceFlow_3</bpmn2:outgoing>
             <bpmn2:participantRef>Participant_2</bpmn2:participantRef>
@@ -43,11 +43,11 @@
             <bpmn2:messageFlowRef>MessageFlow_2</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
         <bpmn2:exclusiveGateway name="Check Customer Known" id="ExclusiveGateway_1">
-            <bpmn2:incoming xmlns="">SequenceFlow_3</bpmn2:incoming>
-            <bpmn2:outgoing xmlns="">SequenceFlow_4</bpmn2:outgoing>
-            <bpmn2:outgoing xmlns="">SequenceFlow_5</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://myns">SequenceFlow_3</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://myns">SequenceFlow_4</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://myns">SequenceFlow_5</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:choreographyTask xmlns="" initiatingParticipantRef="Participant_3" name="Customer Not Known" id="ChoreographyTask_3">
+        <bpmn2:choreographyTask xmlns="http://myns" initiatingParticipantRef="Participant_3" name="Customer Not Known" id="ChoreographyTask_3">
             <bpmn2:incoming>SequenceFlow_4</bpmn2:incoming>
             <bpmn2:outgoing>SequenceFlow_9</bpmn2:outgoing>
             <bpmn2:participantRef>Participant_2</bpmn2:participantRef>
@@ -57,14 +57,14 @@
         <bpmn2:sequenceFlow sourceRef="ChoreographyTask_2" targetRef="ExclusiveGateway_1" name="" id="SequenceFlow_3"/>
         <bpmn2:sequenceFlow sourceRef="ExclusiveGateway_1" targetRef="ChoreographyTask_3" name="Customer Unknown" id="SequenceFlow_4"/>
         <bpmn2:sequenceFlow sourceRef="ExclusiveGateway_1" targetRef="ChoreographyTask_4" name="Customer Known" id="SequenceFlow_5"/>
-        <bpmn2:choreographyTask xmlns="" initiatingParticipantRef="Participant_2" name="Account Not Found" id="ChoreographyTask_5">
+        <bpmn2:choreographyTask xmlns="http://myns" initiatingParticipantRef="Participant_2" name="Account Not Found" id="ChoreographyTask_5">
             <bpmn2:incoming>SequenceFlow_9</bpmn2:incoming>
             <bpmn2:outgoing>SequenceFlow_11</bpmn2:outgoing>
             <bpmn2:participantRef>Participant_1</bpmn2:participantRef>
             <bpmn2:participantRef>Participant_2</bpmn2:participantRef>
             <bpmn2:messageFlowRef>MessageFlow_4</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
-        <bpmn2:choreographyTask xmlns="" initiatingParticipantRef="Participant_3" name="Credit Rating" id="ChoreographyTask_4">
+        <bpmn2:choreographyTask xmlns="http://myns" initiatingParticipantRef="Participant_3" name="Credit Rating" id="ChoreographyTask_4">
             <bpmn2:incoming>SequenceFlow_5</bpmn2:incoming>
             <bpmn2:outgoing>SequenceFlow_6</bpmn2:outgoing>
             <bpmn2:participantRef>Participant_2</bpmn2:participantRef>
@@ -73,18 +73,18 @@
         </bpmn2:choreographyTask>
         <bpmn2:sequenceFlow sourceRef="ChoreographyTask_4" targetRef="ExclusiveGateway_2" name="" id="SequenceFlow_6"/>
         <bpmn2:exclusiveGateway name="Evaluate Credit Rating" id="ExclusiveGateway_2">
-            <bpmn2:incoming xmlns="">SequenceFlow_6</bpmn2:incoming>
-            <bpmn2:outgoing xmlns="">SequenceFlow_7</bpmn2:outgoing>
-            <bpmn2:outgoing xmlns="">SequenceFlow_8</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://myns">SequenceFlow_6</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://myns">SequenceFlow_7</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://myns">SequenceFlow_8</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:choreographyTask xmlns="" initiatingParticipantRef="Participant_2" name="Insufficient Credit" id="ChoreographyTask_6">
+        <bpmn2:choreographyTask xmlns="http://myns" initiatingParticipantRef="Participant_2" name="Insufficient Credit" id="ChoreographyTask_6">
             <bpmn2:incoming>SequenceFlow_7</bpmn2:incoming>
             <bpmn2:outgoing>SequenceFlow_13</bpmn2:outgoing>
             <bpmn2:participantRef>Participant_1</bpmn2:participantRef>
             <bpmn2:participantRef>Participant_2</bpmn2:participantRef>
             <bpmn2:messageFlowRef>MessageFlow_6</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
-        <bpmn2:choreographyTask xmlns="" initiatingParticipantRef="Participant_2" name="Deliver Goods" id="ChoreographyTask_7">
+        <bpmn2:choreographyTask xmlns="http://myns" initiatingParticipantRef="Participant_2" name="Deliver Goods" id="ChoreographyTask_7">
             <bpmn2:incoming>SequenceFlow_8</bpmn2:incoming>
             <bpmn2:outgoing>SequenceFlow_14</bpmn2:outgoing>
             <bpmn2:participantRef>Participant_2</bpmn2:participantRef>
@@ -94,14 +94,14 @@
         <bpmn2:sequenceFlow sourceRef="ExclusiveGateway_2" targetRef="ChoreographyTask_6" name="Poor Rating" id="SequenceFlow_7"/>
         <bpmn2:sequenceFlow sourceRef="ExclusiveGateway_2" targetRef="ChoreographyTask_7" name="Good Rating" id="SequenceFlow_8"/>
         <bpmn2:sequenceFlow sourceRef="ChoreographyTask_3" targetRef="ChoreographyTask_5" name="" id="SequenceFlow_9"/>
-        <bpmn2:choreographyTask xmlns="" initiatingParticipantRef="Participant_4" name="Acknowledge Delivery Details" id="ChoreographyTask_8">
+        <bpmn2:choreographyTask xmlns="http://myns" initiatingParticipantRef="Participant_4" name="Acknowledge Delivery Details" id="ChoreographyTask_8">
             <bpmn2:incoming>SequenceFlow_14</bpmn2:incoming>
             <bpmn2:outgoing>SequenceFlow_15</bpmn2:outgoing>
             <bpmn2:participantRef>Participant_2</bpmn2:participantRef>
             <bpmn2:participantRef>Participant_4</bpmn2:participantRef>
             <bpmn2:messageFlowRef>MessageFlow_8</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
-        <bpmn2:choreographyTask xmlns="" initiatingParticipantRef="Participant_2" name="Buy Confirmed" id="ChoreographyTask_9">
+        <bpmn2:choreographyTask xmlns="http://myns" initiatingParticipantRef="Participant_2" name="Buy Confirmed" id="ChoreographyTask_9">
             <bpmn2:incoming>SequenceFlow_15</bpmn2:incoming>
             <bpmn2:outgoing>SequenceFlow_12</bpmn2:outgoing>
             <bpmn2:participantRef>Participant_1</bpmn2:participantRef>
@@ -109,14 +109,14 @@
             <bpmn2:messageFlowRef>MessageFlow_9</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
         <bpmn2:exclusiveGateway id="ExclusiveGateway_3">
-            <bpmn2:incoming xmlns="">SequenceFlow_12</bpmn2:incoming>
-            <bpmn2:incoming xmlns="">SequenceFlow_13</bpmn2:incoming>
-            <bpmn2:outgoing xmlns="">SequenceFlow_10</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://myns">SequenceFlow_12</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://myns">SequenceFlow_13</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://myns">SequenceFlow_10</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
         <bpmn2:exclusiveGateway id="ExclusiveGateway_4">
-            <bpmn2:incoming xmlns="">SequenceFlow_10</bpmn2:incoming>
-            <bpmn2:incoming xmlns="">SequenceFlow_11</bpmn2:incoming>
-            <bpmn2:outgoing xmlns="">SequenceFlow_16</bpmn2:outgoing>
+            <bpmn2:incoming xmlns="http://myns">SequenceFlow_10</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://myns">SequenceFlow_11</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://myns">SequenceFlow_16</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
         <bpmn2:sequenceFlow sourceRef="ExclusiveGateway_3" targetRef="ExclusiveGateway_4" name="" id="SequenceFlow_10"/>
         <bpmn2:sequenceFlow sourceRef="ChoreographyTask_5" targetRef="ExclusiveGateway_4" name="" id="SequenceFlow_11"/>
@@ -126,55 +126,55 @@
         <bpmn2:sequenceFlow sourceRef="ChoreographyTask_8" targetRef="ChoreographyTask_9" name="" id="SequenceFlow_15"/>
         <bpmn2:sequenceFlow sourceRef="ExclusiveGateway_4" targetRef="EndEvent_1" name="" id="SequenceFlow_16"/>
         <bpmn2:endEvent name="End" id="EndEvent_1">
-            <bpmn2:incoming xmlns="">SequenceFlow_16</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://myns">SequenceFlow_16</bpmn2:incoming>
         </bpmn2:endEvent>
     </bpmn2:choreography>
     <bpmn2:process name="Default Initiating Process" id="Process_1"/>
     <bpmn2:process name="Default Non-initiating Process" id="Process_2"/>
-    <bpmn2:message xmlns="" name="BuyRequest" itemRef="ItemDefinition_1" id="Message_1"/>
+    <bpmn2:message xmlns="http://myns" name="BuyRequest" itemRef="ItemDefinition_1" id="Message_1"/>
     <bpmn2:itemDefinition xmlns:ns1="http://www.jboss.org/examples/store" structureRef="ns1:BuyRequest" id="ItemDefinition_1"/>
-    <bpmn2:message xmlns="" name="CreditCheck" itemRef="ItemDefinition_2" id="Message_2"/>
+    <bpmn2:message xmlns="http://myns" name="CreditCheck" itemRef="ItemDefinition_2" id="Message_2"/>
     <bpmn2:itemDefinition xmlns:ns3="http://www.jboss.org/examples/creditAgency" structureRef="ns3:CreditCheckRequest" id="ItemDefinition_2"/>
     <bpmn2:itemDefinition xmlns:ns3="http://www.jboss.org/examples/creditAgency" structureRef="ns3:CustomerUnknown" id="ItemDefinition_3"/>
-    <bpmn2:message xmlns="" name="CustomerUnknown" itemRef="ItemDefinition_3" id="Message_3"/>
+    <bpmn2:message xmlns="http://myns" name="CustomerUnknown" itemRef="ItemDefinition_3" id="Message_3"/>
     <bpmn2:itemDefinition xmlns:ns3="http://www.jboss.org/examples/creditAgency" structureRef="ns3:CreditRating" id="ItemDefinition_4"/>
-    <bpmn2:message xmlns="" name="CreditRating" itemRef="ItemDefinition_4" id="Message_4"/>
+    <bpmn2:message xmlns="http://myns" name="CreditRating" itemRef="ItemDefinition_4" id="Message_4"/>
     <bpmn2:itemDefinition xmlns:ns1="http://www.jboss.org/examples/store" structureRef="ns1:AccountNotFound" id="ItemDefinition_5"/>
-    <bpmn2:message xmlns="" name="AccountNotFound" itemRef="ItemDefinition_5" id="Message_5"/>
+    <bpmn2:message xmlns="http://myns" name="AccountNotFound" itemRef="ItemDefinition_5" id="Message_5"/>
     <bpmn2:itemDefinition xmlns:ns1="http://www.jboss.org/examples/store" structureRef="ns1:BuyFailed" id="ItemDefinition_6"/>
-    <bpmn2:message xmlns="" name="BuyFailed" itemRef="ItemDefinition_6" id="Message_6"/>
+    <bpmn2:message xmlns="http://myns" name="BuyFailed" itemRef="ItemDefinition_6" id="Message_6"/>
     <bpmn2:itemDefinition xmlns:ns2="http://www.jboss.org/examples/logistics" structureRef="ns2:DeliveryRequest" id="ItemDefinition_7"/>
-    <bpmn2:message xmlns="" name="DeliveryRequest" itemRef="ItemDefinition_7" id="Message_7"/>
+    <bpmn2:message xmlns="http://myns" name="DeliveryRequest" itemRef="ItemDefinition_7" id="Message_7"/>
     <bpmn2:itemDefinition xmlns:ns2="http://www.jboss.org/examples/logistics" structureRef="ns2:DeliveryConfirmed" id="ItemDefinition_8"/>
-    <bpmn2:message xmlns="" name="DeliveryConfirmed" itemRef="ItemDefinition_8" id="Message_8"/>
+    <bpmn2:message xmlns="http://myns" name="DeliveryConfirmed" itemRef="ItemDefinition_8" id="Message_8"/>
     <bpmn2:itemDefinition xmlns:ns1="http://www.jboss.org/examples/store" structureRef="ns1:BuyConfirmed" id="ItemDefinition_9"/>
-    <bpmn2:message xmlns="" name="BuyConfirmed" itemRef="ItemDefinition_9" id="Message_9"/>
-    <bpmn2:error xmlns="" name="CustomerUnknown" errorCode="CustomerUnknown" structureRef="ItemDefinition_3" id="Error_1"/>
-    <bpmn2:error xmlns="" name="AccountNotFound" errorCode="AccountNotFound" structureRef="ItemDefinition_5" id="Error_2"/>
-    <bpmn2:error xmlns="" name="BuyFailed" errorCode="InsufficientCredit" structureRef="ItemDefinition_6" id="Error_3"/>
+    <bpmn2:message xmlns="http://myns" name="BuyConfirmed" itemRef="ItemDefinition_9" id="Message_9"/>
+    <bpmn2:error xmlns="http://myns" name="CustomerUnknown" errorCode="CustomerUnknown" structureRef="ItemDefinition_3" id="Error_1"/>
+    <bpmn2:error xmlns="http://myns" name="AccountNotFound" errorCode="AccountNotFound" structureRef="ItemDefinition_5" id="Error_2"/>
+    <bpmn2:error xmlns="http://myns" name="BuyFailed" errorCode="InsufficientCredit" structureRef="ItemDefinition_6" id="Error_3"/>
     <bpmn2:interface name="CreditAgency" id="CreditAgencyInterface">
         <bpmn2:operation name="creditCheck" id="creditCheck">
-            <bpmn2:inMessageRef xmlns="">Message_2</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="">Message_4</bpmn2:outMessageRef>
-            <bpmn2:errorRef xmlns="">Error_1</bpmn2:errorRef>
+            <bpmn2:inMessageRef xmlns="http://myns">Message_2</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="http://myns">Message_4</bpmn2:outMessageRef>
+            <bpmn2:errorRef xmlns="http://myns">Error_1</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
     <bpmn2:interface name="Store" id="StoreInterface">
         <bpmn2:operation name="buy" id="buy">
-            <bpmn2:inMessageRef xmlns="">Message_1</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="">Message_9</bpmn2:outMessageRef>
-            <bpmn2:errorRef xmlns="">Error_2</bpmn2:errorRef>
-            <bpmn2:errorRef xmlns="">Error_3</bpmn2:errorRef>
+            <bpmn2:inMessageRef xmlns="http://myns">Message_1</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="http://myns">Message_9</bpmn2:outMessageRef>
+            <bpmn2:errorRef xmlns="http://myns">Error_2</bpmn2:errorRef>
+            <bpmn2:errorRef xmlns="http://myns">Error_3</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface name="Logistics" id="LogisticsInterface">
+    <bpmn2:interface xmlns="http://myns/Logistics" name="Logistics" implementationRef="Logistics" id="LogisticsInterface">
         <bpmn2:operation name="delivery" id="delivery">
-            <bpmn2:inMessageRef xmlns="">Message_7</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="">Message_8</bpmn2:outMessageRef>
+            <bpmn2:inMessageRef xmlns:ns6="http://myns">ns6:Message_7</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns:ns6="http://myns">ns6:Message_8</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
     <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-        <bpmndi:BPMNPlane xmlns="" bpmnElement="Choreography_1" id="BPMNPlane_1">
+        <bpmndi:BPMNPlane xmlns="http://myns" bpmnElement="Choreography_1" id="BPMNPlane_1">
             <bpmndi:BPMNShape bpmnElement="ChoreographyTask_1" id="BPMNShape_1">
                 <dc:Bounds x="140.0" y="240.0" width="150.0" height="150.0"/>
             </bpmndi:BPMNShape>
