@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SAVARA Scenario Simulator Protocol
+Bundle-SymbolicName: org.savara.scenario.simulator.protocol
+Bundle-Version: 2.0.0.SNAPSHOT
+Bundle-Activator: org.savara.scenario.simulator.protocol.osgi.Activator
+Bundle-Vendor: www.savara.org
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.osgi.framework;version="1.3.0"
+Require-Bundle: org.savara.scenario,
+ org.junit,
+ org.scribble.common,
+ org.scribble.protocol,
+ org.scribble.protocol.export.monitor,
+ org.scribble.protocol.monitor,
+ org.scribble.protocol.parser,
+ org.scribble.protocol.projection,
+ org.savara.protocol,
+ org.savara.common

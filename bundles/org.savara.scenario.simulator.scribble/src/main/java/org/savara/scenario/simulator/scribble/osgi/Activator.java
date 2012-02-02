@@ -17,16 +17,32 @@
  */
 package org.savara.scenario.simulator.scribble.osgi;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.savara.scenario.simulation.RoleSimulator;
+import org.savara.scenario.simulator.scribble.ScribbleRoleSimulator;
 
 public class Activator implements BundleActivator {
 
+	private static final Logger LOG=Logger.getLogger(Activator.class.getName());
+	
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
+        
+		ScribbleRoleSimulator rs=new ScribbleRoleSimulator();
+		
+        context.registerService(RoleSimulator.class.getName(), 
+				rs, null);
+
+        if (LOG.isLoggable(Level.FINE)) {
+        	LOG.fine("Scribble Protocol Role Simulator registered");
+		}
 	}
 
 	/*

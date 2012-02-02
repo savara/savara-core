@@ -1,0 +1,43 @@
+import "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
+import "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest;
+import "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
+import "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
+import "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest;
+import "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
+import "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
+import "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown;
+import "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound;
+[[ Interface(name=Store,role=Store,namespace=http://www.savara.org/examples/Store) ]]
+[[ Type(location=PurchaseGoods_Store.wsdl,namespace=http://www.savara.org/examples/Store) ]]
+[[ Type(location=PurchaseGoods_CreditAgency.wsdl,namespace=http://www.savara.org/examples/CreditAgency) ]]
+[[ Type(location=PurchaseGoods_Logistics.wsdl,namespace=http://www.savara.org/examples/Logistics) ]]
+[[ Type(location=PurchaseGoods_StoreArtifacts.wsdl,namespace=http://www.savara.org/examples/Store) ]]
+protocol PurchaseGoods_Store at Store {
+	[[ Correlation(request=buy) ]]
+	buy(BuyRequest) from Buyer;
+	[[ Correlation(request=creditCheck) ]]
+	creditCheck(CreditCheckRequest) to CreditAgency;
+	choice at CreditAgency {
+		[[ Correlation(replyTo=creditCheck) ]]
+		creditCheck(CreditRating) from CreditAgency;
+		choice {
+			[[ Fault(name=InsufficientCredit) ]]
+			[[ Correlation(replyTo=buy) ]]
+			buy(BuyFailed) to Buyer;
+		} or {
+			[[ Correlation(request=delivery) ]]
+			delivery(DeliveryRequest) to Logistics;
+			[[ Correlation(replyTo=delivery) ]]
+			delivery(DeliveryConfirmed) from Logistics;
+			[[ Correlation(replyTo=buy) ]]
+			buy(BuyConfirmed) to Buyer;
+		}
+	} or {
+		[[ Fault(name=CustomerUnknown) ]]
+		[[ Correlation(replyTo=creditCheck) ]]
+		creditCheck(CustomerUnknown) from CreditAgency;
+		[[ Fault(name=AccountNotFound) ]]
+		[[ Correlation(replyTo=buy) ]]
+		buy(AccountNotFound) to Buyer;
+	}
+}

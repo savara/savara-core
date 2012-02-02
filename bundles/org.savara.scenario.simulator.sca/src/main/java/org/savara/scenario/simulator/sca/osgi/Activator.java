@@ -50,7 +50,7 @@ public class Activator implements BundleActivator {
 				rs, null);
 
         if (logger.isLoggable(Level.FINE)) {
-			logger.fine("CDM Role Simulator registered");
+			logger.fine("SCA Role Simulator registered");
 		}
 	}
 
