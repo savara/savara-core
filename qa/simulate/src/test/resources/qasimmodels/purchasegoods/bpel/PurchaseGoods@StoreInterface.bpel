@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><process xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:pns1="http://www.savara.org/examples/Buyer" xmlns:pns2="http://www.savara.org/examples/CreditAgency" xmlns:pns3="http://www.savara.org/examples/Store" xmlns:pns4="http://www.savara.org/examples/Logistics" name="PurchaseGoods_Store" targetNamespace="http://www.savara.org/examples/Store">
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_Store.wsdl" namespace="http://www.savara.org/examples/Store"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_CreditAgency.wsdl" namespace="http://www.savara.org/examples/CreditAgency"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_Logistics.wsdl" namespace="http://www.savara.org/examples/Logistics"/>
+    <import importType="http://schemas.xmlsoap.org/wsdl/" location="PurchaseGoods_StoreArtifacts.wsdl" namespace="http://www.savara.org/examples/Store"/>
+    <partnerLinks>
+        <partnerLink myRole="StoreInterface" name="BuyerToStore" partnerLinkType="pns3:BuyerToStoreServiceLT"/>
+        <partnerLink name="StoreToCreditAgency" partnerLinkType="pns3:StoreToCreditAgencyLT" partnerRole="CreditAgency"/>
+        <partnerLink name="StoreToLogistics" partnerLinkType="pns3:StoreToLogisticsLT" partnerRole="Logistics"/>
+    </partnerLinks>
+    <variables>
+        <variable messageType="pns3:buyRequest" name="buyRequestVar"/>
+        <variable messageType="pns2:creditCheckRequest" name="creditCheckRequestVar"/>
+        <variable messageType="pns3:AccountNotFoundFault" name="AccountNotFoundFaultVar"/>
+        <variable messageType="pns2:creditCheckResponse" name="creditCheckResponseVar"/>
+        <variable messageType="pns3:InsufficientCreditFault" name="InsufficientCreditFaultVar"/>
+        <variable messageType="pns4:deliveryRequest" name="deliveryRequestVar"/>
+        <variable messageType="pns4:deliveryResponse" name="deliveryResponseVar"/>
+        <variable messageType="pns3:buyResponse" name="buyResponseVar"/>
+    </variables>
+    <sequence>
+        <receive createInstance="yes" name="Receive_BuyRequest" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="buyRequestVar"/>
+        <scope>
+            <faultHandlers>
+                <catch faultMessageType="pns2:CustomerUnknownFault" faultName="pns2:CustomerUnknown" faultVariable="CustomerUnknownFaultVar">
+                    <sequence>
+                        <reply faultName="pns3:AccountNotFound" name="Send_AccountNotFound" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="AccountNotFoundFaultVar"/>
+                    </sequence>
+                </catch>
+            </faultHandlers>
+            <sequence>
+                <invoke inputVariable="creditCheckRequestVar" name="Send_CreditCheck" operation="creditCheck" outputVariable="creditCheckResponseVar" partnerLink="StoreToCreditAgency" portType="pns2:CreditAgency"/>
+                <if>
+                    <sequence>
+                        <reply faultName="pns3:InsufficientCredit" name="Send_BuyFailed" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="InsufficientCreditFaultVar"/>
+                    </sequence>
+                    <else>
+                        <sequence>
+                            <invoke inputVariable="deliveryRequestVar" name="Send_DeliveryRequest" operation="delivery" outputVariable="deliveryResponseVar" partnerLink="StoreToLogistics" portType="pns4:Logistics"/>
+                            <reply name="Send_BuyConfirmed" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="buyResponseVar"/>
+                        </sequence>
+                    </else>
+                </if>
+            </sequence>
+        </scope>
+    </sequence>
+</process>

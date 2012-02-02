@@ -289,7 +289,6 @@ public class ProtocolRoleSimulatorTest {
 		}
 	}
 
-
 	@Test
 	public void testSimulatePurchaseGoodsAtStore_SuccessfulPurchase() {
 		
