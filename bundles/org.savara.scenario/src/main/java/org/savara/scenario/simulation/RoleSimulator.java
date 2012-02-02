@@ -17,6 +17,7 @@
  */
 package org.savara.scenario.simulation;
 
+import org.savara.common.resources.ResourceLocator;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.Role;
 
@@ -57,9 +58,10 @@ public interface RoleSimulator {
 	 * is returned.
 	 * 
 	 * @param model The simulation model information
+	 * @param locator The optional resource locator
 	 * @return The supported model, or null if not handled
 	 */
-	public Object getModel(SimulationModel model);
+	public Object getModel(SimulationModel model, ResourceLocator locator);
 	
 	/**
 	 * This method returns the list of roles associated with the supplied
@@ -78,9 +80,10 @@ public interface RoleSimulator {
 	 * 
 	 * @param model The model
 	 * @param role The role
+	 * @param locator The optional resource locator
 	 * @return The simulation model
 	 */
-	public Object getModelForRole(Object model, Role role);
+	public Object getModelForRole(Object model, Role role, ResourceLocator locator);
 	
 	/**
 	 * This method simulates the supplied event within the specified simulation

@@ -31,6 +31,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.savara.bundles</groupId>
+			<artifactId>org.savara.bpel</artifactId>
+			<version>${savara.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.scenario</artifactId>
 			<version>${savara.core.version}</version>
 		</dependency>

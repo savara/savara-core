@@ -47,7 +47,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			if (model == null) {
 				fail("No model returned");
@@ -76,7 +76,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -115,7 +115,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -146,7 +146,7 @@ public class CDMRoleSimulatorTest {
 				
 				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
 				
-				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				context.setModel(rsim.getModelForRole(model, roles.get(i), null));
 				
 				rsim.initialize(context);
 				
@@ -190,7 +190,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -221,7 +221,7 @@ public class CDMRoleSimulatorTest {
 				
 				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
 				
-				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				context.setModel(rsim.getModelForRole(model, roles.get(i), null));
 				
 				rsim.initialize(context);
 				
@@ -265,7 +265,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -296,7 +296,7 @@ public class CDMRoleSimulatorTest {
 				
 				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
 				
-				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				context.setModel(rsim.getModelForRole(model, roles.get(i), null));
 				
 				rsim.initialize(context);
 				
@@ -340,7 +340,7 @@ public class CDMRoleSimulatorTest {
 			
 			CDMRoleSimulator rsim=new CDMRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -371,7 +371,7 @@ public class CDMRoleSimulatorTest {
 				
 				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
 				
-				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				context.setModel(rsim.getModelForRole(model, roles.get(i), null));
 				
 				rsim.initialize(context);
 				

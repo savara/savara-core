@@ -42,6 +42,7 @@ import org.pi4soa.service.monitor.ServiceMonitorFactory;
 import org.pi4soa.service.monitor.XMLMonitorConfiguration;
 import org.pi4soa.service.session.Session;
 import org.pi4soa.service.tracker.ServiceTracker;
+import org.savara.common.resources.ResourceLocator;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.MessageEvent;
 import org.savara.scenario.model.Role;
@@ -89,9 +90,10 @@ public class CDMRoleSimulator implements RoleSimulator {
 	 * is returned.
 	 * 
 	 * @param model The simulation model information
+	 * @param locator The optional resource locator
 	 * @return The supported model, or null if not handled
 	 */
-	public Object getModel(SimulationModel model) {
+	public Object getModel(SimulationModel model, ResourceLocator locator) {
 		Object ret=null;
 		
 		if (model.getName().endsWith(CDM_FILE_EXTENSION)) {
@@ -190,9 +192,10 @@ public class CDMRoleSimulator implements RoleSimulator {
 	 * 
 	 * @param model The model
 	 * @param role The role
+	 * @param locator The optional resource locator
 	 * @return The simulation model
 	 */
-	public Object getModelForRole(Object model, Role role) {
+	public Object getModelForRole(Object model, Role role, ResourceLocator locator) {
 		Object ret=null;
 		
 		if (model instanceof org.pi4soa.cdl.Package) {

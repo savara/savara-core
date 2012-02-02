@@ -1,0 +1,144 @@
+/*
+ * JBoss, Home of Professional Open Source
+ * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * by the @authors tag. All rights reserved.
+ * See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ * This copyrighted material is made available to anyone wishing to use,
+ * modify, copy, or redistribute it subject to the terms and conditions
+ * of the GNU Lesser General Public License, v. 2.1.
+ * This program is distributed in the hope that it will be useful, but WITHOUT A
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public License,
+ * v.2.1 along with this distribution; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA  02110-1301, USA.
+ */
+package org.savara.qa.simulate;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+import org.savara.protocol.util.ProtocolServices;
+import org.savara.scenario.simulation.ScenarioSimulatorMain;
+import org.savara.scenario.simulation.model.RoleDetails;
+import org.savara.scenario.simulation.model.Simulation;
+import org.savara.scenario.simulation.model.SimulatorDetails;
+import org.savara.scenario.simulator.scribble.ScribbleRoleSimulator;
+
+public class SimulateBPMN2ChoreoTest {
+
+	@Test
+	public void testSuccessfulPurchase() {
+		
+		ProtocolServices.getParserManager().getParsers().add(
+				new org.savara.bpmn2.parser.choreo.BPMN2ChoreographyProtocolParser());
+		
+		ScenarioSimulatorMain simulator=new ScenarioSimulatorMain();
+		
+		Simulation simulation=new Simulation();
+		
+		RoleDetails details=new RoleDetails();
+		details.setScenarioRole("Buyer");
+		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
+		details.setModelRole("Buyer");
+		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		details=new RoleDetails();
+		details.setScenarioRole("Store");
+		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
+		details.setModelRole("Store");
+		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		details=new RoleDetails();
+		details.setScenarioRole("CreditAgency");
+		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
+		details.setModelRole("CreditAgency");
+		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		details=new RoleDetails();
+		details.setScenarioRole("Logistics");
+		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
+		details.setModelRole("Logistics");
+		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		simulation.setScenario("qascenarios/purchasegoods/SuccessfulPurchase.scn");
+		
+		SimulatorDetails simdetails=new SimulatorDetails();
+		simdetails.setName(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simdetails.setClassName(org.savara.scenario.simulator.scribble.ScribbleRoleSimulator.class.getName());
+		simulation.getSimulators().add(simdetails);
+		
+		TestSimulationHandler handler=new TestSimulationHandler();
+		
+		simulator.simulate(simulation, handler);
+		
+		if (handler.getProcessedEvents().size() != 12) {
+			fail("Expecting 12 procesed events: "+handler.getProcessedEvents().size());
+		}
+	}
+
+	@Test
+	public void testInvalidStoreBehaviour() {
+		
+		ProtocolServices.getParserManager().getParsers().add(
+				new org.savara.bpmn2.parser.choreo.BPMN2ChoreographyProtocolParser());
+		
+		ScenarioSimulatorMain simulator=new ScenarioSimulatorMain();
+		
+		Simulation simulation=new Simulation();
+		
+		RoleDetails details=new RoleDetails();
+		details.setScenarioRole("Buyer");
+		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
+		details.setModelRole("Buyer");
+		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		details=new RoleDetails();
+		details.setScenarioRole("Store");
+		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
+		details.setModelRole("Store");
+		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		details=new RoleDetails();
+		details.setScenarioRole("CreditAgency");
+		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
+		details.setModelRole("CreditAgency");
+		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		details=new RoleDetails();
+		details.setScenarioRole("Logistics");
+		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
+		details.setModelRole("Logistics");
+		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		simulation.setScenario("qascenarios/purchasegoods/InvalidStoreBehaviour.scn");
+		
+		SimulatorDetails simdetails=new SimulatorDetails();
+		simdetails.setName(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		simdetails.setClassName(org.savara.scenario.simulator.scribble.ScribbleRoleSimulator.class.getName());
+		simulation.getSimulators().add(simdetails);
+		
+		TestSimulationHandler handler=new TestSimulationHandler();
+		
+		simulator.simulate(simulation, handler);
+		
+		if (handler.getProcessedEvents().size() != 9) {
+			fail("Nine events were not processed: "+handler.getProcessedEvents().size());
+		}
+		
+		if (handler.getUnexpectedEvents().size() != 3) {
+			fail("Should be 3 unexpected events: "+handler.getUnexpectedEvents().size());
+		}
+	}
+
+}

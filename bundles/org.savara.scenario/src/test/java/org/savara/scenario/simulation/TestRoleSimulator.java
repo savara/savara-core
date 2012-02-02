@@ -20,6 +20,7 @@ package org.savara.scenario.simulation;
 import java.util.Collections;
 import java.util.List;
 
+import org.savara.common.resources.ResourceLocator;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.Role;
 
@@ -44,7 +45,7 @@ public class TestRoleSimulator implements RoleSimulator {
 		return(true);
 	}
 
-	public Object getModel(SimulationModel model) {
+	public Object getModel(SimulationModel model, ResourceLocator locator) {
 		java.io.InputStream is=model.getContents();
 	
 		byte[] b=null;
@@ -77,7 +78,7 @@ public class TestRoleSimulator implements RoleSimulator {
 	public void initialize(SimulationContext context) throws Exception {
 	}
 
-	public Object getModelForRole(Object model, Role role) {
+	public Object getModelForRole(Object model, Role role, ResourceLocator locator) {
 		return null;
 	}
 

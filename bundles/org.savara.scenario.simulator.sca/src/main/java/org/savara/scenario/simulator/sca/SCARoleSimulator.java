@@ -26,6 +26,7 @@ import org.apache.tuscany.sca.invocation.InvocationChain;
 import org.apache.tuscany.sca.invocation.Message;
 import org.apache.tuscany.sca.node.Node;
 import org.apache.tuscany.sca.node.NodeFactory;
+import org.savara.common.resources.ResourceLocator;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.Parameter;
 import org.savara.scenario.model.ReceiveEvent;
@@ -79,7 +80,7 @@ public class SCARoleSimulator implements RoleSimulator {
 		return(model.getName().endsWith(SCA_COMPOSITE_FILE_EXTENSION));
 	}
 	
-	public Object getModel(SimulationModel model) {
+	public Object getModel(SimulationModel model, ResourceLocator locator) {
 		Object ret=null;
 		
 		if (model.getName().endsWith(SCA_COMPOSITE_FILE_EXTENSION)) {
@@ -116,7 +117,7 @@ public class SCARoleSimulator implements RoleSimulator {
 		return(java.util.Collections.emptyList());
 	}
 
-	public Object getModelForRole(Object model, Role role) {
+	public Object getModelForRole(Object model, Role role, ResourceLocator locator) {
 		return null;
 	}
 

@@ -20,6 +20,8 @@ package org.savara.scenario.simulation;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.savara.common.resources.DefaultResourceLocator;
+import org.savara.common.resources.ResourceLocator;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.MessageEvent;
 import org.savara.scenario.model.Role;
@@ -300,7 +302,10 @@ public class ScenarioSimulatorMain {
 				}
 				
 				if (modelFile != null && is != null) {
-					Object model=rsim.getModel(new SimulationModel(modelFile.getName(), is));
+					ResourceLocator locator=new DefaultResourceLocator(modelFile.getParentFile());
+					
+					Object model=rsim.getModel(new SimulationModel(modelFile.getName(), is),
+											locator);
 					
 					// Check if model should be projected to a particular role
 					if (rsim.getModelRoles(model).size() == 0) {
@@ -313,7 +318,7 @@ public class ScenarioSimulatorMain {
 							localRole.setName(details.getModelRole());
 						}
 						
-						model = rsim.getModelForRole(model, localRole);
+						model = rsim.getModelForRole(model, localRole, locator);
 						ret.setModel(model);
 					}
 					

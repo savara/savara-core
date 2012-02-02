@@ -38,7 +38,7 @@ public class SCARoleSimulatorTest {
 		try {
 			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
 			
-			Object model=sim.getModel(simmodel);
+			Object model=sim.getModel(simmodel, null);
 			
 			if (model == null) {
 				fail("Model is null");
@@ -57,7 +57,7 @@ public class SCARoleSimulatorTest {
 		try {
 			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
 			
-			Object model=sim.getModel(simmodel);
+			Object model=sim.getModel(simmodel, null);
 			
 			if (model == null) {
 				fail("Model is null");
@@ -80,7 +80,7 @@ public class SCARoleSimulatorTest {
 		try {
 			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
 			
-			Object model=sim.getModel(simmodel);
+			Object model=sim.getModel(simmodel, null);
 			
 			if (model == null) {
 				fail("Model is null");
@@ -156,7 +156,7 @@ public class SCARoleSimulatorTest {
 		try {
 			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
 			
-			Object model=sim.getModel(simmodel);
+			Object model=sim.getModel(simmodel, null);
 			
 			if (model == null) {
 				fail("Model is null");
@@ -236,7 +236,7 @@ public class SCARoleSimulatorTest {
 		try {
 			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
 			
-			Object model=sim.getModel(simmodel);
+			Object model=sim.getModel(simmodel, null);
 			
 			if (model == null) {
 				fail("Model is null");
@@ -291,7 +291,7 @@ public class SCARoleSimulatorTest {
 		try {
 			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
 			
-			Object model=sim.getModel(simmodel);
+			Object model=sim.getModel(simmodel, null);
 			
 			if (model == null) {
 				fail("Model is null");
@@ -352,7 +352,7 @@ public class SCARoleSimulatorTest {
 		try {
 			SimulationModel simmodel=new SimulationModel("externalservice.composite",null);
 			
-			Object model=sim.getModel(simmodel);
+			Object model=sim.getModel(simmodel, null);
 			
 			if (model == null) {
 				fail("Model is null");
@@ -416,7 +416,7 @@ public class SCARoleSimulatorTest {
 		try {
 			SimulationModel simmodel=new SimulationModel("store/Store.composite",null);
 			
-			Object model=sim.getModel(simmodel);
+			Object model=sim.getModel(simmodel, null);
 			
 			if (model == null) {
 				fail("Model is null");

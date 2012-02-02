@@ -17,11 +17,13 @@
  */
 package org.savara.scenario.simulator.scribble;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.savara.common.resources.ResourceLocator;
 import org.savara.protocol.util.ProtocolServices;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.MessageEvent;
@@ -55,7 +57,7 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 
 	private static Logger LOG=Logger.getLogger(ScribbleRoleSimulator.class.getName());
 	
-	private static final String PROTOCOL_SIMULATOR = "Protocol simulator";
+	public static final String PROTOCOL_SIMULATOR = "Protocol simulator";
 
 	private ProtocolMonitor _monitor=ProtocolMonitorFactory.createProtocolMonitor();
 	private MonitorProtocolExporter _exporter=new MonitorProtocolExporter();
@@ -88,7 +90,7 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object getModel(SimulationModel model) {
+	public Object getModel(SimulationModel model, final ResourceLocator locator) {
 		Object ret=null;
 		
 		try {
@@ -103,7 +105,17 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 			
 			CachedJournal journal=new CachedJournal();
 			
-			ret = ProtocolServices.getParserManager().parse(null, content, journal);
+			org.scribble.common.resource.ResourceLocator res=
+					new org.scribble.common.resource.ResourceLocator() {
+				public URI getResourceURI(String arg0) throws Exception {
+					return locator.getResourceURI(arg0);
+				}
+			};
+			
+			DefaultProtocolContext context=
+					new DefaultProtocolContext(ProtocolServices.getParserManager(), res);
+
+			ret = ProtocolServices.getParserManager().parse(context, content, journal);
 		} catch(Exception e) {
 			LOG.log(Level.SEVERE, "Failed to get model", e);
 		}
@@ -139,12 +151,18 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object getModelForRole(Object model, Role role) {
+	public Object getModelForRole(Object model, Role role, final ResourceLocator locator) {
 		Object ret=null;
 		
+		org.scribble.common.resource.ResourceLocator res=
+				new org.scribble.common.resource.ResourceLocator() {
+			public URI getResourceURI(String arg0) throws Exception {
+				return locator.getResourceURI(arg0);
+			}
+		};
+		
 		DefaultProtocolContext context=
-				new DefaultProtocolContext(ProtocolServices.getParserManager(),
-						null);
+				new DefaultProtocolContext(ProtocolServices.getParserManager(), res);
 
 		CachedJournal journal=new CachedJournal();
 

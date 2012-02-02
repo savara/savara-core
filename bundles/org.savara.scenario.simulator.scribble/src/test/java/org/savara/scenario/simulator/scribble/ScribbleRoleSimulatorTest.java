@@ -48,7 +48,7 @@ public class ScribbleRoleSimulatorTest {
 		try {
 			SimulationModel simmodel=new SimulationModel(filename, is);
 			
-			Object model=sim.getModel(simmodel);
+			Object model=sim.getModel(simmodel,null);
 			
 			if (model == null) {
 				fail("Model is null");
@@ -74,7 +74,7 @@ public class ScribbleRoleSimulatorTest {
 			
 			ScribbleRoleSimulator sim=new ScribbleRoleSimulator();
 			
-			Object model=sim.getModel(sm);
+			Object model=sim.getModel(sm, null);
 			
 			java.util.List<Role> roles=sim.getModelRoles(model);
 			
@@ -129,7 +129,7 @@ public class ScribbleRoleSimulatorTest {
 			
 			ScribbleRoleSimulator sim=new ScribbleRoleSimulator();
 			
-			Object model=sim.getModel(sm);
+			Object model=sim.getModel(sm, null);
 			
 			java.util.List<Role> roles=sim.getModelRoles(model);
 			
@@ -163,12 +163,12 @@ public class ScribbleRoleSimulatorTest {
 			
 			ScribbleRoleSimulator sim=new ScribbleRoleSimulator();
 			
-			Object model=sim.getModel(sm);
+			Object model=sim.getModel(sm, null);
 			
 			Role role=new Role();
 			role.setName("Store");
 			
-			Object localModel=sim.getModelForRole(model, role);
+			Object localModel=sim.getModelForRole(model, role, null);
 			
 			if (localModel == null) {
 				fail("Local Model is null");
@@ -195,12 +195,12 @@ public class ScribbleRoleSimulatorTest {
 			
 			ScribbleRoleSimulator sim=new ScribbleRoleSimulator();
 			
-			Object model=sim.getModel(sm);
+			Object model=sim.getModel(sm, null);
 			
 			Role role=new Role();
 			role.setName("Store");
 			
-			Object localModel=sim.getModelForRole(model, role);
+			Object localModel=sim.getModelForRole(model, role, null);
 			
 			if (localModel == null) {
 				fail("Local Model is null");
@@ -227,7 +227,7 @@ public class ScribbleRoleSimulatorTest {
 			
 			ScribbleRoleSimulator rsim=new ScribbleRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -258,7 +258,7 @@ public class ScribbleRoleSimulatorTest {
 				
 				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
 				
-				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				context.setModel(rsim.getModelForRole(model, roles.get(i), null));
 				
 				rsim.initialize(context);
 				
@@ -303,7 +303,7 @@ public class ScribbleRoleSimulatorTest {
 			
 			ScribbleRoleSimulator rsim=new ScribbleRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -342,7 +342,7 @@ public class ScribbleRoleSimulatorTest {
 				
 			DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
 				
-			context.setModel(rsim.getModelForRole(model, roles.get(0)));
+			context.setModel(rsim.getModelForRole(model, roles.get(0), null));
 				
 			rsim.initialize(context);
 				
@@ -385,7 +385,7 @@ public class ScribbleRoleSimulatorTest {
 			
 			ScribbleRoleSimulator rsim=new ScribbleRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -416,7 +416,7 @@ public class ScribbleRoleSimulatorTest {
 				
 				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
 				
-				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				context.setModel(rsim.getModelForRole(model, roles.get(i), null));
 				
 				rsim.initialize(context);
 				
@@ -461,7 +461,7 @@ public class ScribbleRoleSimulatorTest {
 			
 			ScribbleRoleSimulator rsim=new ScribbleRoleSimulator();
 			
-			Object model=rsim.getModel(sm);
+			Object model=rsim.getModel(sm, null);
 			
 			java.util.List<Role> roles=rsim.getModelRoles(model);
 			
@@ -500,7 +500,7 @@ public class ScribbleRoleSimulatorTest {
 				
 			DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
 				
-			context.setModel(rsim.getModelForRole(model, roles.get(0)));
+			context.setModel(rsim.getModelForRole(model, roles.get(0), null));
 				
 			rsim.initialize(context);
 				
