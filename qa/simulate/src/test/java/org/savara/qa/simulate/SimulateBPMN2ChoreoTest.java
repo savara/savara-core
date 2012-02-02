@@ -25,7 +25,7 @@ import org.savara.scenario.simulation.ScenarioSimulatorMain;
 import org.savara.scenario.simulation.model.RoleDetails;
 import org.savara.scenario.simulation.model.Simulation;
 import org.savara.scenario.simulation.model.SimulatorDetails;
-import org.savara.scenario.simulator.scribble.ScribbleRoleSimulator;
+import org.savara.scenario.simulator.protocol.ProtocolRoleSimulator;
 
 public class SimulateBPMN2ChoreoTest {
 
@@ -43,35 +43,35 @@ public class SimulateBPMN2ChoreoTest {
 		details.setScenarioRole("Buyer");
 		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
 		details.setModelRole("Buyer");
-		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Store");
 		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
 		details.setModelRole("Store");
-		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("CreditAgency");
 		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
 		details.setModelRole("CreditAgency");
-		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Logistics");
 		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
 		details.setModelRole("Logistics");
-		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		simulation.setScenario("qascenarios/purchasegoods/SuccessfulPurchase.scn");
 		
 		SimulatorDetails simdetails=new SimulatorDetails();
-		simdetails.setName(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
-		simdetails.setClassName(org.savara.scenario.simulator.scribble.ScribbleRoleSimulator.class.getName());
+		simdetails.setName(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
+		simdetails.setClassName(ProtocolRoleSimulator.class.getName());
 		simulation.getSimulators().add(simdetails);
 		
 		TestSimulationHandler handler=new TestSimulationHandler();
@@ -97,35 +97,35 @@ public class SimulateBPMN2ChoreoTest {
 		details.setScenarioRole("Buyer");
 		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
 		details.setModelRole("Buyer");
-		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Store");
 		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
 		details.setModelRole("Store");
-		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("CreditAgency");
 		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
 		details.setModelRole("CreditAgency");
-		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Logistics");
 		details.setModel("qasimmodels/purchasegoods/bpmn2choreo/PurchaseGoods.bpmn");
 		details.setModelRole("Logistics");
-		details.setSimulator(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		simulation.setScenario("qascenarios/purchasegoods/InvalidStoreBehaviour.scn");
 		
 		SimulatorDetails simdetails=new SimulatorDetails();
-		simdetails.setName(ScribbleRoleSimulator.PROTOCOL_SIMULATOR);
-		simdetails.setClassName(org.savara.scenario.simulator.scribble.ScribbleRoleSimulator.class.getName());
+		simdetails.setName(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
+		simdetails.setClassName(ProtocolRoleSimulator.class.getName());
 		simulation.getSimulators().add(simdetails);
 		
 		TestSimulationHandler handler=new TestSimulationHandler();

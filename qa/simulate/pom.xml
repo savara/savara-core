@@ -41,7 +41,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.scenario.simulator.scribble</artifactId>
+			<artifactId>org.savara.scenario.simulator.protocol</artifactId>
 			<version>${savara.core.version}</version>
 		</dependency>
 		<dependency>
