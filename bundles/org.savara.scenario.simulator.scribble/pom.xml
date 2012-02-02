@@ -25,6 +25,21 @@
 			<version>${scribble.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.scribble.bundles</groupId>
+			<artifactId>org.scribble.protocol.parser</artifactId>
+			<version>${scribble.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.scribble.bundles</groupId>
+			<artifactId>org.scribble.protocol.projection</artifactId>
+			<version>${scribble.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.scribble.bundles</groupId>
+			<artifactId>org.scribble.protocol.monitor</artifactId>
+			<version>${scribble.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.common</artifactId>
 			<version>${savara.core.version}</version>
@@ -32,11 +47,6 @@
 		<dependency>
 			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.scenario</artifactId>
-			<version>${savara.core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.monitor</artifactId>
 			<version>${savara.core.version}</version>
 		</dependency>
 	    <dependency>
