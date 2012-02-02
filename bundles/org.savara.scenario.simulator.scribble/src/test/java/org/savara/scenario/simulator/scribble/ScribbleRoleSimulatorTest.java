@@ -351,7 +351,7 @@ public class ScribbleRoleSimulatorTest {
 			ssim.simulate(scenario, roleSimulators, contexts, handler);
 			
 			if (handler.getProcessedEvents().size() != 6) {
-				fail("Twelve events were not processed: "+handler.getProcessedEvents().size());
+				fail("Six events were not processed: "+handler.getProcessedEvents().size());
 			}
 			
 			if (handler.getUnexpectedEvents().size() != 0) {
@@ -363,7 +363,165 @@ public class ScribbleRoleSimulatorTest {
 			}
 			
 			if (handler.getNoSimulatorEvents().size() != 6) {
+				fail("Should be 6 'no simulator' events: "+handler.getNoSimulatorEvents().size());
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to get model roles: "+e);
+		}
+	}
+
+	@Test
+	public void testSimulatePurchaseGoods_InvalidStoreBehaviour() {
+		
+		String filename="monitor/models/PurchaseGoods.spr";
+		
+		java.io.InputStream is=
+			ClassLoader.getSystemResourceAsStream(filename);
+		
+		try {
+			SimulationModel sm=new SimulationModel(filename, is);
+			
+			ScribbleRoleSimulator rsim=new ScribbleRoleSimulator();
+			
+			Object model=rsim.getModel(sm);
+			
+			java.util.List<Role> roles=rsim.getModelRoles(model);
+			
+			// Load the scenario
+			String scenarioFile="scenarios/purchasegoods/InvalidStoreBehaviour.scn";
+			
+			java.net.URL url=ClassLoader.getSystemResource(scenarioFile);
+			
+			java.io.InputStream sis=url.openStream();
+			
+			Scenario scenario=ScenarioModelUtil.deserialize(sis);
+			
+			sis.close();
+
+			// Create the simulator
+			ScenarioSimulator ssim=ScenarioSimulatorFactory.getScenarioSimulator();
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			java.util.Map<Role,RoleSimulator> roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
+			java.util.Map<Role,SimulationContext> contexts=new java.util.HashMap<Role,SimulationContext>();
+			
+			// Reorder roles
+			roles.add(1, roles.remove(2));
+			
+			for (int i=0; i < roles.size(); i++) {
+				roleSimulators.put(scenario.getRole().get(i), rsim);
+				
+				DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
+				
+				context.setModel(rsim.getModelForRole(model, roles.get(i)));
+				
+				rsim.initialize(context);
+				
+				contexts.put(scenario.getRole().get(i), context);
+			}
+			
+			ssim.simulate(scenario, roleSimulators, contexts, handler);
+			
+			if (handler.getProcessedEvents().size() != 9) {
+				fail("Nine events were not processed: "+handler.getProcessedEvents().size());
+			}
+			
+			if (handler.getUnexpectedEvents().size() != 3) {
+				fail("Should be 3 unexpected events: "+handler.getUnexpectedEvents().size());
+			}
+			
+			if (handler.getErrorEvents().size() != 0) {
+				fail("Should be no error events");
+			}
+			
+			if (handler.getNoSimulatorEvents().size() != 0) {
 				fail("Should be no 'no simulator' events");
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to get model roles: "+e);
+		}
+	}
+
+
+	@Test
+	public void testSimulatePurchaseGoodsAtStore_InvalidStoreBehaviour() {
+		
+		String filename="monitor/models/PurchaseGoods@Store.spr";
+		
+		java.io.InputStream is=
+			ClassLoader.getSystemResourceAsStream(filename);
+		
+		try {
+			SimulationModel sm=new SimulationModel(filename, is);
+			
+			ScribbleRoleSimulator rsim=new ScribbleRoleSimulator();
+			
+			Object model=rsim.getModel(sm);
+			
+			java.util.List<Role> roles=rsim.getModelRoles(model);
+			
+			if (roles.size() != 1) {
+				fail("Expecting 1 role: "+roles.size());
+			}
+			
+			// Load the scenario
+			String scenarioFile="scenarios/purchasegoods/InvalidStoreBehaviour.scn";
+			
+			java.net.URL url=ClassLoader.getSystemResource(scenarioFile);
+			
+			java.io.InputStream sis=url.openStream();
+			
+			Scenario scenario=ScenarioModelUtil.deserialize(sis);
+			
+			sis.close();
+
+			// Create the simulator
+			ScenarioSimulator ssim=ScenarioSimulatorFactory.getScenarioSimulator();
+			
+			TestSimulationHandler handler=new TestSimulationHandler();
+			
+			java.util.Map<Role,RoleSimulator> roleSimulators=new java.util.HashMap<Role,RoleSimulator>();
+			java.util.Map<Role,SimulationContext> contexts=new java.util.HashMap<Role,SimulationContext>();
+			
+			Role storeRole=null;
+			for (Role r : scenario.getRole()) {
+				if (r.getName().equals("Store")) {
+					storeRole = r;
+					break;
+				}
+			}
+			
+			roleSimulators.put(storeRole, rsim);
+				
+			DefaultSimulationContext context=new DefaultSimulationContext(new File(url.getFile()));
+				
+			context.setModel(rsim.getModelForRole(model, roles.get(0)));
+				
+			rsim.initialize(context);
+				
+			contexts.put(storeRole, context);
+			
+			ssim.simulate(scenario, roleSimulators, contexts, handler);
+			
+			if (handler.getProcessedEvents().size() != 3) {
+				fail("Three events were not processed: "+handler.getProcessedEvents().size());
+			}
+			
+			if (handler.getUnexpectedEvents().size() != 3) {
+				fail("Should be 3 unexpected events: "+handler.getUnexpectedEvents().size());
+			}
+			
+			if (handler.getErrorEvents().size() != 0) {
+				fail("Should be no error events");
+			}
+			
+			if (handler.getNoSimulatorEvents().size() != 6) {
+				fail("Should be 6 'no simulator' events: "+handler.getNoSimulatorEvents().size());
 			}
 			
 		} catch(Exception e) {

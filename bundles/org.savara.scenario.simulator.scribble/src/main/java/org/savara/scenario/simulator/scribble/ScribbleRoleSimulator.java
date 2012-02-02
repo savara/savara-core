@@ -224,6 +224,7 @@ public class ScribbleRoleSimulator implements RoleSimulator {
 					Message mesg=new Message();
 					
 					mesg.setOperator(((MessageEvent) event).getOperationName());
+					mesg.setFault(((MessageEvent) event).getFaultName());
 					mesg.getTypes().add(type);
 					mesg.getValues().add((String)value);
 					
