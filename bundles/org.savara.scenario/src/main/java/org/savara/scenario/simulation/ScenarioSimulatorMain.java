@@ -304,7 +304,7 @@ public class ScenarioSimulatorMain {
 				if (modelFile != null && is != null) {
 					ResourceLocator locator=new DefaultResourceLocator(modelFile.getParentFile());
 					
-					Object model=rsim.getModel(new SimulationModel(modelFile.getName(), is),
+					Object model=rsim.getModel(new SimulationModel(modelFile.getAbsolutePath(), is),
 											locator);
 					
 					// Check if model should be projected to a particular role

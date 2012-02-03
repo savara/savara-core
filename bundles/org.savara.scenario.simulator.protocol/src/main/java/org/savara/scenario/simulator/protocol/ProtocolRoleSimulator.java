@@ -75,8 +75,15 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 	 * {@inheritDoc}
 	 */
 	public void initialize(SimulationContext context) throws Exception {
-		context.getProperties().put(Session.class.getName(), _monitor.createSession(_context,
+		
+		if (context.getModel() == null) {
+			LOG.severe("Cannot initialize role simulator without a model");
+		} else if (!(context.getModel() instanceof Description)) {
+			LOG.severe("Unable to initialize role simulator due to incorrect model type");
+		} else {
+			context.getProperties().put(Session.class.getName(), _monitor.createSession(_context,
 					(Description)context.getModel(), DefaultSession.class));
+		}
 	}
 
 	/**
@@ -93,6 +100,10 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 	 */
 	public Object getModel(SimulationModel model, final ResourceLocator locator) {
 		Object ret=null;
+		
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Get model for '"+model.getName()+"'");
+		}
 		
 		try {
 			java.io.InputStream is=model.getContents();
@@ -117,8 +128,17 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 					new DefaultProtocolContext(ProtocolServices.getParserManager(), res);
 
 			ret = ProtocolServices.getParserManager().parse(context, content, journal);
+			
+			if (journal.hasErrors()) {
+				LOG.severe("Failed to parse model '"+model.getName()+"");
+				journal.apply(new ConsoleJournal());
+			}
 		} catch(Exception e) {
 			LOG.log(Level.SEVERE, "Failed to get model", e);
+		}
+		
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Returning model for '"+model.getName()+"' = "+ret);
 		}
 		
 		return (ret);
@@ -178,6 +198,11 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 					(ProtocolModel)model, new org.scribble.protocol.model.Role(role.getName()),
 								journal);
 		}
+		
+		if (journal.hasErrors()) {
+			LOG.log(Level.SEVERE, "Errors detected projecting located protocol model for export to monitor description");			
+			journal.apply(new ConsoleJournal());
+		}
 
 		if (local != null) {
 			try {
@@ -203,6 +228,8 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 			} catch(Exception e) {
 				LOG.log(Level.SEVERE, "Failed to export monitor description for located protocol model", e);
 			}
+		} else {
+			LOG.log(Level.SEVERE, "Failed to obtain located protocol model for export to monitor description");			
 		}
 		
 		return (ret);

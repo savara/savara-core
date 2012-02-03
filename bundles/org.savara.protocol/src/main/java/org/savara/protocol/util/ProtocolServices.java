@@ -15,6 +15,9 @@
  */
 package org.savara.protocol.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.scribble.protocol.export.ProtocolExportManager;
 import org.scribble.protocol.parser.DefaultProtocolParserManager;
 import org.scribble.protocol.parser.ProtocolParser;
@@ -30,11 +33,20 @@ import org.scribble.protocol.validation.ProtocolValidationManager;
  */
 public class ProtocolServices {
 	
+	private static final Logger LOG=Logger.getLogger(ProtocolServices.class.getName());
+	
 	private static ProtocolValidationManager m_validationManager=null;
 	private static ProtocolParserManager m_parserManager=null;
 	private static ProtocolProjector m_protocolProjector=null;
 	//private static ProtocolMonitor m_protocolMonitor=null;
 	private static ProtocolExportManager m_protocolExportManager=null;
+	
+	private static String[] PARSER_CLASS_NAMES = {
+		"org.scribble.protocol.parser.antlr.ANTLRProtocolParser",
+		"org.savara.bpel.parser.BPELProtocolParser",
+		"org.savara.bpmn2.parser.choreo.BPMN2ChoreographyProtocolParser",
+		"org.savara.pi4soa.cdm.parser.CDMProtocolParser"
+	};
 
 	public static ProtocolValidationManager getValidationManager() {
 		return(m_validationManager);
@@ -46,23 +58,28 @@ public class ProtocolServices {
 	
 	public static ProtocolParserManager getParserManager() {
 		if (m_parserManager == null) {
+			m_parserManager = new DefaultProtocolParserManager();
 			
-			// Instantiate default parser
-			try {
-				Class<?> cls=Class.forName("org.scribble.protocol.parser.antlr.ANTLRProtocolParser");
-				
-				Object obj=cls.newInstance();
-				
-				if (obj instanceof ProtocolParser) {
-					m_parserManager = new DefaultProtocolParserManager();
+			for (String className : PARSER_CLASS_NAMES) {
+				// Instantiate default parser
+				try {
+					Class<?> cls=Class.forName(className);
 					
-					ProtocolParser pp=(ProtocolParser)obj;
-					pp.setAnnotationProcessor(new org.savara.protocol.parser.AnnotationProcessor());
+					Object obj=cls.newInstance();
 					
-					m_parserManager.getParsers().add(pp);
+					if (obj instanceof ProtocolParser) {
+						ProtocolParser pp=(ProtocolParser)obj;
+						pp.setAnnotationProcessor(new org.savara.protocol.parser.AnnotationProcessor());
+						
+						m_parserManager.getParsers().add(pp);
+					}
+				} catch(ClassNotFoundException cfne) {
+					if (LOG.isLoggable(Level.FINE)) {
+						LOG.fine("Protocol parser '"+className+"' was not found");
+					}
+				} catch(Exception e) {
+					LOG.log(Level.SEVERE, "Failed to load protocol parser '"+className+"': "+e, e);
 				}
-			} catch(Exception e) {
-				// Ignore
 			}
 		}
 		
