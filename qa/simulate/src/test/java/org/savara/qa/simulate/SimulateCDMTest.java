@@ -27,35 +27,42 @@ import org.savara.scenario.simulation.model.Simulation;
 import org.savara.scenario.simulation.model.SimulatorDetails;
 import org.savara.scenario.simulator.protocol.ProtocolRoleSimulator;
 
-public class SimulateBPELTest {
+public class SimulateCDMTest {
 
 	@Test
 	public void testSuccessfulPurchase() {
 		
 		ProtocolServices.getParserManager().getParsers().add(
-				new org.savara.bpel.parser.BPELProtocolParser());
+				new org.savara.pi4soa.cdm.parser.CDMProtocolParser());
 		
 		ScenarioSimulatorMain simulator=new ScenarioSimulatorMain();
 		
 		Simulation simulation=new Simulation();
 		
 		RoleDetails details=new RoleDetails();
+		details.setScenarioRole("Buyer");
+		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModelRole("Buyer");
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		details=new RoleDetails();
 		details.setScenarioRole("Store");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Store.bpel");
+		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Store");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("CreditAgency");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@CreditAgency.bpel");
+		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
 		details.setModelRole("CreditAgency");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Logistics");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Logistics.bpel");
+		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Logistics");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
@@ -71,12 +78,12 @@ public class SimulateBPELTest {
 		
 		simulator.simulate(simulation, handler);
 		
-		if (handler.getProcessedEvents().size() != 10) {
-			fail("Expecting 10 processed events: "+handler.getProcessedEvents().size());
+		if (handler.getProcessedEvents().size() != 12) {
+			fail("Expecting 12 processed events: "+handler.getProcessedEvents().size());
 		}
 		
-		if (handler.getNoSimulatorEvents().size() != 2) {
-			fail("Expecting 2 non-simulated events: "+handler.getNoSimulatorEvents().size());
+		if (handler.getNoSimulatorEvents().size() != 0) {
+			fail("Expecting 0 non-simulated events: "+handler.getNoSimulatorEvents().size());
 		}
 	}
 
@@ -84,29 +91,36 @@ public class SimulateBPELTest {
 	public void testInvalidStoreBehaviour() {
 		
 		ProtocolServices.getParserManager().getParsers().add(
-				new org.savara.bpel.parser.BPELProtocolParser());
+				new org.savara.pi4soa.cdm.parser.CDMProtocolParser());
 		
 		ScenarioSimulatorMain simulator=new ScenarioSimulatorMain();
 		
 		Simulation simulation=new Simulation();
 		
 		RoleDetails details=new RoleDetails();
+		details.setScenarioRole("Buyer");
+		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModelRole("Buyer");
+		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
+		simulation.getRoles().add(details);
+		
+		details=new RoleDetails();
 		details.setScenarioRole("Store");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Store.bpel");
+		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Store");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("CreditAgency");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@CreditAgency.bpel");
+		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
 		details.setModelRole("CreditAgency");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Logistics");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Logistics.bpel");
+		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Logistics");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
@@ -122,7 +136,7 @@ public class SimulateBPELTest {
 		
 		simulator.simulate(simulation, handler);
 		
-		if (handler.getProcessedEvents().size() != 7) {
+		if (handler.getProcessedEvents().size() != 9) {
 			fail("Nine events were not processed: "+handler.getProcessedEvents().size());
 		}
 		
@@ -130,59 +144,8 @@ public class SimulateBPELTest {
 			fail("Should be 3 unexpected events: "+handler.getUnexpectedEvents().size());
 		}
 		
-		if (handler.getNoSimulatorEvents().size() != 2) {
-			fail("Should be 2 non-simulator events: "+handler.getNoSimulatorEvents().size());
-		}
-	}
-
-	@Test
-	public void testSuccessfulPurchaseMappedRole() {
-		
-		ProtocolServices.getParserManager().getParsers().add(
-				new org.savara.bpel.parser.BPELProtocolParser());
-		
-		ScenarioSimulatorMain simulator=new ScenarioSimulatorMain();
-		
-		Simulation simulation=new Simulation();
-		
-		RoleDetails details=new RoleDetails();
-		details.setScenarioRole("Store");
-		details.setModel("Xqasimmodels/purchasegoods/bpel/PurchaseGoods@StoreInterface.bpel");
-		details.setModelRole("StoreInterface");
-		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
-		simulation.getRoles().add(details);
-		
-		details=new RoleDetails();
-		details.setScenarioRole("CreditAgency");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@CreditAgency.bpel");
-		details.setModelRole("CreditAgency");
-		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
-		simulation.getRoles().add(details);
-		
-		details=new RoleDetails();
-		details.setScenarioRole("Logistics");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Logistics.bpel");
-		details.setModelRole("Logistics");
-		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
-		simulation.getRoles().add(details);
-		
-		simulation.setScenario("qascenarios/purchasegoods/SuccessfulPurchase.scn");
-		
-		SimulatorDetails simdetails=new SimulatorDetails();
-		simdetails.setName(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
-		simdetails.setClassName(ProtocolRoleSimulator.class.getName());
-		simulation.getSimulators().add(simdetails);
-		
-		TestSimulationHandler handler=new TestSimulationHandler();
-		
-		simulator.simulate(simulation, handler);
-		
-		if (handler.getProcessedEvents().size() != 10) {
-			fail("Expecting 10 processed events: "+handler.getProcessedEvents().size());
-		}
-		
-		if (handler.getNoSimulatorEvents().size() != 2) {
-			fail("Expecting 2 non-simulated events: "+handler.getNoSimulatorEvents().size());
+		if (handler.getNoSimulatorEvents().size() != 0) {
+			fail("Should be 0 non-simulator events: "+handler.getNoSimulatorEvents().size());
 		}
 	}
 

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.pi4soa.cdl:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.pi4soa.cdl="http:///org/pi4soa/cdl.ecore" description="The choreography description for PurchaseGoods" name="PurchaseGoods" author="gary" version="0.1" targetNamespace="http://www.jboss.org/savara/examples">
+  <typeDefinitions>
+    <nameSpaces description="Target Namespace for PurchaseGoods" prefix="tns" uRI="http://www.jboss.org/savara/examples"/>
+    <nameSpaces description="XML Schema Namespace" prefix="xsd" uRI="http://www.w3.org/2001/XMLSchema"/>
+    <nameSpaces prefix="sto" uRI="http://www.jboss.org/examples/store" schemaLocation="store.xsd"/>
+    <nameSpaces prefix="ca" uRI="http://www.jboss.org/examples/creditAgency" schemaLocation="creditAgency.xsd"/>
+    <nameSpaces prefix="lg" uRI="http://www.jboss.org/examples/logistics" schemaLocation="logistics.xsd"/>
+    <informationTypes description="This is the information type AccountNotFound" name="AccountNotFound" typeName="" elementName="sto:AccountNotFound"/>
+    <informationTypes description="This is the information type BuyConfirmed" name="BuyConfirmed" typeName="" elementName="sto:BuyConfirmed"/>
+    <informationTypes description="This is the information type BuyFailed" name="BuyFailed" typeName="" elementName="sto:BuyFailed"/>
+    <informationTypes description="This is the information type BuyRequest" name="BuyRequest" typeName="" elementName="sto:BuyRequest"/>
+    <informationTypes description="This is the information type CreditCheckRequest" name="CreditCheckRequest" typeName="" elementName="ca:CreditCheckRequest"/>
+    <informationTypes description="This is the information type CreditRating" name="CreditRating" typeName="" elementName="ca:CreditRating"/>
+    <informationTypes description="This is the information type CustomerUnknown" name="CustomerUnknown" typeName="" elementName="ca:CustomerUnknown"/>
+    <informationTypes description="This is the information type DeliveryConfirmed" name="DeliveryConfirmed" typeName="" elementName="lg:DeliveryConfirmed"/>
+    <informationTypes description="This is the information type DeliveryRequest" name="DeliveryRequest" typeName="" elementName="lg:DeliveryRequest"/>
+    <informationTypes description="This is the information type IDType" name="IDType" typeName="xsd:string"/>
+    <informationTypes description="This is the information type URITokenType" name="URITokenType" typeName="xsd:anyURI"/>
+    <tokens description="This is the token ID" name="ID" informationType="//@typeDefinitions/@informationTypes.9"/>
+    <tokens description="This is the token URIToken" name="URIToken" informationType="//@typeDefinitions/@informationTypes.10"/>
+    <tokenLocators description="This is the token locator AccountNotFoundIDLocator" token="//@typeDefinitions/@tokens.0" informationType="//@typeDefinitions/@informationTypes.0" query="//@id" name="AccountNotFoundIDLocator"/>
+    <tokenLocators description="This is the token locator BuyFailedIDLocator" token="//@typeDefinitions/@tokens.0" informationType="//@typeDefinitions/@informationTypes.2" query="//@id" name="BuyFailedIDLocator"/>
+    <tokenLocators description="This is the token locator BuyRequestIDLocator" token="//@typeDefinitions/@tokens.0" informationType="//@typeDefinitions/@informationTypes.3" query="//@id" name="BuyRequestIDLocator"/>
+    <tokenLocators description="This is the token locator BuyResponseIDLocator" token="//@typeDefinitions/@tokens.0" informationType="//@typeDefinitions/@informationTypes.1" query="//@id" name="BuyResponseIDLocator"/>
+    <tokenLocators description="This is the token locator CreditCheckRequestIDLocator" token="//@typeDefinitions/@tokens.0" informationType="//@typeDefinitions/@informationTypes.4" query="//@id" name="CreditCheckRequestIDLocator"/>
+    <tokenLocators description="This is the token locator CreditRatingIDLocator" token="//@typeDefinitions/@tokens.0" informationType="//@typeDefinitions/@informationTypes.5" query="//@id" name="CreditRatingIDLocator"/>
+    <tokenLocators description="This is the token locator CustomerUnknownIDLocator" token="//@typeDefinitions/@tokens.0" informationType="//@typeDefinitions/@informationTypes.6" query="//@id" name="CustomerUnknownIDLocator"/>
+    <tokenLocators description="This is the token locator DeliveryConfirmedIDLocator" token="//@typeDefinitions/@tokens.0" informationType="//@typeDefinitions/@informationTypes.7" query="//@id" name="DeliveryConfirmedIDLocator"/>
+    <tokenLocators description="This is the token locator DeliveryRequestIDLocator" token="//@typeDefinitions/@tokens.0" informationType="//@typeDefinitions/@informationTypes.8" query="//@id" name="DeliveryRequestIDLocator"/>
+    <roleTypes description="This is the role type Buyer" name="Buyer">
+      <behaviors description="This is the behavior BuyerBehavior" name="BuyerBehavior"/>
+    </roleTypes>
+    <roleTypes description="This is the role type CreditAgency" name="CreditAgency">
+      <behaviors description="This is the behavior CreditAgencyBehavior" name="CreditAgencyBehavior" interface="ca:CreditAgencyInterface"/>
+    </roleTypes>
+    <roleTypes description="This is the role type Logistics" name="Logistics">
+      <behaviors description="This is the behavior LogisticsBehavior" name="LogisticsBehavior" interface="lg:LogisticsInterface"/>
+    </roleTypes>
+    <roleTypes description="This is the role type Store" name="Store">
+      <behaviors description="This is the behavior StoreBehavior" name="StoreBehavior" interface="sto:StoreInterface"/>
+    </roleTypes>
+    <relationshipTypes description="Relationship between Buyer and Store" name="BuyerToStoreRel" firstRoleType="//@typeDefinitions/@roleTypes.0" secondRoleType="//@typeDefinitions/@roleTypes.3"/>
+    <relationshipTypes description="Relationship between Store and CreditAgency" name="StoreToCreditAgencyRel" firstRoleType="//@typeDefinitions/@roleTypes.3" secondRoleType="//@typeDefinitions/@roleTypes.1"/>
+    <relationshipTypes description="Relationship between Store and Logistics" name="StoreToLogisticsRel" firstRoleType="//@typeDefinitions/@roleTypes.3" secondRoleType="//@typeDefinitions/@roleTypes.2"/>
+    <participantTypes description="This is the participant type Buyer" name="Buyer" roleTypes="//@typeDefinitions/@roleTypes.0">
+      <semanticAnnotations annotation="savara.samples.Purchasing@Buyer" name="conversationType"/>
+    </participantTypes>
+    <participantTypes description="This is the participant type ca:CreditAgency" name="ca:CreditAgency" roleTypes="//@typeDefinitions/@roleTypes.1">
+      <semanticAnnotations annotation="savara.samples.Common@CreditAgency" name="conversationType"/>
+    </participantTypes>
+    <participantTypes description="This is the participant type lg:Logistics" name="lg:Logistics" roleTypes="//@typeDefinitions/@roleTypes.2"/>
+    <participantTypes description="This is the participant type sto:Store" name="sto:Store" roleTypes="//@typeDefinitions/@roleTypes.3">
+      <semanticAnnotations annotation="savara.samples.Purchasing@Store" name="conversationType"/>
+    </participantTypes>
+    <channelTypes description="This is the channel type CreditAgencyChannelType" name="CreditAgencyChannelType" referenceToken="//@typeDefinitions/@tokens.1" roleType="//@typeDefinitions/@roleTypes.1">
+      <identities description="ID" tokens="//@typeDefinitions/@tokens.0"/>
+    </channelTypes>
+    <channelTypes description="This is the channel type LogisticsChannelType" name="LogisticsChannelType" referenceToken="//@typeDefinitions/@tokens.1" roleType="//@typeDefinitions/@roleTypes.2">
+      <identities description="ID" tokens="//@typeDefinitions/@tokens.0"/>
+    </channelTypes>
+    <channelTypes description="This is the channel type StoreChannelType" name="StoreChannelType" referenceToken="//@typeDefinitions/@tokens.1" roleType="//@typeDefinitions/@roleTypes.3">
+      <identities description="ID" tokens="//@typeDefinitions/@tokens.0"/>
+    </channelTypes>
+  </typeDefinitions>
+  <choreographies description="Choreography flow for the PurchaseGoods process" name="PurchaseGoodsProcess" root="true">
+    <variableDefinitions description="Channel to facilitate interaction to CreditAgency" name="CreditAgencyChannel" type="//@typeDefinitions/@channelTypes.0"/>
+    <variableDefinitions name="CreditCheckResultVar" type="//@typeDefinitions/@informationTypes.5"/>
+    <variableDefinitions name="CreditCheckVar" type="//@typeDefinitions/@informationTypes.4"/>
+    <variableDefinitions description="Channel to facilitate interaction to Logistics" name="LogisticsChannel" type="//@typeDefinitions/@channelTypes.1"/>
+    <variableDefinitions description="Channel to facilitate interaction to Supplier" name="SupplierChannel" type="//@typeDefinitions/@channelTypes.2"/>
+    <variableDefinitions description="This is the variable buy" name="buy" type="//@typeDefinitions/@informationTypes.3"/>
+    <activities xsi:type="org.pi4soa.cdl:Interaction" name="BuyRequest" operation="buy" channelVariable="//@choreographies.0/@variableDefinitions.4" relationship="//@typeDefinitions/@relationshipTypes.0">
+      <exchangeDetails description="This is the exchange details for the request exchange associated with interaction BuyRequest" name="BuyRequestRequestExchange" type="//@typeDefinitions/@informationTypes.3">
+        <semanticAnnotations annotation="&lt;validator>&#xD;&#xA;&#x9;&lt;destination name=&quot;{{Destination;The URI for the destination;string;;{http://www.jboss.org/examples/store}StoreService}}&quot;&#xD;&#xA;&#x9;&#x9;type=&quot;{{Type;The type of destination;enum;endpoint address,service name;service name}}&quot; />&#xD;&#xA;&#x9;&#x9;dynamicReplyTo=&quot;{{Dynamic ReplyTo;Whether the replyTo destination is dynamic;boolean;;false}}&quot; />&#xD;&#xA;&lt;/validator>&#xD;&#xA;" name="validator"/>
+      </exchangeDetails>
+    </activities>
+    <activities xsi:type="org.pi4soa.cdl:Interaction" name="CreditCheck" operation="creditCheck" channelVariable="//@choreographies.0/@variableDefinitions.0" relationship="//@typeDefinitions/@relationshipTypes.1">
+      <exchangeDetails description="This is the exchange details for the request exchange associated with interaction CreditCheck" name="CreditCheckRequestExchange" type="//@typeDefinitions/@informationTypes.4" receiveVariable="//@choreographies.0/@variableDefinitions.2">
+        <semanticAnnotations annotation="&lt;validator>&#xD;&#xA;&#x9;&lt;destination name=&quot;{{Destination;The URI for the destination;string;;{http://www.jboss.org/examples/creditAgency}CreditAgencyService}}&quot;&#xD;&#xA;&#x9;&#x9;type=&quot;{{Type;The type of destination;enum;endpoint address,service name;service name}}&quot; />&#xD;&#xA;&#x9;&#x9;dynamicReplyTo=&quot;{{Dynamic ReplyTo;Whether the replyTo destination is dynamic;boolean;;false}}&quot; />&#xD;&#xA;&lt;/validator>&#xD;&#xA;" name="validator"/>
+      </exchangeDetails>
+    </activities>
+    <activities xsi:type="org.pi4soa.cdl:Choice" description="Get Credit Rating">
+      <activities xsi:type="org.pi4soa.cdl:Sequence" description="Credit Rating">
+        <activities xsi:type="org.pi4soa.cdl:Interaction" name="CreditRating" operation="creditCheck" channelVariable="//@choreographies.0/@variableDefinitions.0" relationship="//@typeDefinitions/@relationshipTypes.1">
+          <exchangeDetails description="This is the exchange details for the respond exchange associated with interaction CreditRating" name="CreditRatingRespondExchange" type="//@typeDefinitions/@informationTypes.5" action="Respond" sendVariable="//@choreographies.0/@variableDefinitions.1" receiveVariable="//@choreographies.0/@variableDefinitions.1">
+            <semanticAnnotations annotation="&lt;validator>&#xD;&#xA;&#x9;&lt;destination name=&quot;{{Destination;The URI for the destination;string;;{http://www.jboss.org/examples/creditAgency}CreditAgencyService}}&quot;&#xD;&#xA;&#x9;&#x9;type=&quot;{{Type;The type of destination;enum;endpoint address,service name;service name}}&quot; />&#xD;&#xA;&#x9;&#x9;dynamicReplyTo=&quot;{{Dynamic ReplyTo;Whether the replyTo destination is dynamic;boolean;;false}}&quot; />&#xD;&#xA;&lt;/validator>&#xD;&#xA;" name="validator"/>
+          </exchangeDetails>
+        </activities>
+        <activities xsi:type="org.pi4soa.cdl:Choice" description="Is credit ok?">
+          <activities xsi:type="org.pi4soa.cdl:Conditional" name="CreditValid" expression="cdl:getVariable('CreditCheckResultVar','','//@rating','Store') >= 5">
+            <activities xsi:type="org.pi4soa.cdl:Interaction" name="DeliverItem" operation="delivery" channelVariable="//@choreographies.0/@variableDefinitions.3" relationship="//@typeDefinitions/@relationshipTypes.2">
+              <exchangeDetails description="This is the exchange details for the request exchange associated with interaction DeliverItem" name="DeliverItemRequestExchange" type="//@typeDefinitions/@informationTypes.8"/>
+            </activities>
+            <activities xsi:type="org.pi4soa.cdl:Interaction" name="DeliveryConfirmation" operation="delivery" channelVariable="//@choreographies.0/@variableDefinitions.3" relationship="//@typeDefinitions/@relationshipTypes.2">
+              <exchangeDetails description="This is the exchange details for the respond exchange associated with interaction DeliveryConfirmation" name="DeliveryConfirmationRespondExchange" type="//@typeDefinitions/@informationTypes.7" action="Respond"/>
+            </activities>
+            <activities xsi:type="org.pi4soa.cdl:Interaction" name="BuyConfirmed" operation="buy" channelVariable="//@choreographies.0/@variableDefinitions.4" relationship="//@typeDefinitions/@relationshipTypes.0">
+              <exchangeDetails description="This is the exchange details for the respond exchange associated with interaction BuyConfirmed" name="BuyConfirmedRespondExchange" type="//@typeDefinitions/@informationTypes.1" action="Respond">
+                <semanticAnnotations annotation="&lt;validator>&#xD;&#xA;&#x9;&lt;destination name=&quot;{{Destination;The URI for the destination;string;;{http://www.jboss.org/examples/store}StoreService}}&quot;&#xD;&#xA;&#x9;&#x9;type=&quot;{{Type;The type of destination;enum;endpoint address,service name;service name}}&quot; />&#xD;&#xA;&#x9;&#x9;dynamicReplyTo=&quot;{{Dynamic ReplyTo;Whether the replyTo destination is dynamic;boolean;;false}}&quot; />&#xD;&#xA;&lt;/validator>&#xD;&#xA;" name="validator"/>
+              </exchangeDetails>
+            </activities>
+          </activities>
+          <activities xsi:type="org.pi4soa.cdl:Sequence" description="Credit Invalid">
+            <activities xsi:type="org.pi4soa.cdl:Interaction" name="BuyFailed" operation="buy" channelVariable="//@choreographies.0/@variableDefinitions.4" relationship="//@typeDefinitions/@relationshipTypes.0">
+              <exchangeDetails description="This is the exchange details for the respond exchange associated with interaction BuyFailed" name="BuyFailedRespondExchange" type="//@typeDefinitions/@informationTypes.2" action="Respond" faultName="BuyFailed">
+                <semanticAnnotations annotation="&lt;validator>&#xD;&#xA;&#x9;&lt;destination name=&quot;{{Destination;The URI for the destination;string;;{http://www.jboss.org/examples/store}StoreService}}&quot;&#xD;&#xA;&#x9;&#x9;type=&quot;{{Type;The type of destination;enum;endpoint address,service name;service name}}&quot; />&#xD;&#xA;&#x9;&#x9;dynamicReplyTo=&quot;{{Dynamic ReplyTo;Whether the replyTo destination is dynamic;boolean;;false}}&quot; />&#xD;&#xA;&lt;/validator>&#xD;&#xA;" name="validator"/>
+              </exchangeDetails>
+            </activities>
+          </activities>
+        </activities>
+      </activities>
+      <activities xsi:type="org.pi4soa.cdl:Sequence" description="Customer Unknown">
+        <activities xsi:type="org.pi4soa.cdl:Interaction" name="CustomerUnknown" operation="creditCheck" channelVariable="//@choreographies.0/@variableDefinitions.0" relationship="//@typeDefinitions/@relationshipTypes.1">
+          <exchangeDetails description="This is the exchange details for the respond exchange associated with interaction CustomerUnknown" name="CustomerUnknownRespondExchange" type="//@typeDefinitions/@informationTypes.6" action="Respond" faultName="CustomerUnknown">
+            <semanticAnnotations annotation="&lt;validator>&#xD;&#xA;&#x9;&lt;destination name=&quot;{{Destination;The URI for the destination;string;;{http://www.jboss.org/examples/creditAgency}CreditAgencyService}}&quot;&#xD;&#xA;&#x9;&#x9;type=&quot;{{Type;The type of destination;enum;endpoint address,service name;service name}}&quot; />&#xD;&#xA;&#x9;&#x9;dynamicReplyTo=&quot;{{Dynamic ReplyTo;Whether the replyTo destination is dynamic;boolean;;false}}&quot; />&#xD;&#xA;&lt;/validator>&#xD;&#xA;" name="validator"/>
+          </exchangeDetails>
+        </activities>
+        <activities xsi:type="org.pi4soa.cdl:Interaction" name="AccountNotFound" operation="buy" channelVariable="//@choreographies.0/@variableDefinitions.4" relationship="//@typeDefinitions/@relationshipTypes.0">
+          <exchangeDetails description="This is the exchange details for the respond exchange associated with interaction AccountNotFound" name="AccountNotFoundRespondExchange" type="//@typeDefinitions/@informationTypes.0" action="Respond" faultName="AccountNotFound">
+            <semanticAnnotations annotation="&lt;validator>&#xD;&#xA;&#x9;&lt;destination name=&quot;{{Destination;The URI for the destination;string;;{http://www.jboss.org/examples/store}StoreService}}&quot;&#xD;&#xA;&#x9;&#x9;type=&quot;{{Type;The type of destination;enum;endpoint address,service name;service name}}&quot; />&#xD;&#xA;&#x9;&#x9;dynamicReplyTo=&quot;{{Dynamic ReplyTo;Whether the replyTo destination is dynamic;boolean;;false}}&quot; />&#xD;&#xA;&lt;/validator>&#xD;&#xA;" name="validator"/>
+          </exchangeDetails>
+        </activities>
+      </activities>
+    </activities>
+  </choreographies>
+</org.pi4soa.cdl:Package>

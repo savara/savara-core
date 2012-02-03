@@ -17,12 +17,16 @@
  */
 package org.savara.qa.simulate;
 
+import java.util.logging.Logger;
+
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.MessageEvent;
 import org.savara.scenario.simulation.SimulationHandler;
 
 public class TestSimulationHandler implements SimulationHandler {
 
+	private static final Logger LOG=Logger.getLogger(TestSimulationHandler.class.getName());
+	
 	private java.util.List<Event> m_noSimulatorEvents=new java.util.Vector<Event>();
 	private java.util.List<Event> m_processedEvents=new java.util.Vector<Event>();
 	private java.util.List<Event> m_unexpectedEvents=new java.util.Vector<Event>();
@@ -64,6 +68,7 @@ public class TestSimulationHandler implements SimulationHandler {
 
 	public void error(String mesg, Event event, Throwable e) {
 		m_errorEvents.add(event);
+		LOG.severe("ERROR: "+mesg+" Event="+event+" Exception="+e);
 	}
 	
 	public String toString() {

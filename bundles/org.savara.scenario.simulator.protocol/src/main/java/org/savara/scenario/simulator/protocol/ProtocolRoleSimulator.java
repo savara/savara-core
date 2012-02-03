@@ -35,6 +35,7 @@ import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
 import org.savara.scenario.simulation.SimulationModel;
 import org.scribble.common.logging.CachedJournal;
+import org.scribble.common.logging.ConsoleJournal;
 import org.scribble.common.resource.ByteArrayContent;
 import org.scribble.common.resource.Content;
 import org.scribble.protocol.DefaultProtocolContext;
@@ -190,6 +191,8 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 				if (journal.hasErrors()) {
 					LOG.severe("Errors detected when exporting protocol '"+
 									local+"' to monitorable description");
+					
+					journal.apply(new ConsoleJournal());
 				} else {
 					java.io.InputStream is=new java.io.ByteArrayInputStream(os.toByteArray());
 					
