@@ -27,7 +27,7 @@ public class Activator implements BundleActivator {
 		Activator.context = bundleContext;
 
 		Properties props = new Properties();
-        
+		
 		ProtocolRoleSimulator rs=new ProtocolRoleSimulator();
         
         context.registerService(RoleSimulator.class.getName(), 

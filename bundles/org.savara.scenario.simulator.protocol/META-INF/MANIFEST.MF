@@ -11,9 +11,9 @@ Require-Bundle: org.savara.scenario,
  org.junit,
  org.scribble.common,
  org.scribble.protocol,
- org.scribble.protocol.export.monitor,
  org.scribble.protocol.monitor,
  org.scribble.protocol.parser,
  org.scribble.protocol.projection,
  org.savara.protocol,
- org.savara.common
+ org.savara.common,
+ org.scribble.protocol.export.monitor
