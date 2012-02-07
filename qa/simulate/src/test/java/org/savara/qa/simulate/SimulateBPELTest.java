@@ -147,7 +147,7 @@ public class SimulateBPELTest {
 		
 		RoleDetails details=new RoleDetails();
 		details.setScenarioRole("Store");
-		details.setModel("Xqasimmodels/purchasegoods/bpel/PurchaseGoods@StoreInterface.bpel");
+		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@StoreInterface.bpel");
 		details.setModelRole("StoreInterface");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);

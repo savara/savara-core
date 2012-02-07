@@ -28,6 +28,7 @@ import org.savara.monitor.Message;
 import org.savara.monitor.Monitor;
 import org.savara.protocol.ProtocolCriteria.Direction;
 import org.savara.protocol.ProtocolId;
+import org.savara.protocol.export.monitor.ForkJoinMonitorExportVisitor;
 import org.savara.protocol.repository.ProtocolRepository;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.protocol.export.monitor.MonitorProtocolExporter;
@@ -57,6 +58,13 @@ public class DefaultMonitor implements Monitor {
 	private	MonitorContext _context=new MonitorContextImpl();
 	
 	private static final Logger logger=Logger.getLogger(DefaultMonitor.class.getName());
+	
+	/**
+	 * Default constructor.
+	 */
+	public DefaultMonitor() {
+		m_exporter.setMonitorExportVisitor(new ForkJoinMonitorExportVisitor());
+	}
 	
 	/**
 	 * This method sets the monitor context.

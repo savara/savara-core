@@ -84,6 +84,10 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 			context.getProperties().put(Session.class.getName(), _monitor.createSession(_context,
 					(Description)context.getModel(), DefaultSession.class));
 		}
+		
+		// Add the fork/join extension to the protocol monitor exporter
+		_exporter.setMonitorExportVisitor(
+				new org.savara.protocol.export.monitor.ForkJoinMonitorExportVisitor());
 	}
 
 	/**

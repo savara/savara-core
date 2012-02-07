@@ -34,7 +34,11 @@
 			<groupId>org.scribble.bundles</groupId>
 			<artifactId>org.scribble.protocol.projection</artifactId>
 			<version>${scribble.version}</version>
-<!--		<scope>test</scope> -->
+		</dependency>
+		<dependency>
+			<groupId>org.scribble.bundles</groupId>
+			<artifactId>org.scribble.protocol.export.monitor</artifactId>
+			<version>${scribble.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.savara.bundles</groupId>

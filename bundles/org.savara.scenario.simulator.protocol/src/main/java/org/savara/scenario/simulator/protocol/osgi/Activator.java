@@ -30,10 +30,10 @@ public class Activator implements BundleActivator {
         
 		ProtocolRoleSimulator rs=new ProtocolRoleSimulator();
         
-        	context.registerService(RoleSimulator.class.getName(), 
+        context.registerService(RoleSimulator.class.getName(), 
 				rs, props);
 
-        	if (logger.isLoggable(Level.FINE)) {
+        if (logger.isLoggable(Level.FINE)) {
 			logger.fine("Protocol Role Simulator registered");
 		}
 	}
