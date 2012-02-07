@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.savara.org/examples" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:ns7="http://www.savara.org/examples/Store" xmlns:ns5="http://www.savara.org/examples/Logistics" xmlns:ns6="http://www.savara.org/examples/CreditAgency" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" name="PurchaseGoods" targetNamespace="http://www.savara.org/examples">
-  <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="store.xsd" namespace="http://www.jboss.org/examples/store"/>
-  <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="logistics.xsd" namespace="http://www.jboss.org/examples/logistics"/>
-  <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
+  <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/store.xsd" namespace="http://www.jboss.org/examples/store"/>
+  <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/logistics.xsd" namespace="http://www.jboss.org/examples/logistics"/>
+  <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
   <bpmn2:choreography id="Choreography_1" name="PurchaseGoods">
     <bpmn2:participant id="Participant_1" name="Buyer" processRef="Process_1"/>
     <bpmn2:participant id="Participant_2" name="Store" processRef="Process_2">
@@ -152,20 +152,20 @@
   <bpmn2:error id="Error_1" errorCode="CustomerUnknown" name="CustomerUnknown" structureRef="ItemDefinition_3"/>
   <bpmn2:error id="Error_2" errorCode="AccountNotFound" name="AccountNotFound" structureRef="ItemDefinition_5"/>
   <bpmn2:error id="Error_3" errorCode="InsufficientCredit" name="InsufficientCredit" structureRef="ItemDefinition_6"/>
-  <bpmn2:interface id="CreditAgencyInterface" name="CreditAgencyInterface" implementationRef="ns6:CreditAgencyInterface">
+  <bpmn2:interface id="CreditAgencyInterface" name="CreditAgencyInterface"> <!-- implementationRef="ns6:CreditAgencyInterface"-->
     <bpmn2:operation id="creditCheck" name="creditCheck">
       <bpmn2:inMessageRef>Message_2</bpmn2:inMessageRef>
       <bpmn2:outMessageRef>Message_4</bpmn2:outMessageRef>
       <bpmn2:errorRef>Error_1</bpmn2:errorRef>
     </bpmn2:operation>
   </bpmn2:interface>
-  <bpmn2:interface id="LogisticsInterface" name="LogisticsInterface" implementationRef="ns5:LogisticsInterface">
+  <bpmn2:interface id="LogisticsInterface" name="LogisticsInterface"> <!-- implementationRef="ns5:LogisticsInterface"-->
     <bpmn2:operation id="delivery" name="delivery">
       <bpmn2:inMessageRef>Message_7</bpmn2:inMessageRef>
       <bpmn2:outMessageRef>Message_8</bpmn2:outMessageRef>
     </bpmn2:operation>
   </bpmn2:interface>
-  <bpmn2:interface id="StoreInterface" name="StoreInterface" implementationRef="ns7:StoreInterface">
+  <bpmn2:interface id="StoreInterface" name="StoreInterface"> <!-- implementationRef="ns7:StoreInterface"-->
     <bpmn2:operation id="buy" name="buy">
       <bpmn2:inMessageRef>Message_1</bpmn2:inMessageRef>
       <bpmn2:outMessageRef>Message_9</bpmn2:outMessageRef>

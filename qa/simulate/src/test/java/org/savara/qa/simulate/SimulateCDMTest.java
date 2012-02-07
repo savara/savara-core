@@ -41,33 +41,33 @@ public class SimulateCDMTest {
 		
 		RoleDetails details=new RoleDetails();
 		details.setScenarioRole("Buyer");
-		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModel("qasim/purchasing/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Buyer");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Store");
-		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModel("qasim/purchasing/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Store");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("CreditAgency");
-		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModel("qasim/purchasing/cdm/PurchaseGoods.cdm");
 		details.setModelRole("CreditAgency");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Logistics");
-		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModel("qasim/purchasing/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Logistics");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
-		simulation.setScenario("qascenarios/purchasegoods/SuccessfulPurchase.scn");
+		simulation.setScenario("qasim/purchasing/requirements/SuccessfulPurchase.scn");
 		
 		SimulatorDetails simdetails=new SimulatorDetails();
 		simdetails.setName(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
@@ -99,33 +99,33 @@ public class SimulateCDMTest {
 		
 		RoleDetails details=new RoleDetails();
 		details.setScenarioRole("Buyer");
-		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModel("qasim/purchasing/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Buyer");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Store");
-		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModel("qasim/purchasing/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Store");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("CreditAgency");
-		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModel("qasim/purchasing/cdm/PurchaseGoods.cdm");
 		details.setModelRole("CreditAgency");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Logistics");
-		details.setModel("qasimmodels/purchasegoods/cdm/PurchaseGoods.cdm");
+		details.setModel("qasim/purchasing/cdm/PurchaseGoods.cdm");
 		details.setModelRole("Logistics");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
-		simulation.setScenario("qascenarios/purchasegoods/InvalidStoreBehaviour.scn");
+		simulation.setScenario("qasim/purchasing/requirements/InvalidStoreBehaviour.scn");
 		
 		SimulatorDetails simdetails=new SimulatorDetails();
 		simdetails.setName(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);

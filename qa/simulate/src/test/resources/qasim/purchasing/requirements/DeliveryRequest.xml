@@ -1,4 +1,4 @@
 <tns:DeliveryRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 			xmlns:tns="http://www.jboss.org/examples/logistics" 
-			xsi:schemaLocation="http://www.jboss.org/examples/logistics logistics.xsd " 
+			xsi:schemaLocation="http://www.jboss.org/examples/logistics ../schema/logistics.xsd " 
 			id="1" address="1001 Acme Street" />

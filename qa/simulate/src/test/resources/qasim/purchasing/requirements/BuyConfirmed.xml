@@ -1,5 +1,5 @@
 <!-- @IgnoreAttr(deliveryDate) -->
 <tns:BuyConfirmed xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 			xmlns:tns="http://www.jboss.org/examples/store" 
-			xsi:schemaLocation="http://www.jboss.org/examples/store store.xsd " 
+			xsi:schemaLocation="http://www.jboss.org/examples/store ../schema/store.xsd " 
 			id="1" amount="500" deliveryDate="2011-12-12"/>

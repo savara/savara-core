@@ -41,26 +41,26 @@ public class SimulateBPELTest {
 		
 		RoleDetails details=new RoleDetails();
 		details.setScenarioRole("Store");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Store.bpel");
+		details.setModel("qasim/purchasing/bpel/PurchaseGoods@Store.bpel");
 		details.setModelRole("Store");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("CreditAgency");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@CreditAgency.bpel");
+		details.setModel("qasim/purchasing/bpel/PurchaseGoods@CreditAgency.bpel");
 		details.setModelRole("CreditAgency");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Logistics");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Logistics.bpel");
+		details.setModel("qasim/purchasing/bpel/PurchaseGoods@Logistics.bpel");
 		details.setModelRole("Logistics");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
-		simulation.setScenario("qascenarios/purchasegoods/SuccessfulPurchase.scn");
+		simulation.setScenario("qasim/purchasing/requirements/SuccessfulPurchase.scn");
 		
 		SimulatorDetails simdetails=new SimulatorDetails();
 		simdetails.setName(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
@@ -92,26 +92,26 @@ public class SimulateBPELTest {
 		
 		RoleDetails details=new RoleDetails();
 		details.setScenarioRole("Store");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Store.bpel");
+		details.setModel("qasim/purchasing/bpel/PurchaseGoods@Store.bpel");
 		details.setModelRole("Store");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("CreditAgency");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@CreditAgency.bpel");
+		details.setModel("qasim/purchasing/bpel/PurchaseGoods@CreditAgency.bpel");
 		details.setModelRole("CreditAgency");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Logistics");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Logistics.bpel");
+		details.setModel("qasim/purchasing/bpel/PurchaseGoods@Logistics.bpel");
 		details.setModelRole("Logistics");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
-		simulation.setScenario("qascenarios/purchasegoods/InvalidStoreBehaviour.scn");
+		simulation.setScenario("qasim/purchasing/requirements/InvalidStoreBehaviour.scn");
 		
 		SimulatorDetails simdetails=new SimulatorDetails();
 		simdetails.setName(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
@@ -147,26 +147,26 @@ public class SimulateBPELTest {
 		
 		RoleDetails details=new RoleDetails();
 		details.setScenarioRole("Store");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@StoreInterface.bpel");
+		details.setModel("qasim/purchasing/bpel/PurchaseGoods@StoreInterface.bpel");
 		details.setModelRole("StoreInterface");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("CreditAgency");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@CreditAgency.bpel");
+		details.setModel("qasim/purchasing/bpel/PurchaseGoods@CreditAgency.bpel");
 		details.setModelRole("CreditAgency");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
 		details=new RoleDetails();
 		details.setScenarioRole("Logistics");
-		details.setModel("qasimmodels/purchasegoods/bpel/PurchaseGoods@Logistics.bpel");
+		details.setModel("qasim/purchasing/bpel/PurchaseGoods@Logistics.bpel");
 		details.setModelRole("Logistics");
 		details.setSimulator(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
 		simulation.getRoles().add(details);
 		
-		simulation.setScenario("qascenarios/purchasegoods/SuccessfulPurchase.scn");
+		simulation.setScenario("qasim/purchasing/requirements/SuccessfulPurchase.scn");
 		
 		SimulatorDetails simdetails=new SimulatorDetails();
 		simdetails.setName(ProtocolRoleSimulator.PROTOCOL_SIMULATOR);
