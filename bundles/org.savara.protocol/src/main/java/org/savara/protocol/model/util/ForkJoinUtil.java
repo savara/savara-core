@@ -19,10 +19,8 @@ package org.savara.protocol.model.util;
 
 import org.savara.protocol.model.Join;
 import org.savara.protocol.model.Sync;
+import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.CustomActivity;
-import org.scribble.protocol.model.DefaultVisitor;
-import org.scribble.protocol.model.Parallel;
-import org.scribble.protocol.model.Protocol;
 
 /**
  * This class provides utility functions related to the join/fork constructs.
@@ -40,66 +38,58 @@ public class ForkJoinUtil {
 	 * @param parallel The parallel construct
 	 * @return The list of unique link names
 	 */
-	public static java.util.List<String> getLinkNames(final Parallel parallel) {
-		final java.util.List<String> ret=new java.util.Vector<String>();
+	public static java.util.List<String> getLinkNames(org.scribble.protocol.model.Parallel elem) {
+		java.util.List<String> ret=new java.util.Vector<String>();
 		
-		parallel.visit(new DefaultVisitor() {
-			
-			@Override
-			public void end(Parallel par) {
-				if (par != parallel) {
-					// Exclude link names just associated with contained
-					// parallel construct
-					java.util.List<String> links=getLinkNames(par);
+		java.util.Set<String> working=new java.util.HashSet<String>();
+		
+		for (Block path : elem.getPaths()) {
+			if (working.size() == 0) {
+				path.visit(new ForkJoinLinkVisitor(working));
+			} else {
+				java.util.Set<String> current=new java.util.HashSet<String>();
+				path.visit(new ForkJoinLinkVisitor(current));
+				
+				java.util.Iterator<String> iter=current.iterator();
+				while (iter.hasNext()) {
+					String linkName=iter.next();
 					
-					ret.removeAll(links);
-				}
-			}
-			
-			public void accept(CustomActivity act) {
-				if (act instanceof Sync) {
-					String linkName = ((Sync)act).getLabel();
-					if (!ret.contains(linkName)) {
-						ret.add(linkName);
-					}
-				} else if (act instanceof Join) {
-					for (String linkName : ((Join)act).getLabels()) {
+					if (working.contains(linkName)) {
 						if (!ret.contains(linkName)) {
 							ret.add(linkName);
 						}
+						working.remove(linkName);
+						iter.remove();
 					}
 				}
+				
+				// Transfer any unmatched link names to the working set
+				working.addAll(current);
 			}
-		});
-		
-		// Exclude link names that are used outside the scope of the
-		// supplied parallel
-		Protocol protocol=parallel.getEnclosingProtocol();
-		
-		if (protocol != null) {
-			protocol.visit(new DefaultVisitor() {
-				
-				@Override
-				public boolean start(Parallel par) {
-					// Visit contained paths if not the same parallel
-					// construct that was supplied
-					return(par != parallel);
-				}
-				
-				@Override
-				public void accept(CustomActivity act) {
-					if (act instanceof Sync) {
-						String linkName = ((Sync)act).getLabel();
-						ret.remove(linkName);
-					} else if (act instanceof Join) {
-						for (String linkName : ((Join)act).getLabels()) {
-							ret.remove(linkName);
-						}
-					}
-				}
-			});
 		}
 		
-		return (ret);
+		return(ret);
+	}
+	
+	/**
+	 * This class visits the parallel paths to identify fork/join link names.
+	 *
+	 */
+	protected static class ForkJoinLinkVisitor extends org.scribble.protocol.model.DefaultVisitor {
+		
+		private java.util.Set<String> _links=null;
+		
+		public ForkJoinLinkVisitor(java.util.Set<String> links) {
+			_links = links;
+		}
+		
+		@Override
+		public void accept(CustomActivity elem) {
+			if (elem instanceof Sync) {
+				_links.add(((Sync)elem).getLabel());
+			} else if (elem instanceof Join) {
+				_links.addAll(((Join)elem).getLabels());
+			}
+		}
 	}
 }

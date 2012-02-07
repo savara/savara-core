@@ -22,8 +22,8 @@
         <receive createInstance="yes" name="Receive_BuyRequest" operation="buy" partnerLink="BuyerToStore" portType="pns3:Store" variable="buyRequestVar"/>
         <flow>
             <links>
-                <link name="L11"/>
                 <link name="L13"/>
+                <link name="L11"/>
             </links>
             <sequence>
                 <scope>

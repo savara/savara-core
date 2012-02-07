@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -19,8 +19,10 @@ package org.savara.protocol.export.monitor;
 
 import org.savara.protocol.model.Join;
 import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.util.ForkJoinUtil;
 import org.scribble.protocol.model.CustomActivity;
 import org.scribble.protocol.monitor.model.Fork;
+import org.scribble.protocol.monitor.model.LinkDeclaration;
 import org.scribble.protocol.monitor.model.Node;
 
 /**
@@ -37,7 +39,7 @@ public class ForkJoinMonitorExportVisitor extends org.scribble.protocol.export.m
 	 */
 	@Override
 	public void accept(CustomActivity elem) {
-		
+
 		startActivity(elem);
 		
 		Node node=null;
@@ -77,10 +79,23 @@ public class ForkJoinMonitorExportVisitor extends org.scribble.protocol.export.m
 	@Override
     public boolean start(org.scribble.protocol.model.Parallel elem) {
 		
-		// Need to see effects doing startActivity twice
-		//startActivity(elem);
+		java.util.List<String> linkNames=ForkJoinUtil.getLinkNames(elem);
 		
-		
+		for (String linkName : linkNames) {
+			// Need to see effects doing startActivity twice
+			startActivity(elem);
+			
+			// Check if this parallel has any link declarations
+			LinkDeclaration node=new LinkDeclaration();
+			node.setName(linkName);
+			
+			getNodes().add(node);
+			
+			getPendingNextIndex().add(node);
+			
+			endActivity(elem);
+		}
+
 		return (super.start(elem));
     }
 }
