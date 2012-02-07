@@ -26,7 +26,7 @@ import org.savara.bpel.model.TVariable;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.resources.ResourceLocator;
 import org.savara.protocol.model.Join;
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.ProtocolModel;
 
@@ -124,7 +124,7 @@ public class DefaultParserContext implements ParserContext {
 				
 				if (act.getSources() != null) {
 					for (TSource src : act.getSources().getSource()) {
-						Sync sync=new Sync();
+						Fork sync=new Fork();
 						sync.setLabel(src.getLinkName());
 						activities.add(sync);
 					}

@@ -17,16 +17,16 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.scribble.protocol.model.Activity;
 
 /**
- * This class represents the BPMN2 activity node for a Sync activity.
+ * This class represents the BPMN2 activity node for a Fork activity.
  * 
  */
-public class SyncActivity extends SimpleActivity {
+public class ForkActivity extends SimpleActivity {
 	
-	private Sync _sync=null;
+	private Fork _sync=null;
 
 	/**
 	 * This constructor initializes the sync.
@@ -35,7 +35,7 @@ public class SyncActivity extends SimpleActivity {
 	 * @param parent The parent BPMN state
 	 * @param model The BPMN model
 	 */
-	public SyncActivity(Sync act,
+	public ForkActivity(Fork act,
 			BPMNActivity parent, org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
 			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
 		super(act, parent, model, notation);
@@ -44,7 +44,7 @@ public class SyncActivity extends SimpleActivity {
 	}
 	
 	protected Object createNode(Activity act) {
-		return(getModelFactory().createSyncTask(getContainer(), act));
+		return(getModelFactory().createForkTask(getContainer(), act));
 	}
 	
 	/**
@@ -52,7 +52,7 @@ public class SyncActivity extends SimpleActivity {
 	 * 
 	 * @return The sync activity
 	 */
-	public Sync getSync() {
+	public Fork getFork() {
 		return(_sync);
 	}
 	

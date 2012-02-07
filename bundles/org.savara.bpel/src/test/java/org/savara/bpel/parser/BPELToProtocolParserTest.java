@@ -21,7 +21,7 @@ import java.net.URI;
 
 import org.savara.bpel.parser.BPELProtocolParser;
 import org.savara.protocol.export.text.JoinTextProtocolExporterRule;
-import org.savara.protocol.export.text.SyncTextProtocolExporterRule;
+import org.savara.protocol.export.text.ForkTextProtocolExporterRule;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.common.resource.Content;
 import org.scribble.common.resource.ResourceContent;
@@ -142,7 +142,7 @@ public class BPELToProtocolParserTest extends TestCase {
 							new org.scribble.protocol.export.text.TextProtocolExporter();
 				
 	    				// TODO: Temporary until supported in scribble protocol model
-	    				exporter.register(new SyncTextProtocolExporterRule());
+	    				exporter.register(new ForkTextProtocolExporterRule());
 	    				exporter.register(new JoinTextProtocolExporterRule());
 	    				
 						java.io.ByteArrayOutputStream os=

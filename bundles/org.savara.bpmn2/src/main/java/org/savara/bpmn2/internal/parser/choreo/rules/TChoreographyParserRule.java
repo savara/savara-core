@@ -35,7 +35,7 @@ import org.savara.common.logging.MessageFormatter;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.model.Join;
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.savara.protocol.model.util.ChoiceUtil;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
@@ -172,13 +172,13 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 				
 				if (joinBlock.getContents().size() == 2 &&
 						joinBlock.getContents().get(0) instanceof Join &&
-						joinBlock.getContents().get(1) instanceof Sync) {
+						joinBlock.getContents().get(1) instanceof Fork) {
 					// Check that join and sync are associated with same role
 					Join join=(Join)joinBlock.getContents().get(0);
-					Sync sync=(Sync)joinBlock.getContents().get(1);
+					Fork fork=(Fork)joinBlock.getContents().get(1);
 					
-					if ((join.getRoles().size() == 0 && sync.getRoles().size() == 0) ||
-						join.getRoles().containsAll(sync.getRoles())) {
+					if ((join.getRoles().size() == 0 && fork.getRoles().size() == 0) ||
+						join.getRoles().containsAll(fork.getRoles())) {
 						
 						Parallel par=(Parallel)joinBlock.getParent();
 						Block parParent=(Block)par.getParent();
@@ -196,10 +196,10 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						context.getScope().getParallelReviewList().remove(par);
 
 						// Substitute labels in join with sync label in connected join
-						Join otherJoin=(Join)context.getScope().getJoin(sync.getLabel());
+						Join otherJoin=(Join)context.getScope().getJoin(fork.getLabel());
 						
 						if (otherJoin != null) {
-							otherJoin.getLabels().remove(sync.getLabel());
+							otherJoin.getLabels().remove(fork.getLabel());
 							otherJoin.getLabels().addAll(join.getLabels());
 						}
 						
@@ -242,7 +242,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 					Join join=(Join)joinBlock.getContents().get(0);
 					
 					for (String label : join.getLabels()) {
-						Sync sync=context.getScope().getSync(label);
+						Fork sync=context.getScope().getFork(label);
 						
 						((Block)sync.getParent()).remove(sync);
 					}
@@ -361,7 +361,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 					if (((TFlowNode)target).getIncoming().size() > 1) {
 						
 						// Add sync
-						Sync sync=new Sync();
+						Fork sync=new Fork();
 						sync.setLabel(getJoinName(elem.getOutgoing().get(0).getLocalPart()));
 						
 						// Get role
@@ -369,7 +369,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						
 						container.add(sync);
 						
-						context.getScope().registerSync(sync);
+						context.getScope().registerFork(sync);
 					}
 
 					processNode(context, (TFlowNode)target, container);
@@ -405,7 +405,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						if (((TFlowNode)seq.getTargetRef()).getIncoming().size() > 1) {
 							
 							// Add sync
-							Sync sync=new Sync();
+							Fork sync=new Fork();
 							sync.setLabel(getJoinName(seqFlowQName.getLocalPart()));
 							
 							// Get role
@@ -413,7 +413,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 							
 							b.add(sync);
 							
-							context.getScope().registerSync(sync);
+							context.getScope().registerFork(sync);
 						}
 						
 						processNode(context, (TFlowNode)seq.getTargetRef(), b);
@@ -445,7 +445,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 						if (((TFlowNode)seq.getTargetRef()).getIncoming().size() > 1) {
 							
 							// Add sync
-							Sync sync=new Sync();
+							Fork sync=new Fork();
 							sync.setLabel(getJoinName(seqFlowQName.getLocalPart()));
 							
 							// Get role
@@ -453,7 +453,7 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 							
 							b.add(sync);
 							
-							context.getScope().registerSync(sync);
+							context.getScope().registerFork(sync);
 						}
 						
 						processNode(context, (TFlowNode)seq.getTargetRef(), b);

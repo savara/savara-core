@@ -41,7 +41,7 @@ import org.savara.bpmn2.internal.generation.process.components.SendActivity;
 import org.savara.bpmn2.internal.generation.process.components.SequenceActivity;
 import org.savara.bpmn2.internal.generation.process.components.DoActivity;
 import org.savara.bpmn2.internal.generation.process.components.DoBlockActivity;
-import org.savara.bpmn2.internal.generation.process.components.SyncActivity;
+import org.savara.bpmn2.internal.generation.process.components.ForkActivity;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TError;
 import org.savara.bpmn2.model.TImport;
@@ -59,7 +59,7 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.generator.ModelGenerator;
 import org.savara.common.resources.ResourceLocator;
 import org.savara.protocol.model.Join;
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.savara.protocol.model.util.InteractionUtil;
 import org.scribble.protocol.model.*;
 
@@ -537,10 +537,10 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 */
 		public void accept(CustomActivity act) {
 			
-			if (act instanceof Sync) {
+			if (act instanceof Fork) {
 				BPMNActivity umls=getBPMNActivity();
 				if (umls != null) {
-					new SyncActivity((Sync)act, umls, m_modelFactory, m_notationFactory);
+					new ForkActivity((Fork)act, umls, m_modelFactory, m_notationFactory);
 				}
 			} else if (act instanceof Join) {
 				BPMNActivity umls=getBPMNActivity();

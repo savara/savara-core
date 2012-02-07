@@ -15,43 +15,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.protocol.export.text;
+package org.savara.protocol.model;
 
-import org.savara.protocol.model.Sync;
-import org.scribble.common.logging.Journal;
-import org.scribble.protocol.export.text.TextProtocolExporterRule;
-import org.scribble.protocol.model.ModelObject;
+import org.scribble.protocol.model.CustomActivity;
 
-public class SyncTextProtocolExporterRule implements TextProtocolExporterRule {
+/**
+ * This class represents the Fork construct.
+ * 
+ * NOTE: This class is in experimental status. Once join/fork concept has become
+ * stable it will be included in the scribble model.
+ */
+public class Fork extends CustomActivity {
 
+	private String _label=null;
+	
 	/**
-	 * {@inheritDoc}
+	 * This method sets the label associated with the fork.
+	 * 
+	 * @param label The label
 	 */
-	public boolean isSupported(ModelObject obj) {
-		return (obj instanceof Sync);
+	public void setLabel(String label) {
+		_label = label;
 	}
-
+	
 	/**
-	 * {@inheritDoc}
+	 * This method returns the label associated with the fork.
+	 * 
+	 * @return The label
 	 */
-	public String getText(ModelObject obj, Journal journal) {
-		String ret=null;
-		Sync sync=(Sync)obj;
-		
-		ret = "sync "+sync.getLabel();
-		
-		if (sync.getRoles().size() > 0) {
-			ret += " at ";
-			
-			for (int i=0; i < sync.getRoles().size(); i++) {
-				if (i > 0) {
-					ret += ",";
-				}
-				ret += sync.getRoles().get(i).getName();
-			}
-		}
-		
-		return (ret);
+	public String getLabel() {
+		return (_label);
 	}
-
 }

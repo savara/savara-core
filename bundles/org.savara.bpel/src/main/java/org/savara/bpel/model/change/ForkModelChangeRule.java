@@ -26,9 +26,9 @@ import org.savara.protocol.model.change.ModelChangeContext;
 import org.scribble.protocol.model.*;
 
 /**
- * This is the model change rule for the Sync custom activity.
+ * This is the model change rule for the Fork custom activity.
  */
-public class SyncModelChangeRule extends AbstractBPELModelChangeRule {
+public class ForkModelChangeRule extends AbstractBPELModelChangeRule {
 
 	/**
 	 * This method determines whether the rule is appropriate
@@ -46,7 +46,7 @@ public class SyncModelChangeRule extends AbstractBPELModelChangeRule {
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
 		boolean ret=false;
 		
-		if (mobj instanceof org.savara.protocol.model.Sync && isBPELModel(model)) {
+		if (mobj instanceof org.savara.protocol.model.Fork && isBPELModel(model)) {
 			ret = true;
 		}
 		
@@ -83,8 +83,8 @@ public class SyncModelChangeRule extends AbstractBPELModelChangeRule {
 	@Override
 	public boolean insert(ModelChangeContext context,
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
-		org.savara.protocol.model.Sync elem=
-					 (org.savara.protocol.model.Sync)mobj;		
+		org.savara.protocol.model.Fork elem=
+					 (org.savara.protocol.model.Fork)mobj;		
 		TActivity sourceActivity=null;
 		
 		if (context.getParent() instanceof TSequence) {

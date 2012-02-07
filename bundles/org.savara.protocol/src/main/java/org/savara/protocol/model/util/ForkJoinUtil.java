@@ -18,7 +18,7 @@
 package org.savara.protocol.model.util;
 
 import org.savara.protocol.model.Join;
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.CustomActivity;
 
@@ -85,8 +85,8 @@ public class ForkJoinUtil {
 		
 		@Override
 		public void accept(CustomActivity elem) {
-			if (elem instanceof Sync) {
-				_links.add(((Sync)elem).getLabel());
+			if (elem instanceof Fork) {
+				_links.add(((Fork)elem).getLabel());
 			} else if (elem instanceof Join) {
 				_links.addAll(((Join)elem).getLabels());
 			}

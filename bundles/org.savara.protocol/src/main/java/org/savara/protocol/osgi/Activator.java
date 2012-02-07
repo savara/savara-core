@@ -9,9 +9,9 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.savara.protocol.export.text.JoinTextProtocolExporterRule;
-import org.savara.protocol.export.text.SyncTextProtocolExporterRule;
+import org.savara.protocol.export.text.ForkTextProtocolExporterRule;
 import org.savara.protocol.projection.JoinProjectorRule;
-import org.savara.protocol.projection.SyncProjectorRule;
+import org.savara.protocol.projection.ForkProjectorRule;
 import org.savara.protocol.util.ProtocolServices;
 import org.scribble.protocol.export.text.TextProtocolExporterRule;
 import org.scribble.protocol.parser.ProtocolParserManager;
@@ -44,7 +44,7 @@ public class Activator implements BundleActivator {
         context.registerService(ProjectorRule.class.getName(), 
                             jpr, props);
         
-        SyncProjectorRule spr=new SyncProjectorRule();        
+        ForkProjectorRule spr=new ForkProjectorRule();        
         context.registerService(ProjectorRule.class.getName(), 
                             spr, props);
         
@@ -52,7 +52,7 @@ public class Activator implements BundleActivator {
         context.registerService(TextProtocolExporterRule.class.getName(), 
         					jtper, props);
         
-        SyncTextProtocolExporterRule stper=new SyncTextProtocolExporterRule();        
+        ForkTextProtocolExporterRule stper=new ForkTextProtocolExporterRule();        
         context.registerService(TextProtocolExporterRule.class.getName(), 
         					stper, props);
         

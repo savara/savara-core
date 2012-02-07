@@ -21,7 +21,7 @@ import org.savara.bpmn2.model.TChoreography;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TFlowNode;
 import org.savara.protocol.model.Join;
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Introduces;
 import org.scribble.protocol.model.Parallel;
@@ -35,7 +35,7 @@ public class Scope {
 	private java.util.Map<String,Object> m_elements=new java.util.HashMap<String,Object>();
 	private java.util.Map<String,Role> _roles=new java.util.HashMap<String,Role>();
 	private java.util.Map<String,Join> _joins=new java.util.HashMap<String,Join>();
-	private java.util.Map<String,Sync> _syncs=new java.util.HashMap<String,Sync>();
+	private java.util.Map<String,Fork> _forks=new java.util.HashMap<String,Fork>();
 	private java.util.Map<TFlowNode,Block> _joinBlocks=new java.util.HashMap<TFlowNode,Block>();
 	private java.util.Map<Role,Introduces> _introduces=new java.util.HashMap<Role,Introduces>();
 	private java.util.List<Parallel> _parallelReviewList=new java.util.Vector<Parallel>();
@@ -129,14 +129,14 @@ public class Scope {
 	}
 	
 	/**
-	 * This method returns the sync associated with the supplied
+	 * This method returns the fork associated with the supplied
 	 * name.
 	 * 
 	 * @param name The name
-	 * @return The sync, or null if not found
+	 * @return The fork, or null if not found
 	 */
-	public Sync getSync(String name) {
-		return(_syncs.get(name));
+	public Fork getFork(String name) {
+		return(_forks.get(name));
 	}
 	
 	/**
@@ -144,8 +144,8 @@ public class Scope {
 	 * 
 	 * @param sync The sync
 	 */
-	public void registerSync(Sync sync) {
-		_syncs.put(sync.getLabel(), sync);
+	public void registerFork(Fork fork) {
+		_forks.put(fork.getLabel(), fork);
 	}
 	
 	/**

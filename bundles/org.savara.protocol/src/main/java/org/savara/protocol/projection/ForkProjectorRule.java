@@ -17,7 +17,7 @@
  */
 package org.savara.protocol.projection;
 
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.Role;
@@ -25,10 +25,10 @@ import org.scribble.protocol.projection.impl.ProjectorRule;
 import org.scribble.protocol.projection.impl.ProtocolProjectorContext;
 
 /**
- * This class provides the Unordered implementation of the
+ * This class provides the Fork implementation of the
  * projector rule.
  */
-public class SyncProjectorRule implements ProjectorRule {
+public class ForkProjectorRule implements ProjectorRule {
 
     /**
      * This method determines whether the projection rule is
@@ -39,7 +39,7 @@ public class SyncProjectorRule implements ProjectorRule {
      *                 model object
      */
     public boolean isSupported(ModelObject obj) {
-        return (obj.getClass() == Sync.class);
+        return (obj.getClass() == Fork.class);
     }
     
     /**
@@ -54,11 +54,11 @@ public class SyncProjectorRule implements ProjectorRule {
      */
     public Object project(ProtocolProjectorContext context, ModelObject model,
                     Role role, Journal l) {
-    	Sync ret=null;
-    	Sync source=(Sync)model;
+    	Fork ret=null;
+    	Fork source=(Fork)model;
 
         if (source.getRoles().contains(role)) {
-        	ret = new Sync();
+        	ret = new Fork();
 
         	ret.derivedFrom(source);
             

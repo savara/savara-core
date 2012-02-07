@@ -50,7 +50,7 @@ import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TSubProcess;
 import org.savara.bpmn2.model.TTask;
 import org.savara.protocol.model.Join;
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Run;
 import org.scribble.protocol.model.Interaction;
@@ -178,8 +178,8 @@ public class BPMN2ModelFactory {
 		return(task);
 	}
 	
-	public Object createSyncTask(Object container, Activity activity) {
-		Sync sync=(Sync)activity;
+	public Object createForkTask(Object container, Activity activity) {
+		Fork sync=(Fork)activity;
 		
 		TIntermediateThrowEvent event=new TIntermediateThrowEvent();
 		TLinkEventDefinition led=new TLinkEventDefinition();

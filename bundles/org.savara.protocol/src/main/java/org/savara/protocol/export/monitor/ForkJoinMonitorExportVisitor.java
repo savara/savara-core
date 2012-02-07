@@ -18,10 +18,9 @@
 package org.savara.protocol.export.monitor;
 
 import org.savara.protocol.model.Join;
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.savara.protocol.model.util.ForkJoinUtil;
 import org.scribble.protocol.model.CustomActivity;
-import org.scribble.protocol.monitor.model.Fork;
 import org.scribble.protocol.monitor.model.LinkDeclaration;
 import org.scribble.protocol.monitor.model.Node;
 
@@ -44,9 +43,9 @@ public class ForkJoinMonitorExportVisitor extends org.scribble.protocol.export.m
 		
 		Node node=null;
 		
-		if (elem instanceof Sync) {
-			node = new Fork();
-			((Fork)node).setLinkName(((Sync) elem).getLabel());
+		if (elem instanceof Fork) {
+			node = new org.scribble.protocol.monitor.model.Fork();
+			((org.scribble.protocol.monitor.model.Fork)node).setLinkName(((Fork) elem).getLabel());
 			
 		} else if (elem instanceof Join) {
 			node = new org.scribble.protocol.monitor.model.Join();

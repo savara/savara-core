@@ -112,7 +112,7 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     					org.scribble.protocol.projection.impl.ProtocolProjectorImpl projector=
     							new org.scribble.protocol.projection.impl.ProtocolProjectorImpl();
     					projector.getCustomRules().add(new org.savara.protocol.projection.JoinProjectorRule());
-    					projector.getCustomRules().add(new org.savara.protocol.projection.SyncProjectorRule());
+    					projector.getCustomRules().add(new org.savara.protocol.projection.ForkProjectorRule());
     					
     					ProtocolModel local=projector.project(context, model, role,
     										new JournalProxy(handler));

@@ -20,7 +20,7 @@ package org.savara.protocol.export.monitor;
 import static org.junit.Assert.*;
 
 import org.savara.protocol.model.Join;
-import org.savara.protocol.model.Sync;
+import org.savara.protocol.model.Fork;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.monitor.util.MonitorModelUtil;
@@ -65,7 +65,7 @@ public class ForkJoinMonitorExportVisitorTest {
         
         b1.add(i3);
         
-        Sync fork=new Sync();
+        Fork fork=new Fork();
         fork.setLabel("link1");
         b1.add(fork);
         
@@ -149,7 +149,7 @@ public class ForkJoinMonitorExportVisitorTest {
         
         b1.add(i3);
         
-        Sync fork=new Sync();
+        Fork fork=new Fork();
         fork.setLabel("link1");
         b1.add(fork);
         
@@ -180,7 +180,7 @@ public class ForkJoinMonitorExportVisitorTest {
         
         b3.add(i4);
         
-        Sync fork2=new Sync();
+        Fork fork2=new Fork();
         fork2.setLabel("link2");
         b3.add(fork2);
         
@@ -252,7 +252,7 @@ public class ForkJoinMonitorExportVisitorTest {
         
         b1.add(i3);
         
-        Sync fork=new Sync();
+        Fork fork=new Fork();
         fork.setLabel("link1");
         b1.add(fork);
         

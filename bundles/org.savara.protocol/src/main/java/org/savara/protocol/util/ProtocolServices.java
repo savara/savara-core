@@ -114,7 +114,7 @@ public class ProtocolServices {
 					((org.scribble.protocol.projection.impl.ProtocolProjectorImpl)m_protocolProjector).
 							getCustomRules().add(new org.savara.protocol.projection.JoinProjectorRule());
 					((org.scribble.protocol.projection.impl.ProtocolProjectorImpl)m_protocolProjector).
-							getCustomRules().add(new org.savara.protocol.projection.SyncProjectorRule());
+							getCustomRules().add(new org.savara.protocol.projection.ForkProjectorRule());
 				}
 			} catch(Exception e) {
 				// Ignore

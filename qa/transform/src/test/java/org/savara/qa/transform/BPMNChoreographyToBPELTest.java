@@ -122,7 +122,7 @@ public class BPMNChoreographyToBPELTest {
     					org.scribble.protocol.projection.impl.ProtocolProjectorImpl projector=
     						new org.scribble.protocol.projection.impl.ProtocolProjectorImpl();
     					projector.getCustomRules().add(new org.savara.protocol.projection.JoinProjectorRule());
-    					projector.getCustomRules().add(new org.savara.protocol.projection.SyncProjectorRule());
+    					projector.getCustomRules().add(new org.savara.protocol.projection.ForkProjectorRule());
 						
 						org.scribble.protocol.model.ProtocolModel projected=
     									projector.project(null, model, role, journal);
