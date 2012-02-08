@@ -98,7 +98,11 @@ public class SCARoleSimulator implements RoleSimulator {
 					
 					NodeFactory nf=NodeFactory.newInstance();
 					
-					Node n=nf.createNode(model.getName());
+					if (logger.isLoggable(Level.FINE)) {
+						logger.fine("Loading SCA composite from: "+model.getName());
+					}
+					
+					Node n=nf.createNode(model.getContents());
 					
 					ret = n.start();
 	
