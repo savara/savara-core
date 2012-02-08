@@ -147,6 +147,9 @@ public class SCARoleSimulator implements RoleSimulator {
 				if (path != null && ClassLoader.getSystemResource(path) == null) {
 					path = null;
 				}
+				
+				top = top.getParentFile();
+				
 			} while (top != null && path == null);
 			
 			if (path != null) {
