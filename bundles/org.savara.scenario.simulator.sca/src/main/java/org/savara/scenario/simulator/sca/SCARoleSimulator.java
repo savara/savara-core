@@ -130,24 +130,34 @@ public class SCARoleSimulator implements RoleSimulator {
 		java.io.File f=new java.io.File(name);
 		
 		if (f.isAbsolute() && f.isFile()) {
-			String absPath=f.getPath();
 			
-			String cp=System.getProperty("java.class.path");
-			String[] paths=cp.split(java.io.File.pathSeparator);
+			java.io.File top=f;
+			String path=null;
 			
-			for (String path : paths) {
-				java.io.File cpf=new java.io.File(path);
-				
-				if (cpf.isDirectory()) {
-					String cpfPath=cpf.getPath();
-					
-					if (absPath.startsWith(cpfPath)) {
-						ret = absPath.substring(cpfPath.length()+1); // +1 to take care of the path separator
+			do {
+				java.io.File cur=f;
+				do {
+					if (path == null) {
+						path = cur.getName();
+					} else {
+						path = cur.getName()+java.io.File.separator+path;
 					}
+				} while (cur != f);
+				
+				if (path != null && ClassLoader.getSystemResource(path) == null) {
+					path = null;
 				}
+			} while (top != null && path == null);
+			
+			if (path != null) {
+				ret = path;
 			}
 		}
 		
+		if (logger.isLoggable(Level.FINE)) {
+			logger.fine("GetModelPath fullpath="+f.getAbsolutePath()+" ret="+ret);
+		}
+
 		return(ret);
 	}
 
