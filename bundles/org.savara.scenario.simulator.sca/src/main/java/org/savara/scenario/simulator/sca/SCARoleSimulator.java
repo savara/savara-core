@@ -97,12 +97,14 @@ public class SCARoleSimulator implements RoleSimulator {
 					WSBindingProviderFactory.setMessageStore(m_messageStore);
 					
 					NodeFactory nf=NodeFactory.newInstance();
+
+					String modelPath=getModelPath(model.getName());
 					
 					if (logger.isLoggable(Level.FINE)) {
-						logger.fine("Loading SCA composite from: "+model.getName());
+						logger.fine("Loading SCA composite for '"+model.getName()+"' from: "+modelPath);
 					}
 					
-					Node n=nf.createNode(model.getContents());
+					Node n=nf.createNode(modelPath);
 					
 					ret = n.start();
 	
@@ -111,6 +113,38 @@ public class SCARoleSimulator implements RoleSimulator {
 				}
 			} catch(Throwable e) {
 				logger.log(Level.SEVERE, "Failed to load SCA composite model", e);
+			}
+		}
+		
+		return(ret);
+	}
+	
+	/**
+	 * Convert absolute paths to relative within class path where possible.
+	 * 
+	 * @param name The model name/path
+	 * @return The path
+	 */
+	protected String getModelPath(String name) {
+		String ret=name;
+		java.io.File f=new java.io.File(name);
+		
+		if (f.isAbsolute() && f.isFile()) {
+			String absPath=f.getPath();
+			
+			String cp=System.getProperty("java.class.path");
+			String[] paths=cp.split(java.io.File.pathSeparator);
+			
+			for (String path : paths) {
+				java.io.File cpf=new java.io.File(path);
+				
+				if (cpf.isDirectory()) {
+					String cpfPath=cpf.getPath();
+					
+					if (absPath.startsWith(cpfPath)) {
+						ret = absPath.substring(cpfPath.length()+1); // +1 to take care of the path separator
+					}
+				}
 			}
 		}
 		
