@@ -32,7 +32,7 @@ import org.savara.scenario.simulator.sca.SCARoleSimulator;
 public class SCARoleSimulatorTest {
 
 	@Test
-	public void testGetSupportedModel() {
+	public void testGetSupportedModelRelativePath() {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
@@ -51,11 +51,34 @@ public class SCARoleSimulatorTest {
 	}
 
 	@Test
+	public void testGetSupportedModelAbsolutePath() {
+		SCARoleSimulator sim=new SCARoleSimulator();
+		
+		try {
+			java.net.URL url=ClassLoader.getSystemResource("simsample.composite");
+			
+			SimulationModel simmodel=new SimulationModel(url.getFile(),null);
+			
+			Object model=sim.getModel(simmodel, null);
+			
+			if (model == null) {
+				fail("Model is null");
+			} else if ((model instanceof Node) == false) {
+				fail("Model is not a Tuscany SCA node");
+			}
+		} catch(Exception e) {
+			fail("Exception occurred: "+e);
+		}
+	}
+
+	@Test
 	public void testGetModelRoles() {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
-			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
+			java.io.InputStream is=ClassLoader.getSystemResourceAsStream("simsample.composite");
+			
+			SimulationModel simmodel=new SimulationModel("simsample.composite",is);
 			
 			Object model=sim.getModel(simmodel, null);
 			
@@ -78,7 +101,9 @@ public class SCARoleSimulatorTest {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
-			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
+			java.io.InputStream is=ClassLoader.getSystemResourceAsStream("simsample.composite");
+			
+			SimulationModel simmodel=new SimulationModel("simsample.composite",is);
 			
 			Object model=sim.getModel(simmodel, null);
 			
@@ -154,7 +179,9 @@ public class SCARoleSimulatorTest {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
-			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
+			java.io.InputStream is=ClassLoader.getSystemResourceAsStream("simsample.composite");
+			
+			SimulationModel simmodel=new SimulationModel("simsample.composite",is);
 			
 			Object model=sim.getModel(simmodel, null);
 			
@@ -234,7 +261,9 @@ public class SCARoleSimulatorTest {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
-			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
+			java.io.InputStream is=ClassLoader.getSystemResourceAsStream("simsample.composite");
+			
+			SimulationModel simmodel=new SimulationModel("simsample.composite",is);
 			
 			Object model=sim.getModel(simmodel, null);
 			
@@ -289,7 +318,9 @@ public class SCARoleSimulatorTest {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
-			SimulationModel simmodel=new SimulationModel("simsample.composite",null);
+			java.io.InputStream is=ClassLoader.getSystemResourceAsStream("simsample.composite");
+			
+			SimulationModel simmodel=new SimulationModel("simsample.composite",is);
 			
 			Object model=sim.getModel(simmodel, null);
 			
@@ -350,7 +381,9 @@ public class SCARoleSimulatorTest {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
-			SimulationModel simmodel=new SimulationModel("externalservice.composite",null);
+			java.io.InputStream is=ClassLoader.getSystemResourceAsStream("externalservice.composite");
+			
+			SimulationModel simmodel=new SimulationModel("externalservice.composite",is);
 			
 			Object model=sim.getModel(simmodel, null);
 			
@@ -414,7 +447,9 @@ public class SCARoleSimulatorTest {
 		SCARoleSimulator sim=new SCARoleSimulator();
 		
 		try {
-			SimulationModel simmodel=new SimulationModel("store/Store.composite",null);
+			java.io.InputStream is=ClassLoader.getSystemResourceAsStream("store/Store.composite");
+			
+			SimulationModel simmodel=new SimulationModel("store/Store.composite",is);
 			
 			Object model=sim.getModel(simmodel, null);
 			
