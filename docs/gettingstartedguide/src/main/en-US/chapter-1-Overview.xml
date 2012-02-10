@@ -17,16 +17,16 @@
         <para>Generation of documentation based on the choreography</para>
       </listitem>
       <listitem>
-        <para>Generation of service design using BPMN2</para>
+        <para>Generation of service designs (e.g. BPMN2, etc)</para>
       </listitem>
       <listitem>
-        <para>Generation of service implementation using WS-BPEL</para>
+        <para>Generation of service contracts (e.g. WSDL, etc)</para>
       </listitem>
       <listitem>
-        <para>Generation of service implementation using SCA Java</para>
+        <para>Generation of service implementation (e.g. WS-BPEL, SCA Java, etc)</para>
       </listitem>
       <listitem>
-        <para>Generation of service interfaces using WSDL</para>
+        <para>Simulation of scenarios against the choreography and service designs/implementations</para>
       </listitem>
     </itemizedlist>
   </chapter>

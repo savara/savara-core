@@ -18,7 +18,7 @@
       <para>
         To generate the BPMN2 processes for a choreography, select the
         <emphasis role="italics">Savara-&gt;Generate-&gt;Service</emphasis>
-        menu item, and then for each relevant participant choose the
+        menu item from the context menu associated with the choreography, and then for each relevant participant choose the
         <emphasis role="strong">
           <emphasis role="italics">BPMN2 Process</emphasis>
         </emphasis>
@@ -26,10 +26,10 @@
       </para>
       <para>
         <figure>
-<title>Select the <emphasis>BPMN2 Process</emphasis> Service Type</title>
+<title>Dialog for generating BPMN2 based services</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735781/GenerateServiceBPMN2.png" width="4in"/>
+              <imagedata fileref="author/download/attachments/3735781/GenerateServiceDialogBPMN2.png" width ="3in" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -41,10 +41,10 @@
       </para>
       <para>
         <figure>
-<title>Store participant generated as a BPMN2 process</title>
+<title>Generated BPMN2 process for the Store role</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735781/StoreBPMN2.png" width="6in"/>
+              <imagedata fileref="author/download/attachments/3735781/PurchaseGoodsStore.bmp" width="6in" />
             </imageobject>
           </mediaobject>
         </figure>

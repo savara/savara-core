@@ -3,45 +3,21 @@
 <chapter id="sid-3735775">
     
     <title>Business Analysis</title>
-    <section id="sid-3735774">
+    <section id="sid-3735777">
       
-      <title>Define Participants</title>
-      <para>In the current Eclipse tools, that use the pi4soa Choreography based models for defining architectural models, this phase would be achieved by defining the Participants and Roles within the choreography model.</para>
+      <title>Create Example Messages</title>
+      <para>The first step is to create the example messages, to be used by the scenarios that will document the business requirements.</para>
       <para>
-        When a choreography description is initially created, using the
-        <emphasis role="italics">New-&gt;Other-&gt;Choreography-&gt;Choreography Description</emphasis>
-        menu item, the roles and relationships can be defined on the first tab.
+        Some previously defined examples can be found in the
+        <code>purchasing</code>
+        Eclipse project. For example, the Buy request is defined as:
       </para>
-      <para>
-        <figure>
-<title>The roles and their relationships within a choreography</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="author/download/attachments/3735774/RolesAndRelationships.png" width="5in"/>
-            </imageobject>
-          </mediaobject>
-        </figure>
-      </para>
-      <para>
-        Default participant types are automatically created, one per role, and can be found on the
-        <emphasis role="italics">Base Types</emphasis>
-        tab. For example,
-      </para>
-      <para>
-        <figure>
-<title>Additional type information (including Participant Types) within the choreography</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="author/download/attachments/3735774/ParticipantAndOtherTypes.png" width="3in"/>
-            </imageobject>
-          </mediaobject>
-        </figure>
-      </para>
-      <para>
-        Only these components need to be specified in the choreography model. This enables them to be referenced in the subsequently defined scenarios. Otherwise it would be necessary to return to the scenarios, once the choreography model had been defined in the
-        <emphasis role="italics">Architecture</emphasis>
-        phase.
-      </para>
+      <informalexample>
+        <programlisting>&lt;tns:BuyRequest xmlns:tns="http://www.jboss.org/examples/store"
+            id="1" product="Laptop" /&gt;</programlisting>
+      </informalexample>
+      <para>Although a schema may not have been defined at this stage, unless one previously existed that is being reused, it is a good idea to define a namespace for the message type. This is because it will be used within the scenarios and architectural models defined in the following stage. If the namespace was not specified at this stage, then the example messages, scenarios and architectural models would need to be updated at a later stage.</para>
+      <para>Although this phase has been defined before the definition of the scenarios, in practice these phases are iterative. So scenarios and example messages would be defined concurrently, as the requirements evolve through discussions between the business analyst and users.</para>
     </section>
     <section id="sid-3735776">
       
@@ -56,34 +32,15 @@
       </para>
       <para>
         <figure>
-<title>Scenario representation a purchasing usecase prior to verification</title>
+<title>Scenario representing a successful purchase</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735776/SuccessfulPurchasePreTest.png" width="6in"/>
+              <imagedata fileref="author/download/attachments/3735776/SuccessfulPurchasePreTest.png" width="5in" />
             </imageobject>
           </mediaobject>
         </figure>
       </para>
-      <para>
-        The business requirements can therefore defined as a set of scenarios, each demonstrating
-        
-        a specific use-case, or path through the business process being enacted.
-      </para>
-    </section>
-    <section id="sid-3735777">
-      
-      <title>Create Example Messages</title>
-      <para>The next step is to create the example messages required by the scenarios.</para>
-      <para>
-        Some previously defined examples can be found in the
-        <code>purchasing</code>
-        Eclipse project. For example, the Buy request is defined as:
-      </para>
-      <informalexample>
-        <programlisting>&lt;tns:BuyRequest xmlns:tns="http://www.jboss.org/examples/store"
-            id="1" product="Laptop" /&gt;</programlisting>
-      </informalexample>
-      <para>Although a schema may not have been defined at this stage, unless one previously existed that is being reused, it is a good idea to define a namespace for the message type. This is because it will be used within the scenarios and architectural models defined in the following stage. If the namespace was not specified at this stage, then the example messages, scenarios and architectural models would need to be updated at a later stage.</para>
-      <para>Although this phase has been defined following the definition of the scenarios, in practice these phases are iterative. So scenarios and example messages would be defined concurrently. Similarly, new participants may be added in an evolutionary manner, as scenarios are created that require them.</para>
+      <para>The business requirements can therefore be defined as a set of scenarios, each demonstrating a specific use-case, or path through the business process being enacted.</para>
+      <para>It is also possible to define scenarios that represent invalid use cases, that should not be implemented by the system. In these cases, the invalid message events (i.e. the sending or receiving icons) will be flagged as "Error Expected", to indicate that they should not occur.</para>
     </section>
   </chapter>

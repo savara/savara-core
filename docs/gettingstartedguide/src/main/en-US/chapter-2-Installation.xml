@@ -32,45 +32,28 @@
         <emphasis role="italics">Savara</emphasis>
         and
         <emphasis role="italics">Savara Dependencies</emphasis>
-        categories and follow the instructions to install them within your Eclipse environment. If wanting to generate BPEL process definitions, then you will need to obtain the BPEL editor from either JBoss Tools (
-        <ulink url="http://www.jboss.org/tools"/>
-        ) or appropriate Eclipse update sites.
+        categories and follow the instructions to install them within your Eclipse environment.
       </para>
-      <note>
-        <para>
-          If loading the Savara tools from the JBoss Tools update site (
-          <ulink url="http://www.jboss.org/tools"/>
-          ), then select the
-          <emphasis role="italics">SAVARA Tools</emphasis>
-          ,
-          <emphasis role="italics">JBoss BPEL Editor</emphasis>
-          and
-          <emphasis role="italics">pi4soa core</emphasis>
-          features from the
-          <emphasis role="italics">SOA Development</emphasis>
-          category. However for the most uptodate version of the Savara tools, it is recommended to load them from the Savara update site.
-        </para>
-      </note>
     </section>
     <section id="sid-3735773">
       
       <title>Importing Samples into Eclipse</title>
       <para>
         For the purpose of the Getting Started Guide, we will be using the Purchasing example located here:
-        <ulink url="http://downloads.jboss.org/savara/examples/purchasing.zip"/>
+        <ulink url="http://downloads.jboss.org/savara/examples/savara2-example-purchasing.zip"/>
       </para>
       <para>Once the SAVARA Eclipse Tool distribution has been correctly installed, and the example zip downloaded, then use the following steps to import the project:</para>
       <itemizedlist>
         <listitem>
-          <para>Select the 'Import...' menu item, associated with the popup menu on the background of the left panal (Navigator or Package depending on perspective being viewed).</para>
+          <para>Select the 'Import...' menu item, associated with the popup menu on the background of the left panel (Navigator or Package depending on perspective being viewed).</para>
         </listitem>
       </itemizedlist>
       <para>
         <figure>
-<title>The Eclipse import menu</title>
+<title>Select import from the Project Explorer context menu</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735773/ImportMenu.jpg" width="2in"/>
+              <imagedata fileref="author/download/attachments/3735773/ImportMenu.jpg" width="2in" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -79,43 +62,43 @@
         <listitem>
           <para>
             When the import dialog appears, select the
-            <emphasis role="italics">General-&gt;ExistingProject from Workspace</emphasis>
-            option and press the 'Next' button.
+            <emphasis role="italics">"General-&gt;Existing Projects from Workspace</emphasis>
+            " option and press the 'Next' button.
           </para>
         </listitem>
       </itemizedlist>
       <para>
         <figure>
-<title>Import dialog window</title>
+<title>Import existing project into workspace</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735773/ImportDialog.jpg" width="4in"/>
+              <imagedata fileref="author/download/attachments/3735773/ImportProjectDialog.png" width="3in" />
             </imageobject>
           </mediaobject>
         </figure>
       </para>
       <itemizedlist>
         <listitem>
-          <para>Ensuring that the 'Select archive file' radio button is selected, press the 'Browse' button and locate the downloaded example zip, and then press 'Ok'. All of the Eclipse projects contained within the selected zip will be listed. Press the 'Finish' button to import them all.</para>
+          <para>Ensuring that the 'Select archive file' radio button is selected, press the 'Browse' button and locate the downloaded example zip, and then press 'Ok'. Press the 'Finish' button to import the project.</para>
         </listitem>
       </itemizedlist>
       <para>
         <figure>
-<title>Locate the examples archive</title>
+<title>Locate the downloaded purchasing sample project</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735773/PurchasingImport.png" width="4in"/>
+              <imagedata fileref="author/download/attachments/3735773/ImportPurchasingProject.png" width="3in" />
             </imageobject>
           </mediaobject>
         </figure>
       </para>
-      <para>Once imported, the Eclipse navigator will list the sample projects:</para>
+      <para>Once imported, the Eclipse navigator will list the sample project:</para>
       <para>
         <figure>
-<title>Purchasing example project listing</title>
+<title>Project structure for purchasing example</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="author/download/attachments/3735773/PurchasingProject.png" width="2in"/>
+              <imagedata fileref="author/download/attachments/3735773/PurchasingProjectStructure.png" width="2in" />
             </imageobject>
           </mediaobject>
         </figure>

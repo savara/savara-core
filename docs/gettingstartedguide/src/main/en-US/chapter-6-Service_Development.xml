@@ -17,26 +17,16 @@
           When a choreography description has been created, it is possible to generate a BPEL Process (and associated WSDL files and deployment descriptor) for each of the participants defined within the choreography. To try this out, select the
           <emphasis role="italics">Savara-&gt;Generate-&gt;Service</emphasis>
           menu item from the popup menu associated with the
-          <code>PurchaseGoods.cdm</code>
+          <code>architecture/PurchaseGoods.bpmn</code>
           .
         </para>
+        <para>This will display a dialog listing the possible services that can be generated from this choreography, with a proposed Eclipse project name, and the option to select a service type.</para>
         <para>
           <figure>
-<title>Generating WS-BPEL based services</title>
+<title>Dialog for generating BPEL based services</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735783/GenerateServiceMenu.png" width="5in"/>
-              </imageobject>
-            </mediaobject>
-          </figure>
-        </para>
-        <para>This will display a dialog listing the possible services that can be generated from this choreography, with a proposed Eclipse project name, and the option to select a service type (in this case BPEL).</para>
-        <para>
-          <figure>
-<title>Dialog for generating services, with the <emphasis>BPEL</emphasis> service type selected</title>
-            <mediaobject>
-              <imageobject>
-                <imagedata fileref="author/download/attachments/3735783/GenerateServiceBPEL.png" width="4in"/>
+                <imagedata fileref="author/download/attachments/3735783/GenerateServiceDialogBPEL.png" width="3in" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -52,67 +42,27 @@
         </para>
         <para>
           Each project will contain a single
-          <code>bpel</code>
-          folder containing the WS-BPEL process definition for the participant, a list of relevant WSDL files and a deployment descriptor file for use with RiftSaw. However the WS-BPEL and WSDL files are standard, so can be deployed to any WS-BPEL 2.0 compliant engine.
+          <code>bpelContent</code>
+          folder containing the WS-BPEL process definition for the participant, a list of relevant WSDL files and a deployment descriptor file for use with any Apache ODE based engine (e.g. RiftSaw). However the WS-BPEL and WSDL files are standard, so can be deployed to any WS-BPEL 2.0 compliant engine.
         </para>
       </section>
-      <section id="sid-3735783_WS-BPEL-Addingimplementationdetails">
+      <section id="sid-3735783_WS-BPEL-StaticallyVerifyingtheService">
         
-        <title>Adding implementation details</title>
-        <para>The generated BPEL processes and deployment descriptors are incomplete, due to lack of implementation details in the choreography description. The choreography simply represents the externally observable interactions between the parties, and therefore cannot provide internal implementation details.</para>
+        <title>Statically Verifying the Service</title>
+        <para>The SAVARA tools include the ability to statically verify the external observable behaviour of a BPEL process definition against other artifacts (e.g. a scenario).</para>
         <para>
-          Therefore a completed version of the deployment descriptor and BPEL process files, for both the creditAgency, logistics and store participants, can be found in the
-          <ulink url="http://downloads.jboss.org/savara/examples/purchasing_bpel_impl.zip">purchasing_bpel_impl.zip</ulink>
-          .
+          To verify a scenario against one or more BPEL process definitions, open the scenario in the editor and select the green play button. When the dialog is displayed, select the BPEL process associated with the role being simulated. For example, the
+          <code>Store</code>
+          role should be associated with the generated
+          <code>PurchaseGoods_Store.bpel</code>
+          , the
+          <code>CreditAgency</code>
+          role associated with the
+          <code>PurchaseGoods_CreditAgency.bpel</code>
+          , etc. When the OK button is pressed, the simulation will be performed against the selected BPEL process definitions.
         </para>
-        <para>
-          To highlight the differences between the original generated version, and the completed version, simply select both files and use the
-          <emphasis role="italics">Compare With-&gt;Each Other</emphasis>
-          menu item.
-        </para>
-      </section>
-      <section id="sid-3735783_WS-BPEL-Testingtheimplementation">
-        
-        <title>Testing the implementation</title>
-        <para>Once the implementation details have been added, the BPEL processes for the three particpiants can be deployed to Riftsaw (BPEL engine) for execution.</para>
-        <para>
-          The processes can either be deployed using
-          <ulink url="http://www.jboss.org/tools">JBossTools</ulink>
-          or manually. To manually deploy, package the contents of the 'bpelContent' folder, within each project, into a jar named after the participant (ensure that the .bpel, .wsdl and deploy.xml files are contained at the top level of the jar).
-        </para>
-        <para>
-          Once Riftsaw has been installed into your JBossAS 5.1 environment and the server has been started, then place the jars in the JBossAS
-          <emphasis role="italics">server/default/deploy</emphasis>
-          folder. Then the next step is to send a test message using an appropriate SOAP client (e.g.
-          <ulink url="http://www.soapui.org/">soapui</ulink>
-          ). Initially send the following message:
-        </para>
-        <informalexample>
-          <programlisting>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:stor="http://www.jboss.org/examples/store"&gt;
-   &lt;soapenv:Header/&gt;
-   &lt;soapenv:Body&gt;
-      &lt;stor:BuyRequest id="1" product="car" customer="Joe"/&gt;
-   &lt;/soapenv:Body&gt;
-&lt;/soapenv:Envelope&gt;</programlisting>
-        </informalexample>
-        <para>
-          This will result in a normal
-          <emphasis role="italics">BuyConfirmed</emphasis>
-          response. But if you send:
-        </para>
-        <informalexample>
-          <programlisting>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:stor="http://www.jboss.org/examples/store"&gt;
-   &lt;soapenv:Header/&gt;
-   &lt;soapenv:Body&gt;
-      &lt;stor:BuyRequest id="1" product="car" customer="Fred"/&gt;
-   &lt;/soapenv:Body&gt;
-&lt;/soapenv:Envelope&gt;</programlisting>
-        </informalexample>
-        <para>
-          the credit agency will return a fault, resulting in an
-          <emphasis role="italics">AccountNotFound</emphasis>
-          fault.
-        </para>
+        <para>'Static' verification refers to the fact that a protocol description is derived from the BPEL process, describing the communications behaviour of the process. It is this protocol description that is validated against other artifacts - in this case a scenario.</para>
+        <para>In contract, a dynamic verification would involve actually executing an instance of the BPEL process, to determine whether it correctly behaves when presented with a series of sample (simulated) use cases. We hope to be able to support this functionality in the near future.</para>
       </section>
     </section>
     <section id="sid-3735904">
@@ -126,7 +76,7 @@
           When a choreography description has been created, it is possible to generate a SCA Java implementation (and associated WSDL files and SCA composite descriptor) for one or more of the participants defined within the choreography. To try this out, select the
           <emphasis role="italics">Savara-&gt;Generate-&gt;Service</emphasis>
           menu item from the popup menu associated with the
-          <code>PurchaseGoods.cdm</code>
+          <code>architecture/PurchaseGoods.bpmn</code>
           .
         </para>
         <para>
@@ -136,10 +86,10 @@
         </para>
         <para>
           <figure>
-<title>Dialog for generating services, with the <emphasis>SCA Java</emphasis> service type selected</title>
+<title>Dialog for generating SCA Java based services</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735904/GenerateServiceSCAJava.png" width="4in"/>
+                <imagedata fileref="author/download/attachments/3735904/GenerateServiceDialogSCAJava.png" width="3in" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -155,58 +105,31 @@
         </para>
         <para>Each project will be generated as a Java project, containing the relevant Java interfaces and classes for the service implementation, the WSDL and XSD files for the public service interface, and the SCA composite descriptor.</para>
       </section>
-      <section id="sid-3735904_SCAJava-AddingImplementationDetails">
-        
-        <title>Adding Implementation Details</title>
-        <para>The generated SCA Java service implementation for a particular role is incomplete, due to lack of implementation details in the choreography description. The choreography simply represents the externally observable interactions between the parties, and therefore cannot provide internal implementation details.</para>
-        <para>
-          Therefore a completed version of the SCA Java service implementation, for the creditAgency, logistics and store participants, can be found in the
-          <ulink url="http://downloads.jboss.org/savara/examples/purchasing_sca_impl.zip">purchasing_sca_impl.zip</ulink>
-          . Each sub-folder in the zip represents one of the participants, containing the Java class file that has the implementation details. This file will need to be copied into the relevant participant's Java package, e.g. the
-          <emphasis role="italics">Store</emphasis>
-          folder contains the
-          <emphasis role="italics">StoreInterfaceImpl.java class</emphasis>
-          , which should be copied into the project generated for the
-          <emphasis role="italics">Store</emphasis>
-          participant (i.e.
-          <emphasis role="italics">PurchaseGoodsProcess-Store</emphasis>
-          ), in the
-          <emphasis role="italics">src/main/java/org/jboss/examples/store</emphasis>
-          folder.
-        </para>
-        <para>
-          To highlight the differences between the original generated version, and the completed version, simply select both files and use the
-          <emphasis role="italics">Compare With-&gt;Each Other</emphasis>
-          menu item.
-        </para>
-      </section>
       <section id="sid-3735904_SCAJava-VerifyingtheSCAJavaimplementationagainstaScenario">
         
         <title>Verifying the SCA Java implementation against a Scenario</title>
         <para>In a previous section of the document, it showed how to use the Scenario (that represents a particular use case or requirement) to verify an architectural model (or choreography). The same scenarios can be used to test the service implementations generated from those architectural models or designs.</para>
         <para>
-          For example, to test the SCA Java implemenations for the
+          For example, to test the SCA Java implementation for the
           <emphasis role="italics">Store</emphasis>
-          ,
-          <emphasis role="italics">CreditAgency</emphasis>
-          and
-          <emphasis role="italics">Logistics</emphasis>
           participants, you open the
-          <code>SuccessfulPurchase.scn</code>
-          scenario and press the green "play" button in the toolbar. This will show the 'scenario simulation' dialog. Then for each of the particpiants, select the relevant composite file, so for example for the
+          <code>requirements/SuccessfulPurchase.scn</code>
+          scenario and press the green "play" button in the toolbar. This will show the 'scenario simulation' dialog. Then for the
+          <emphasis role="italics">Store</emphasis>
+          role, select the relevant composite file, so for the
           <emphasis role="italics">Store</emphasis>
           role locate the
           <code>Store.composite</code>
           file in the
-          <code>PurchaseGoodsProcess-Store/src/main/resources</code>
+          <code>PurchaseGoods-Store/src/main/resources</code>
           folder:
         </para>
         <para>
           <figure>
-<title>Dialog for selecting the model for simulation against a particular role in a scenario</title>
+<title>Dialog for selecting the SCA composite</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735904/FileDialogStoreComposite.png" width="4in"/>
+                <imagedata fileref="author/download/attachments/3735904/SelectStoreComposite.png" width="3in" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -214,25 +137,119 @@
         <para>When the SCA composite has been selected, then it will automatically set the simulator to be "SCA simulator" and clear the model role - this is because the model role is not relevant as the service implementation represents a single role, rather than a collection of roles as in the case of a choreography being used for the model.</para>
         <para>
           <figure>
-<title>Simulation dialog configured to verify a scenario against three separate SCA composite models, each implementing a role within the scenario</title>
+<title>Scenario simulation configured for validating the SCA Java implementation for the Store role</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735904/ScenarioSimulationSCA.png" width="3in"/>
+                <imagedata fileref="author/download/attachments/3735904/ScenarioSimulationSCAStore.png" width="3in" />
               </imageobject>
             </mediaobject>
           </figure>
         </para>
-        <para>Once all of the roles have been initialised, then press the "Simulate" button. Unlike the verification against a choreography model, which is pure simulation, when the SCA simulator is used and configured with a particular SCA composite file, then the simulation is performed by executing the service implementation. The simulation output is the same though:</para>
+        <para>Next press the "Simulate" button. Unlike the verification against a choreography model, which is pure simulation, when the SCA simulator is used and configured with a particular SCA composite file, then the simulation is performed by executing the service implementation. The simulation output is the same though:</para>
         <para>
           <figure>
-<title>Scenario verified against three SCA service implementations</title>
+<title>Result of simulating the Store role, within the Successful Purchase scenario, against the SCA Java implementation</title>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="author/download/attachments/3735904/SimulateSuccessfulPurchaseSCA.png" width="6in"/>
+                <imagedata fileref="author/download/attachments/3735904/SuccessfulPurchaseStoreSCA.png" width="5in" />
               </imageobject>
             </mediaobject>
           </figure>
         </para>
+        <para>
+          Note however, before being able to verify the SCA Store implementation through simulation, you will need to implement the service logic. Initially it will be created as a skeleton. The following is a completed version of the
+          <code>org.savara.examples.store.StoreImpl</code>
+          class:
+        </para>
+        <informalexample>
+          <programlisting>package org.savara.examples.store;
+
+import java.math.BigInteger;
+import java.util.logging.Logger;
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.xml.bind.annotation.XmlSeeAlso;
+
+import org.savara.examples.creditagency.CreditAgency;
+import org.savara.examples.logistics.Logistics;
+import org.jboss.examples.store.AccountNotFoundType;
+import org.oasisopen.sca.annotation.Reference;
+
+/**
+ * This class was generated by Apache CXF 2.4.0
+ * 2012-02-08T10:25:28.453Z
+ * Generated source version: 2.4.0
+ *
+ */
+
+@javax.jws.WebService(
+                      serviceName = "StoreService",
+                      portName = "StorePort",
+                      targetNamespace = "http://www.savara.org/examples/Store",
+                      wsdlLocation = "wsdl/PurchaseGoods_Store.wsdl",
+                      endpointInterface = "org.savara.examples.store.Store")
+
+public class StoreImpl implements Store {
+
+    private static final Logger LOG = Logger.getLogger(StoreImpl.class.getName());
+
+    @Reference
+    public CreditAgency  creditAgency;
+
+    @Reference
+    public Logistics  logistics;
+
+    /* (non-Javadoc)
+     * @see org.savara.examples.store.Store#buy(org.jboss.examples.store.BuyRequestType  content )*
+     */
+    public org.jboss.examples.store.BuyConfirmedType buy(org.jboss.examples.store.BuyRequestType content) throws InsufficientCreditFault , AccountNotFoundFault    {
+        LOG.info("Executing operation buy");
+        System.out.println(content);
+        try {
+        	org.jboss.examples.creditagency.CreditCheckType check=
+        			new org.jboss.examples.creditagency.CreditCheckType();
+        	check.setId(content.getId());
+        	check.setCustomer("C104536");
+
+        	org.jboss.examples.creditagency.CreditRatingType rating=
+        			creditAgency.creditCheck(check);
+
+        	System.out.println("RATING="+rating);
+
+        	if (rating.getRating().intValue() &gt; 5) {
+	        	org.jboss.examples.logistics.DeliveryRequestType deliveryRequest=
+	    			new org.jboss.examples.logistics.DeliveryRequestType();
+	        	deliveryRequest.setId(content.getId());
+	        	deliveryRequest.setAddress("1001 Acme Street");
+
+	        	org.jboss.examples.logistics.DeliveryConfirmedType delivery=
+	        			logistics.delivery(deliveryRequest);
+
+	            org.jboss.examples.store.BuyConfirmedType _return =
+	            		new org.jboss.examples.store.BuyConfirmedType();
+	            _return.setId("1");
+	            _return.setAmount(BigInteger.valueOf(500));
+	            return _return;
+        	} else {
+	            org.jboss.examples.store.BuyFailedType buyFailed =
+	            		new org.jboss.examples.store.BuyFailedType();
+	            buyFailed.setId("1");
+
+	            throw new org.savara.examples.store.InsufficientCreditFault("Buy failed", buyFailed);
+        	}
+        } catch(org.savara.examples.creditagency.CustomerUnknownFault cuf) {
+        	AccountNotFoundType anft=new AccountNotFoundType();
+        	anft.setId(content.getId());
+        	anft.setReason("Don't know you");
+        	throw new AccountNotFoundFault("Account not found", anft);
+        }
+    }
+
+}</programlisting>
+        </informalexample>
       </section>
     </section>
   </chapter>
