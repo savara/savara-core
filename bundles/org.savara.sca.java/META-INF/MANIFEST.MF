@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA SCA Java
 Bundle-SymbolicName: org.savara.sca.java;singleton:=true
-Bundle-Version: 2.0.0.CR1
+Bundle-Version: 2.0.0.SNAPSHOT
 Bundle-Activator: org.savara.sca.java.osgi.Activator
 Bundle-Vendor: www.savara.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

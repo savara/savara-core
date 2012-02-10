@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara</groupId>
 	<artifactId>parent</artifactId>
-	<version>2.0.0.CR1</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
     <name>Savara</name>
 	<url>http://www.savara.org</url>
@@ -50,7 +50,7 @@
 	</developers>
 
 	<properties>
-		<savara.core.version>2.0.0.CR1</savara.core.version>
+		<savara.core.version>2.0.0-SNAPSHOT</savara.core.version>
 		<scribble.version>2.1.0.20120208-M1</scribble.version>
 		<pi4soa.version>3.1.1-SNAPSHOT</pi4soa.version> <!-- Actually taken from
 						Tycho built update site, not Nexus, so
