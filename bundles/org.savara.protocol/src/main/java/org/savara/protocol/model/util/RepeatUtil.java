@@ -20,41 +20,41 @@ package org.savara.protocol.model.util;
 import java.util.logging.Logger;
 
 import org.scribble.protocol.model.Block;
-import org.scribble.protocol.model.Choice;
+import org.scribble.protocol.model.Repeat;
 import org.scribble.protocol.model.Interaction;
 import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.Role;
 
-public class ChoiceUtil {
+public class RepeatUtil {
 	
-	private static final Logger LOG=Logger.getLogger(ChoiceUtil.class.getName());
+	private static final Logger LOG=Logger.getLogger(RepeatUtil.class.getName());
 
-	public static Role getDecisionMaker(Choice choice) {
+	public static Role getDecisionMaker(Repeat repeat) {
 		Role ret=null;
 		
-		for (Block path : choice.getPaths()) {
-			java.util.List<ModelObject> interactions=
-						org.scribble.protocol.util.InteractionUtil.getInitialInteractions(path);
-			boolean found=false;
-			
-			for (ModelObject mobj : interactions) {
-				if (mobj instanceof Interaction) {
-					Interaction interaction=(Interaction)mobj;
-					
-					if (ret == null) {
-						ret = interaction.getFromRole();
-					} else if (!ret.equals(interaction.getFromRole())) {
-						LOG.severe("Mismatch between decision making interactions '"+
-									ret+"' and '"+interaction.getFromRole()+"'");
-					}
-					
-					found = true;
+		Block path=repeat.getBlock();
+		
+		java.util.List<ModelObject> interactions=
+					org.scribble.protocol.util.InteractionUtil.getInitialInteractions(path);
+		boolean found=false;
+		
+		for (ModelObject mobj : interactions) {
+			if (mobj instanceof Interaction) {
+				Interaction interaction=(Interaction)mobj;
+				
+				if (ret == null) {
+					ret = interaction.getFromRole();
+				} else if (!ret.equals(interaction.getFromRole())) {
+					LOG.severe("Mismatch between decision making interactions '"+
+								ret+"' and '"+interaction.getFromRole()+"'");
 				}
+				
+				found = true;
 			}
-			
-			if (!found) {
-				LOG.severe("No interaction found in path: "+path);				
-			}
+		}
+		
+		if (!found) {
+			LOG.severe("No interaction found in path: "+path);				
 		}
 		
 		return(ret);
@@ -67,11 +67,11 @@ public class ChoiceUtil {
 	 * @param choice The choice
 	 * @return Whether the choice is associated with the decision maker
 	 */
-	public static boolean isDecisionMaker(Choice choice) {
+	public static boolean isDecisionMaker(Repeat repeat) {
 		boolean ret=false;
 		
-		if (choice.getRole() != null && choice.getEnclosingProtocol() != null &&
-				choice.getRole().equals(choice.getEnclosingProtocol().getLocatedRole())) {
+		if (repeat.getRoles().size() > 0 && repeat.getEnclosingProtocol() != null &&
+				repeat.getRoles().contains(repeat.getEnclosingProtocol().getLocatedRole())) {
 			ret = true;
 		}
 		
