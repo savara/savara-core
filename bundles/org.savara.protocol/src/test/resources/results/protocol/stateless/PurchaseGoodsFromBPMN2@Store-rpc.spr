@@ -1,0 +1,41 @@
+[[ Type(location=logistics.xsd,prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
+[[ Type(location=store.xsd,prefix=ns1,namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(location=creditAgency.xsd,prefix=ns3,namespace=http://www.jboss.org/examples/creditAgency) ]]
+[[ SourceComponent(id=Choreography_1) ]]
+[[ Interface(name=BuyerInterface,role=Buyer,namespace=http://www.savara.org/examples/Buyer) ]]
+[[ Type(prefix=pns1,namespace=http://www.savara.org/examples/Buyer) ]]
+[[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://www.savara.org/examples/CreditAgency) ]]
+[[ Type(prefix=pns2,namespace=http://www.savara.org/examples/CreditAgency) ]]
+[[ Interface(name=StoreInterface,role=Store,namespace=http://www.savara.org/examples/Store) ]]
+[[ Type(prefix=pns3,namespace=http://www.savara.org/examples/Store) ]]
+[[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://www.savara.org/examples/Logistics) ]]
+[[ Type(prefix=pns4,namespace=http://www.savara.org/examples/Logistics) ]]
+protocol PurchaseGoods at Store(role Buyer, role CreditAgency, role Logistics) {
+	[[ Correlation(request=buy) ]]
+	buy(BuyRequest) from Buyer;
+	[[ Correlation(request=creditCheck) ]]
+	creditCheck(CreditCheck) to CreditAgency;
+	choice {
+		[[ Fault(name=CustomerUnknown) ]]
+		[[ Correlation(replyTo=creditCheck) ]]
+		creditCheck(CustomerUnknown) from CreditAgency;
+		[[ Fault(name=AccountNotFound) ]]
+		[[ Correlation(replyTo=buy) ]]
+		buy(AccountNotFound) to Buyer;
+	} or {
+		[[ Correlation(replyTo=creditCheck) ]]
+		creditCheck(CreditRating) from CreditAgency;
+		choice at Store {
+			[[ Fault(name=InsufficientCredit) ]]
+			[[ Correlation(replyTo=buy) ]]
+			buy(BuyFailed) to Buyer;
+		} or {
+			[[ Correlation(request=delivery) ]]
+			delivery(DeliveryRequest) to Logistics;
+			[[ Correlation(replyTo=delivery) ]]
+			delivery(DeliveryConfirmed) from Logistics;
+			[[ Correlation(replyTo=buy) ]]
+			buy(BuyConfirmed) to Buyer;
+		}
+	}
+}

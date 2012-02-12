@@ -33,8 +33,10 @@ public interface StatelessTransformer {
 	 * This method transforms the supplied definition.
 	 * 
 	 * @param stateful The stateful protocol model
+	 * @param messageBased Whether the transformation should be
+	 * 			message based, instead of RPC based
 	 * @return The stateless protocol model
 	 */
-	public ProtocolModel transform(ProtocolModel stateful);
+	public ProtocolModel transform(ProtocolModel stateful, boolean messageBased);
 	
 }

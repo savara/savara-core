@@ -30,7 +30,7 @@ import org.scribble.protocol.model.*;
 public class DefaultStatelessTransformationContext 
 					implements StatelessTransformationContext {
 	
-	//private ModelReference m_source=null;
+	private boolean _messageBased=false;
 	private org.scribble.protocol.model.Choice _choice=null;
 	private boolean m_allowNewPaths=true;
 	private Block m_lastPath=null;
@@ -56,40 +56,22 @@ public class DefaultStatelessTransformationContext
 	/**
 	 * This is the constructor for the default context.
 	 * 
-	 * @param ref The model reference for the definition being
-	 * 				transformed
+	 * @param messageBased Whether the transformation is message based
+	 * 						versus RPC based
 	 */
-	public DefaultStatelessTransformationContext() {//ModelReference ref) {
-		
-		//m_source = ref;
-		
-		/*
-		java.util.List<Object> rules=
-			org.scribble.extensions.RegistryFactory.getRegistry().
-						getExtensions(StatelessTransformationRule.class,
-									ref.getNotation());
-		
-		// Transfer to typed list
-		for (int i=0; i < rules.size(); i++) {
-			if (rules.get(i) instanceof StatelessTransformationRule) {
-				m_rules.add((StatelessTransformationRule)rules.get(i));
-			}
-		}
-		*/
+	public DefaultStatelessTransformationContext(boolean messageBased) {
+		_messageBased = messageBased;
 	}
 	
 	/**
-	 * This method returns the model reference associated with
-	 * the definition being transformed.
+	 * This method determines whether the transformation should be
+	 * message based, as opposed to RPC (request/response) based.
 	 * 
-	 * @return The model reference for the definition being
-	 * 					transformed
+	 * @return Whether the transformation is message based
 	 */
-	/*
-	public ModelReference getSource() {
-		return(m_source);
+	public boolean isMessageBased() {
+		return (_messageBased);
 	}
-	*/
 	
 	/**
 	 * This method transforms the supplied model object.

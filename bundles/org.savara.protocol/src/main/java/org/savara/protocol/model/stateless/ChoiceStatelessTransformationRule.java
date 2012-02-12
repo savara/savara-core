@@ -21,7 +21,6 @@
  */
 package org.savara.protocol.model.stateless;
 
-import org.savara.protocol.model.util.ChoiceUtil;
 import org.scribble.protocol.model.*;
 
 /**
@@ -40,8 +39,7 @@ public class ChoiceStatelessTransformationRule
 	 * @return Whether the model object can be transformed
 	 */
 	public boolean isSupported(ModelObject modelObject) {
-		return(modelObject instanceof Choice &&
-				ChoiceUtil.isDecisionMaker((Choice)modelObject) == false);
+		return(modelObject instanceof Choice);
 	}
 	
 	/**

@@ -41,7 +41,20 @@ public class StatefulToStatelessProtocolTransformerTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("Stateful -> Stateless Protocol Transformer Tests");
 
-        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoods"));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","Buyer",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","Buyer",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","CreditAgency",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","CreditAgency",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","Store",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","Store",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Buyer",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Buyer",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","CreditAgency",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","CreditAgency",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Logistics",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Logistics",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Store",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Store",false));
 
         return suite;
     }
@@ -49,6 +62,8 @@ public class StatefulToStatelessProtocolTransformerTest {
     protected static class StatefulToStatelessProtocolTester extends TestCase {
 
     	private String m_name=null;
+    	private String _role=null;
+    	private boolean _messageBased=false;
 
     	/**
     	 * This constructor is initialized with the test
@@ -56,9 +71,11 @@ public class StatefulToStatelessProtocolTransformerTest {
     	 * 
     	 * @param name The test name
     	 */
-    	public StatefulToStatelessProtocolTester(String name) {
-    		super(name);
+    	public StatefulToStatelessProtocolTester(String name, String role, boolean messageBased) {
+    		super(name+"@"+role+(messageBased?" message":" rpc"));
     		m_name = name;
+    		_role = role;
+    		_messageBased = messageBased;
     	}
     	
     	/**
@@ -100,8 +117,15 @@ public class StatefulToStatelessProtocolTransformerTest {
     				result.addError(this, new Throwable("Model is null"));
     			} else {
     				java.util.List<Role> roles=model.getRoles();
+    				Role role=null;
     				
-    				for (Role role : roles) {
+    				for (Role r : roles) {
+    					if (r.getName().equals(_role)) {
+    						role = r;
+    					}
+    				}
+    				
+    				if (role != null) {
     					DefaultProtocolContext context=
     							new DefaultProtocolContext(ProtocolServices.getParserManager(),
     									null);
@@ -122,38 +146,45 @@ public class StatefulToStatelessProtocolTransformerTest {
     	    				DefaultStatelessTransformer translater=
     	    								new DefaultStatelessTransformer();
     	    				
-    	    				ProtocolModel target=translater.transform(local);
+    	    				// Message based
+    	    				ProtocolModel target=translater.transform(local, _messageBased);
     	    				
     	    				if (target != null) {
-	    	    				org.scribble.protocol.export.text.TextProtocolExporter exporter=
-	    	        					new org.scribble.protocol.export.text.TextProtocolExporter();
-	    	        				
-		        				// TODO: Temporary until supported in scribble protocol model
-		        				exporter.register(new ForkTextProtocolExporterRule());
-		        				exporter.register(new JoinTextProtocolExporterRule());
-		        				
-		        				java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
-		        				
-		        				exporter.export(target, journal, os);
-		        				
-		        				try {
-		        					os.close();
-		        				} catch(Exception e) {
-		        					fail("Failed to close stream");
-		        				}
-		        				
-		        				String str=os.toString();
-		        				
-		        				checkResults(result, str, role.getName());
+    	    					exportProtocolAndCheck(result, target, journal);
     	    				} else {
     	    					fail("Stateless model is null");
     	    				}
     					}
+    				} else {
+    					fail("Role '"+_role+"' not found");
     				}
      			}
     		}
     		
     		result.endTest(this);
+    	}
+    	
+    	protected void exportProtocolAndCheck(TestResult result, ProtocolModel target, Journal journal) {
+			org.scribble.protocol.export.text.TextProtocolExporter exporter=
+					new org.scribble.protocol.export.text.TextProtocolExporter();
+				
+			// TODO: Temporary until supported in scribble protocol model
+			exporter.register(new ForkTextProtocolExporterRule());
+			exporter.register(new JoinTextProtocolExporterRule());
+			
+			java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
+			
+			exporter.export(target, journal, os);
+			
+			try {
+				os.close();
+			} catch(Exception e) {
+				fail("Failed to close stream");
+			}
+			
+			String str=os.toString();
+			
+			checkResults(result, str);
     	}
     	
     	/**
@@ -163,10 +194,11 @@ public class StatefulToStatelessProtocolTransformerTest {
     	 * @param result The test result
     	 * @param protocol The protocol
     	 */
-    	protected void checkResults(TestResult result, String protocol, String role) {
+    	protected void checkResults(TestResult result, String protocol) {
     		boolean f_valid=false;
+    		String type=(_messageBased ? "mb" : "rpc");
 
-    		String filename="results/protocol/stateless/"+m_name+"@"+role+".spr";
+    		String filename="results/protocol/stateless/"+m_name+"@"+_role+"-"+type+".spr";
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);
@@ -227,7 +259,7 @@ public class StatefulToStatelessProtocolTransformerTest {
     					}
     					
     					java.io.File resultFile=new java.io.File(resultsDir,
-    										m_name+"@"+role+".generated");
+    										m_name+"@"+_role+"-"+type+".generated");
     					
     					if (resultFile.exists() == false) {
     						try {

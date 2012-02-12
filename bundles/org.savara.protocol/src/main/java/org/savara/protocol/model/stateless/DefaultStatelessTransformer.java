@@ -41,15 +41,15 @@ public class DefaultStatelessTransformer
 	 * This method transforms the supplied definition.
 	 * 
 	 * @param stateful The stateful protocol model
-	 * @param ref The model reference associated with the
-	 * 						definition
+	 * @param messageBased Whether the transformation should be
+	 * 			message based, instead of RPC based
 	 * @return The stateless definition
 	 */
-	public ProtocolModel transform(ProtocolModel stateful) {
+	public ProtocolModel transform(ProtocolModel stateful, boolean messageBased) {
 		ProtocolModel ret=null;
 		
 		DefaultStatelessTransformationContext context=
-				new DefaultStatelessTransformationContext();
+				new DefaultStatelessTransformationContext(messageBased);
 		
 		ret = (ProtocolModel)context.transform(stateful);
 		

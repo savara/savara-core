@@ -56,11 +56,11 @@ public class ProtocolToContractGeneratorTest {
         suite.addTest(new ProtocolToContractTester("ESBBroker", "CreditAgency", null));
         suite.addTest(new ProtocolToContractTester("ESBBroker", "SupplierQuoteEngine", null));
         
-        suite.addTest(new ProtocolToContractTester("PurchaseGoods", "Buyer", null));
-        suite.addTest(new ProtocolToContractTester("PurchaseGoods", "Buyer", "CreditAgency"));
-        suite.addTest(new ProtocolToContractTester("PurchaseGoods", "CreditAgency", null));
-        suite.addTest(new ProtocolToContractTester("PurchaseGoods", "Store", null));
-        suite.addTest(new ProtocolToContractTester("PurchaseGoods", "Store", "CreditAgency"));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromCDL", "Buyer", null));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromCDL", "Buyer", "CreditAgency"));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromCDL", "CreditAgency", null));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromCDL", "Store", null));
+        suite.addTest(new ProtocolToContractTester("PurchaseGoodsFromCDL", "Store", "CreditAgency"));
         
         suite.addTest(new ProtocolToContractTester("ReqRespFault", "Buyer", null));
         suite.addTest(new ProtocolToContractTester("ReqRespFault", "Seller", null));

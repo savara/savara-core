@@ -101,11 +101,20 @@ public abstract class AbstractDefinitionStatelessTransformationRule
 		
 		// Convert role list into parameters
 		for (Role r : context.getRoleList()) {
-			ParameterDefinition pd=new ParameterDefinition();
-			pd.setName(r.getName());
-			ret.getParameterDefinitions().add(pd);
+			if (!r.equals(role)) {
+				ParameterDefinition pd=new ParameterDefinition();
+				pd.setName(r.getName());
+				ret.getParameterDefinitions().add(pd);
+			}
 		}
+
+		// Check if only one choice block
+		if (mpb.getPaths().size() == 1) {
+			ret.getBlock().remove(mpb);
 			
+			ret.getBlock().getContents().addAll(mpb.getPaths().get(0).getContents());
+		}
+		
 /* GPB: TODO: Remove duplicate paths (see if merging as in choice can be used)			
 			// Check for duplicate paths in multi-path behaviour
 			org.scribble.comparator.Comparator comparator=

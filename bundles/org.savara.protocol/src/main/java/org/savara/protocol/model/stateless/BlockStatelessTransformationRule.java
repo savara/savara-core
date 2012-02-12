@@ -24,6 +24,7 @@ package org.savara.protocol.model.stateless;
 import org.savara.protocol.model.util.ChoiceUtil;
 import org.savara.protocol.model.util.RepeatUtil;
 import org.scribble.protocol.model.*;
+import org.scribble.protocol.util.InteractionUtil;
 
 /**
  * This class implements the stateless transformation
@@ -91,7 +92,7 @@ public class BlockStatelessTransformationRule
 					i < src.getContents().size(); i++) {
 			Activity act=src.getContents().get(i);
 			
-			if (isWaitState(act)) {
+			if (isWaitState(context, act)) {
 			
 				if (isMultiPathBehaviour(act)) {
 					java.util.List<Block> mpbs=getMultiPaths(act);
@@ -279,13 +280,41 @@ public class BlockStatelessTransformationRule
 		return(ret);
 	}
 	
-	protected static boolean isWaitState(Activity act) {
+	protected static boolean isWaitState(StatelessTransformationContext context,
+							Activity act) {
 		boolean ret=false;
 		
 		if (act instanceof Choice) {
 			ret = !ChoiceUtil.isDecisionMaker((Choice)act);
+			
+			// If RPC based, then check if interactions in each path are responses
+			if (ret && !context.isMessageBased()) {
+				Choice choice=(Choice)act;
+				
+				ret = false;
+				
+				for (Block path : choice.getPaths()) {
+					java.util.List<ModelObject> interactions=
+									InteractionUtil.getInitialInteractions(path);
+					
+					for (ModelObject mobj : interactions) {
+						if (!org.savara.protocol.model.util.InteractionUtil.isResponse((Interaction)mobj)) {
+							ret = true;
+							break;
+						}
+					}
+					
+					if (ret) {
+						break;
+					}
+				}
+			}
 		} else if (act instanceof Repeat) {
-			ret = !RepeatUtil.isDecisionMaker((Repeat)act);			
+			ret = !RepeatUtil.isDecisionMaker((Repeat)act);
+			
+		} else if (act instanceof Interaction) {
+			ret = !org.savara.protocol.model.util.InteractionUtil.isSend((Interaction)act) &&
+					context.isMessageBased();
 		}
 		
 		return(ret);

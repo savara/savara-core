@@ -30,13 +30,12 @@ import org.scribble.protocol.model.*;
 public interface StatelessTransformationContext {
 
 	/**
-	 * This method returns the model reference associated with
-	 * the definition being transformed.
+	 * This method determines whether the transformation should be
+	 * message based, as opposed to RPC (request/response) based.
 	 * 
-	 * @return The model reference for the definition being
-	 * 					transformed
+	 * @return Whether the transformation is message based
 	 */
-	//public ModelReference getSource();
+	public boolean isMessageBased();
 	
 	/**
 	 * This method transforms the supplied block.

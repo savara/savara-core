@@ -6,7 +6,7 @@
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(prefix=pur,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Type(prefix=sto,namespace=http://www.jboss.org/examples/store) ]]
-protocol PurchaseGoodsProcess at Store(role Buyer) {
+protocol PurchaseGoodsProcess at Store(role Buyer, role CreditAgency) {
 	choice {
 		[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name=StoreInterface,namespace=http://www.jboss.org/examples/store) ]]
@@ -15,12 +15,12 @@ protocol PurchaseGoodsProcess at Store(role Buyer) {
 		[[ SourceComponent(id=//@choreographies.0/@activities.1/@exchangeDetails.0) ]]
 		[[ Interface(name=CreditAgencyInterface,namespace=java:org.jboss.savara.examples.purchasing) ]]
 		[[ Correlation(request=checkCredit) ]]
-		checkCredit(CreditCheckRequest);
+		checkCredit(CreditCheckRequest) to CreditAgency;
 	} or {
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@activities.0/@exchangeDetails.0) ]]
 		[[ Interface(name=CreditAgencyInterface,namespace=java:org.jboss.savara.examples.purchasing) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit(CreditCheckOk);
+		checkCredit(CreditCheckOk) from CreditAgency;
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.0/@activities.1/@exchangeDetails.0) ]]
 		[[ Interface(name=StoreInterface,namespace=http://www.jboss.org/examples/store) ]]
 		[[ Correlation(replyTo=buy) ]]
@@ -30,7 +30,7 @@ protocol PurchaseGoodsProcess at Store(role Buyer) {
 		[[ Fault(name=CreditCheckFailed) ]]
 		[[ Interface(name=CreditAgencyInterface,namespace=java:org.jboss.savara.examples.purchasing) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit(CreditCheckInvalid);
+		checkCredit(CreditCheckInvalid) from CreditAgency;
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.1/@activities.1/@exchangeDetails.0) ]]
 		[[ Fault(name=BuyFailed) ]]
 		[[ Interface(name=StoreInterface,namespace=http://www.jboss.org/examples/store) ]]
