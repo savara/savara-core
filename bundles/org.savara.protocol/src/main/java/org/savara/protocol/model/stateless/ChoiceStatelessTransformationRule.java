@@ -51,7 +51,7 @@ public class ChoiceStatelessTransformationRule
 	 * @return The transformed object
 	 */
 	public ModelObject transform(StatelessTransformationContext context,
-							ModelObject modelObject) {
+						ModelObject modelObject) {
 		Choice ret=new Choice();
 		Choice src=(Choice)modelObject;
 		

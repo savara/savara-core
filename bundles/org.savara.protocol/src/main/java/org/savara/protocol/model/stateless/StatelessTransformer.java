@@ -21,6 +21,7 @@
  */
 package org.savara.protocol.model.stateless;
 
+import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.*;
 
 /**
@@ -35,8 +36,10 @@ public interface StatelessTransformer {
 	 * @param stateful The stateful protocol model
 	 * @param messageBased Whether the transformation should be
 	 * 			message based, instead of RPC based
+	 * @param journal The journal
 	 * @return The stateless protocol model
 	 */
-	public ProtocolModel transform(ProtocolModel stateful, boolean messageBased);
+	public ProtocolModel transform(ProtocolModel stateful, boolean messageBased,
+							Journal journal);
 	
 }

@@ -107,6 +107,9 @@ public abstract class AbstractDefinitionStatelessTransformationRule
 				ret.getParameterDefinitions().add(pd);
 			}
 		}
+		
+		// Merge
+		ChoiceMergingUtil.merge(mpb, role, context.getJournal(), false);
 
 		// Check if only one choice block
 		if (mpb.getPaths().size() == 1) {
@@ -114,40 +117,6 @@ public abstract class AbstractDefinitionStatelessTransformationRule
 			
 			ret.getBlock().getContents().addAll(mpb.getPaths().get(0).getContents());
 		}
-		
-/* GPB: TODO: Remove duplicate paths (see if merging as in choice can be used)			
-			// Check for duplicate paths in multi-path behaviour
-			org.scribble.comparator.Comparator comparator=
-				(org.scribble.comparator.Comparator)
-				RegistryFactory.getRegistry().getExtension(
-						org.scribble.comparator.Comparator.class, null);
-
-			for (int i=mpb.getPaths().size()-1; i >= 0; i--) {
-				Block path=mpb.getPaths().get(i);
-				boolean f_duplicate=false;
-				
-				for (int j=0; f_duplicate == false &&
-									j < i; j++) {
-					Block path2=mpb.getPaths().get(j);
-					
-					DefaultModelListener l=new DefaultModelListener();
-					
-					BehaviourList mainBehaviourList=BehaviourList.createBehaviourList(path);
-					BehaviourList refBehaviourList=BehaviourList.createBehaviourList(path2);
-					
-					if (comparator.compare(mainBehaviourList,
-							context.getSource(), refBehaviourList,
-							context.getSource(), l)) {
-						f_duplicate = true;
-					}
-				}
-				
-				if (f_duplicate) {
-					mpb.removePath(path);
-				}
-			}
-		}
-*/
 		
 		return(ret);
 	}

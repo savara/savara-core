@@ -21,6 +21,7 @@
  */
 package org.savara.protocol.model.stateless;
 
+import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.*;
 
 /**
@@ -37,6 +38,13 @@ public interface StatelessTransformationContext {
 	 */
 	public boolean isMessageBased();
 	
+	/**
+	 * This method returns the journal.
+	 * 
+	 * @return The journal
+	 */
+	public Journal getJournal();
+
 	/**
 	 * This method transforms the supplied block.
 	 * 

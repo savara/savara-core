@@ -13,7 +13,5 @@ protocol ChoiceFollowedByInteracton at Store(role Buyer) {
 	} or {
 		[[ Correlation(request=close) ]]
 		close(EndSession) from Buyer;
-	} or {
-		[[ Correlation(request=close) ]]
-		close(EndSession) from Buyer;
-	}}
+	}
+}

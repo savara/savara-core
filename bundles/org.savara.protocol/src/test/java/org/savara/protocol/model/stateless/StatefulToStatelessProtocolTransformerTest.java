@@ -174,7 +174,7 @@ public class StatefulToStatelessProtocolTransformerTest {
     	    								new DefaultStatelessTransformer();
     	    				
     	    				// Message based
-    	    				ProtocolModel target=translater.transform(local, _messageBased);
+    	    				ProtocolModel target=translater.transform(local, _messageBased, journal);
     	    				
     	    				if (target != null) {
     	    					exportProtocolAndCheck(result, target, journal);

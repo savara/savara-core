@@ -21,6 +21,7 @@
  */
 package org.savara.protocol.model.stateless;
 
+import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.*;
 
 /**
@@ -30,6 +31,7 @@ import org.scribble.protocol.model.*;
 public class DefaultStatelessTransformationContext 
 					implements StatelessTransformationContext {
 	
+	private Journal _journal=null;
 	private boolean _messageBased=false;
 	private org.scribble.protocol.model.Choice _choice=null;
 	private boolean m_allowNewPaths=true;
@@ -59,8 +61,9 @@ public class DefaultStatelessTransformationContext
 	 * @param messageBased Whether the transformation is message based
 	 * 						versus RPC based
 	 */
-	public DefaultStatelessTransformationContext(boolean messageBased) {
+	public DefaultStatelessTransformationContext(boolean messageBased, Journal journal) {
 		_messageBased = messageBased;
+		_journal = journal;
 	}
 	
 	/**
@@ -71,6 +74,15 @@ public class DefaultStatelessTransformationContext
 	 */
 	public boolean isMessageBased() {
 		return (_messageBased);
+	}
+	
+	/**
+	 * This method returns the journal.
+	 * 
+	 * @return The journal
+	 */
+	public Journal getJournal() {
+		return(_journal);
 	}
 	
 	/**

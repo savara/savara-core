@@ -23,6 +23,7 @@ package org.savara.protocol.model.stateless;
 
 import org.savara.protocol.model.util.ChoiceUtil;
 import org.savara.protocol.model.util.RepeatUtil;
+import org.scribble.common.logging.Journal;
 import org.scribble.protocol.model.*;
 import org.scribble.protocol.util.InteractionUtil;
 
@@ -51,10 +52,11 @@ public class BlockStatelessTransformationRule
 	 * 
 	 * @param context The context
 	 * @param modelObject The model object to transform
+	 * @param journal The journal
 	 * @return The transformed object
 	 */
 	public ModelObject transform(StatelessTransformationContext context,
-						ModelObject modelObject) {
+						ModelObject modelObject, Journal journal) {
 		return(null);
 	}
 	
