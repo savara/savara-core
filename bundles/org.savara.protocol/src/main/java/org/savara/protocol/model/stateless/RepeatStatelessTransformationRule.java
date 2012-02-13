@@ -23,7 +23,6 @@ package org.savara.protocol.model.stateless;
 
 import java.util.logging.Logger;
 
-import org.savara.protocol.model.util.RepeatUtil;
 import org.scribble.protocol.model.*;
 
 /**
@@ -44,8 +43,7 @@ public class RepeatStatelessTransformationRule
 	 * @return Whether the model object can be transformed
 	 */
 	public boolean isSupported(ModelObject modelObject) {
-		return(modelObject instanceof Repeat &&
-				RepeatUtil.isDecisionMaker((Repeat)modelObject) == false);
+		return(modelObject instanceof Repeat);
 	}
 	
 	/**
@@ -135,18 +133,18 @@ public class RepeatStatelessTransformationRule
 				// block - can this be done based on checking
 				// the stack?
 				
-/* GPB: TO INVESTIGATE				
+//* GPB: TO INVESTIGATE				
 				if (bp.getParent() != src &&
-						bp.getParent() instanceof SinglePathBehaviour &&
-						bp.getParent().isWaitState() == false &&
-						((SinglePathBehaviour)bp.getParent()).isRepetition()) {
+						BlockStatelessTransformationRule.isSinglePathBehaviour(bp.getParent()) &&
+						BlockStatelessTransformationRule.isWaitState(context, bp.getParent()) == false &&
+						bp.getParent() instanceof Repeat) {
 					f_continue = false;
 
 				} else {
 					f_continue = BlockStatelessTransformationRule.processBlock(context, bp.getBlock(),
 								elseBlock, bp.getPosition()+1, false);
 				}
-*/				
+//*/				
 			}
 			
 			for (int i=tmpstack.size()-1; i >= 0; i--) {

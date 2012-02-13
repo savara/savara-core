@@ -22,6 +22,7 @@
 package org.savara.protocol.model.stateless;
 
 import org.scribble.protocol.model.*;
+import org.scribble.protocol.util.RunUtil;
 
 /**
  * This class provides the conversation specific
@@ -55,7 +56,7 @@ public class RunStatelessTransformationRule
 		Block ret=new Block();
 		Run src=(Run)modelObject;
 		
-		Protocol defn=src.getEnclosingProtocol();
+		Protocol defn=RunUtil.getInnerProtocol(src.getEnclosingProtocol(), src.getProtocolReference());
 		
 		if (defn != null) {
 			context.transform(defn.getBlock(), ret);

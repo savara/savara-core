@@ -111,11 +111,9 @@ public class BlockStatelessTransformationRule
 						context.pop();
 					}
 					
-					/* TODO: GPB: INVESTIGATE
-					if (((MultiPathBehaviour)act).isConditional() == false) {
+					if (isConditional(context, act) == false) {
 						src = null;
 					}
-					*/
 					
 				} else if (isSinglePathBehaviour(act)) {
 					Block spb=getSinglePath(act);
@@ -130,11 +128,9 @@ public class BlockStatelessTransformationRule
 					
 					context.pop();
 
-					/* TODO: GPB: INVESTIGATE
-					if (((SinglePathBehaviour)act).isConditional() == false) {
+					if (isConditional(context, act) == false) {
 						src = null;
 					}
-					*/
 
 				} else {
 					target = context.createNewPath();
@@ -175,7 +171,13 @@ public class BlockStatelessTransformationRule
 				if (isSubScope(act)) {
 					context.pop();
 					
-					src = null;
+					// If transformation has changed the return type, then assume
+					// has wait states, otherwise continue
+					if (localPath != context.getCurrentPath() ||
+							!(act instanceof Repeat &&
+								RepeatUtil.isDecisionMaker((Repeat)act))) {
+						src = null;
+					}
 				}
 			}
 		}
@@ -195,12 +197,14 @@ public class BlockStatelessTransformationRule
 			//for (int i=0; f_continue && i < stack.size(); i++) {
 				//TransformState bp=stack.get(i);
 				
+			// Only process if the path has changed
+			//if (initialPath != context.getCurrentPath()) {
 			while (f_continue && (bp=context.pop()) != null) {
 				
 				tmpstack.add(bp);
 				
-				if (bp.getParent() instanceof Repeat &&
-						RepeatUtil.isDecisionMaker((Repeat)bp.getParent())) {
+				if (bp.getParent() instanceof Repeat) {// &&
+						//RepeatUtil.isDecisionMaker((Repeat)bp.getParent())) {
 					
 					// Only process if the path has changed
 					if (initialPath != context.getCurrentPath()) {
@@ -227,6 +231,7 @@ public class BlockStatelessTransformationRule
 									target, bp.getPosition()+1, false);
 				}
 			}
+			//}
 			
 			for (int i=tmpstack.size()-1; i >= 0; i--) {
 				context.push(tmpstack.get(i));
@@ -280,6 +285,17 @@ public class BlockStatelessTransformationRule
 		return(ret);
 	}
 	
+	protected static boolean isConditional(StatelessTransformationContext context,
+							Activity act) {
+		boolean ret=false;
+		
+		if (act instanceof Repeat) {
+			ret = true;
+		}
+		
+		return(ret);
+	}
+	
 	protected static boolean isWaitState(StatelessTransformationContext context,
 							Activity act) {
 		boolean ret=false;
@@ -314,7 +330,8 @@ public class BlockStatelessTransformationRule
 			
 		} else if (act instanceof Interaction) {
 			ret = !org.savara.protocol.model.util.InteractionUtil.isSend((Interaction)act) &&
-					context.isMessageBased();
+					(context.isMessageBased() || 
+						org.savara.protocol.model.util.InteractionUtil.isRequest((Interaction)act));
 		}
 		
 		return(ret);

@@ -1,0 +1,21 @@
+[[ Type(location=logistics.xsd,prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
+[[ Type(location=store.xsd,prefix=ns1,namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(location=creditAgency.xsd,prefix=ns3,namespace=http://www.jboss.org/examples/creditAgency) ]]
+[[ SourceComponent(id=Choreography_1) ]]
+[[ Interface(name=BuyerInterface,role=Buyer,namespace=http://www.savara.org/examples/Buyer) ]]
+[[ Type(prefix=pns1,namespace=http://www.savara.org/examples/Buyer) ]]
+[[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://www.savara.org/examples/CreditAgency) ]]
+[[ Type(prefix=pns2,namespace=http://www.savara.org/examples/CreditAgency) ]]
+[[ Interface(name=StoreInterface,role=Store,namespace=http://www.savara.org/examples/Store) ]]
+[[ Type(prefix=pns3,namespace=http://www.savara.org/examples/Store) ]]
+[[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://www.savara.org/examples/Logistics) ]]
+[[ Type(prefix=pns4,namespace=http://www.savara.org/examples/Logistics) ]]
+protocol Repeat at Buyer(role Store) {
+	choice {
+		[[ Correlation(request=buy) ]]
+		buy(BuyRequest) to Store;
+	} or {
+		[[ Correlation(replyTo=buy) ]]
+		buy(BuyConfirmed) from Store;
+	}
+}

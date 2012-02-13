@@ -1,0 +1,18 @@
+protocol ChoiceFollowedByInteracton(role Buyer) {
+	Buyer introduces Store;
+	
+	[[ Correlation(request=buy) ]]
+	buy(BuyRequest) from Buyer to Store;
+	
+	choice at Store {
+		[[ Correlation(replyTo=buy) ]]
+		buy(BuyConfirmed) from Store to Buyer;
+	} or {
+		[[ Correlation(replyTo=buy) ]]
+		[[ Fault(name=Failed) ]]
+		buy(BuyFailed) from Store to Buyer;
+	}
+	
+	[[ Correlation(request=close) ]]
+	close(EndSession) from Buyer to Store;
+}

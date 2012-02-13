@@ -41,12 +41,22 @@ public class StatefulToStatelessProtocolTransformerTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("Stateful -> Stateless Protocol Transformer Tests");
 
+        suite.addTest(new StatefulToStatelessProtocolTester("Run","Buyer",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("Run","Buyer",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("Run","CreditAgency",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("Run","CreditAgency",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("Run","Logistics",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("Run","Logistics",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("Run","Store",true));        
+        suite.addTest(new StatefulToStatelessProtocolTester("Run","Store",false));
+        
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","Buyer",true));
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","Buyer",false));
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","CreditAgency",true));
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","CreditAgency",false));
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","Store",true));
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromCDL","Store",false));
+
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Buyer",true));
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Buyer",false));
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","CreditAgency",true));
@@ -55,6 +65,23 @@ public class StatefulToStatelessProtocolTransformerTest {
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Logistics",false));
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Store",true));
         suite.addTest(new StatefulToStatelessProtocolTester("PurchaseGoodsFromBPMN2","Store",false));
+
+        suite.addTest(new StatefulToStatelessProtocolTester("ChoiceFollowedByInteraction","Buyer",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("ChoiceFollowedByInteraction","Buyer",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("ChoiceFollowedByInteraction","Store",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("ChoiceFollowedByInteraction","Store",false));
+        
+        suite.addTest(new StatefulToStatelessProtocolTester("Repeat","Buyer",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("Repeat","Buyer",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("Repeat","CreditAgency",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("Repeat","CreditAgency",false));
+        suite.addTest(new StatefulToStatelessProtocolTester("Repeat","Logistics",true));
+        suite.addTest(new StatefulToStatelessProtocolTester("Repeat","Logistics",false));
+        
+        // SAVARA-298
+        //suite.addTest(new StatefulToStatelessProtocolTester("Repeat","Store",true));
+        
+        suite.addTest(new StatefulToStatelessProtocolTester("Repeat","Store",false));
 
         return suite;
     }
