@@ -1,0 +1,34 @@
+
+
+
+package org.savara.examples.store;
+
+import java.util.logging.Logger;
+
+@org.switchyard.component.bean.Service(Store.class)
+public class StoreImpl implements Store {
+
+    @javax.inject.Inject @org.switchyard.component.bean.Reference
+    org.savara.examples.logistics.Logistics logistics;
+
+    @javax.inject.Inject @org.switchyard.component.bean.Reference
+    org.savara.examples.creditagency.CreditAgency creditAgency;
+
+    private static final Logger LOG = Logger.getLogger(StoreImpl.class.getName());
+
+    
+    public org.jboss.examples.store.BuyConfirmedType buy(org.jboss.examples.store.BuyRequestType content) throws InsufficientCreditFault , AccountNotFoundFault    { 
+        LOG.info("Executing operation buy");
+        System.out.println(content);
+        try {
+            org.jboss.examples.store.BuyConfirmedType _return = null;
+            return _return;
+        } catch (java.lang.Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
+        }
+        //throw new InsufficientCreditFault("InsufficientCreditFault...");
+        //throw new AccountNotFoundFault("AccountNotFoundFault...");
+    }
+
+}

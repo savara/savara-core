@@ -27,15 +27,17 @@
 		<module>org.savara.contract</module>
 		<module>org.savara.monitor</module>
 		<module>org.savara.monitor.sstore.rdbms</module>
-		<module>org.savara.pi4soa.cdm</module>
 		<module>org.savara.protocol</module>
-		<module>org.savara.sca.java</module>
 		<module>org.savara.switchyard.bpel</module>
+		<module>org.savara.switchyard.java</module>
 		<module>org.savara.scenario</module>
 		<module>org.savara.scenario.simulator.cdm</module>
 		<module>org.savara.scenario.simulator.sca</module>
 		<module>org.savara.scenario.simulator.protocol</module>
 		<module>org.savara.wsdl</module>
+
+		<module>org.savara.pi4soa.cdm</module>
+		<module>org.savara.sca.java</module>
 	</modules>
  
 	<build>

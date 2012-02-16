@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="Store" targetNamespace="http://www.savara.org/examples/Store" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns3="http://www.savara.org/examples/Store" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+    <types xmlns="http://schemas.xmlsoap.org/wsdl/">
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.jboss.org/examples/store" schemaLocation="store.xsd"/>
+        </schema>
+    </types>
+  <wsdl:message name="InsufficientCreditFault">
+    <wsdl:part name="content" element="ns1:BuyFailed">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="AccountNotFoundFault">
+    <wsdl:part name="content" element="ns1:AccountNotFound">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buyResponse">
+    <wsdl:part name="content" element="ns1:BuyConfirmed">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="buyRequest">
+    <wsdl:part name="content" element="ns1:BuyRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="Store">
+    <wsdl:operation name="buy">
+      <wsdl:input message="pns3:buyRequest">
+    </wsdl:input>
+      <wsdl:output message="pns3:buyResponse">
+    </wsdl:output>
+      <wsdl:fault name="AccountNotFound" message="pns3:AccountNotFoundFault">
+    </wsdl:fault>
+      <wsdl:fault name="InsufficientCredit" message="pns3:InsufficientCreditFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="StoreBinding" type="pns3:Store">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="buy">
+      <soap:operation soapAction="http://www.savara.org/examples/Store/buy"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AccountNotFound">
+        <soap:fault name="AccountNotFound" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InsufficientCredit">
+        <soap:fault name="InsufficientCredit" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="StoreService">
+    <wsdl:port name="StorePort" binding="pns3:StoreBinding">
+      <soap:address location="http://localhost:8080/StoreService/StorePort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
