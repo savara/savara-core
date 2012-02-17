@@ -181,4 +181,74 @@ public class InteractionUtil {
 		return(ret);
 	}
 	
+	/**
+	 * This method determines whether the supplied choice is a normal/fault response
+	 * handler for the supplied request.
+	 * 
+	 * @param choice The choice
+	 * @param req The request
+	 * @return Whether the choice is a response/fault handler for the request
+	 */
+	public static boolean isResponseAndFaultHandler(Choice choice, Interaction req) {
+		boolean ret=choice.getPaths().size() > 0;
+		
+		// Check if all paths are responses with same reply label
+		String label=getRequestLabel(req);
+		
+		for (int i=0; ret && i < choice.getPaths().size(); i++) {
+			Block path=choice.getPaths().get(i);
+			
+			// Get initial interaction
+			java.util.List<ModelObject> interactions=
+					org.scribble.protocol.util.InteractionUtil.getInitialInteractions(path);
+
+			if (interactions != null && interactions.size() == 1 &&
+							interactions.get(0) instanceof Interaction) {
+				Interaction interaction=(Interaction)interactions.get(0);
+				
+				if (i == 0) {
+					label = InteractionUtil.getReplyToLabel(interaction);
+					
+					if (label == null || InteractionUtil.isRequest(interaction)
+							|| InteractionUtil.isSend(interaction)) {
+						ret = false;
+					}
+				} else {
+					String replyTo=InteractionUtil.getReplyToLabel(interaction);
+					
+					if (replyTo == null ||
+							replyTo.equals(label) == false ||
+							InteractionUtil.isRequest(interaction) ||
+							InteractionUtil.isSend(interaction)) {
+						ret = false;
+					}
+				}
+			}
+		}		
+
+		return(ret);
+	}
+	
+	/**
+	 * This method determines whether the response is associated with the
+	 * supplied request.
+	 * 
+	 * @param resp The response
+	 * @param req The request
+	 * @return Whether the request and response are associated
+	 */
+	public static boolean isResponseForRequest(Interaction resp,
+							Interaction req) {
+		boolean ret=false;
+		
+		if (InteractionUtil.isRequest(req) &&
+					InteractionUtil.isResponse(resp) &&
+					InteractionUtil.getReplyToLabel(resp).equals(
+					InteractionUtil.getRequestLabel(req))) {
+			ret = true;
+		}
+		
+		return(ret);
+	}
+
 }

@@ -9,26 +9,31 @@ import java.util.logging.Logger;
 public class StoreImpl implements Store {
 
     @javax.inject.Inject @org.switchyard.component.bean.Reference
-    org.savara.examples.logistics.Logistics logistics;
+    org.savara.examples.logistics.Logistics _logistics;
 
     @javax.inject.Inject @org.switchyard.component.bean.Reference
-    org.savara.examples.creditagency.CreditAgency creditAgency;
+    org.savara.examples.creditagency.CreditAgency _creditAgency;
 
     private static final Logger LOG = Logger.getLogger(StoreImpl.class.getName());
 
     
-    public org.jboss.examples.store.BuyConfirmedType buy(org.jboss.examples.store.BuyRequestType content) throws InsufficientCreditFault , AccountNotFoundFault    { 
-        LOG.info("Executing operation buy");
-        System.out.println(content);
+    public org.jboss.examples.store.BuyConfirmedType buy(org.jboss.examples.store.BuyRequestType content) throws InsufficientCreditFault , AccountNotFoundFault    {
+        org.jboss.examples.store.BuyConfirmedType ret;
         try {
-            org.jboss.examples.store.BuyConfirmedType _return = null;
-            return _return;
-        } catch (java.lang.Exception ex) {
-            ex.printStackTrace();
-            throw new RuntimeException(ex);
+            // TODO: Add code here to initialize request
+            org.jboss.examples.creditagency.CreditCheckRequestType creditCheckReq;
+
+            org.jboss.examples.creditagency.CreditRatingType creditCheckResult = _creditAgency.creditCheck(creditCheckReq);
+            if (false) { // TODO: Set expression
+                throw new org.jboss.examples.store.InsufficientCreditFault();
+            } else {
+                // TODO: Add code here to return response
+                // ret = ....;
+            }
+        } catch (org.jboss.examples.creditagency.CustomerUnknownFault customerUnknown) {
+            throw new org.jboss.examples.store.AccountNotFoundFault();
         }
-        //throw new InsufficientCreditFault("InsufficientCreditFault...");
-        //throw new AccountNotFoundFault("AccountNotFoundFault...");
+        return (ret);
     }
 
 }

@@ -22,15 +22,22 @@ import java.util.logging.Logger;
 
 import javax.wsdl.PortType;
 import javax.wsdl.xml.WSDLReader;
+import javax.xml.namespace.QName;
 
 import org.apache.cxf.tools.common.ToolContext;
+import org.savara.protocol.model.util.ChoiceUtil;
+import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Choice;
+import org.scribble.protocol.model.Interaction;
 import org.scribble.protocol.model.MessageSignature;
 import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
+import org.scribble.protocol.model.TypeImport;
+import org.scribble.protocol.model.TypeReference;
 import org.scribble.protocol.util.InteractionUtil;
+import org.scribble.protocol.util.TypesUtil;
 
 public class SwitchyardJavaGenerator {
 	
@@ -111,6 +118,30 @@ public class SwitchyardJavaGenerator {
 		}
 		
 		return(ret);
+	}
+	
+	protected String getJavaType(Interaction interaction) {
+		String ret=null;
+		TypeReference tref=interaction.getMessageSignature().getTypeReferences().get(0);
+		TypeImport ti=TypesUtil.getTypeImport(tref);
+		
+		if (ti != null && ti.getDataType() != null) {
+			QName type=QName.valueOf(ti.getDataType().getDetails());
+			
+			ret = getJavaPackage(type.getNamespaceURI());
+			
+			if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
+				ret += "."+org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction)+"Fault";
+			} else {
+				ret += "."+type.getLocalPart()+"Type";
+			}
+		}
+
+		return(ret);
+	}
+	
+	protected String getVariableName(String name) {
+		return(Character.toLowerCase(name.charAt(0))+name.substring(1));
 	}
 	
 	public void createServiceImplementationFromWSDL(Role role, java.util.List<Role> refRoles,
@@ -237,15 +268,14 @@ public class SwitchyardJavaGenerator {
 
 					while (refPortTypes.hasNext()) {
 						PortType refPortType=refPortTypes.next();
-						String name=Character.toLowerCase(refRoles.get(i).getName().charAt(0))+
-								refRoles.get(i).getName().substring(1);
+						String name=getVariableName(refRoles.get(i).getName());
 						
 						if (refDefn.getPortTypes().size() > 1) {
 							name += refPortCount;
 						}									
 					
 						text.insert(index, "@javax.inject.Inject @org.switchyard.component.bean.Reference\r\n    "+
-								refPack+"."+refPortType.getQName().getLocalPart()+" "+
+								refPack+"."+refPortType.getQName().getLocalPart()+" _"+
 								name+";\r\n\r\n    ");
 					}
 				}
@@ -351,7 +381,8 @@ public class SwitchyardJavaGenerator {
 		// Create variable/role mapping
 		java.util.Map<Role, String> roleMapping=new java.util.HashMap<Role, String>();
 		for (Role r : refRoles) {
-			roleMapping.put(r, r.getName());
+			String varName="_"+Character.toLowerCase(r.getName().charAt(0))+r.getName().substring(1);
+			roleMapping.put(r, varName);
 		}
 		
 		// Process the Java class to replace the operation bodies
@@ -373,10 +404,10 @@ public class SwitchyardJavaGenerator {
 					// Find out operation name
 					String[] reg=str.substring(index, startIndex).split("[ \\(]");
 					
-					String opbody=getOperationBody(reg[6], behaviour, roleMapping);
+					String opbody=getOperationBody(reg[6], reg[5], behaviour, roleMapping);
 					
 					if (opbody != null) {
-						str = str.substring(0, startIndex+1)+"\r\n"+
+						str = str.substring(0, startIndex+1)+
 									opbody+str.substring(endIndex);
 						index = startIndex+1+opbody.length();
 					} else {
@@ -396,7 +427,7 @@ public class SwitchyardJavaGenerator {
 		fos.close();
 	}
 	
-	protected String getOperationBody(String opName, ProtocolModel behaviour,
+	protected String getOperationBody(String opName, String returnType, ProtocolModel behaviour,
 					java.util.Map<Role,String> roleMapping) {
 		String ret=null;
 	
@@ -407,11 +438,25 @@ public class SwitchyardJavaGenerator {
 				logger.finer("Behaviour for operation="+opName+" is: "+block);
 			}
 			
-			CodeGenerator cg=new CodeGenerator(roleMapping);
+			StringBuffer code=new StringBuffer();
+			int indent=2;
+			java.util.Map<String,String> typeVarMap=new java.util.HashMap<String,String>();
 			
-			block.visit(cg);
+			if (!returnType.equals("void")) {
+				newline(code, indent);
+				code.append(returnType+" ret;");
+				
+				typeVarMap.put(returnType, "ret");
+			}
 			
-			ret = cg.getCode();
+			processBlock(block, code, indent, roleMapping, typeVarMap);
+			
+			if (!returnType.equals("void")) {
+				newline(code, indent);
+				code.append("return (ret);");
+			}
+			
+			ret = code.toString();
 		}
 		
 		return(ret);
@@ -467,38 +512,224 @@ public class SwitchyardJavaGenerator {
 		return(ret);
 	}
 	
-	protected class CodeGenerator extends org.scribble.protocol.model.DefaultVisitor {
+	protected void processBlock(Block block, StringBuffer code, int indent,
+						java.util.Map<Role,String> roleMap, java.util.Map<String,String> typeVarMap) {
 		
-		private int _indent=0;
-		private StringBuffer _code=new StringBuffer();
-		private java.util.Map<Role,String> _roleMapping=null;
-		
-		public CodeGenerator(java.util.Map<Role,String> roleMapping) {
-			_roleMapping = roleMapping;
+		for (int i=0; i < block.getContents().size(); i++) {
+			Activity act=block.getContents().get(i);
+			
+			if (act instanceof Interaction) {
+				Interaction interaction=(Interaction)act;
+				
+				if (org.savara.protocol.model.util.InteractionUtil.isRequest(interaction) &&
+						org.savara.protocol.model.util.InteractionUtil.isSend(interaction)) {
+					
+					if (i+1 < block.getContents().size()) {
+						Activity next=block.getContents().get(i+1);
+						
+						// Check if followed by an interaction representing a response to this
+						// request
+						if (next instanceof Interaction &&
+								org.savara.protocol.model.util.InteractionUtil.isResponseForRequest(
+											(Interaction)next, interaction)) {
+							processInvoke(interaction, (Interaction)next,
+									code, indent, roleMap, typeVarMap);
+							i++; // Skip response
+							
+						// Check if followed by a choice representing normal and fault responses
+						} else if (next instanceof Choice &&
+								org.savara.protocol.model.util.InteractionUtil.isResponseAndFaultHandler(
+											(Choice)next, interaction)) {							
+							processInvoke(interaction, (Choice)next,
+									code, indent, roleMap, typeVarMap);
+							i++; // Skip normal/response fault handler
+						}
+					}
+				} else if (org.savara.protocol.model.util.InteractionUtil.isResponse(interaction) &&
+						org.savara.protocol.model.util.InteractionUtil.isSend(interaction)) {
+					processResponse(interaction, code, indent, roleMap, typeVarMap);
+				}
+			} else if (act instanceof Choice && ChoiceUtil.isDecisionMaker((Choice)act)) {
+				
+				for (int j=0; j < ((Choice)act).getPaths().size(); j++) {
+					Block path=((Choice)act).getPaths().get(j);
+					
+					// Save type/var map
+					java.util.Map<String,String> savedTypeVarMap=new java.util.HashMap<String, String>(typeVarMap);
+					
+					newline(code, indent);
+					
+					if (j == 0) {
+						code.append("if (false) { // TODO: Set expression");
+					} else if (j != ((Choice)act).getPaths().size()-1) {
+						code.append("} else if (false) { // TODO: Set expression");
+					} else {
+						code.append("} else {");
+					}
+					
+					processBlock(path, code, indent+1, roleMap, typeVarMap);
+
+					// Restore type/var map
+					typeVarMap = savedTypeVarMap;
+				}
+				
+				newline(code, indent);
+				code.append("}");				
+			}
 		}
-		
-		public String getCode() {
-			return(_code.toString());
+	}
+	
+	protected void newline(StringBuffer code, int indent) {
+		code.append("\r\n");
+		for (int i=0; i < indent; i++) {
+			code.append("    ");
 		}
+	}
+	
+	protected void processResponse(Interaction resp,
+			StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
+			java.util.Map<String,String> typeVarMap) {
 		
-		protected void newline() {
-			_code.append("\r\n");
-			for (int i=0; i < _indent; i++) {
-				_code.append("\t");
+		// Check if fault response
+		if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(resp)) {
+			String faultType=getJavaType(resp);
+			
+			newline(code, indent);
+			code.append("throw new "+faultType+"();");
+		} else {
+			String type=getJavaType(resp);
+			String name=typeVarMap.get(type);
+			
+			newline(code, indent);
+			code.append("// TODO: Add code here to return response");
+			newline(code, indent);
+			code.append("// "+name+" = ....;");
+		}
+	}
+
+	protected void processInvoke(Interaction req, Interaction resp,
+			StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
+			java.util.Map<String,String> typeVarMap) {
+
+	}
+
+	protected void processInvoke(Interaction req, Choice respAndFaults,
+					StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
+					java.util.Map<String,String> typeVarMap) {
+		// Sort choice paths into normal and fault responses
+		Block normalPath=null;
+		Interaction normalInteraction=null;
+		java.util.List<Block> faultPaths=new java.util.Vector<Block>();
+		java.util.List<Interaction> faultInteractions=new java.util.Vector<Interaction>();
+		
+		for (Block b : respAndFaults.getPaths()) {
+			
+			java.util.List<ModelObject> ints=InteractionUtil.getInitialInteractions(b);
+			
+			if (ints.size() != 1) {
+				if (logger.isLoggable(Level.FINE)) {
+					logger.fine("Response fault handler path should only have single initial interaction: "+b);
+				}
+			} else {
+				if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse((Interaction)ints.get(0))) {
+					faultPaths.add(b);
+					faultInteractions.add((Interaction)ints.get(0));
+				} else if (normalPath == null) {
+					normalPath = b;
+					normalInteraction = (Interaction)ints.get(0);
+				} else {
+					logger.severe("More than one normal path exists in the choice: "+respAndFaults);
+				}
 			}
 		}
 		
-		public boolean start(Block elem) {
-			_code.append(" {\r\n");
-			_indent++;
+		newline(code, indent);
+		
+		code.append("try {");
+		
+		indent++;
+		
+		// Save type/var map
+		java.util.Map<String,String> savedTypeVarMap=new java.util.HashMap<String, String>(typeVarMap);
+		
+		// Identify request Java type, and determine if a new variable is required
+		String reqType=getJavaType(req);
+		String reqVarName=typeVarMap.get(reqType);
+		
+		if (reqVarName == null) {
+			newline(code, indent);
 			
-			return(true);
+			// Declare new request variable
+			reqVarName = getVariableName(req.getMessageSignature().getOperation())+"Req";
+			
+			typeVarMap.put(reqType, reqVarName);
+			
+			code.append("// TODO: Add code here to initialize request");
+			newline(code, indent);
+			code.append(reqType+" "+reqVarName+";\r\n");
+		}
+
+		newline(code, indent);
+		
+		// Get normal response and create var if does not exist
+		if (normalPath != null && normalInteraction != null &&
+					normalInteraction.getMessageSignature().getTypeReferences().size() == 1) {
+			String typeStr=getJavaType(normalInteraction);
+			String varName=typeVarMap.get(typeStr);
+			
+			if (varName == null) {
+				varName = getVariableName(req.getMessageSignature().getOperation())+"Result";
+				
+				typeVarMap.put(typeStr, varName);
+				
+				code.append(typeStr+" ");
+			}
+			
+			code.append(varName+" = ");
 		}
 		
-		public void end(Block elem) {
-			newline();
-			_code.append("}");
-			_indent--;
+		// Get variable for role
+		String roleVar=roleMap.get(req.getToRoles().get(0));
+		
+		code.append(roleVar+"."+req.getMessageSignature().getOperation()+"("+reqVarName+");");
+		
+		// Process remainder of normal block
+		if (normalPath != null) {
+			processBlock(normalPath, code, indent, roleMap, typeVarMap);
 		}
+		
+		indent--;
+		
+		// Restore type/var map
+		typeVarMap = savedTypeVarMap;
+		
+		// For each of the fault blocks - create a catch block for fault
+		for (int i=0; i < faultPaths.size(); i++) {
+			Block faultPath=faultPaths.get(i);
+			Interaction faultInteraction=faultInteractions.get(i);
+			
+			// Save type/var map
+			savedTypeVarMap=new java.util.HashMap<String, String>(typeVarMap);
+			
+			String faultType=getJavaType(faultInteraction);
+			String faultName=getVariableName(org.savara.protocol.model.util.InteractionUtil.getFaultName(faultInteraction));
+			
+			newline(code, indent);
+			
+			code.append("} catch ("+faultType+" "+faultName+") {");
+			
+			typeVarMap.put(faultType, faultName);
+			
+			// Process fault block
+			processBlock(faultPath, code, indent+1, roleMap, typeVarMap);
+			
+			// Restore type/var map
+			typeVarMap = savedTypeVarMap;
+		}
+		
+		newline(code, indent);
+		
+		code.append("}");
+		
 	}
 }
