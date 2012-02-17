@@ -1,3 +1,9 @@
+[[ XSDType ]]
+import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed, "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed, "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest from "http://www.jboss.org/examples/store";
+[[ XSDType ]]
+import xsd "{java:org.jboss.savara.examples.purchasing}CreditCheckInvalid" as CreditCheckInvalid, "{java:org.jboss.savara.examples.purchasing}CreditCheckOk" as CreditCheckOk, "{java:org.jboss.savara.examples.purchasing}CreditCheckRequest" as CreditCheckRequest from "java:org.jboss.savara.examples.purchasing";
+[[ XSDType ]]
+import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http://www.w3.org/2001/XMLSchema";
 [[ SourceComponent(id=//@choreographies.0) ]]
 [[ Interface(name=BuyerInterface,role=Buyer,namespace=http://www.jboss.org/savara/examples) ]]
 [[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=java:org.jboss.savara.examples.purchasing) ]]

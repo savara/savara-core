@@ -22,22 +22,10 @@ import java.util.logging.Logger;
 
 import javax.wsdl.PortType;
 import javax.wsdl.xml.WSDLReader;
-import javax.xml.namespace.QName;
 
 import org.apache.cxf.tools.common.ToolContext;
-import org.savara.protocol.model.util.ChoiceUtil;
-import org.scribble.protocol.model.Activity;
-import org.scribble.protocol.model.Block;
-import org.scribble.protocol.model.Choice;
-import org.scribble.protocol.model.Interaction;
-import org.scribble.protocol.model.MessageSignature;
-import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
-import org.scribble.protocol.model.TypeImport;
-import org.scribble.protocol.model.TypeReference;
-import org.scribble.protocol.util.InteractionUtil;
-import org.scribble.protocol.util.TypesUtil;
 
 public class SwitchyardJavaGenerator {
 	
@@ -85,65 +73,6 @@ public class SwitchyardJavaGenerator {
 		//makeSwitchyardService(wsdlPath, srcFolder);
 	}
 	
-	protected String getJavaPackage(String namespace) {
-		String ret=null;
-		
-		try {
-			java.net.URI uri=new java.net.URI(namespace);
-			
-			String host=uri.getHost();
-			
-			// Removing preceding www
-			if (host.startsWith("www.")) {
-				host = host.substring(4);
-			}
-			
-			// Place the suffix at the beginning
-			int index=host.lastIndexOf('.');
-			
-			if (index != -1) {
-				ret = host.substring(index+1);
-				
-				ret += "."+host.substring(0, index);
-			} else {
-				ret = host;
-			}
-			
-			ret += uri.getPath().replace('/', '.');
-			
-			ret = ret.toLowerCase();
-			
-		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Failed to get java package from namespace '"+namespace+"'", e);
-		}
-		
-		return(ret);
-	}
-	
-	protected String getJavaType(Interaction interaction) {
-		String ret=null;
-		TypeReference tref=interaction.getMessageSignature().getTypeReferences().get(0);
-		TypeImport ti=TypesUtil.getTypeImport(tref);
-		
-		if (ti != null && ti.getDataType() != null) {
-			QName type=QName.valueOf(ti.getDataType().getDetails());
-			
-			ret = getJavaPackage(type.getNamespaceURI());
-			
-			if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
-				ret += "."+org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction)+"Fault";
-			} else {
-				ret += "."+type.getLocalPart()+"Type";
-			}
-		}
-
-		return(ret);
-	}
-	
-	protected String getVariableName(String name) {
-		return(Character.toLowerCase(name.charAt(0))+name.substring(1));
-	}
-	
 	public void createServiceImplementationFromWSDL(Role role, java.util.List<Role> refRoles,
 							ProtocolModel behaviour, String wsdlPath, String wsdlLocation,
 						java.util.List<String> refWsdlPaths, String srcFolder) throws Exception {
@@ -169,7 +98,7 @@ public class SwitchyardJavaGenerator {
 		if (defn != null) {
 			
 			// Use the namespace to obtain a Java package
-			String pack=getJavaPackage(defn.getTargetNamespace());
+			String pack=JavaBehaviourGenerator.getJavaPackage(defn.getTargetNamespace());
 			
 			String folder=pack.replace('.', java.io.File.separatorChar);
 			
@@ -260,7 +189,7 @@ public class SwitchyardJavaGenerator {
 				if (refDefn != null) {
 					
 					// Use the namespace to obtain a Java package
-					String refPack=getJavaPackage(refDefn.getTargetNamespace());
+					String refPack=JavaBehaviourGenerator.getJavaPackage(refDefn.getTargetNamespace());
 					
 					@SuppressWarnings("unchecked")
 					java.util.Iterator<PortType> refPortTypes=refDefn.getPortTypes().values().iterator();
@@ -268,7 +197,7 @@ public class SwitchyardJavaGenerator {
 
 					while (refPortTypes.hasNext()) {
 						PortType refPortType=refPortTypes.next();
-						String name=getVariableName(refRoles.get(i).getName());
+						String name=JavaBehaviourGenerator.getVariableName(refRoles.get(i).getName());
 						
 						if (refDefn.getPortTypes().size() > 1) {
 							name += refPortCount;
@@ -299,7 +228,7 @@ public class SwitchyardJavaGenerator {
 		
 		if (defn != null) {
 			// Use the namespace to obtain a Java package
-			String pack=getJavaPackage(defn.getTargetNamespace());
+			String pack=JavaBehaviourGenerator.getJavaPackage(defn.getTargetNamespace());
 			
 			StringBuffer composite=new StringBuffer();
 			
@@ -390,6 +319,8 @@ public class SwitchyardJavaGenerator {
 		
 		int index=0;
 		
+		JavaBehaviourGenerator bg=new JavaBehaviourGenerator(behaviour);
+		
 		// NOTE: Tried using Eclipse JDT, but pulled in many dependencies and
 		// was an over complex approach to just replace a method body, so decided
 		// to do it the low tech way :)
@@ -402,9 +333,9 @@ public class SwitchyardJavaGenerator {
 				
 				if (startIndex != -1 && endIndex != -1) {
 					// Find out operation name
-					String[] reg=str.substring(index, startIndex).split("[ \\(]");
+					String[] reg=str.substring(index, startIndex).split("[ \\(\\)]");
 					
-					String opbody=getOperationBody(reg[6], reg[5], behaviour, roleMapping);
+					String opbody=bg.getOperationBody(reg[6], reg[5], reg[7], reg[8], roleMapping);
 					
 					if (opbody != null) {
 						str = str.substring(0, startIndex+1)+
@@ -420,6 +351,17 @@ public class SwitchyardJavaGenerator {
 		
 		} while (index != -1);
 		
+		// Insert the import statements
+		String importStatements=bg.getImportStatements();
+		
+		if (importStatements != null) {
+			int ind=str.indexOf("import");
+			
+			if (ind != -1) {
+				str = str.substring(0, ind)+importStatements+"\r\n"+str.substring(ind);
+			}
+		}
+		
 		java.io.FileOutputStream fos=new java.io.FileOutputStream(implFile);
 		
 		fos.write(str.getBytes());
@@ -427,309 +369,4 @@ public class SwitchyardJavaGenerator {
 		fos.close();
 	}
 	
-	protected String getOperationBody(String opName, String returnType, ProtocolModel behaviour,
-					java.util.Map<Role,String> roleMapping) {
-		String ret=null;
-	
-		Block block=getStatelessBehaviourForOperation(opName, behaviour);
-		
-		if (block != null) {
-			if (logger.isLoggable(Level.FINER)) {
-				logger.finer("Behaviour for operation="+opName+" is: "+block);
-			}
-			
-			StringBuffer code=new StringBuffer();
-			int indent=2;
-			java.util.Map<String,String> typeVarMap=new java.util.HashMap<String,String>();
-			
-			if (!returnType.equals("void")) {
-				newline(code, indent);
-				code.append(returnType+" ret;");
-				
-				typeVarMap.put(returnType, "ret");
-			}
-			
-			processBlock(block, code, indent, roleMapping, typeVarMap);
-			
-			if (!returnType.equals("void")) {
-				newline(code, indent);
-				code.append("return (ret);");
-			}
-			
-			ret = code.toString();
-		}
-		
-		return(ret);
-	}
-	
-	protected Block getStatelessBehaviourForOperation(String opName, ProtocolModel behaviour) {
-		Block ret=null;
-		
-		if (behaviour.getProtocol().getBlock().size() == 1 &&
-				behaviour.getProtocol().getBlock().get(0) instanceof Choice) {
-			for (Block b : ((Choice)behaviour.getProtocol().getBlock().get(0)).getPaths()) {
-				
-				// Get first interaction, and check whether it is for
-				// the supplied operation name
-				java.util.List<ModelObject> interactions=InteractionUtil.getInitialInteractions(b);
-				
-				if (interactions != null) {
-					if (interactions.size() == 1) {
-						MessageSignature msig=InteractionUtil.getMessageSignature(interactions.get(0));
-						
-						if (msig.getOperation() != null && msig.getOperation().equals(opName)) {
-							ret = b;
-							
-							break;
-						}
-					} else {
-						logger.severe("Stateless behaviour shouldn't have more " +
-								"than one initial interaction for path: "+b);
-					}
-				}
-			}
-		} else {
-			// Assume only a single path
-			// Get first interaction, and check whether it is for
-			// the supplied operation name
-			java.util.List<ModelObject> interactions=
-					InteractionUtil.getInitialInteractions(behaviour.getProtocol().getBlock());
-			
-			if (interactions != null) {
-				if (interactions.size() == 1) {
-					MessageSignature msig=InteractionUtil.getMessageSignature(interactions.get(0));
-					
-					if (msig.getOperation() != null && msig.getOperation().equals(opName)) {
-						ret = behaviour.getProtocol().getBlock();
-					}
-				} else {
-					logger.severe("Stateless behaviour shouldn't have more " +
-							"than one initial interaction for path: "+behaviour.getProtocol().getBlock());
-				}
-			}
-		}
-	
-		return(ret);
-	}
-	
-	protected void processBlock(Block block, StringBuffer code, int indent,
-						java.util.Map<Role,String> roleMap, java.util.Map<String,String> typeVarMap) {
-		
-		for (int i=0; i < block.getContents().size(); i++) {
-			Activity act=block.getContents().get(i);
-			
-			if (act instanceof Interaction) {
-				Interaction interaction=(Interaction)act;
-				
-				if (org.savara.protocol.model.util.InteractionUtil.isRequest(interaction) &&
-						org.savara.protocol.model.util.InteractionUtil.isSend(interaction)) {
-					
-					if (i+1 < block.getContents().size()) {
-						Activity next=block.getContents().get(i+1);
-						
-						// Check if followed by an interaction representing a response to this
-						// request
-						if (next instanceof Interaction &&
-								org.savara.protocol.model.util.InteractionUtil.isResponseForRequest(
-											(Interaction)next, interaction)) {
-							processInvoke(interaction, (Interaction)next,
-									code, indent, roleMap, typeVarMap);
-							i++; // Skip response
-							
-						// Check if followed by a choice representing normal and fault responses
-						} else if (next instanceof Choice &&
-								org.savara.protocol.model.util.InteractionUtil.isResponseAndFaultHandler(
-											(Choice)next, interaction)) {							
-							processInvoke(interaction, (Choice)next,
-									code, indent, roleMap, typeVarMap);
-							i++; // Skip normal/response fault handler
-						}
-					}
-				} else if (org.savara.protocol.model.util.InteractionUtil.isResponse(interaction) &&
-						org.savara.protocol.model.util.InteractionUtil.isSend(interaction)) {
-					processResponse(interaction, code, indent, roleMap, typeVarMap);
-				}
-			} else if (act instanceof Choice && ChoiceUtil.isDecisionMaker((Choice)act)) {
-				
-				for (int j=0; j < ((Choice)act).getPaths().size(); j++) {
-					Block path=((Choice)act).getPaths().get(j);
-					
-					// Save type/var map
-					java.util.Map<String,String> savedTypeVarMap=new java.util.HashMap<String, String>(typeVarMap);
-					
-					newline(code, indent);
-					
-					if (j == 0) {
-						code.append("if (false) { // TODO: Set expression");
-					} else if (j != ((Choice)act).getPaths().size()-1) {
-						code.append("} else if (false) { // TODO: Set expression");
-					} else {
-						code.append("} else {");
-					}
-					
-					processBlock(path, code, indent+1, roleMap, typeVarMap);
-
-					// Restore type/var map
-					typeVarMap = savedTypeVarMap;
-				}
-				
-				newline(code, indent);
-				code.append("}");				
-			}
-		}
-	}
-	
-	protected void newline(StringBuffer code, int indent) {
-		code.append("\r\n");
-		for (int i=0; i < indent; i++) {
-			code.append("    ");
-		}
-	}
-	
-	protected void processResponse(Interaction resp,
-			StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
-			java.util.Map<String,String> typeVarMap) {
-		
-		// Check if fault response
-		if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(resp)) {
-			String faultType=getJavaType(resp);
-			
-			newline(code, indent);
-			code.append("throw new "+faultType+"();");
-		} else {
-			String type=getJavaType(resp);
-			String name=typeVarMap.get(type);
-			
-			newline(code, indent);
-			code.append("// TODO: Add code here to return response");
-			newline(code, indent);
-			code.append("// "+name+" = ....;");
-		}
-	}
-
-	protected void processInvoke(Interaction req, Interaction resp,
-			StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
-			java.util.Map<String,String> typeVarMap) {
-
-	}
-
-	protected void processInvoke(Interaction req, Choice respAndFaults,
-					StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
-					java.util.Map<String,String> typeVarMap) {
-		// Sort choice paths into normal and fault responses
-		Block normalPath=null;
-		Interaction normalInteraction=null;
-		java.util.List<Block> faultPaths=new java.util.Vector<Block>();
-		java.util.List<Interaction> faultInteractions=new java.util.Vector<Interaction>();
-		
-		for (Block b : respAndFaults.getPaths()) {
-			
-			java.util.List<ModelObject> ints=InteractionUtil.getInitialInteractions(b);
-			
-			if (ints.size() != 1) {
-				if (logger.isLoggable(Level.FINE)) {
-					logger.fine("Response fault handler path should only have single initial interaction: "+b);
-				}
-			} else {
-				if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse((Interaction)ints.get(0))) {
-					faultPaths.add(b);
-					faultInteractions.add((Interaction)ints.get(0));
-				} else if (normalPath == null) {
-					normalPath = b;
-					normalInteraction = (Interaction)ints.get(0);
-				} else {
-					logger.severe("More than one normal path exists in the choice: "+respAndFaults);
-				}
-			}
-		}
-		
-		newline(code, indent);
-		
-		code.append("try {");
-		
-		indent++;
-		
-		// Save type/var map
-		java.util.Map<String,String> savedTypeVarMap=new java.util.HashMap<String, String>(typeVarMap);
-		
-		// Identify request Java type, and determine if a new variable is required
-		String reqType=getJavaType(req);
-		String reqVarName=typeVarMap.get(reqType);
-		
-		if (reqVarName == null) {
-			newline(code, indent);
-			
-			// Declare new request variable
-			reqVarName = getVariableName(req.getMessageSignature().getOperation())+"Req";
-			
-			typeVarMap.put(reqType, reqVarName);
-			
-			code.append("// TODO: Add code here to initialize request");
-			newline(code, indent);
-			code.append(reqType+" "+reqVarName+";\r\n");
-		}
-
-		newline(code, indent);
-		
-		// Get normal response and create var if does not exist
-		if (normalPath != null && normalInteraction != null &&
-					normalInteraction.getMessageSignature().getTypeReferences().size() == 1) {
-			String typeStr=getJavaType(normalInteraction);
-			String varName=typeVarMap.get(typeStr);
-			
-			if (varName == null) {
-				varName = getVariableName(req.getMessageSignature().getOperation())+"Result";
-				
-				typeVarMap.put(typeStr, varName);
-				
-				code.append(typeStr+" ");
-			}
-			
-			code.append(varName+" = ");
-		}
-		
-		// Get variable for role
-		String roleVar=roleMap.get(req.getToRoles().get(0));
-		
-		code.append(roleVar+"."+req.getMessageSignature().getOperation()+"("+reqVarName+");");
-		
-		// Process remainder of normal block
-		if (normalPath != null) {
-			processBlock(normalPath, code, indent, roleMap, typeVarMap);
-		}
-		
-		indent--;
-		
-		// Restore type/var map
-		typeVarMap = savedTypeVarMap;
-		
-		// For each of the fault blocks - create a catch block for fault
-		for (int i=0; i < faultPaths.size(); i++) {
-			Block faultPath=faultPaths.get(i);
-			Interaction faultInteraction=faultInteractions.get(i);
-			
-			// Save type/var map
-			savedTypeVarMap=new java.util.HashMap<String, String>(typeVarMap);
-			
-			String faultType=getJavaType(faultInteraction);
-			String faultName=getVariableName(org.savara.protocol.model.util.InteractionUtil.getFaultName(faultInteraction));
-			
-			newline(code, indent);
-			
-			code.append("} catch ("+faultType+" "+faultName+") {");
-			
-			typeVarMap.put(faultType, faultName);
-			
-			// Process fault block
-			processBlock(faultPath, code, indent+1, roleMap, typeVarMap);
-			
-			// Restore type/var map
-			typeVarMap = savedTypeVarMap;
-		}
-		
-		newline(code, indent);
-		
-		code.append("}");
-		
-	}
 }

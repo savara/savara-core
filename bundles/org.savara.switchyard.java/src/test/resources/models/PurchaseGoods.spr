@@ -1,5 +1,7 @@
 import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest from "store.xsd";
+import xsd "{http://www.jboss.org/examples/store}AckRequest" as AckRequest from "store.xsd";
 import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheck from "creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditAckRequest" as CreditAck from "creditAgency.xsd";
 import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown from "creditAgency.xsd";
 import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating from "creditAgency.xsd";
 import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound from "store.xsd";
@@ -41,6 +43,9 @@ protocol PurchaseGoods(role Buyer) {
 			[[ Correlation(replyTo=buy) ]]
 			buy(BuyFailed) from Store to Buyer;
 		} or {
+			[[ Correlation(request=creditAck) ]]
+			creditAck(CreditAck) from Store to CreditAgency;
+			
 			Store introduces Logistics;
 			[[ Correlation(request=delivery) ]]
 			delivery(DeliveryRequest) from Store to Logistics;
@@ -48,6 +53,8 @@ protocol PurchaseGoods(role Buyer) {
 			delivery(DeliveryConfirmed) from Logistics to Store;
 			[[ Correlation(replyTo=buy) ]]
 			buy(BuyConfirmed) from Store to Buyer;
+			[[ Correlation(request=buy) ]]
+			ack(AckRequest) from Buyer to Store;			
 		}
 	}
 }

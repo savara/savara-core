@@ -13,6 +13,10 @@
     <wsdl:part name="content" element="ns3:CreditRating">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="creditAckRequest">
+    <wsdl:part name="content" element="ns3:CreditAckRequest">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="creditCheckRequest">
     <wsdl:part name="content" element="ns3:CreditCheckRequest">
     </wsdl:part>
@@ -25,6 +29,10 @@
     </wsdl:output>
       <wsdl:fault name="CustomerUnknown" message="pns2:CustomerUnknownFault">
     </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="creditAck">
+      <wsdl:input message="pns2:creditAckRequest">
+    </wsdl:input>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="CreditAgencyBinding" type="pns2:CreditAgency">
@@ -40,6 +48,12 @@
       <wsdl:fault name="CustomerUnknown">
         <soap:fault name="CustomerUnknown" use="literal"/>
       </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="creditAck">
+      <soap:operation soapAction="http://www.savara.org/examples/CreditAgency/creditAck"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="CreditAgencyService">

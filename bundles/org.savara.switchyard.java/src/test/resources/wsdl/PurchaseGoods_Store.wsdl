@@ -21,6 +21,10 @@
     <wsdl:part name="content" element="ns1:BuyRequest">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="ackRequest">
+    <wsdl:part name="content" element="ns1:AckRequest">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="Store">
     <wsdl:operation name="buy">
       <wsdl:input message="pns3:buyRequest">
@@ -31,6 +35,10 @@
     </wsdl:fault>
       <wsdl:fault name="InsufficientCredit" message="pns3:InsufficientCreditFault">
     </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ack">
+      <wsdl:input message="pns3:ackRequest">
+    </wsdl:input>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="StoreBinding" type="pns3:Store">
@@ -49,6 +57,12 @@
       <wsdl:fault name="InsufficientCredit">
         <soap:fault name="InsufficientCredit" use="literal"/>
       </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ack">
+      <soap:operation soapAction="http://www.savara.org/examples/Store/ack"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="StoreService">

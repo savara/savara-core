@@ -3,6 +3,7 @@
 
     <element name="CreditCheckRequest" type="tns:CreditCheckType"></element>
     <element name="CreditRating" type="tns:CreditRatingType"></element>
+    <element name="CreditAckRequest" type="tns:CreditAckType"></element>
     <element name="CustomerUnknown" type="tns:CustomerUnknownType"></element>
 
     <complexType name="CreditCheckType">
@@ -13,6 +14,10 @@
     <complexType name="CreditRatingType">
     	<attribute name="id" type="string"></attribute>
     	<attribute name="rating" type="integer"></attribute>
+    </complexType>
+    
+    <complexType name="CreditAckType">
+    	<attribute name="id" type="string"></attribute>
     </complexType>
     
     <complexType name="CustomerUnknownType">

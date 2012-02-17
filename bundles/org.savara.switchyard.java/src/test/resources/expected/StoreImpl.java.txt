@@ -3,6 +3,18 @@
 
 package org.savara.examples.store;
 
+import org.jboss.examples.store.BuyRequestType;
+import org.jboss.examples.store.BuyConfirmedType;
+import org.jboss.examples.creditagency.CreditCheckRequestType;
+import org.jboss.examples.creditagency.CreditRatingType;
+import org.jboss.examples.store.InsufficientCreditFault;
+import org.jboss.examples.creditagency.CreditAckRequestType;
+import org.jboss.examples.logistics.DeliveryRequestType;
+import org.jboss.examples.logistics.DeliveryConfirmedType;
+import org.jboss.examples.creditagency.CustomerUnknownFault;
+import org.jboss.examples.store.AccountNotFoundFault;
+import org.jboss.examples.store.AckRequestType;
+
 import java.util.logging.Logger;
 
 @org.switchyard.component.bean.Service(Store.class)
@@ -18,22 +30,44 @@ public class StoreImpl implements Store {
 
     
     public org.jboss.examples.store.BuyConfirmedType buy(org.jboss.examples.store.BuyRequestType content) throws InsufficientCreditFault , AccountNotFoundFault    {
-        org.jboss.examples.store.BuyConfirmedType ret;
+        BuyConfirmedType ret;
+
+        // TODO: Add code here to handle request (in variable 'content')
+
         try {
             // TODO: Add code here to initialize request
-            org.jboss.examples.creditagency.CreditCheckRequestType creditCheckReq;
+            CreditCheckRequestType creditCheckReq;
 
-            org.jboss.examples.creditagency.CreditRatingType creditCheckResult = _creditAgency.creditCheck(creditCheckReq);
+            CreditRatingType creditCheckResult = _creditAgency.creditCheck(creditCheckReq);
+
             if (false) { // TODO: Set expression
-                throw new org.jboss.examples.store.InsufficientCreditFault();
+                throw new InsufficientCreditFault();
             } else {
+                // TODO: Add code here to initialize request
+                CreditAckRequestType creditAckReq;
+
+                _creditAgency.creditAck(creditAckReq);
+
+                // TODO: Add code here to initialize request
+                DeliveryRequestType deliveryReq;
+
+                DeliveryConfirmedType deliveryResult = _logistics.delivery(deliveryReq);
+
                 // TODO: Add code here to return response
                 // ret = ....;
             }
-        } catch (org.jboss.examples.creditagency.CustomerUnknownFault customerUnknown) {
-            throw new org.jboss.examples.store.AccountNotFoundFault();
+
+        } catch (CustomerUnknownFault customerUnknown) {
+            throw new AccountNotFoundFault();
         }
+
         return (ret);
+    }
+
+    
+    public void ack(org.jboss.examples.store.AckRequestType content) {
+        // TODO: Add code here to handle request (in variable 'content')
+
     }
 
 }

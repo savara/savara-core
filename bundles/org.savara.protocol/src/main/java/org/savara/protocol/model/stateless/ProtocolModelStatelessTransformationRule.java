@@ -57,7 +57,14 @@ public class ProtocolModelStatelessTransformationRule
 		
 		ret.derivedFrom(src);
 		
-		// TODO: Transform (copy) the import statements
+		// Transform (copy) the import statements
+		for (ImportList il : src.getImports()) {
+			if (il instanceof TypeImportList) {
+				ret.getImports().add(new TypeImportList((TypeImportList)il));
+			} else if (il instanceof ProtocolImportList) {
+				ret.getImports().add(new ProtocolImportList((ProtocolImportList)il));
+			}
+		}
 		
 		ret.setProtocol((Protocol)context.transform(src.getProtocol()));
 		

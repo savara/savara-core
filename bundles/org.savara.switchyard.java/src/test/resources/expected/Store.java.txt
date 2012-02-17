@@ -1,5 +1,6 @@
 package org.savara.examples.store;
 
+import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
@@ -20,4 +21,11 @@ public interface Store {
         @WebParam(partName = "content", name = "BuyRequest", targetNamespace = "http://www.jboss.org/examples/store")
         org.jboss.examples.store.BuyRequestType content
     ) throws InsufficientCreditFault, AccountNotFoundFault;
+
+    @Oneway
+    @WebMethod(action = "http://www.savara.org/examples/Store/ack")
+    public void ack(
+        @WebParam(partName = "content", name = "AckRequest", targetNamespace = "http://www.jboss.org/examples/store")
+        org.jboss.examples.store.AckRequestType content
+    );
 }

@@ -89,7 +89,10 @@ public class SwitchyardJavaGeneratorTest {
 										local.getProtocol().getAnnotations(), AnnotationDefinitions.TYPE);
 							}
 							
-							ret = local;
+							org.savara.protocol.model.stateless.StatelessTransformer transformer=
+									org.savara.protocol.model.stateless.StatelessTransformerFactory.createStatelessTransformer();
+							
+							ret = transformer.transform(local, false, new JournalProxy(handler));
 						}
 						
 						break;

@@ -2,6 +2,7 @@
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/examples/store" elementFormDefault="qualified">
 
     <element name="BuyRequest" type="tns:BuyRequestType"></element>
+    <element name="AckRequest" type="tns:AckRequestType"></element>
     <element name="BuyConfirmed" type="tns:BuyConfirmedType"></element>
     <element name="AccountNotFound" type="tns:AccountNotFoundType"></element>
     <element name="BuyFailed" type="tns:BuyFailedType"></element>
@@ -9,6 +10,10 @@
     <complexType name="BuyRequestType">
     	<attribute name="id" type="string"></attribute>
     	<attribute name="product" type="string"></attribute>
+    </complexType>
+    
+    <complexType name="AckRequestType">
+    	<attribute name="id" type="string"></attribute>
     </complexType>
     
     <complexType name="BuyConfirmedType">
