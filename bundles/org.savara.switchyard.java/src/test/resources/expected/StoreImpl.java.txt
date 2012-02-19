@@ -5,14 +5,11 @@ package org.savara.examples.store;
 
 import org.jboss.examples.store.BuyRequestType;
 import org.jboss.examples.store.BuyConfirmedType;
-import org.jboss.examples.creditagency.CreditCheckRequestType;
+import org.jboss.examples.creditagency.CreditCheckType;
 import org.jboss.examples.creditagency.CreditRatingType;
-import org.jboss.examples.store.InsufficientCreditFault;
-import org.jboss.examples.creditagency.CreditAckRequestType;
+import org.jboss.examples.creditagency.CreditAckType;
 import org.jboss.examples.logistics.DeliveryRequestType;
 import org.jboss.examples.logistics.DeliveryConfirmedType;
-import org.jboss.examples.creditagency.CustomerUnknownFault;
-import org.jboss.examples.store.AccountNotFoundFault;
 import org.jboss.examples.store.AckRequestType;
 
 import java.util.logging.Logger;
@@ -36,7 +33,7 @@ public class StoreImpl implements Store {
 
         try {
             // TODO: Add code here to initialize request
-            CreditCheckRequestType creditCheckReq;
+            CreditCheckType creditCheckReq;
 
             CreditRatingType creditCheckResult = _creditAgency.creditCheck(creditCheckReq);
 
@@ -44,7 +41,7 @@ public class StoreImpl implements Store {
                 throw new InsufficientCreditFault();
             } else {
                 // TODO: Add code here to initialize request
-                CreditAckRequestType creditAckReq;
+                CreditAckType creditAckReq;
 
                 _creditAgency.creditAck(creditAckReq);
 

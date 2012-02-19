@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.common.resources.DefaultResourceLocator;
 import org.savara.protocol.util.JournalProxy;
 import org.savara.protocol.util.ProtocolServices;
 import org.scribble.common.logging.Journal;
@@ -127,6 +128,9 @@ public class SwitchyardJavaGeneratorTest {
 		
 		try {
 			java.net.URL url=ClassLoader.getSystemClassLoader().getResource(STORE_WSDL_LOCATION);
+			java.net.URL modelurl=ClassLoader.getSystemClassLoader().getResource("models/PurchaseGoods.spr");
+			
+			java.io.File modelFile=new java.io.File(modelurl.getPath());
 
 			java.util.List<Role> refRoles=new java.util.Vector<Role>();
 			refRoles.add(new Role("CreditAgency"));
@@ -138,7 +142,8 @@ public class SwitchyardJavaGeneratorTest {
 			
 			gen.createServiceImplementationFromWSDL(new Role("Store"), refRoles,
 					getProtocol("PurchaseGoods", "Store"),
-					url.getFile(), STORE_WSDL_LOCATION, refWsdlPaths, SRC_PATH);
+					url.getFile(), STORE_WSDL_LOCATION, refWsdlPaths, SRC_PATH,
+					new DefaultResourceLocator(modelFile.getParentFile()));
 			
 			compare("expected/StoreImpl.java.txt",
 					SRC_PATH+"/org/savara/examples/store/StoreImpl.java");

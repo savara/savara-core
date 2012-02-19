@@ -22,6 +22,11 @@ import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
+import org.apache.xerces.xs.XSElementDeclaration;
+import org.apache.xerces.xs.XSImplementation;
+import org.apache.xerces.xs.XSLoader;
+import org.apache.xerces.xs.XSModel;
+import org.savara.common.resources.ResourceLocator;
 import org.savara.protocol.model.util.ChoiceUtil;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
@@ -32,9 +37,11 @@ import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 import org.scribble.protocol.model.TypeImport;
+import org.scribble.protocol.model.TypeImportList;
 import org.scribble.protocol.model.TypeReference;
 import org.scribble.protocol.util.InteractionUtil;
 import org.scribble.protocol.util.TypesUtil;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 
 /**
  * This class provides capabilities to generate stateless behaviour
@@ -46,15 +53,19 @@ public class JavaBehaviourGenerator {
 	private static final Logger logger=Logger.getLogger(JavaBehaviourGenerator.class.getName());
 	
 	private ProtocolModel _behaviour=null;
+	private ResourceLocator _locator=null;
 	private java.util.List<String> _importedTypes=new java.util.Vector<String>();
 	
 	/**
 	 * This is the constructor for the Java benaviour generator.
 	 * 
 	 * @param behaviour The stateless endpoint behaviour
+	 * @param locator The optional resource locator
 	 */
-	public JavaBehaviourGenerator(ProtocolModel behaviour) {
+	public JavaBehaviourGenerator(ProtocolModel behaviour,
+						ResourceLocator locator) {
 		_behaviour = behaviour;
+		_locator = locator;
 	}
 	
 	/**
@@ -69,7 +80,7 @@ public class JavaBehaviourGenerator {
 		String ret=type;
 				
 		// Check if in import list
-		if (!_importedTypes.contains(ret)) {
+		if (ret.indexOf('.') != -1 && !_importedTypes.contains(ret)) {
 			_importedTypes.add(ret);
 		}
 
@@ -82,13 +93,14 @@ public class JavaBehaviourGenerator {
 	 * just the local type.
 	 * 
 	 * @param interaction The interaction
+	 * @param locator The optional resource locator
 	 * @return The Java type, local if imported, or fully qualified
 	 */
-	protected String getImportedType(Interaction interaction) {
-		String ret=getJavaType(interaction);
+	protected String getImportedType(Interaction interaction, ResourceLocator locator) {
+		String ret=getJavaType(interaction, locator);
 				
 		// Check if in import list
-		if (!_importedTypes.contains(ret)) {
+		if (ret.indexOf('.') != -1 && !_importedTypes.contains(ret)) {
 			_importedTypes.add(ret);
 		}
 
@@ -130,7 +142,7 @@ public class JavaBehaviourGenerator {
 		return(ret);
 	}
 	
-	protected static String getJavaType(Interaction interaction) {
+	protected static String getJavaType(Interaction interaction, ResourceLocator locator) {
 		String ret=null;
 		TypeReference tref=interaction.getMessageSignature().getTypeReferences().get(0);
 		TypeImport ti=TypesUtil.getTypeImport(tref);
@@ -141,9 +153,42 @@ public class JavaBehaviourGenerator {
 			ret = getJavaPackage(type.getNamespaceURI());
 			
 			if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
-				ret += "."+org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction)+"Fault";
+				ret = org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction)+"Fault";
 			} else {
-				ret += "."+type.getLocalPart()+"Type";
+				ret += "."+type.getLocalPart();
+				
+				// Check if XSD element - and if so find the XSD type
+				if (locator != null && ti.getParent() instanceof TypeImportList &&
+						((TypeImportList)ti.getParent()).getLocation() != null) {
+					String location=((TypeImportList)ti.getParent()).getLocation();
+					try {
+						java.net.URI uri=locator.getResourceURI(location);
+						
+						// Get DOM Implementation using DOM Registry
+						System.setProperty(DOMImplementationRegistry.PROPERTY,
+						    "org.apache.xerces.dom.DOMXSImplementationSourceImpl");
+						DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+
+						XSImplementation impl = 
+						    (XSImplementation) registry.getDOMImplementation("XS-Loader");
+
+						XSLoader schemaLoader = impl.createXSLoader(null);
+						
+						XSModel xsmodel=schemaLoader.loadURI(uri.toString());
+						
+						XSElementDeclaration elemDecl=
+								xsmodel.getElementDeclaration(type.getLocalPart(),
+											type.getNamespaceURI());
+						
+						if (elemDecl != null) {
+							ret = getJavaPackage(elemDecl.getTypeDefinition().getNamespace());
+							ret += "."+elemDecl.getTypeDefinition().getName();
+						}
+
+					} catch(Exception e) {
+						logger.log(Level.SEVERE, "Failed to obtain XSD schema '"+location+"'", e);
+					}
+				}
 			}
 		}
 
@@ -193,7 +238,7 @@ public class JavaBehaviourGenerator {
 				typeVarMap.put(localType, "ret");
 			}
 			
-			processBlock(block, code, indent, roleMapping, typeVarMap);
+			processBlock(block, code, indent, roleMapping, typeVarMap, _locator);
 			
 			if (!returnType.equals("void")) {
 				newline(code, indent);
@@ -273,7 +318,8 @@ public class JavaBehaviourGenerator {
 	}
 	
 	protected void processBlock(Block block, StringBuffer code, int indent,
-						java.util.Map<Role,String> roleMap, java.util.Map<String,String> typeVarMap) {
+						java.util.Map<Role,String> roleMap, java.util.Map<String,String> typeVarMap,
+						ResourceLocator locator) {
 		
 		for (int i=0; i < block.getContents().size(); i++) {
 			Activity act=block.getContents().get(i);
@@ -296,7 +342,7 @@ public class JavaBehaviourGenerator {
 									org.savara.protocol.model.util.InteractionUtil.isResponseForRequest(
 												(Interaction)next, interaction)) {
 								processInvoke(interaction, (Interaction)next,
-										code, indent, roleMap, typeVarMap);
+										code, indent, roleMap, typeVarMap, locator);
 								i++; // Skip response
 								
 								processed = true;
@@ -306,7 +352,7 @@ public class JavaBehaviourGenerator {
 									org.savara.protocol.model.util.InteractionUtil.isResponseAndFaultHandler(
 												(Choice)next, interaction)) {							
 								processInvoke(interaction, (Choice)next,
-										code, indent, roleMap, typeVarMap);
+										code, indent, roleMap, typeVarMap, locator);
 								i++; // Skip normal/response fault handler
 
 								processed = true;
@@ -315,16 +361,16 @@ public class JavaBehaviourGenerator {
 							if (!processed) {
 								// Handle one-way requests
 								processInvoke(interaction, (Interaction)null,
-										code, indent, roleMap, typeVarMap);
+										code, indent, roleMap, typeVarMap, locator);
 							}
 						}
 					} else {
 						processReceive(interaction,
-								code, indent, roleMap, typeVarMap);
+								code, indent, roleMap, typeVarMap, locator);
 					}
 				} else if (org.savara.protocol.model.util.InteractionUtil.isResponse(interaction) &&
 						org.savara.protocol.model.util.InteractionUtil.isSend(interaction)) {
-					processResponse(interaction, code, indent, roleMap, typeVarMap);
+					processResponse(interaction, code, indent, roleMap, typeVarMap, locator);
 				}
 			} else if (act instanceof Choice && ChoiceUtil.isDecisionMaker((Choice)act)) {
 				
@@ -344,7 +390,7 @@ public class JavaBehaviourGenerator {
 						code.append("} else {");
 					}
 					
-					processBlock(path, code, indent+1, roleMap, typeVarMap);
+					processBlock(path, code, indent+1, roleMap, typeVarMap, locator);
 
 					// Restore type/var map
 					typeVarMap = savedTypeVarMap;
@@ -365,16 +411,17 @@ public class JavaBehaviourGenerator {
 	
 	protected void processResponse(Interaction resp,
 			StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
-			java.util.Map<String,String> typeVarMap) {
+			java.util.Map<String,String> typeVarMap,
+			ResourceLocator locator) {
 		
 		// Check if fault response
 		if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(resp)) {
-			String faultType=getImportedType(resp);
+			String faultType=getImportedType(resp, locator);
 			
 			newline(code, indent);
 			code.append("throw new "+faultType+"();");
 		} else {
-			String type=getImportedType(resp);
+			String type=getImportedType(resp, locator);
 			String name=typeVarMap.get(type);
 			
 			newline(code, indent);
@@ -386,9 +433,10 @@ public class JavaBehaviourGenerator {
 
 	protected void processReceive(Interaction req,
 			StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
-			java.util.Map<String,String> typeVarMap) {
+			java.util.Map<String,String> typeVarMap,
+			ResourceLocator locator) {
 		
-		String type=getImportedType(req);
+		String type=getImportedType(req, locator);
 		String name=typeVarMap.get(type);
 		
 		newline(code, indent);
@@ -397,13 +445,14 @@ public class JavaBehaviourGenerator {
 
 	protected void processInvoke(Interaction req, Interaction resp,
 			StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
-			java.util.Map<String,String> typeVarMap) {
+			java.util.Map<String,String> typeVarMap,
+			ResourceLocator locator) {
 
 		// Get variable for role
 		String roleVar=roleMap.get(req.getToRoles().get(0));
 		
 		// Identify request Java type, and determine if a new variable is required
-		String reqType=getImportedType(req);
+		String reqType=getImportedType(req, locator);
 		String reqVarName=typeVarMap.get(reqType);
 		
 		if (reqVarName == null) {
@@ -422,7 +471,7 @@ public class JavaBehaviourGenerator {
 		newline(code, indent);
 		
 		if (resp != null) {
-			String typeStr=getImportedType(resp);
+			String typeStr=getImportedType(resp, locator);
 			String varName=typeVarMap.get(typeStr);
 			
 			if (varName == null) {
@@ -441,7 +490,8 @@ public class JavaBehaviourGenerator {
 
 	protected void processInvoke(Interaction req, Choice respAndFaults,
 					StringBuffer code, int indent, java.util.Map<Role,String> roleMap,
-					java.util.Map<String,String> typeVarMap) {
+					java.util.Map<String,String> typeVarMap,
+					ResourceLocator locator) {
 		// Sort choice paths into normal and fault responses
 		Block normalPath=null;
 		Interaction normalInteraction=null;
@@ -479,7 +529,7 @@ public class JavaBehaviourGenerator {
 		java.util.Map<String,String> savedTypeVarMap=new java.util.HashMap<String, String>(typeVarMap);
 		
 		// Identify request Java type, and determine if a new variable is required
-		String reqType=getImportedType(req);
+		String reqType=getImportedType(req, locator);
 		String reqVarName=typeVarMap.get(reqType);
 		
 		if (reqVarName == null) {
@@ -500,7 +550,7 @@ public class JavaBehaviourGenerator {
 		// Get normal response and create var if does not exist
 		if (normalPath != null && normalInteraction != null &&
 					normalInteraction.getMessageSignature().getTypeReferences().size() == 1) {
-			String typeStr=getImportedType(normalInteraction);
+			String typeStr=getImportedType(normalInteraction, locator);
 			String varName=typeVarMap.get(typeStr);
 			
 			if (varName == null) {
@@ -521,7 +571,7 @@ public class JavaBehaviourGenerator {
 		
 		// Process remainder of normal block
 		if (normalPath != null) {
-			processBlock(normalPath, code, indent, roleMap, typeVarMap);
+			processBlock(normalPath, code, indent, roleMap, typeVarMap, locator);
 		}
 		
 		indent--;
@@ -537,7 +587,7 @@ public class JavaBehaviourGenerator {
 			// Save type/var map
 			savedTypeVarMap=new java.util.HashMap<String, String>(typeVarMap);
 			
-			String faultType=getImportedType(faultInteraction);
+			String faultType=getImportedType(faultInteraction, locator);
 			String faultName=getVariableName(org.savara.protocol.model.util.InteractionUtil.getFaultName(faultInteraction));
 			
 			newline(code, indent);
@@ -547,7 +597,7 @@ public class JavaBehaviourGenerator {
 			typeVarMap.put(faultType, faultName);
 			
 			// Process fault block
-			processBlock(faultPath, code, indent+1, roleMap, typeVarMap);
+			processBlock(faultPath, code, indent+1, roleMap, typeVarMap, locator);
 			
 			// Restore type/var map
 			typeVarMap = savedTypeVarMap;

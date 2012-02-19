@@ -24,6 +24,7 @@ import javax.wsdl.PortType;
 import javax.wsdl.xml.WSDLReader;
 
 import org.apache.cxf.tools.common.ToolContext;
+import org.savara.common.resources.ResourceLocator;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 
@@ -75,7 +76,8 @@ public class SwitchyardJavaGenerator {
 	
 	public void createServiceImplementationFromWSDL(Role role, java.util.List<Role> refRoles,
 							ProtocolModel behaviour, String wsdlPath, String wsdlLocation,
-						java.util.List<String> refWsdlPaths, String srcFolder) throws Exception {
+						java.util.List<String> refWsdlPaths, String srcFolder,
+						ResourceLocator locator) throws Exception {
 		String[] cxfargs=new String[]{
 				"-impl",
 				"-d", srcFolder,
@@ -117,7 +119,7 @@ public class SwitchyardJavaGenerator {
 					
 					addServiceReferencesToImplementation(f, role, refRoles, refWsdlPaths, srcFolder);
 					
-					addServiceBehaviour(f, role, refRoles, behaviour, srcFolder);
+					addServiceBehaviour(f, role, refRoles, behaviour, srcFolder, locator);
 				} else {
 					logger.severe("Service file '"+f.getAbsolutePath()+"' does not exist");
 				}
@@ -300,7 +302,7 @@ public class SwitchyardJavaGenerator {
 	}
 	
 	protected void addServiceBehaviour(java.io.File implFile, Role role, java.util.List<Role> refRoles,
-			ProtocolModel behaviour, String srcFolder) throws Exception {
+			ProtocolModel behaviour, String srcFolder, ResourceLocator locator) throws Exception {
 		
 		java.io.FileInputStream fis=new java.io.FileInputStream(implFile);
 		byte[] b=new byte[fis.available()];
@@ -319,7 +321,7 @@ public class SwitchyardJavaGenerator {
 		
 		int index=0;
 		
-		JavaBehaviourGenerator bg=new JavaBehaviourGenerator(behaviour);
+		JavaBehaviourGenerator bg=new JavaBehaviourGenerator(behaviour, locator);
 		
 		// NOTE: Tried using Eclipse JDT, but pulled in many dependencies and
 		// was an over complex approach to just replace a method body, so decided
@@ -335,7 +337,8 @@ public class SwitchyardJavaGenerator {
 					// Find out operation name
 					String[] reg=str.substring(index, startIndex).split("[ \\(\\)]");
 					
-					String opbody=bg.getOperationBody(reg[6], reg[5], reg[7], reg[8], roleMapping);
+					String opbody=bg.getOperationBody(reg[6], reg[5],
+							reg[7], reg[8], roleMapping);
 					
 					if (opbody != null) {
 						str = str.substring(0, startIndex+1)+
