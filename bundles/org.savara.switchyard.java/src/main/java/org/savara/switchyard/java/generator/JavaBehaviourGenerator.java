@@ -26,6 +26,8 @@ import org.apache.xerces.xs.XSElementDeclaration;
 import org.apache.xerces.xs.XSImplementation;
 import org.apache.xerces.xs.XSLoader;
 import org.apache.xerces.xs.XSModel;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.resources.ResourceLocator;
 import org.savara.protocol.model.util.ChoiceUtil;
 import org.scribble.protocol.model.Activity;
@@ -154,6 +156,19 @@ public class JavaBehaviourGenerator {
 			
 			if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
 				ret = org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction)+"Fault";
+				
+				if (!org.savara.protocol.model.util.InteractionUtil.isSend(interaction)) {
+					Annotation ann=AnnotationDefinitions.getAnnotationWithProperty(
+							interaction.getEnclosingProtocol().getAnnotations(),
+							AnnotationDefinitions.INTERFACE, AnnotationDefinitions.ROLE_PROPERTY,
+							interaction.getFromRole().getName());
+					
+					if (ann != null) {
+						String ns=(String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY);
+						
+						ret = getJavaPackage(ns)+"."+ret;
+					}
+				}
 			} else {
 				ret += "."+type.getLocalPart();
 				

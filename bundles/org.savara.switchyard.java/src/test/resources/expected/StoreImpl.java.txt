@@ -10,6 +10,7 @@ import org.jboss.examples.creditagency.CreditRatingType;
 import org.jboss.examples.creditagency.CreditAckType;
 import org.jboss.examples.logistics.DeliveryRequestType;
 import org.jboss.examples.logistics.DeliveryConfirmedType;
+import org.savara.examples.creditagency.CustomerUnknownFault;
 import org.jboss.examples.store.AckRequestType;
 
 import java.util.logging.Logger;
