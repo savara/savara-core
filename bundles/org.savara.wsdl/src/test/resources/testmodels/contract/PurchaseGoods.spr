@@ -1,15 +1,15 @@
-import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest from "store.xsd";
-import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheck from "creditAgency.xsd";
-import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown from "creditAgency.xsd";
-import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating from "creditAgency.xsd";
-import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound from "store.xsd";
-import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed from "store.xsd";
-import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest from "logistics.xsd";
-import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed from "logistics.xsd";
-import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed from "store.xsd";
-[[ Type(location=logistics.xsd,prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
-[[ Type(location=store.xsd,prefix=ns1,namespace=http://www.jboss.org/examples/store) ]]
-[[ Type(location=creditAgency.xsd,prefix=ns3,namespace=http://www.jboss.org/examples/creditAgency) ]]
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest from "../schema/store.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheck from "../schema/creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown from "../schema/creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating from "../schema/creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound from "../schema/store.xsd";
+import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed from "../schema/store.xsd";
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest from "../schema/logistics.xsd";
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed from "../schema/logistics.xsd";
+import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed from "../schema/store.xsd";
+[[ Type(location=../schema/logistics.xsd,prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
+[[ Type(location=../schema/store.xsd,prefix=ns1,namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(location=../schema/creditAgency.xsd,prefix=ns3,namespace=http://www.jboss.org/examples/creditAgency) ]]
 [[ SourceComponent(id=Choreography_1) ]]
 [[ Interface(namespace=http://www.savara.org/examples/Buyer,name=Buyer,role=Buyer) ]]
 [[ Type(prefix=pns1,namespace=http://www.savara.org/examples/Buyer) ]]

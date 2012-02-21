@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/examples/store" elementFormDefault="qualified">
+
+    <element name="BuyRequest" type="tns:BuyRequestType"></element>
+    <element name="BuyConfirmed" type="tns:BuyConfirmedType"></element>
+    <element name="AccountNotFound" type="tns:AccountNotFoundType"></element>
+    <element name="BuyFailed" type="tns:BuyFailedType"></element>
+
+    <complexType name="BuyRequestType">
+    	<attribute name="id" type="string"></attribute>
+    	<attribute name="product" type="string"></attribute>
+    	<attribute name="customer" type="string"></attribute>
+    </complexType>
+
+    <complexType name="BuyConfirmedType">
+    	<attribute name="id" type="string"></attribute>
+    	<attribute name="amount" type="integer"></attribute>
+    	<attribute name="deliveryDate" type="date"></attribute>
+    </complexType>
+    
+    <complexType name="AccountNotFoundType">
+    	<attribute name="id" type="string"></attribute>
+    	<attribute name="reason" type="string"></attribute>
+    </complexType>
+    
+    <complexType name="BuyFailedType">
+    	<attribute name="id" type="string"></attribute>
+    	<attribute name="reason" type="string"></attribute>
+    </complexType>
+</schema>

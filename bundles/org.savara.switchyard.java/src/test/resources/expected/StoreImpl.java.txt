@@ -28,13 +28,13 @@ public class StoreImpl implements Store {
 
     
     public org.jboss.examples.store.BuyConfirmedType buy(org.jboss.examples.store.BuyRequestType content) throws InsufficientCreditFault , AccountNotFoundFault    {
-        BuyConfirmedType ret;
+        BuyConfirmedType ret=null;
 
         // TODO: Add code here to handle request (in variable 'content')
 
         try {
             // TODO: Add code here to initialize request
-            CreditCheckType creditCheckReq;
+            CreditCheckType creditCheckReq=null;
 
             CreditRatingType creditCheckResult = _creditAgency.creditCheck(creditCheckReq);
 
@@ -42,12 +42,12 @@ public class StoreImpl implements Store {
                 throw new InsufficientCreditFault();
             } else {
                 // TODO: Add code here to initialize request
-                CreditAckType creditAckReq;
+                CreditAckType creditAckReq=null;
 
                 _creditAgency.creditAck(creditAckReq);
 
                 // TODO: Add code here to initialize request
-                DeliveryRequestType deliveryReq;
+                DeliveryRequestType deliveryReq=null;
 
                 DeliveryConfirmedType deliveryResult = _logistics.delivery(deliveryReq);
 

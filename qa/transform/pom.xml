@@ -45,6 +45,29 @@
 			<version>${savara.core.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.savara.bundles</groupId>
+			<artifactId>org.savara.switchyard.java</artifactId>
+			<version>${savara.core.version}</version>
+		</dependency>
+ 		<dependency>
+ 			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-tools-wsdlto-core</artifactId> 
+			<version>${cxf.version}</version>
+			<scope>provided</scope>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-tools-wsdlto-frontend-jaxws</artifactId> 
+			<version>${cxf.version}</version>
+			<scope>provided</scope>
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-tools-wsdlto-databinding-jaxb</artifactId> 
+			<version>${cxf.version}</version>
+			<scope>provided</scope>
+ 		</dependency>
+		<dependency>
 			<groupId>com.sun.xml.bind</groupId>
 			<artifactId>jaxb-impl</artifactId>
 			<version>${jaxbri.version}</version>

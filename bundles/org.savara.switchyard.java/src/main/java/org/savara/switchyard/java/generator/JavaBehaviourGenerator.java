@@ -21,11 +21,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.xerces.xs.XSElementDeclaration;
-import org.apache.xerces.xs.XSImplementation;
-import org.apache.xerces.xs.XSLoader;
-import org.apache.xerces.xs.XSModel;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.resources.ResourceLocator;
@@ -43,7 +41,6 @@ import org.scribble.protocol.model.TypeImportList;
 import org.scribble.protocol.model.TypeReference;
 import org.scribble.protocol.util.InteractionUtil;
 import org.scribble.protocol.util.TypesUtil;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 
 /**
  * This class provides capabilities to generate stateless behaviour
@@ -179,25 +176,40 @@ public class JavaBehaviourGenerator {
 					try {
 						java.net.URI uri=locator.getResourceURI(location);
 						
-						// Get DOM Implementation using DOM Registry
-						System.setProperty(DOMImplementationRegistry.PROPERTY,
-						    "org.apache.xerces.dom.DOMXSImplementationSourceImpl");
-						DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
-
-						XSImplementation impl = 
-						    (XSImplementation) registry.getDOMImplementation("XS-Loader");
-
-						XSLoader schemaLoader = impl.createXSLoader(null);
+						DocumentBuilderFactory fact=DocumentBuilderFactory.newInstance();
+						fact.setNamespaceAware(true);
 						
-						XSModel xsmodel=schemaLoader.loadURI(uri.toString());
+						DocumentBuilder builder=fact.newDocumentBuilder();
 						
-						XSElementDeclaration elemDecl=
-								xsmodel.getElementDeclaration(type.getLocalPart(),
-											type.getNamespaceURI());
+						java.io.InputStream is=uri.toURL().openStream();
 						
-						if (elemDecl != null) {
-							ret = getJavaPackage(elemDecl.getTypeDefinition().getNamespace());
-							ret += "."+elemDecl.getTypeDefinition().getName();
+						org.w3c.dom.Document doc=builder.parse(is);
+						
+						is.close();
+						
+						org.w3c.dom.NodeList elemList=
+								doc.getDocumentElement().getElementsByTagNameNS(
+										"http://www.w3.org/2001/XMLSchema", "element");
+						
+						for (int i=0; i < elemList.getLength(); i++) {
+							org.w3c.dom.Element elem=(org.w3c.dom.Element)elemList.item(i);
+							
+							String name=elem.getAttribute("name");
+							String elemType=elem.getAttribute("type");
+							
+							if (name.equals(type.getLocalPart())) {
+								String prefix=org.savara.common.util.XMLUtils.getPrefix(elemType);
+								String ns=null;
+								
+								if (prefix != null && prefix.trim().length() > 0) {
+									ns = elem.lookupNamespaceURI(prefix);
+								} else {
+									ns = elem.getOwnerDocument().getDocumentElement().getAttribute("targetNamespace");
+								}
+								
+								ret = getJavaPackage(ns);
+								ret += "."+org.savara.common.util.XMLUtils.getLocalname(elemType);
+							}
 						}
 
 					} catch(Exception e) {
@@ -248,7 +260,7 @@ public class JavaBehaviourGenerator {
 				
 				String localType=getImportedType(returnType);
 				
-				code.append(localType+" ret;\r\n");
+				code.append(localType+" ret=null;\r\n");
 				
 				typeVarMap.put(localType, "ret");
 			}
@@ -480,7 +492,7 @@ public class JavaBehaviourGenerator {
 			
 			code.append("// TODO: Add code here to initialize request");
 			newline(code, indent);
-			code.append(reqType+" "+reqVarName+";\r\n");
+			code.append(reqType+" "+reqVarName+"=null;\r\n");
 		}
 
 		newline(code, indent);
@@ -557,7 +569,7 @@ public class JavaBehaviourGenerator {
 			
 			code.append("// TODO: Add code here to initialize request");
 			newline(code, indent);
-			code.append(reqType+" "+reqVarName+";\r\n");
+			code.append(reqType+" "+reqVarName+"=null;\r\n");
 		}
 
 		newline(code, indent);
