@@ -17,7 +17,7 @@
  */
 package org.savara.wsdl.generator;
 
-import org.savara.wsdl.generator.impl.WSDLGeneratorImpl;
+import org.savara.wsdl.internal.generator.WSDLGeneratorImpl;
 
 /**
  * This class provides a factory for WSDL Generators.

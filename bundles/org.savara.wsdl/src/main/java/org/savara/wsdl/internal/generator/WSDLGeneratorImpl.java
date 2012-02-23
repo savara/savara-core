@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.wsdl.generator.impl;
+package org.savara.wsdl.internal.generator;
 
 import java.util.Collections;
 import java.util.Comparator;

@@ -20,8 +20,8 @@
 package org.savara.bpel.generator;
 
 import org.savara.bpel.BPELDefinitions;
+import org.savara.bpel.internal.model.change.BPELModelChangeContext;
 import org.savara.bpel.model.TProcess;
-import org.savara.bpel.model.change.BPELModelChangeContext;
 import org.savara.bpel.util.BPELModelUtil;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.logging.FeedbackHandler;

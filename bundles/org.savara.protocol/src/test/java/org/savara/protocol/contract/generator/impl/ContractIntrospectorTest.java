@@ -21,7 +21,7 @@
  */
 package org.savara.protocol.contract.generator.impl;
 
-import org.savara.protocol.contract.generator.impl.ContractIntrospector;
+import org.savara.protocol.internal.contract.generator.ContractIntrospector;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.Annotation;

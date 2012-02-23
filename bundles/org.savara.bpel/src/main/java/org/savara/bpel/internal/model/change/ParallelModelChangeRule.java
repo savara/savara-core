@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,29 +15,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpel.model.change;
+package org.savara.bpel.internal.model.change;
 
-import org.savara.contract.model.Contract;
-import org.savara.protocol.contract.generator.ContractGenerator;
-import org.savara.protocol.contract.generator.ContractGeneratorFactory;
+import org.savara.bpel.model.TFlow;
+import org.savara.bpel.model.TLink;
+import org.savara.bpel.model.TLinks;
+import org.savara.bpel.model.TSequence;
 import org.savara.protocol.model.change.ModelChangeContext;
-import org.savara.protocol.model.change.ModelChangeUtils;
 import org.scribble.protocol.model.*;
 
 /**
- * This is the model change rule for the Language Model to
- * Conversation Model.
+ * This is the model change rule for the Parallel.
  */
-public class ProtocolModelModelChangeRule extends AbstractBPELModelChangeRule {
+public class ParallelModelChangeRule extends AbstractBPELModelChangeRule {
 
 	/**
 	 * This method determines whether the rule is appropriate
-	 * for the supplied type of model, parent (in the context) and inserted
+	 * for the supplied type of model, parent (in the context) and
 	 * model object.
 	 *
 	 * @param context The context
 	 * @param model The model
-	 * @param mobj The model object being inserted
+	 * @param mobj The model object causing the change
 	 * @param ref The optional reference model object
 	 * @return Whether the rule supports the supplied information
 	 */
@@ -46,7 +45,7 @@ public class ProtocolModelModelChangeRule extends AbstractBPELModelChangeRule {
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
 		boolean ret=false;
 		
-		if (mobj instanceof ProtocolModel && isBPELModel(model)) {
+		if (mobj instanceof org.scribble.protocol.model.Parallel && isBPELModel(model)) {
 			ret = true;
 		}
 		
@@ -83,40 +82,52 @@ public class ProtocolModelModelChangeRule extends AbstractBPELModelChangeRule {
 	@Override
 	public boolean insert(ModelChangeContext context,
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
-		ProtocolModel cm=(ProtocolModel)mobj;
+		org.scribble.protocol.model.Parallel elem=
+					 (org.scribble.protocol.model.Parallel)mobj;
+		java.util.List<Block> paths=elem.getPaths();
 		
-		if (cm.getProtocol() != null) {
-			//ModelChangeUtils.addContracts(context, cm.getProtocol(), true);
+		TFlow act=new TFlow();
 			
-			// Derive contracts for roles associated with the protocol model
-			ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
-			
-			if (cg != null) {
-				if (cm.getProtocol().getLocatedRole() != null) {
-					Contract c=cg.generate(cm.getProtocol(), null, cm.getProtocol().getLocatedRole(), context.getFeedbackHandler());
-					
-					if (c != null) {
-						ModelChangeUtils.addContract(context, cm.getProtocol().getLocatedRole(), c);
-					}					
-				}
-				
-				java.util.List<Role> roles=cm.getRoles();
-				
-				for (Role r : roles) {
-					Contract c=cg.generate(cm.getProtocol(), null, r, context.getFeedbackHandler());
-					
-					if (c != null) {
-						ModelChangeUtils.addContract(context, r, c);
-					}
-				}
-			}
-
-			context.insert(model, cm.getProtocol(), null);
-
-			//ModelChangeUtils.removeContracts(context, cm.getProtocol(), true);
+		if (context.getParent() instanceof TSequence) {
+			((TSequence)context.getParent()).getActivity().add(act);
 		}
 		
+		// Check if flow links need to be declared
+		java.util.List<String> linkNames=org.savara.protocol.model.util.ForkJoinUtil.getLinkNames(elem);
+		
+		if (linkNames.size() > 0) {
+			TLinks links=new TLinks();
+			act.setLinks(links);
+			
+			for (String linkName : linkNames) {
+				TLink link=new TLink();
+				link.setName(linkName);
+				links.getLink().add(link);
+			}
+		}
+			
+		// Generate the individual flow paths
+		for (int i=0; i < paths.size(); i++) {
+			Block path=paths.get(i);
+							
+			TSequence seq=new TSequence();
+							
+			// Process the activities within the conversation
+			java.util.List<Activity> acts=path.getContents();
+						
+			context.pushScope();
+			
+			context.setParent(seq);
+			
+			for (int j=0; j < acts.size(); j++) {
+				context.insert(model, acts.get(j), null);
+			}
+			
+			context.popScope();
+
+			act.getActivity().add(seq);
+		}
+				
 		return(true);
-	}
-	
+	}	
 }

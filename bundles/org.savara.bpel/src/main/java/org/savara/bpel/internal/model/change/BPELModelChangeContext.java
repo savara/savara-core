@@ -17,7 +17,7 @@
  * Change History:
  * 24 Jul 2008 : Initial version created by gary
  */
-package org.savara.bpel.model.change;
+package org.savara.bpel.internal.model.change;
 
 import org.savara.protocol.model.change.AbstractModelChangeContext;
 import org.savara.protocol.model.change.ModelChangeRule;

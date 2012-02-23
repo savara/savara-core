@@ -10,5 +10,4 @@ Import-Package: org.junit,
  org.osgi.framework
 Require-Bundle: org.scribble.common,
  org.savara.common
-Export-Package: org.savara.contract.generator,
- org.savara.contract.model
+Export-Package: org.savara.contract.model

@@ -113,7 +113,7 @@ public class ParallelActivity extends AbstractBPMNActivity {
 				umls.transitionFrom(m_forkState, null);
 				
 				// Check if state is a junction
-				Object endNode=umls.getEndNode();
+				//Object endNode=umls.getEndNode();
 				
 				/* Do not remove endpoint junctions from
 				 * parallel elements, as this can cause issues

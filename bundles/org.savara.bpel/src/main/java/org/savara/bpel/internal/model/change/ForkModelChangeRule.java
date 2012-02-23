@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,17 +15,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpel.model.change;
+package org.savara.bpel.internal.model.change;
 
+import org.savara.bpel.model.TActivity;
+import org.savara.bpel.model.TEmpty;
+import org.savara.bpel.model.TSequence;
+import org.savara.bpel.model.TSource;
+import org.savara.bpel.model.TSources;
 import org.savara.protocol.model.change.ModelChangeContext;
-import org.savara.protocol.model.change.ModelChangeUtils;
 import org.scribble.protocol.model.*;
-import org.scribble.protocol.util.RunUtil;
 
 /**
- * This is the model change rule for the Run.
+ * This is the model change rule for the Fork custom activity.
  */
-public class RunModelChangeRule extends AbstractBPELModelChangeRule {
+public class ForkModelChangeRule extends AbstractBPELModelChangeRule {
 
 	/**
 	 * This method determines whether the rule is appropriate
@@ -43,7 +46,7 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
 		boolean ret=false;
 		
-		if (mobj instanceof Run && isBPELModel(model)) {
+		if (mobj instanceof org.savara.protocol.model.Fork && isBPELModel(model)) {
 			ret = true;
 		}
 		
@@ -80,59 +83,35 @@ public class RunModelChangeRule extends AbstractBPELModelChangeRule {
 	@Override
 	public boolean insert(ModelChangeContext context,
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
-		Run elem=(Run)mobj;
-
-		Protocol defn=RunUtil.getInnerProtocol(elem.getEnclosingProtocol(),
-				elem.getProtocolReference());
-
-		if (defn != null) {
+		org.savara.protocol.model.Fork elem=
+					 (org.savara.protocol.model.Fork)mobj;		
+		TActivity sourceActivity=null;
+		
+		if (context.getParent() instanceof TSequence) {
+			sourceActivity = (TSequence)context.getParent();
 			
-			// Push details related to sub-choreo
-			ModelChangeUtils.pushRoleContractMapping(context, elem, context.getFeedbackHandler());
-			
-			//ModelChangeUtils.addContracts(context, elem.getProtocol(), false);
-			
-			//context.insert(model, elem.getProtocol(), ref);
-			
-			// Create a scope
-			/*
-			TScope scope=new TScope();
-			TSequence seq=new TSequence();
-
-			((TSequence)context.getParent()).getActivity().add(scope);
-			
-			// NOTE: Currently needs to be added after adding scope
-			// to parent sequence, as otherwise the DOM element
-			// associated with the 'seq' sequence becomes
-			// disconnected from the actual document - due to
-			// the fact that added elements are copied (in
-			// turn due to an xml parser exception).
-			scope.setSequence(seq);
-			
-			context.getProperties().put(BPELDefinitions.BPEL_SCOPE_PROPERTY, scope);
-			*/
-
-			// Process the activities within the conversation
-			java.util.List<Activity> acts=defn.getBlock().getContents();
-			
-			//Object parent=context.getParent();
-			
-			//context.setParent(seq);
-			
-			for (int i=0; i < acts.size(); i++) {
-				context.insert(model, acts.get(i), null);
+			if (((TSequence)sourceActivity).getActivity().size() > 0) {
+				sourceActivity = (TActivity)((TSequence)sourceActivity).getActivity().get(
+						((TSequence)sourceActivity).getActivity().size()-1);
 			}
-			
-			// Reset old parent
-			//context.setParent(parent);
-
-			// Pop details related to sub-choreo
-			//ModelChangeUtils.removeContracts(context, elem.getProtocol(), false);
-			
-			ModelChangeUtils.popRoleContractMapping(context, elem, context.getFeedbackHandler());
 		}
 		
+		if (sourceActivity != null) {
+			if (sourceActivity.getSources() == null) {
+				sourceActivity.setSources(new TSources());
+			}
+			
+			TSource source=new TSource();
+			source.setLinkName(elem.getLabel());
+			
+			sourceActivity.getSources().getSource().add(source);
+		}
+		
+		// Check if contained sequence only contains the sync
+		if (elem.getParent() instanceof Block && ((Block)elem.getParent()).size() == 1) {
+			((TSequence)context.getParent()).getActivity().add(new TEmpty());
+		}
+
 		return(true);
-	}
-	
+	}	
 }

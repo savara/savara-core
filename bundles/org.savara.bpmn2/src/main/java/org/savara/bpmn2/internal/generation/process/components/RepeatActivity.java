@@ -200,13 +200,13 @@ public class RepeatActivity extends AbstractBPMNActivity {
 		}
 		*/
 		
-		SequenceActivity seq=null;
+		//SequenceActivity seq=null;
 		
 		for (int i=0; i < getChildStates().size(); i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			
 			if (act instanceof SequenceActivity) {
-				seq = (SequenceActivity)act;
+				//seq = (SequenceActivity)act;
 				
 				//act.calculatePosition(x+
 				//		m_initialChoiceState.getWidth()+

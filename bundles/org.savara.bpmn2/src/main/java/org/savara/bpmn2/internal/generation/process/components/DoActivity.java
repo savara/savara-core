@@ -24,9 +24,7 @@ import javax.xml.namespace.QName;
 import org.savara.bpmn2.model.BPMNEdge;
 import org.savara.bpmn2.model.Point;
 import org.savara.bpmn2.model.TBoundaryEvent;
-import org.savara.bpmn2.model.TSubProcess;
 import org.scribble.protocol.model.Activity;
-import org.scribble.protocol.model.Do;
 
 /**
  * This class represents the BPMN activity node for a Perform activity.
