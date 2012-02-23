@@ -163,11 +163,11 @@ public class SwitchyardJavaGeneratorTest {
 			gen.createServiceComposite(new Role("Store"), new java.util.Vector<Role>(),
 					url.getFile(), new java.util.Vector<String>(), SRC_PATH);
 			
-			compare("expected/Store.composite",
-					SRC_PATH+"/Store.composite");
+			compare("expected/Store.switchyard.xml",
+					SRC_PATH+"/switchyard.xml");
 		} catch(Exception e) {
 			e.printStackTrace();
-			fail("Failed to generate Store composite: "+e);
+			fail("Failed to generate Store switchyard descriptor: "+e);
 		}
 	}
 
@@ -189,8 +189,8 @@ public class SwitchyardJavaGeneratorTest {
 			gen.createServiceComposite(new Role("Store"), refRoles,
 					url.getFile(), refWsdlPaths, SRC_PATH);
 			
-			compare("expected/StoreWithReferences.composite",
-					SRC_PATH+"/Store.composite");
+			compare("expected/StoreWithReferences.switchyard.xml",
+					SRC_PATH+"/switchyard.xml");
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail("Failed to generate Store composite: "+e);

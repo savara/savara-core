@@ -229,33 +229,45 @@ public class SwitchyardJavaGenerator {
 		javax.wsdl.Definition defn=_reader.readWSDL(wsdlPath);
 		
 		if (defn != null) {
-			// Use the namespace to obtain a Java package
-			String pack=JavaBehaviourGenerator.getJavaPackage(defn.getTargetNamespace());
-			
 			StringBuffer composite=new StringBuffer();
 			
-			composite.append("<composite xmlns=\"http://docs.oasis-open.org/ns/opencsa/sca/200912\"\r\n");
-			composite.append("\t\txmlns:tuscany=\"http://tuscany.apache.org/xmlns/sca/1.1\"\r\n");
-			composite.append("\t\ttargetNamespace=\"");
-			composite.append(defn.getTargetNamespace());
-			composite.append("\"\r\n\t\tname=\"");
-			composite.append(role.getName());
-			composite.append("\" >\r\n");
+			String targetNamespace=defn.getTargetNamespace();
+			String name=role.getName();
 			
+			composite.append("<switchyard xmlns=\"urn:switchyard-config:switchyard:1.0\"\r\n");
+			
+			// TODO: May need to add other namespaces here
+						
+			composite.append("\t\ttargetNamespace=\""+targetNamespace+"\"\r\n");
+			composite.append("\t\tname=\""+name+"\">\r\n");
+
+			composite.append("\t<composite xmlns=\"http://docs.oasis-open.org/ns/opencsa/sca/200912\"\r\n");
+			composite.append("\t\t\ttargetNamespace=\"");
+			composite.append(targetNamespace);
+			composite.append("\"\r\n\t\t\tname=\"");
+			composite.append(name);
+			composite.append("\" >\r\n");
+
 			@SuppressWarnings("unchecked")
 			java.util.Iterator<PortType> portTypes=defn.getPortTypes().values().iterator();
 			
 			while (portTypes.hasNext()) {
 				PortType portType=portTypes.next();
 				
-				composite.append("\t<component name=\""+portType.getQName().getLocalPart()+"Component\">\r\n");
-				composite.append("\t\t<implementation.java class=\""+pack+"."+
-									portType.getQName().getLocalPart()+"Impl\" />\r\n");
-				composite.append("\t\t<service name=\""+portType.getQName().getLocalPart()+"\">\r\n");
-				composite.append("\t\t\t<interface.java interface=\""+pack+"."+
-									portType.getQName().getLocalPart()+"\" />\r\n");
-				composite.append("\t\t\t<binding.ws uri=\"http://localhost:8080/"+
-									portType.getQName().getLocalPart()+"Component\" />\r\n");
+				String wsdlName=wsdlPath;
+				int ind=wsdlName.lastIndexOf('/');
+				if (ind != -1) {
+					wsdlName = wsdlName.substring(ind+1);
+				}
+				
+				composite.append("\t\t<service name=\""+portType.getQName().getLocalPart()+
+						"\" promote=\""+portType.getQName().getLocalPart()+"\">\r\n");
+				
+				composite.append("\t\t\t<binding.soap xmlns=\"urn:switchyard-component-soap:config:1.0\">\r\n");
+				composite.append("\t\t\t\t<wsdl>wsdl/"+wsdlName+"</wsdl>\r\n");
+				composite.append("\t\t\t\t<socketAddr>:18001</socketAddr>\r\n");
+				composite.append("\t\t\t</binding.soap>\r\n");
+								
 				composite.append("\t\t</service>\r\n");
 				
 				for (int i=0; i < refWsdlPaths.size(); i++){
@@ -266,34 +278,33 @@ public class SwitchyardJavaGenerator {
 						
 						@SuppressWarnings("unchecked")
 						java.util.Iterator<PortType> refPortTypes=refDefn.getPortTypes().values().iterator();
-						int refPortCount=1;
 						
 						while (refPortTypes.hasNext()) {
 							PortType refPortType=refPortTypes.next();
-							String name=Character.toLowerCase(refRoles.get(i).getName().charAt(0))+
-									refRoles.get(i).getName().substring(1);
-							
-							if (refDefn.getPortTypes().size() > 1) {
-								name += refPortCount;
+
+							String refWsdlName=refWsdlPath;
+							ind = refWsdlName.lastIndexOf('/');
+							if (ind != -1) {
+								refWsdlName = refWsdlName.substring(ind+1);
 							}
 							
-							composite.append("\t\t<reference name=\""+name+"\">\r\n");
-							composite.append("\t\t\t<binding.ws uri=\"http://localhost:8080/"+
-											refPortType.getQName().getLocalPart()+"Component\" />\r\n");
+							composite.append("\t\t<reference name=\""+refPortType.getQName().getLocalPart()+
+									"\" promote=\""+refPortType.getQName().getLocalPart()+"\" multiplicity=\"1..1\" >\r\n");
+							composite.append("\t\t\t<binding.soap xmlns=\"urn:switchyard-component-soap:config:1.0\">\r\n");
+							composite.append("\t\t\t\t<wsdl>wsdl/"+refWsdlName+"</wsdl>\r\n");
+							composite.append("\t\t\t\t<socketAddr>:18001</socketAddr>\r\n");
+							composite.append("\t\t\t</binding.soap>\r\n");
 							composite.append("\t\t</reference>\r\n");
-							
-							refPortCount++;
 						}
 					}
 				}
-				
-				composite.append("\t</component>\r\n");
 			}
 
-			composite.append("</composite>\r\n");
+			composite.append("\t</composite>\r\n");
+			composite.append("</switchyard>\r\n");
 			
-			java.io.FileOutputStream fos=new java.io.FileOutputStream(resourceFolder+java.io.File.separatorChar+
-									role.getName()+".composite");
+			java.io.FileOutputStream fos=new java.io.FileOutputStream(resourceFolder+
+					java.io.File.separatorChar+"switchyard.xml");
 			
 			fos.write(composite.toString().getBytes());
 			
