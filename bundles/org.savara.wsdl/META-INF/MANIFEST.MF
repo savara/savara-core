@@ -15,6 +15,5 @@ Require-Bundle: javax.wsdl;visibility:=reexport,
  org.scribble.protocol,
  org.junit
 Export-Package: org.savara.wsdl.generator,
- org.savara.wsdl.generator.impl,
  org.savara.wsdl.generator.soap,
  org.savara.wsdl.util

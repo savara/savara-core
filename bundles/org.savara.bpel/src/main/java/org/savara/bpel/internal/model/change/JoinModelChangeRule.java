@@ -15,19 +15,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpel.model.change;
+package org.savara.bpel.internal.model.change;
 
-import org.savara.bpel.model.TFlow;
-import org.savara.bpel.model.TLink;
-import org.savara.bpel.model.TLinks;
+import org.savara.bpel.model.TActivity;
+import org.savara.bpel.model.TCondition;
 import org.savara.bpel.model.TSequence;
+import org.savara.bpel.model.TTarget;
+import org.savara.bpel.model.TTargets;
 import org.savara.protocol.model.change.ModelChangeContext;
 import org.scribble.protocol.model.*;
 
 /**
- * This is the model change rule for the Parallel.
+ * This is the model change rule for the Join custom activity.
  */
-public class ParallelModelChangeRule extends AbstractBPELModelChangeRule {
+public class JoinModelChangeRule extends AbstractBPELModelChangeRule {
 
 	/**
 	 * This method determines whether the rule is appropriate
@@ -45,7 +46,7 @@ public class ParallelModelChangeRule extends AbstractBPELModelChangeRule {
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
 		boolean ret=false;
 		
-		if (mobj instanceof org.scribble.protocol.model.Parallel && isBPELModel(model)) {
+		if (mobj instanceof org.savara.protocol.model.Join && isBPELModel(model)) {
 			ret = true;
 		}
 		
@@ -82,52 +83,46 @@ public class ParallelModelChangeRule extends AbstractBPELModelChangeRule {
 	@Override
 	public boolean insert(ModelChangeContext context,
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
-		org.scribble.protocol.model.Parallel elem=
-					 (org.scribble.protocol.model.Parallel)mobj;
-		java.util.List<Block> paths=elem.getPaths();
+		org.savara.protocol.model.Join elem=
+					 (org.savara.protocol.model.Join)mobj;		
+		TActivity targetActivity=null;
 		
-		TFlow act=new TFlow();
-			
 		if (context.getParent() instanceof TSequence) {
-			((TSequence)context.getParent()).getActivity().add(act);
-		}
-		
-		// Check if flow links need to be declared
-		java.util.List<String> linkNames=org.savara.protocol.model.util.ForkJoinUtil.getLinkNames(elem);
-		
-		if (linkNames.size() > 0) {
-			TLinks links=new TLinks();
-			act.setLinks(links);
+			targetActivity = (TSequence)context.getParent();
 			
-			for (String linkName : linkNames) {
-				TLink link=new TLink();
-				link.setName(linkName);
-				links.getLink().add(link);
+			if (((TSequence)targetActivity).getActivity().size() > 0) {
+				targetActivity = (TActivity)((TSequence)targetActivity).getActivity().get(
+						((TSequence)targetActivity).getActivity().size()-1);
 			}
 		}
-			
-		// Generate the individual flow paths
-		for (int i=0; i < paths.size(); i++) {
-			Block path=paths.get(i);
-							
-			TSequence seq=new TSequence();
-							
-			// Process the activities within the conversation
-			java.util.List<Activity> acts=path.getContents();
-						
-			context.pushScope();
-			
-			context.setParent(seq);
-			
-			for (int j=0; j < acts.size(); j++) {
-				context.insert(model, acts.get(j), null);
+		
+		if (targetActivity != null) {
+			if (targetActivity.getTargets() == null) {
+				targetActivity.setTargets(new TTargets());
 			}
 			
-			context.popScope();
-
-			act.getActivity().add(seq);
-		}
+			String joinCondition=null;
+			
+			for (String linkName : elem.getLabels()) {
+				TTarget target=new TTarget();
+				target.setLinkName(linkName);
 				
+				targetActivity.getTargets().getTarget().add(target);
+				
+				if (joinCondition == null) {
+					joinCondition = "$"+linkName;
+				} else {
+					joinCondition += " and $"+linkName;
+				}
+			}
+			
+			if (!elem.getXOR()) {
+				TCondition cond=new TCondition();
+				cond.getContent().add(joinCondition);
+				targetActivity.getTargets().setJoinCondition(cond);
+			}
+		}
+
 		return(true);
 	}	
 }

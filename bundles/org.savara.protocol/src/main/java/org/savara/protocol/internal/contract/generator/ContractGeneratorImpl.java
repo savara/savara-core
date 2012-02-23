@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.protocol.contract.generator.impl;
+package org.savara.protocol.internal.contract.generator;
 
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.logging.MessageFormatter;

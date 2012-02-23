@@ -28,7 +28,6 @@ import org.savara.bpmn2.model.TSubProcess;
 public abstract class InlineActivity extends AbstractBPMNActivity {
 
 	private boolean m_completed=false;
-	private BPMNActivity m_initialState=null;
 	private BPMNActivity m_finalState=null;
 	private TSubProcess m_subProcess=null;
 	
@@ -52,7 +51,7 @@ public abstract class InlineActivity extends AbstractBPMNActivity {
 		m_subProcess = (TSubProcess)getModelFactory().createSubProcess(parent.getContainer());
 		
 		// Create initial state
-		m_initialState = new JunctionActivity(getModelFactory().createInitialNode(getContainer()),
+		new JunctionActivity(getModelFactory().createInitialNode(getContainer()),
 				this, getModelFactory(), getNotationFactory());
 		
 		// Create final state

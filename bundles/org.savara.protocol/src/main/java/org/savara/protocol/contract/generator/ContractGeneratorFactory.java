@@ -17,7 +17,7 @@
  */
 package org.savara.protocol.contract.generator;
 
-import org.savara.protocol.contract.generator.impl.ContractGeneratorImpl;
+import org.savara.protocol.internal.contract.generator.ContractGeneratorImpl;
 
 /**
  * This class provides access to a contract generator.

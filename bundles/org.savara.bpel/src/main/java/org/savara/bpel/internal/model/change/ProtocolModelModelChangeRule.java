@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,29 +15,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpel.model.change;
+package org.savara.bpel.internal.model.change;
 
-import org.savara.bpel.model.TActivity;
-import org.savara.bpel.model.TEmpty;
-import org.savara.bpel.model.TSequence;
-import org.savara.bpel.model.TSource;
-import org.savara.bpel.model.TSources;
+import org.savara.contract.model.Contract;
+import org.savara.protocol.contract.generator.ContractGenerator;
+import org.savara.protocol.contract.generator.ContractGeneratorFactory;
 import org.savara.protocol.model.change.ModelChangeContext;
+import org.savara.protocol.model.change.ModelChangeUtils;
 import org.scribble.protocol.model.*;
 
 /**
- * This is the model change rule for the Fork custom activity.
+ * This is the model change rule for the Language Model to
+ * Conversation Model.
  */
-public class ForkModelChangeRule extends AbstractBPELModelChangeRule {
+public class ProtocolModelModelChangeRule extends AbstractBPELModelChangeRule {
 
 	/**
 	 * This method determines whether the rule is appropriate
-	 * for the supplied type of model, parent (in the context) and
+	 * for the supplied type of model, parent (in the context) and inserted
 	 * model object.
 	 *
 	 * @param context The context
 	 * @param model The model
-	 * @param mobj The model object causing the change
+	 * @param mobj The model object being inserted
 	 * @param ref The optional reference model object
 	 * @return Whether the rule supports the supplied information
 	 */
@@ -46,7 +46,7 @@ public class ForkModelChangeRule extends AbstractBPELModelChangeRule {
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
 		boolean ret=false;
 		
-		if (mobj instanceof org.savara.protocol.model.Fork && isBPELModel(model)) {
+		if (mobj instanceof ProtocolModel && isBPELModel(model)) {
 			ret = true;
 		}
 		
@@ -83,35 +83,40 @@ public class ForkModelChangeRule extends AbstractBPELModelChangeRule {
 	@Override
 	public boolean insert(ModelChangeContext context,
 				ProtocolModel model, ModelObject mobj, ModelObject ref) {
-		org.savara.protocol.model.Fork elem=
-					 (org.savara.protocol.model.Fork)mobj;		
-		TActivity sourceActivity=null;
+		ProtocolModel cm=(ProtocolModel)mobj;
 		
-		if (context.getParent() instanceof TSequence) {
-			sourceActivity = (TSequence)context.getParent();
+		if (cm.getProtocol() != null) {
+			//ModelChangeUtils.addContracts(context, cm.getProtocol(), true);
 			
-			if (((TSequence)sourceActivity).getActivity().size() > 0) {
-				sourceActivity = (TActivity)((TSequence)sourceActivity).getActivity().get(
-						((TSequence)sourceActivity).getActivity().size()-1);
+			// Derive contracts for roles associated with the protocol model
+			ContractGenerator cg=ContractGeneratorFactory.getContractGenerator();
+			
+			if (cg != null) {
+				if (cm.getProtocol().getLocatedRole() != null) {
+					Contract c=cg.generate(cm.getProtocol(), null, cm.getProtocol().getLocatedRole(), context.getFeedbackHandler());
+					
+					if (c != null) {
+						ModelChangeUtils.addContract(context, cm.getProtocol().getLocatedRole(), c);
+					}					
+				}
+				
+				java.util.List<Role> roles=cm.getRoles();
+				
+				for (Role r : roles) {
+					Contract c=cg.generate(cm.getProtocol(), null, r, context.getFeedbackHandler());
+					
+					if (c != null) {
+						ModelChangeUtils.addContract(context, r, c);
+					}
+				}
 			}
-		}
-		
-		if (sourceActivity != null) {
-			if (sourceActivity.getSources() == null) {
-				sourceActivity.setSources(new TSources());
-			}
-			
-			TSource source=new TSource();
-			source.setLinkName(elem.getLabel());
-			
-			sourceActivity.getSources().getSource().add(source);
-		}
-		
-		// Check if contained sequence only contains the sync
-		if (elem.getParent() instanceof Block && ((Block)elem.getParent()).size() == 1) {
-			((TSequence)context.getParent()).getActivity().add(new TEmpty());
-		}
 
+			context.insert(model, cm.getProtocol(), null);
+
+			//ModelChangeUtils.removeContracts(context, cm.getProtocol(), true);
+		}
+		
 		return(true);
-	}	
+	}
+	
 }

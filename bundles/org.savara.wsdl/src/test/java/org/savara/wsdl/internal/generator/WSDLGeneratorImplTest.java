@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.wsdl.generator.impl;
+package org.savara.wsdl.internal.generator;
 
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
@@ -28,9 +28,9 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.contract.model.*;
 import org.savara.wsdl.generator.WSDLBinding;
-import org.savara.wsdl.generator.impl.WSDLGeneratorImpl;
 import org.savara.wsdl.generator.soap.SOAPDocLitWSDLBinding;
 import org.savara.wsdl.generator.soap.SOAPRPCWSDLBinding;
+import org.savara.wsdl.internal.generator.WSDLGeneratorImpl;
 
 import junit.framework.TestCase;
 

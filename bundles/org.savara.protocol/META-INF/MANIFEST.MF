@@ -18,14 +18,13 @@ Require-Bundle: org.scribble.common,
  org.scribble.protocol.monitor
 Export-Package: org.savara.protocol,
  org.savara.protocol.contract.generator,
- org.savara.protocol.export.text,
  org.savara.protocol.export.monitor,
+ org.savara.protocol.export.text,
+ org.savara.protocol.model,
  org.savara.protocol.model.annotation,
  org.savara.protocol.model.change,
  org.savara.protocol.model.util,
- org.savara.protocol.model,
  org.savara.protocol.parser,
  org.savara.protocol.repository,
- org.savara.protocol.repository.impl,
  org.savara.protocol.util
 Bundle-ActivationPolicy: lazy

@@ -22,10 +22,7 @@ package org.savara.bpmn2.internal.generation.process.components;
 import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Interaction;
-import org.scribble.protocol.model.Protocol;
-import org.scribble.protocol.model.ProtocolModel;
 
 /**
  * This class represents the state information associated with

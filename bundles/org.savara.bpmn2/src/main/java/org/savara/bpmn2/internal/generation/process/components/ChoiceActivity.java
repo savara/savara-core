@@ -19,7 +19,6 @@
  */
 package org.savara.bpmn2.internal.generation.process.components;
 
-import org.savara.bpmn2.generation.process.*;
 import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
 import org.scribble.protocol.model.Choice;
 

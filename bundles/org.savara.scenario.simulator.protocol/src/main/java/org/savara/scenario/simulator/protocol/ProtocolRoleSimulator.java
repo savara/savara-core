@@ -34,6 +34,8 @@ import org.savara.scenario.simulation.RoleSimulator;
 import org.savara.scenario.simulation.SimulationContext;
 import org.savara.scenario.simulation.SimulationHandler;
 import org.savara.scenario.simulation.SimulationModel;
+import org.savara.scenario.simulator.protocol.internal.Message;
+import org.savara.scenario.simulator.protocol.internal.MonitorContextImpl;
 import org.scribble.common.logging.CachedJournal;
 import org.scribble.common.logging.ConsoleJournal;
 import org.scribble.common.resource.ByteArrayContent;

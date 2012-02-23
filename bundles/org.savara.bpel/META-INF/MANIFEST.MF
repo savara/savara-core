@@ -20,7 +20,6 @@ Require-Bundle: org.apache.commons.logging,
  org.scribble.protocol.projection
 Export-Package: org.savara.bpel.generator,
  org.savara.bpel.model,
- org.savara.bpel.model.change,
  org.savara.bpel.parser,
  org.savara.bpel.util
 Bundle-ActivationPolicy: lazy
