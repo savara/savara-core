@@ -4,7 +4,7 @@ Bundle-Name: SAVARA Common
 Bundle-SymbolicName: org.savara.common;singleton:=true
 Bundle-Version: 2.0.0.SNAPSHOT
 Bundle-Activator: org.savara.common.osgi.Activator
-Bundle-Vendor: www.savara.org
+Bundle-Vendor: Red Hat, Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.framework;version="1.3.0"
 Export-Package: org.savara.common.config,

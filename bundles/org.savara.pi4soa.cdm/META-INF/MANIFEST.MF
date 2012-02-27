@@ -4,7 +4,7 @@ Bundle-Name: SAVARA pi4soa CDM
 Bundle-SymbolicName: org.savara.pi4soa.cdm;singleton:=true
 Bundle-Version: 2.0.0.SNAPSHOT
 Bundle-Activator: org.savara.pi4soa.cdm.osgi.Activator
-Bundle-Vendor: www.savara.org
+Bundle-Vendor: Red Hat, Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.osgi.framework;version="1.3.0"
