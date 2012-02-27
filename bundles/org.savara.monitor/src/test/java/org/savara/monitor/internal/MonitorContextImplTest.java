@@ -15,12 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.monitor.impl;
+package org.savara.monitor.internal;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.savara.monitor.Message;
+import org.savara.monitor.internal.MonitorContextImpl;
 import org.scribble.protocol.monitor.Result;
 import org.scribble.protocol.monitor.model.Annotation;
 import org.scribble.protocol.monitor.model.MessageNode;

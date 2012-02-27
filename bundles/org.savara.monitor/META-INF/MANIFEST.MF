@@ -12,5 +12,4 @@ Require-Bundle: org.scribble.protocol.monitor,
  org.savara.common,
  org.scribble.protocol.export.monitor,
  org.savara.protocol
-Export-Package: org.savara.monitor,
- org.savara.monitor.impl
+Export-Package: org.savara.monitor
