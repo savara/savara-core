@@ -123,7 +123,13 @@ public class BPELToBPMNProcessTest extends TestCase {
 					
         			DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
 
-        			Object target=generator.generate(lm, handler, null);
+ 					java.util.Map<String,Object> map=generator.generate(lm, handler, null);
+					
+					if (map == null || map.size() != 1) {
+						fail("Protocol to BPMN model generator didn't return a single BPMN process definition");
+					}
+					
+					Object target=map.values().iterator().next();
 					
 					if (target instanceof TDefinitions) {
 						

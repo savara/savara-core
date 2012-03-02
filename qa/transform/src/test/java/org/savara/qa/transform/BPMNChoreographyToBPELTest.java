@@ -138,8 +138,14 @@ public class BPMNChoreographyToBPELTest {
     					
     					ModelGenerator generator=new ProtocolToBPELModelGenerator();
     				
-						Object target=generator.generate(projected, handler, null);
+						java.util.Map<String,Object> map=generator.generate(projected, handler, null);
 						
+						if (map == null || map.size() != 1) {
+							fail("Protocol to BPEL model generator didn't return a single BPEL process definition");
+						}
+						
+						Object target=map.values().iterator().next();
+
 						if (target instanceof TProcess) {
 							// Obtain any namespace prefix map
 							java.util.Map<String, String> prefixes=

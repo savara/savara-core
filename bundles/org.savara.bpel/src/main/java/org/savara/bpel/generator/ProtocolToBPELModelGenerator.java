@@ -51,7 +51,7 @@ public class ProtocolToBPELModelGenerator implements ModelGenerator {
 							targetType.equals(BPELDefinitions.BPEL_TYPE));
 	}
 
-	public Object generate(Object source, FeedbackHandler handler, ResourceLocator locator) {
+	public java.util.Map<String,Object> generate(Object source, FeedbackHandler handler, ResourceLocator locator) {
 		BPELModelChangeContext context=
 			new BPELModelChangeContext(null, new DefaultFeedbackHandler());
 		ProtocolModel pm=(ProtocolModel)source;
@@ -105,7 +105,10 @@ public class ProtocolToBPELModelGenerator implements ModelGenerator {
 		
 		context.insert(bpelModel, pm, null);
 		
-		return(bpel);
+		java.util.Map<String,Object> ret=new java.util.HashMap<String,Object>();
+		ret.put(pm.getProtocol().getName()+"_"+pm.getProtocol().getLocatedRole().getName()+".bpel", bpel);
+		
+		return(ret);
 	}
 	
 }

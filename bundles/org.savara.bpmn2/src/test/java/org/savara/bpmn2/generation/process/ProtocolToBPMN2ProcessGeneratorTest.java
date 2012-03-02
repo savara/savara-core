@@ -138,7 +138,13 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     	    								new ProtocolToBPMN2ProcessModelGenerator();
     	    				generator.setUseConsecutiveIds(true);
     	    				
-    	    				Object target=generator.generate(local, handler, null);
+    						java.util.Map<String,Object> map=generator.generate(local, handler, null);
+    						
+    						if (map == null || map.size() != 1) {
+    							fail("Target should have one BPEL process definition");
+    						}
+    						
+    						Object target=map.values().iterator().next();
     	    				
     	    				if (target instanceof TDefinitions) {
     	    					

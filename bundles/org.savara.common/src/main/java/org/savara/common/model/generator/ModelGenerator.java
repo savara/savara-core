@@ -39,13 +39,15 @@ public interface ModelGenerator {
 
 	/**
 	 * This method generates the contents of the target
-	 * model using information in the source model.
+	 * model(s) using information in the source model. A map
+	 * is returned to cater for source models that generate multiple
+	 * models.
 	 * 
 	 * @param source The source model
 	 * @param handler The feedback handler
 	 * @param locator The resource locator
-	 * @return The target model
+	 * @return The target models, returned as a map of model name to model
 	 */
-	public Object generate(Object source, FeedbackHandler handler, ResourceLocator locator);
+	public java.util.Map<String,Object> generate(Object source, FeedbackHandler handler, ResourceLocator locator);
 	
 }

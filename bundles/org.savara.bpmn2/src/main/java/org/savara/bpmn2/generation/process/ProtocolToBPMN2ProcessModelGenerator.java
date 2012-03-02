@@ -69,6 +69,7 @@ import org.scribble.protocol.model.*;
  */
 public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 
+	private static final String BPMN_FILE_EXTENSION = ".bpmn";
 	private boolean m_consecutiveIds=false;
 	private org.savara.bpmn2.model.ObjectFactory _objectFactory=new org.savara.bpmn2.model.ObjectFactory();
 	
@@ -99,17 +100,11 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 	}
 
 	/**
-	 * This method generates the contents of the target
-	 * model using information in the source model.
-	 * 
-	 * @param source The source model
-	 * @param handler The feedback handler
-	 * @param locator The resource locator
-	 * @return The target model
+	 * {@inheritDoc}
 	 */
-	public Object generate(Object source, FeedbackHandler handler,
+	public java.util.Map<String,Object> generate(Object source, FeedbackHandler handler,
 							final ResourceLocator locator) {
-		Object ret=null;
+		java.util.Map<String,Object> ret=null;
 
 		if (source instanceof ProtocolModel) {
 			ProtocolModel pm=(ProtocolModel)source;
@@ -139,7 +134,9 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			visitor.completeModels();
 			
-			ret = defns;
+			ret = new java.util.HashMap<String,Object>();
+			ret.put(pm.getProtocol().getName()+"_"+pm.getProtocol().getLocatedRole().getName()+
+								BPMN_FILE_EXTENSION, defns);
 		}
 		
 		return(ret);
