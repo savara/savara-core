@@ -26,288 +26,334 @@
     <bpmn2:message id="IDIDType" itemRef="ITEMIDType" name="IDType"/>
     <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMURITokenType" structureRef="xs:anyURI"/>
     <bpmn2:message id="IDURITokenType" itemRef="ITEMURITokenType" name="URITokenType"/>
-    <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID6" name="Buyer"/>
-        <bpmn2:participant id="MID7" name="Store"/>
-        <bpmn2:participant id="MID9" name="CreditAgency"/>
-        <bpmn2:participant id="MID16" name="Logistics"/>
-    </bpmn2:collaboration>
-    <bpmn2:choreography id="MID2" name="PurchaseGoodsProcess">
-        <bpmn2:startEvent id="MID3">
-            <bpmn2:outgoing>MID36</bpmn2:outgoing>
+    <bpmn2:choreography id="MID1" name="PurchaseGoodsProcess">
+        <bpmn2:participant id="MID5" name="Buyer"/>
+        <bpmn2:participant id="MID6" name="Store">
+            <bpmn2:interfaceRef>StoreInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:participant id="MID9" name="CreditAgency">
+            <bpmn2:interfaceRef>CreditAgencyInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:participant id="MID18" name="Logistics">
+            <bpmn2:interfaceRef>LogisticsInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:messageFlow id="MID7" messageRef="IDBuyRequest" sourceRef="MID5" targetRef="MID6"/>
+        <bpmn2:messageFlow id="MID10" messageRef="IDCreditCheckRequest" sourceRef="MID6" targetRef="MID9"/>
+        <bpmn2:messageFlow id="MID14" messageRef="IDCreditRating" sourceRef="MID9" targetRef="MID6"/>
+        <bpmn2:messageFlow id="MID19" messageRef="IDDeliveryRequest" sourceRef="MID6" targetRef="MID18"/>
+        <bpmn2:messageFlow id="MID21" messageRef="IDDeliveryConfirmed" sourceRef="MID18" targetRef="MID6"/>
+        <bpmn2:messageFlow id="MID23" messageRef="IDBuyConfirmed" sourceRef="MID6" targetRef="MID5"/>
+        <bpmn2:messageFlow id="MID25" messageRef="IDBuyFailed" sourceRef="MID6" targetRef="MID5"/>
+        <bpmn2:messageFlow id="MID27" messageRef="IDCustomerUnknown" sourceRef="MID9" targetRef="MID6"/>
+        <bpmn2:messageFlow id="MID29" messageRef="IDAccountNotFound" sourceRef="MID6" targetRef="MID5"/>
+        <bpmn2:startEvent id="MID2">
+            <bpmn2:outgoing>MID44</bpmn2:outgoing>
         </bpmn2:startEvent>
-        <bpmn2:endEvent id="MID4">
-            <bpmn2:incoming>MID37</bpmn2:incoming>
+        <bpmn2:endEvent id="MID3">
+            <bpmn2:incoming>MID45</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:choreographyTask id="MID5" initiatingParticipantRef="MID6" name="buy(BuyRequest)">
-            <bpmn2:incoming>MID36</bpmn2:incoming>
-            <bpmn2:outgoing>MID22</bpmn2:outgoing>
-            <bpmn2:participantRef>MID6</bpmn2:participantRef>
-            <bpmn2:participantRef>MID7</bpmn2:participantRef>
-        </bpmn2:choreographyTask>
-        <bpmn2:choreographyTask id="MID8" initiatingParticipantRef="MID7" name="checkCredit(CreditCheckRequest)">
-            <bpmn2:incoming>MID22</bpmn2:incoming>
-            <bpmn2:outgoing>MID35</bpmn2:outgoing>
-            <bpmn2:participantRef>MID7</bpmn2:participantRef>
-            <bpmn2:participantRef>MID9</bpmn2:participantRef>
-        </bpmn2:choreographyTask>
-        <bpmn2:exclusiveGateway id="MID10">
-            <bpmn2:incoming>MID35</bpmn2:incoming>
-            <bpmn2:outgoing>MID31</bpmn2:outgoing>
-            <bpmn2:outgoing>MID33</bpmn2:outgoing>
-        </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway id="MID11">
-            <bpmn2:incoming>MID32</bpmn2:incoming>
-            <bpmn2:incoming>MID34</bpmn2:incoming>
-            <bpmn2:outgoing>MID37</bpmn2:outgoing>
-        </bpmn2:exclusiveGateway>
-        <bpmn2:choreographyTask id="MID12" initiatingParticipantRef="MID9" name="checkCredit(CreditRating)">
-            <bpmn2:incoming>MID31</bpmn2:incoming>
-            <bpmn2:outgoing>MID29</bpmn2:outgoing>
-            <bpmn2:participantRef>MID9</bpmn2:participantRef>
-            <bpmn2:participantRef>MID7</bpmn2:participantRef>
-        </bpmn2:choreographyTask>
-        <bpmn2:exclusiveGateway id="MID13">
-            <bpmn2:incoming>MID29</bpmn2:incoming>
-            <bpmn2:outgoing>MID25</bpmn2:outgoing>
-            <bpmn2:outgoing>MID27</bpmn2:outgoing>
-        </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway id="MID14">
-            <bpmn2:incoming>MID26</bpmn2:incoming>
-            <bpmn2:incoming>MID28</bpmn2:incoming>
-            <bpmn2:outgoing>MID32</bpmn2:outgoing>
-        </bpmn2:exclusiveGateway>
-        <bpmn2:choreographyTask id="MID15" initiatingParticipantRef="MID7" name="deliver(DeliveryRequest)">
-            <bpmn2:incoming>MID25</bpmn2:incoming>
-            <bpmn2:outgoing>MID23</bpmn2:outgoing>
-            <bpmn2:participantRef>MID7</bpmn2:participantRef>
-            <bpmn2:participantRef>MID16</bpmn2:participantRef>
-        </bpmn2:choreographyTask>
-        <bpmn2:choreographyTask id="MID17" initiatingParticipantRef="MID16" name="deliver(DeliveryConfirmed)">
-            <bpmn2:incoming>MID23</bpmn2:incoming>
-            <bpmn2:outgoing>MID24</bpmn2:outgoing>
-            <bpmn2:participantRef>MID16</bpmn2:participantRef>
-            <bpmn2:participantRef>MID7</bpmn2:participantRef>
-        </bpmn2:choreographyTask>
-        <bpmn2:choreographyTask id="MID18" initiatingParticipantRef="MID7" name="buy(BuyConfirmed)">
-            <bpmn2:incoming>MID24</bpmn2:incoming>
-            <bpmn2:outgoing>MID26</bpmn2:outgoing>
-            <bpmn2:participantRef>MID7</bpmn2:participantRef>
-            <bpmn2:participantRef>MID6</bpmn2:participantRef>
-        </bpmn2:choreographyTask>
-        <bpmn2:choreographyTask id="MID19" initiatingParticipantRef="MID7" name="buy(BuyFailed)">
-            <bpmn2:incoming>MID27</bpmn2:incoming>
-            <bpmn2:outgoing>MID28</bpmn2:outgoing>
-            <bpmn2:participantRef>MID7</bpmn2:participantRef>
-            <bpmn2:participantRef>MID6</bpmn2:participantRef>
-        </bpmn2:choreographyTask>
-        <bpmn2:choreographyTask id="MID20" initiatingParticipantRef="MID9" name="checkCredit(CustomerUnknown)">
-            <bpmn2:incoming>MID33</bpmn2:incoming>
+        <bpmn2:choreographyTask id="MID4" initiatingParticipantRef="MID5" name="buy(BuyRequest)">
+            <bpmn2:incoming>MID44</bpmn2:incoming>
             <bpmn2:outgoing>MID30</bpmn2:outgoing>
-            <bpmn2:participantRef>MID9</bpmn2:participantRef>
-            <bpmn2:participantRef>MID7</bpmn2:participantRef>
-        </bpmn2:choreographyTask>
-        <bpmn2:choreographyTask id="MID21" initiatingParticipantRef="MID7" name="buy(AccountNotFound)">
-            <bpmn2:incoming>MID30</bpmn2:incoming>
-            <bpmn2:outgoing>MID34</bpmn2:outgoing>
-            <bpmn2:participantRef>MID7</bpmn2:participantRef>
+            <bpmn2:participantRef>MID5</bpmn2:participantRef>
             <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID7</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
-        <bpmn2:sequenceFlow id="MID22" sourceRef="MID5" targetRef="MID8"/>
-        <bpmn2:sequenceFlow id="MID23" sourceRef="MID15" targetRef="MID17"/>
-        <bpmn2:sequenceFlow id="MID24" sourceRef="MID17" targetRef="MID18"/>
-        <bpmn2:sequenceFlow id="MID25" sourceRef="MID13" targetRef="MID15"/>
-        <bpmn2:sequenceFlow id="MID26" sourceRef="MID18" targetRef="MID14"/>
-        <bpmn2:sequenceFlow id="MID27" sourceRef="MID13" targetRef="MID19"/>
-        <bpmn2:sequenceFlow id="MID28" sourceRef="MID19" targetRef="MID14"/>
-        <bpmn2:sequenceFlow id="MID29" sourceRef="MID12" targetRef="MID13"/>
-        <bpmn2:sequenceFlow id="MID30" sourceRef="MID20" targetRef="MID21"/>
-        <bpmn2:sequenceFlow id="MID31" sourceRef="MID10" targetRef="MID12"/>
-        <bpmn2:sequenceFlow id="MID32" sourceRef="MID14" targetRef="MID11"/>
-        <bpmn2:sequenceFlow id="MID33" sourceRef="MID10" targetRef="MID20"/>
-        <bpmn2:sequenceFlow id="MID34" sourceRef="MID21" targetRef="MID11"/>
-        <bpmn2:sequenceFlow id="MID35" sourceRef="MID8" targetRef="MID10"/>
-        <bpmn2:sequenceFlow id="MID36" sourceRef="MID3" targetRef="MID5"/>
-        <bpmn2:sequenceFlow id="MID37" sourceRef="MID11" targetRef="MID4"/>
+        <bpmn2:choreographyTask id="MID8" initiatingParticipantRef="MID6" name="checkCredit(CreditCheckRequest)">
+            <bpmn2:incoming>MID30</bpmn2:incoming>
+            <bpmn2:outgoing>MID43</bpmn2:outgoing>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:participantRef>MID9</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID10</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:exclusiveGateway id="MID11">
+            <bpmn2:incoming>MID43</bpmn2:incoming>
+            <bpmn2:outgoing>MID39</bpmn2:outgoing>
+            <bpmn2:outgoing>MID41</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:exclusiveGateway id="MID12">
+            <bpmn2:incoming>MID40</bpmn2:incoming>
+            <bpmn2:incoming>MID42</bpmn2:incoming>
+            <bpmn2:outgoing>MID45</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:choreographyTask id="MID13" initiatingParticipantRef="MID9" name="checkCredit(CreditRating)">
+            <bpmn2:incoming>MID39</bpmn2:incoming>
+            <bpmn2:outgoing>MID37</bpmn2:outgoing>
+            <bpmn2:participantRef>MID9</bpmn2:participantRef>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID14</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:exclusiveGateway id="MID15">
+            <bpmn2:incoming>MID37</bpmn2:incoming>
+            <bpmn2:outgoing>MID33</bpmn2:outgoing>
+            <bpmn2:outgoing>MID35</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:exclusiveGateway id="MID16">
+            <bpmn2:incoming>MID34</bpmn2:incoming>
+            <bpmn2:incoming>MID36</bpmn2:incoming>
+            <bpmn2:outgoing>MID40</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:choreographyTask id="MID17" initiatingParticipantRef="MID6" name="deliver(DeliveryRequest)">
+            <bpmn2:incoming>MID33</bpmn2:incoming>
+            <bpmn2:outgoing>MID31</bpmn2:outgoing>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:participantRef>MID18</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID19</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="MID20" initiatingParticipantRef="MID18" name="deliver(DeliveryConfirmed)">
+            <bpmn2:incoming>MID31</bpmn2:incoming>
+            <bpmn2:outgoing>MID32</bpmn2:outgoing>
+            <bpmn2:participantRef>MID18</bpmn2:participantRef>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID21</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="MID22" initiatingParticipantRef="MID6" name="buy(BuyConfirmed)">
+            <bpmn2:incoming>MID32</bpmn2:incoming>
+            <bpmn2:outgoing>MID34</bpmn2:outgoing>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:participantRef>MID5</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID23</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="MID24" initiatingParticipantRef="MID6" name="buy(BuyFailed)">
+            <bpmn2:incoming>MID35</bpmn2:incoming>
+            <bpmn2:outgoing>MID36</bpmn2:outgoing>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:participantRef>MID5</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID25</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="MID26" initiatingParticipantRef="MID9" name="checkCredit(CustomerUnknown)">
+            <bpmn2:incoming>MID41</bpmn2:incoming>
+            <bpmn2:outgoing>MID38</bpmn2:outgoing>
+            <bpmn2:participantRef>MID9</bpmn2:participantRef>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID27</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="MID28" initiatingParticipantRef="MID6" name="buy(AccountNotFound)">
+            <bpmn2:incoming>MID38</bpmn2:incoming>
+            <bpmn2:outgoing>MID42</bpmn2:outgoing>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:participantRef>MID5</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID29</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:sequenceFlow id="MID30" sourceRef="MID4" targetRef="MID8"/>
+        <bpmn2:sequenceFlow id="MID31" sourceRef="MID17" targetRef="MID20"/>
+        <bpmn2:sequenceFlow id="MID32" sourceRef="MID20" targetRef="MID22"/>
+        <bpmn2:sequenceFlow id="MID33" sourceRef="MID15" targetRef="MID17"/>
+        <bpmn2:sequenceFlow id="MID34" sourceRef="MID22" targetRef="MID16"/>
+        <bpmn2:sequenceFlow id="MID35" sourceRef="MID15" targetRef="MID24"/>
+        <bpmn2:sequenceFlow id="MID36" sourceRef="MID24" targetRef="MID16"/>
+        <bpmn2:sequenceFlow id="MID37" sourceRef="MID13" targetRef="MID15"/>
+        <bpmn2:sequenceFlow id="MID38" sourceRef="MID26" targetRef="MID28"/>
+        <bpmn2:sequenceFlow id="MID39" sourceRef="MID11" targetRef="MID13"/>
+        <bpmn2:sequenceFlow id="MID40" sourceRef="MID16" targetRef="MID12"/>
+        <bpmn2:sequenceFlow id="MID41" sourceRef="MID11" targetRef="MID26"/>
+        <bpmn2:sequenceFlow id="MID42" sourceRef="MID28" targetRef="MID12"/>
+        <bpmn2:sequenceFlow id="MID43" sourceRef="MID8" targetRef="MID11"/>
+        <bpmn2:sequenceFlow id="MID44" sourceRef="MID2" targetRef="MID4"/>
+        <bpmn2:sequenceFlow id="MID45" sourceRef="MID12" targetRef="MID3"/>
     </bpmn2:choreography>
+    <bpmn2:error errorCode="BuyFailed" id="ERRBuyFailed" name="BuyFailed" structureRef="ITEMBuyFailed"/>
+    <bpmn2:error errorCode="CustomerUnknown" id="ERRCustomerUnknown" name="CustomerUnknown" structureRef="ITEMCustomerUnknown"/>
+    <bpmn2:error errorCode="AccountNotFound" id="ERRAccountNotFound" name="AccountNotFound" structureRef="ITEMAccountNotFound"/>
+    <bpmn2:interface xmlns="null/CreditAgency" id="CreditAgencyInterface" implementationRef="CreditAgency" name="CreditAgency">
+        <bpmn2:operation id="creditCheck" name="creditCheck">
+            <bpmn2:inMessageRef xmlns="" xmlns:ns6="null/CreditAgency">IDCreditCheckRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="" xmlns:ns6="null/CreditAgency">IDCreditRating</bpmn2:outMessageRef>
+            <bpmn2:errorRef xmlns="" xmlns:ns6="null/CreditAgency">ERRCustomerUnknown</bpmn2:errorRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:interface xmlns="null/Logistics" id="LogisticsInterface" implementationRef="Logistics" name="Logistics">
+        <bpmn2:operation id="delivery" name="delivery">
+            <bpmn2:inMessageRef xmlns="" xmlns:ns6="null/Logistics">IDDeliveryRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="" xmlns:ns6="null/Logistics">IDDeliveryConfirmed</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:interface xmlns="null/Store" id="StoreInterface" implementationRef="Store" name="Store">
+        <bpmn2:operation id="buy" name="buy">
+            <bpmn2:inMessageRef xmlns="" xmlns:ns6="null/Store">IDBuyRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="" xmlns:ns6="null/Store">IDBuyConfirmed</bpmn2:outMessageRef>
+            <bpmn2:errorRef xmlns="" xmlns:ns6="null/Store">ERRBuyFailed</bpmn2:errorRef>
+            <bpmn2:errorRef xmlns="" xmlns:ns6="null/Store">ERRAccountNotFound</bpmn2:errorRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
     <bpmndi:BPMNDiagram id="NID1">
         <bpmndi:BPMNPlane>
-            <bpmndi:BPMNShape bpmnElement="MID3" id="NID2">
+            <bpmndi:BPMNShape bpmnElement="MID2" id="NID2">
                 <dc:Bounds height="30.0" width="30.0" x="50.0" y="215.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID5" id="NID3">
+            <bpmndi:BPMNShape bpmnElement="MID4" id="NID3">
                 <dc:Bounds height="100.0" width="110.0" x="130.0" y="180.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID3" participantBandKind="top_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID5" choreographyActivityShape="NID3" isMessageVisible="true" participantBandKind="top_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="130.0" y="180.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" choreographyActivityShape="NID3" participantBandKind="bottom_non_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID3" participantBandKind="bottom_non_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="130.0" y="265.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID8" id="NID4">
                 <dc:Bounds height="100.0" width="110.0" x="290.0" y="180.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" choreographyActivityShape="NID4" participantBandKind="top_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID4" isMessageVisible="true" participantBandKind="top_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="290.0" y="180.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID9" choreographyActivityShape="NID4" participantBandKind="bottom_non_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="290.0" y="265.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID22" id="NID5" sourceElement="NID3" targetElement="NID4">
+            <bpmndi:BPMNEdge bpmnElement="MID30" id="NID5" sourceElement="NID3" targetElement="NID4">
                 <ns4:waypoint x="240.0" y="230.0"/>
                 <ns4:waypoint x="290.0" y="230.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID10" id="NID6">
+            <bpmndi:BPMNShape bpmnElement="MID11" id="NID6">
                 <dc:Bounds height="30.0" width="30.0" x="450.0" y="205.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID12" id="NID7">
+            <bpmndi:BPMNShape bpmnElement="MID13" id="NID7">
                 <dc:Bounds height="100.0" width="110.0" x="530.0" y="110.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID9" choreographyActivityShape="NID7" participantBandKind="top_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID9" choreographyActivityShape="NID7" isMessageVisible="true" participantBandKind="top_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="530.0" y="110.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" choreographyActivityShape="NID7" participantBandKind="bottom_non_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID7" participantBandKind="bottom_non_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="530.0" y="195.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID13" id="NID8">
+            <bpmndi:BPMNShape bpmnElement="MID15" id="NID8">
                 <dc:Bounds height="30.0" width="30.0" x="690.0" y="135.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID15" id="NID9">
+            <bpmndi:BPMNShape bpmnElement="MID17" id="NID9">
                 <dc:Bounds height="100.0" width="110.0" x="770.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" choreographyActivityShape="NID9" participantBandKind="top_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID9" isMessageVisible="true" participantBandKind="top_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="770.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID16" choreographyActivityShape="NID9" participantBandKind="bottom_non_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID18" choreographyActivityShape="NID9" participantBandKind="bottom_non_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="770.0" y="125.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID17" id="NID10">
+            <bpmndi:BPMNShape bpmnElement="MID20" id="NID10">
                 <dc:Bounds height="100.0" width="110.0" x="930.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID16" choreographyActivityShape="NID10" participantBandKind="top_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID18" choreographyActivityShape="NID10" isMessageVisible="true" participantBandKind="top_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="930.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" choreographyActivityShape="NID10" participantBandKind="bottom_non_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID10" participantBandKind="bottom_non_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="930.0" y="125.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID23" id="NID11" sourceElement="NID9" targetElement="NID10">
+            <bpmndi:BPMNEdge bpmnElement="MID31" id="NID11" sourceElement="NID9" targetElement="NID10">
                 <ns4:waypoint x="880.0" y="90.0"/>
                 <ns4:waypoint x="930.0" y="90.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID18" id="NID12">
+            <bpmndi:BPMNShape bpmnElement="MID22" id="NID12">
                 <dc:Bounds height="100.0" width="110.0" x="1090.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" choreographyActivityShape="NID12" participantBandKind="top_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID12" isMessageVisible="true" participantBandKind="top_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="1090.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID12" participantBandKind="bottom_non_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID5" choreographyActivityShape="NID12" participantBandKind="bottom_non_initiating">
                 <dc:Bounds height="15.0" width="110.0" x="1090.0" y="125.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID24" id="NID13" sourceElement="NID10" targetElement="NID12">
+            <bpmndi:BPMNEdge bpmnElement="MID32" id="NID13" sourceElement="NID10" targetElement="NID12">
                 <ns4:waypoint x="1040.0" y="90.0"/>
                 <ns4:waypoint x="1090.0" y="90.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID19" id="NID14">
+            <bpmndi:BPMNShape bpmnElement="MID24" id="NID14">
                 <dc:Bounds height="100.0" width="430.0" x="770.0" y="180.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" choreographyActivityShape="NID14" participantBandKind="top_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID14" isMessageVisible="true" participantBandKind="top_initiating">
                 <dc:Bounds height="15.0" width="430.0" x="770.0" y="180.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID14" participantBandKind="bottom_non_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID5" choreographyActivityShape="NID14" participantBandKind="bottom_non_initiating">
                 <dc:Bounds height="15.0" width="430.0" x="770.0" y="265.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID14" id="NID15">
+            <bpmndi:BPMNShape bpmnElement="MID16" id="NID15">
                 <dc:Bounds height="30.0" width="30.0" x="1250.0" y="135.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID25" id="NID16" sourceElement="NID8" targetElement="NID9">
+            <bpmndi:BPMNEdge bpmnElement="MID33" id="NID16" sourceElement="NID8" targetElement="NID9">
                 <ns4:waypoint x="740.0" y="160.0"/>
                 <ns4:waypoint x="755.0" y="160.0"/>
                 <ns4:waypoint x="755.0" y="90.0"/>
                 <ns4:waypoint x="770.0" y="90.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID26" id="NID17" sourceElement="NID12" targetElement="NID15">
+            <bpmndi:BPMNEdge bpmnElement="MID34" id="NID17" sourceElement="NID12" targetElement="NID15">
                 <ns4:waypoint x="1200.0" y="90.0"/>
                 <ns4:waypoint x="1225.0" y="90.0"/>
                 <ns4:waypoint x="1225.0" y="160.0"/>
                 <ns4:waypoint x="1250.0" y="160.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID27" id="NID18" sourceElement="NID8" targetElement="NID14">
+            <bpmndi:BPMNEdge bpmnElement="MID35" id="NID18" sourceElement="NID8" targetElement="NID14">
                 <ns4:waypoint x="740.0" y="160.0"/>
                 <ns4:waypoint x="755.0" y="160.0"/>
                 <ns4:waypoint x="755.0" y="230.0"/>
                 <ns4:waypoint x="770.0" y="230.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID28" id="NID19" sourceElement="NID14" targetElement="NID15">
+            <bpmndi:BPMNEdge bpmnElement="MID36" id="NID19" sourceElement="NID14" targetElement="NID15">
                 <ns4:waypoint x="1200.0" y="230.0"/>
                 <ns4:waypoint x="1225.0" y="230.0"/>
                 <ns4:waypoint x="1225.0" y="160.0"/>
                 <ns4:waypoint x="1250.0" y="160.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID29" id="NID20" sourceElement="NID7" targetElement="NID8">
+            <bpmndi:BPMNEdge bpmnElement="MID37" id="NID20" sourceElement="NID7" targetElement="NID8">
                 <ns4:waypoint x="640.0" y="160.0"/>
                 <ns4:waypoint x="690.0" y="160.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID20" id="NID21">
+            <bpmndi:BPMNShape bpmnElement="MID26" id="NID21">
                 <dc:Bounds height="100.0" width="305.0" x="575.0" y="320.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID9" choreographyActivityShape="NID21" participantBandKind="top_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID9" choreographyActivityShape="NID21" isMessageVisible="true" participantBandKind="top_initiating">
                 <dc:Bounds height="15.0" width="305.0" x="575.0" y="320.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" choreographyActivityShape="NID21" participantBandKind="bottom_non_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID21" participantBandKind="bottom_non_initiating">
                 <dc:Bounds height="15.0" width="305.0" x="575.0" y="405.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID21" id="NID22">
+            <bpmndi:BPMNShape bpmnElement="MID28" id="NID22">
                 <dc:Bounds height="100.0" width="305.0" x="930.0" y="320.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" choreographyActivityShape="NID22" participantBandKind="top_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID22" isMessageVisible="true" participantBandKind="top_initiating">
                 <dc:Bounds height="15.0" width="305.0" x="930.0" y="320.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID22" participantBandKind="bottom_non_initiating">
+            <bpmndi:BPMNShape bpmnElement="MID5" choreographyActivityShape="NID22" participantBandKind="bottom_non_initiating">
                 <dc:Bounds height="15.0" width="305.0" x="930.0" y="405.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID30" id="NID23" sourceElement="NID21" targetElement="NID22">
+            <bpmndi:BPMNEdge bpmnElement="MID38" id="NID23" sourceElement="NID21" targetElement="NID22">
                 <ns4:waypoint x="880.0" y="370.0"/>
                 <ns4:waypoint x="930.0" y="370.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID11" id="NID24">
+            <bpmndi:BPMNShape bpmnElement="MID12" id="NID24">
                 <dc:Bounds height="30.0" width="30.0" x="1330.0" y="205.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID31" id="NID25" sourceElement="NID6" targetElement="NID7">
+            <bpmndi:BPMNEdge bpmnElement="MID39" id="NID25" sourceElement="NID6" targetElement="NID7">
                 <ns4:waypoint x="500.0" y="230.0"/>
                 <ns4:waypoint x="515.0" y="230.0"/>
                 <ns4:waypoint x="515.0" y="160.0"/>
                 <ns4:waypoint x="530.0" y="160.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID32" id="NID26" sourceElement="NID15" targetElement="NID24">
+            <bpmndi:BPMNEdge bpmnElement="MID40" id="NID26" sourceElement="NID15" targetElement="NID24">
                 <ns4:waypoint x="1300.0" y="160.0"/>
                 <ns4:waypoint x="1315.0" y="160.0"/>
                 <ns4:waypoint x="1315.0" y="230.0"/>
                 <ns4:waypoint x="1330.0" y="230.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID33" id="NID27" sourceElement="NID6" targetElement="NID21">
+            <bpmndi:BPMNEdge bpmnElement="MID41" id="NID27" sourceElement="NID6" targetElement="NID21">
                 <ns4:waypoint x="500.0" y="230.0"/>
                 <ns4:waypoint x="537.5" y="230.0"/>
                 <ns4:waypoint x="537.5" y="370.0"/>
                 <ns4:waypoint x="575.0" y="370.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID34" id="NID28" sourceElement="NID22" targetElement="NID24">
+            <bpmndi:BPMNEdge bpmnElement="MID42" id="NID28" sourceElement="NID22" targetElement="NID24">
                 <ns4:waypoint x="1235.0" y="370.0"/>
                 <ns4:waypoint x="1282.5" y="370.0"/>
                 <ns4:waypoint x="1282.5" y="230.0"/>
                 <ns4:waypoint x="1330.0" y="230.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID35" id="NID29" sourceElement="NID4" targetElement="NID6">
+            <bpmndi:BPMNEdge bpmnElement="MID43" id="NID29" sourceElement="NID4" targetElement="NID6">
                 <ns4:waypoint x="400.0" y="230.0"/>
                 <ns4:waypoint x="450.0" y="230.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID36" id="NID30" sourceElement="NID2" targetElement="NID3">
+            <bpmndi:BPMNEdge bpmnElement="MID44" id="NID30" sourceElement="NID2" targetElement="NID3">
                 <ns4:waypoint x="80.0" y="230.0"/>
                 <ns4:waypoint x="130.0" y="230.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID4" id="NID31">
+            <bpmndi:BPMNShape bpmnElement="MID3" id="NID31">
                 <dc:Bounds height="30.0" width="30.0" x="1410.0" y="215.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID37" id="NID32" sourceElement="NID24" targetElement="NID31">
+            <bpmndi:BPMNEdge bpmnElement="MID45" id="NID32" sourceElement="NID24" targetElement="NID31">
                 <ns4:waypoint x="1380.0" y="230.0"/>
                 <ns4:waypoint x="1410.0" y="230.0"/>
             </bpmndi:BPMNEdge>

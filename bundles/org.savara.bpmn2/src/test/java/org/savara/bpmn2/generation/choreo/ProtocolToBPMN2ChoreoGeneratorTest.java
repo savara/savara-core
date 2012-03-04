@@ -164,7 +164,7 @@ public class ProtocolToBPMN2ChoreoGeneratorTest {
     	protected void checkResults(TestResult result, String modelName, String choreo) {
     		boolean f_valid=false;
 
-    		String filename="results/bpmn2/choreo/"+modelName+".bpmn";
+    		String filename="results/bpmn2/choreo/"+modelName;
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);

@@ -17,6 +17,7 @@
  */
 package org.savara.bpmn2.generation.choreo;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
@@ -36,10 +37,8 @@ import org.savara.bpmn2.internal.generation.components.DoBlockActivity;
 import org.savara.bpmn2.internal.generation.components.ForkActivity;
 import org.savara.bpmn2.internal.generation.components.JoinActivity;
 import org.savara.bpmn2.internal.generation.components.ParallelActivity;
-import org.savara.bpmn2.internal.generation.components.ReceiveActivity;
 import org.savara.bpmn2.internal.generation.components.RepeatActivity;
 import org.savara.bpmn2.internal.generation.components.RunActivity;
-import org.savara.bpmn2.internal.generation.components.SendActivity;
 import org.savara.bpmn2.internal.generation.components.SequenceActivity;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TError;
@@ -48,9 +47,8 @@ import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TItemDefinition;
 import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TOperation;
-import org.savara.bpmn2.model.TReceiveTask;
+import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TRootElement;
-import org.savara.bpmn2.model.TSendTask;
 import org.savara.bpmn2.util.BPMN2ServiceUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
@@ -151,6 +149,16 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		generateChoreography(p, visitor, handler, locator);
 		
 		visitor.completeModels();
+		
+		// Define interfaces for the choreography
+		java.util.Map<TParticipant,TInterface> intfs=
+				BPMN2ServiceUtil.introspect(defns);
+
+		if (intfs.size() > 0) {
+			BPMN2ServiceUtil.merge(defns, intfs);
+		} else if (logger.isLoggable(Level.FINE)) {
+			logger.fine("No interfaces detected in generated BPMN2 choreography");
+		}
 		
 		modelMap.put(modelName+BPMN_FILE_EXTENSION, defns);
 	}
@@ -443,52 +451,8 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 			
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
-				ChoreographyTask ct=
-					new ChoreographyTask(elem, umls, _modelFactory, _notationFactory);
+				new ChoreographyTask(elem, umls, _modelFactory, _notationFactory);
 			}	
-			
-			/*
-			// Check if a send
-			if (elem.getFromRole() == null ||
-					elem.getFromRole().equals(elem.getEnclosingProtocol().getLocatedRole())) {
-				
-				BPMNActivity umls=getBPMNActivity();
-				if (umls != null) {
-					SendActivity sa=
-						new SendActivity(elem, umls, _modelFactory, _notationFactory);
-					
-					// Register the send to enable links to be established
-					// with an appropriate receive
-					BPMNDiagram amodel=umls.getBPMNDiagram();		
-					amodel.registerSendActivity(elem, sa);
-					
-					TSendTask task=sa.getSendTask();
-					
-					if (task != null) {
-						task.setMessageRef(getMessageReference(elem));
-						task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
-					}
-				}
-			} else {
-				BPMNActivity umls=getBPMNActivity();
-				if (umls != null) {
-					ReceiveActivity sa=
-						new ReceiveActivity(elem, umls, _modelFactory, _notationFactory);
-					
-					// Register the receive to enable links to be established
-					// with an appropriate send
-					BPMNDiagram amodel=umls.getBPMNDiagram();		
-					amodel.registerReceiveActivity(elem, sa);
-					
-					TReceiveTask task=sa.getReceiveTask();
-					
-					if (task != null) {
-						task.setMessageRef(getMessageReference(elem));
-						task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
-					}
-				}
-			}
-			*/
 		}
 		
 		/**
@@ -640,67 +604,6 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 				
 				amodel.completeModel();
 			}
-		}
-		
-		/**
-		 * This method establishes the associated message details,
-		 * if not defined, and returns a reference to it.
-		 * 
-		 * @param interaction The interaction
-		 * @return The message reference
-		 */
-		protected QName getMessageReference(Interaction interaction) {
-			QName ret=null;
-			
-			if (interaction.getMessageSignature() == null ||
-					interaction.getMessageSignature().getTypeReferences().size() == 0) {
-				return(null);
-			}
-			
-			// Check for Message definition
-			for (JAXBElement<? extends TRootElement> rootElem :
-							_modelFactory.getDefinitions().getRootElement()) {
-				if (rootElem.getValue() instanceof TMessage) {
-					TMessage mesg=(TMessage)rootElem.getValue();
-					
-					if (mesg.getName().equals(interaction.getMessageSignature().
-									getTypeReferences().get(0).getName())) {
-						ret = new QName(_modelFactory.getDefinitions().getTargetNamespace(),
-											mesg.getId());
-						
-						// Check if fault, and if so, that an error has been defined
-						if (InteractionUtil.isFaultResponse(interaction)) {
-							String faultName=InteractionUtil.getFaultName(interaction);
-							boolean found=false;
-							
-							for (JAXBElement<? extends TRootElement> subRootElem :
-								_modelFactory.getDefinitions().getRootElement()) {
-								
-								if (subRootElem.getValue() instanceof TError &&
-										((TError)subRootElem.getValue()).getStructureRef().equals(
-												mesg.getItemRef()) &&
-										((TError)subRootElem.getValue()).getName().equals(faultName)) {
-									found = true;
-								}
-							}
-							
-							if (!found) {
-								TError error=new TError();
-								error.setId("ERR"+faultName);
-								error.setName(faultName);
-								error.setErrorCode(faultName);
-								error.setStructureRef(mesg.getItemRef());
-								_modelFactory.getDefinitions().getRootElement().add(
-										_objectFactory.createError(error));
-							}
-						}
-						
-						break;
-					}
-				}
-			}
-			
-			return(ret);
 		}
 		
 		/**

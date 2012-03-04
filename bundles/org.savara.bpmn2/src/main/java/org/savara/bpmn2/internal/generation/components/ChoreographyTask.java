@@ -45,7 +45,7 @@ public class ChoreographyTask extends SimpleActivity {
 	}
 	
 	protected Object createNode(Activity act) {
-		return(getModelFactory().createChoreographyTask(getContainer(), act));
+		return(getModelFactory().createChoreographyTask(getContainer(), (Interaction)act));
 	}
 	
 	public void draw(Object parent) {

@@ -177,6 +177,8 @@ public class BPMN2NotationFactory {
 		initParticipant.setParticipantBandKind(ParticipantBandKind.TOP_INITIATING);
 		initParticipant.setBpmnElement(ct.getInitiatingParticipantRef());
 		
+		initParticipant.setIsMessageVisible(true);
+		
 		BPMNShape targetParticipant=new BPMNShape();
 		targetParticipant.setChoreographyActivityShape(
 				new QName(m_modelFactory.getDefinitions().getTargetNamespace(), shape.getId()));

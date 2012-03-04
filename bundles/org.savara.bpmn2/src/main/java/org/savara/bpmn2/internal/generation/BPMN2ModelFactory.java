@@ -34,6 +34,7 @@ import org.savara.bpmn2.model.TChoreographyTask;
 import org.savara.bpmn2.model.TCollaboration;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TEndEvent;
+import org.savara.bpmn2.model.TError;
 import org.savara.bpmn2.model.TExclusiveGateway;
 import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TFlowNode;
@@ -42,17 +43,21 @@ import org.savara.bpmn2.model.TInclusiveGateway;
 import org.savara.bpmn2.model.TIntermediateCatchEvent;
 import org.savara.bpmn2.model.TIntermediateThrowEvent;
 import org.savara.bpmn2.model.TLinkEventDefinition;
+import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TMessageFlow;
 import org.savara.bpmn2.model.TParallelGateway;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TProcess;
 import org.savara.bpmn2.model.TReceiveTask;
+import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.model.TSendTask;
 import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TSubChoreography;
 import org.savara.bpmn2.model.TSubProcess;
 import org.savara.bpmn2.model.TTask;
+import org.savara.common.model.annotation.Annotation;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.model.Join;
 import org.savara.protocol.model.Fork;
 import org.scribble.protocol.model.Activity;
@@ -63,44 +68,39 @@ import org.scribble.protocol.util.InteractionUtil;
 
 public class BPMN2ModelFactory {
 	
-	private TDefinitions m_definitions=null;
-	private TCollaboration m_collaboration=null;
-	private ObjectFactory m_factory=new ObjectFactory();
-	private boolean m_consecutiveIds=false;
-	private int m_id=1;
+	private TDefinitions _definitions=null;
+	private TCollaboration _collaboration=null;
+	private TChoreography _choreography=null;
+	private ObjectFactory _factory=new ObjectFactory();
+	private boolean _consecutiveIds=false;
+	private int _id=1;
 	
 	public BPMN2ModelFactory(TDefinitions defns) {
-		m_definitions = defns;
+		_definitions = defns;
 	}
 	
 	public void setUseConsecutiveIds(boolean b) {
-		m_consecutiveIds = b;
+		_consecutiveIds = b;
 	}
 	
 	protected String createId() {
-		if (m_consecutiveIds) {
-			return("MID"+(m_id++));
+		if (_consecutiveIds) {
+			return("MID"+(_id++));
 		}
 		return(UUID.randomUUID().toString());
 	}
 
 	public Object createDiagram() {
 		
-		// Create collaboration
-		m_collaboration = new TCollaboration();
-		m_collaboration.setId(createId());
-		
-		m_definitions.getRootElement().add(m_factory.createCollaboration(m_collaboration));
-		
-		return(m_definitions);
+		return(_definitions);
 	}
 	
 	public TDefinitions getDefinitions() {
-		return(m_definitions);
+		return(_definitions);
 	}
 	
 	public TCollaboration getCollaboration() {
-		return(m_collaboration);
+		return(_collaboration);
 	}
 	
 	public Object createPool(Object diagram, String name) {
@@ -109,17 +109,25 @@ public class BPMN2ModelFactory {
 		
 		process.setName(name);
 		
-		m_definitions.getRootElement().add(m_factory.createProcess(process));
+		_definitions.getRootElement().add(_factory.createProcess(process));
 		
 		// Create participant in collaboration and point to process
 		TParticipant participant=new TParticipant();
 		participant.setId(createId());
 		participant.setName(name);
 		
-		participant.setProcessRef(new QName(m_definitions.getTargetNamespace(),
+		participant.setProcessRef(new QName(_definitions.getTargetNamespace(),
 							process.getId()));
 		
-		m_collaboration.getParticipant().add(participant);
+		if (_collaboration != null) {
+			// Create collaboration
+			_collaboration = new TCollaboration();
+			_collaboration.setId(createId());
+			
+			_definitions.getRootElement().add(_factory.createCollaboration(_collaboration));
+		}
+
+		_collaboration.getParticipant().add(participant);
 
 		return(process);
 	}
@@ -130,7 +138,10 @@ public class BPMN2ModelFactory {
 		
 		choreo.setName(name);
 		
-		m_definitions.getRootElement().add(m_factory.createChoreography(choreo));
+		_definitions.getRootElement().add(_factory.createChoreography(choreo));
+		
+		// Set singleton choreography
+		_choreography = choreo;
 		
 		return(choreo);
 	}
@@ -140,13 +151,13 @@ public class BPMN2ModelFactory {
 		startEvent.setId(createId());
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
+			((TProcess)container).getFlowElement().add(_factory.createStartEvent(startEvent));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
+			((TSubProcess)container).getFlowElement().add(_factory.createStartEvent(startEvent));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
+			((TChoreography)container).getFlowElement().add(_factory.createStartEvent(startEvent));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
+			((TSubChoreography)container).getFlowElement().add(_factory.createStartEvent(startEvent));
 		}
 		
 		return(startEvent);
@@ -159,13 +170,13 @@ public class BPMN2ModelFactory {
 		task.setName("task: "+activity);
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
+			((TProcess)container).getFlowElement().add(_factory.createTask(task));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createTask(task));
+			((TSubProcess)container).getFlowElement().add(_factory.createTask(task));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createTask(task));
+			((TChoreography)container).getFlowElement().add(_factory.createTask(task));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createTask(task));
+			((TSubChoreography)container).getFlowElement().add(_factory.createTask(task));
 		}
 
 		return(task);
@@ -181,9 +192,9 @@ public class BPMN2ModelFactory {
 					run.getProtocolReference().getRole());
 
 			if (container instanceof TProcess) {
-				((TProcess)container).getFlowElement().add(m_factory.createCallActivity((TCallActivity)task));
+				((TProcess)container).getFlowElement().add(_factory.createCallActivity((TCallActivity)task));
 			} else if (container instanceof TSubProcess) {
-				((TSubProcess)container).getFlowElement().add(m_factory.createCallActivity((TCallActivity)task));
+				((TSubProcess)container).getFlowElement().add(_factory.createCallActivity((TCallActivity)task));
 			}
 
 			task.setId(createId());
@@ -196,9 +207,9 @@ public class BPMN2ModelFactory {
 					run.getProtocolReference().getRole());
 
 			if (container instanceof TChoreography) {
-				((TChoreography)container).getFlowElement().add(m_factory.createCallChoreography((TCallChoreography)task));
+				((TChoreography)container).getFlowElement().add(_factory.createCallChoreography((TCallChoreography)task));
 			} else if (container instanceof TSubChoreography) {
-				((TChoreography)container).getFlowElement().add(m_factory.createCallChoreography((TCallChoreography)task));
+				((TChoreography)container).getFlowElement().add(_factory.createCallChoreography((TCallChoreography)task));
 			}
 
 			task.setId(createId());
@@ -213,9 +224,9 @@ public class BPMN2ModelFactory {
 		TSubProcess task=new TSubProcess();
 			
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createSubProcess((TSubProcess)task));
+			((TProcess)container).getFlowElement().add(_factory.createSubProcess((TSubProcess)task));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createSubProcess((TSubProcess)task));
+			((TSubProcess)container).getFlowElement().add(_factory.createSubProcess((TSubProcess)task));
 		}
 
 		task.setId(createId());
@@ -230,20 +241,20 @@ public class BPMN2ModelFactory {
 		TLinkEventDefinition led=new TLinkEventDefinition();
 		
 		led.setName(sync.getLabel());
-		event.getEventDefinition().add(m_factory.createLinkEventDefinition(led));
+		event.getEventDefinition().add(_factory.createLinkEventDefinition(led));
 
 		event.setId(createId());
 		
 		event.setName(sync.getLabel());
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createEvent(event));
+			((TProcess)container).getFlowElement().add(_factory.createEvent(event));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createEvent(event));
+			((TSubProcess)container).getFlowElement().add(_factory.createEvent(event));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createEvent(event));
+			((TChoreography)container).getFlowElement().add(_factory.createEvent(event));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createEvent(event));
+			((TSubChoreography)container).getFlowElement().add(_factory.createEvent(event));
 		}
 
 		return(event);
@@ -256,24 +267,24 @@ public class BPMN2ModelFactory {
 		if (join.getXOR()) {
 			gw = new TExclusiveGateway();
 			if (container instanceof TProcess) {
-				((TProcess)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
+				((TProcess)container).getFlowElement().add(_factory.createExclusiveGateway((TExclusiveGateway)gw));
 			} else if (container instanceof TSubProcess) {
-				((TSubProcess)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
+				((TSubProcess)container).getFlowElement().add(_factory.createExclusiveGateway((TExclusiveGateway)gw));
 			} else if (container instanceof TChoreography) {
-				((TChoreography)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
+				((TChoreography)container).getFlowElement().add(_factory.createExclusiveGateway((TExclusiveGateway)gw));
 			} else if (container instanceof TSubChoreography) {
-				((TSubChoreography)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
+				((TSubChoreography)container).getFlowElement().add(_factory.createExclusiveGateway((TExclusiveGateway)gw));
 			}
 		} else {
 			gw = new TParallelGateway();
 			if (container instanceof TProcess) {
-				((TProcess)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
+				((TProcess)container).getFlowElement().add(_factory.createParallelGateway((TParallelGateway)gw));
 			} else if (container instanceof TSubProcess) {
-				((TSubProcess)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
+				((TSubProcess)container).getFlowElement().add(_factory.createParallelGateway((TParallelGateway)gw));
 			} else if (container instanceof TChoreography) {
-				((TChoreography)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
+				((TChoreography)container).getFlowElement().add(_factory.createParallelGateway((TParallelGateway)gw));
 			} else if (container instanceof TSubChoreography) {
-				((TSubChoreography)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
+				((TSubChoreography)container).getFlowElement().add(_factory.createParallelGateway((TParallelGateway)gw));
 			}
 		}
 		
@@ -287,16 +298,16 @@ public class BPMN2ModelFactory {
 		TLinkEventDefinition led=new TLinkEventDefinition();
 		
 		led.setName(label);
-		linkTarget.getEventDefinition().add(m_factory.createLinkEventDefinition(led));
+		linkTarget.getEventDefinition().add(_factory.createLinkEventDefinition(led));
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
+			((TProcess)container).getFlowElement().add(_factory.createIntermediateCatchEvent(linkTarget));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
+			((TSubProcess)container).getFlowElement().add(_factory.createIntermediateCatchEvent(linkTarget));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
+			((TChoreography)container).getFlowElement().add(_factory.createIntermediateCatchEvent(linkTarget));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
+			((TSubChoreography)container).getFlowElement().add(_factory.createIntermediateCatchEvent(linkTarget));
 		}
 		
 		linkTarget.setId(createId());
@@ -308,8 +319,10 @@ public class BPMN2ModelFactory {
 	
 	public TParticipant getParticipant(String name) {
 		TParticipant participant=null;
+		java.util.List<TParticipant> participants=(_choreography != null ?
+					_choreography.getParticipant() : _collaboration.getParticipant());
 		
-		for (TParticipant p : m_collaboration.getParticipant()) {
+		for (TParticipant p : participants) {
 			if (p.getName().equals(name)) {
 				participant = p;
 				break;
@@ -322,35 +335,122 @@ public class BPMN2ModelFactory {
 			participant.setId(createId());
 			participant.setName(name);
 			
-			m_collaboration.getParticipant().add(participant);
+			participants.add(participant);
 		}
 		
 		return(participant);
 	}
 	
-	public Object createChoreographyTask(Object container, Activity activity) {
+	/**
+	 * This method establishes the associated message details,
+	 * if not defined, and returns a reference to it.
+	 * 
+	 * @param interaction The interaction
+	 * @return The message reference
+	 */
+	protected QName getMessageReference(Interaction interaction) {
+		QName ret=null;
+		
+		if (interaction.getMessageSignature() == null ||
+				interaction.getMessageSignature().getTypeReferences().size() == 0) {
+			return(null);
+		}
+		
+		// Check for Message definition
+		for (JAXBElement<? extends TRootElement> rootElem :
+						getDefinitions().getRootElement()) {
+			if (rootElem.getValue() instanceof TMessage) {
+				TMessage mesg=(TMessage)rootElem.getValue();
+				
+				if (mesg.getName().equals(interaction.getMessageSignature().
+								getTypeReferences().get(0).getName())) {
+					ret = new QName(getDefinitions().getTargetNamespace(),
+										mesg.getId());
+					
+					// Check if fault, and if so, that an error has been defined
+					if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
+						String faultName=org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction);
+						boolean found=false;
+						
+						for (JAXBElement<? extends TRootElement> subRootElem :
+										getDefinitions().getRootElement()) {
+							
+							if (subRootElem.getValue() instanceof TError &&
+									((TError)subRootElem.getValue()).getStructureRef().equals(
+											mesg.getItemRef()) &&
+									((TError)subRootElem.getValue()).getName().equals(faultName)) {
+								found = true;
+							}
+						}
+						
+						if (!found) {
+							TError error=new TError();
+							error.setId("ERR"+faultName);
+							error.setName(faultName);
+							error.setErrorCode(faultName);
+							error.setStructureRef(mesg.getItemRef());
+							getDefinitions().getRootElement().add(
+									_factory.createError(error));
+						}
+					}
+					
+					break;
+				}
+			}
+		}
+		
+		return(ret);
+	}
+	
+	public Object createChoreographyTask(Object container, Interaction interaction) {
 		TChoreographyTask task=new TChoreographyTask();
 		task.setId(createId());
 		
-		task.setName(InteractionUtil.getMessageSignature(activity).toString());
+		task.setName(interaction.getMessageSignature().toString());
 		
-		Role fromRole=InteractionUtil.getFromRole(activity);
+		Role fromRole=interaction.getFromRole();
 		TParticipant fromParticipant=getParticipant(fromRole.getName());
 		
-		Role toRole=InteractionUtil.getToRole(activity);
+		Role toRole=interaction.getToRoles().get(0);
 		TParticipant toParticipant=getParticipant(toRole.getName());
 		
-		task.getParticipantRef().add(new QName(m_definitions.getTargetNamespace(),
+		task.getParticipantRef().add(new QName(_definitions.getTargetNamespace(),
 								fromParticipant.getId()));
-		task.getParticipantRef().add(new QName(m_definitions.getTargetNamespace(),
+		task.getParticipantRef().add(new QName(_definitions.getTargetNamespace(),
 								toParticipant.getId()));
-		task.setInitiatingParticipantRef(new QName(m_definitions.getTargetNamespace(),
+		task.setInitiatingParticipantRef(new QName(_definitions.getTargetNamespace(),
 								fromParticipant.getId()));
 		
+		// Create message flow
+		TMessageFlow mf=new TMessageFlow();
+		mf.setId(createId());
+		
+		mf.setSourceRef(new QName(_definitions.getTargetNamespace(),
+							fromParticipant.getId()));
+		mf.setTargetRef(new QName(_definitions.getTargetNamespace(),
+				toParticipant.getId()));
+		
+		QName mesg=getMessageReference(interaction);
+		if (mesg != null) {
+			mf.setMessageRef(mesg);
+		}
+		
+		_choreography.getMessageFlow().add(mf);
+		
+		task.getMessageFlowRef().add(new QName(_definitions.getTargetNamespace(),
+								mf.getId()));
+		
 		if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createChoreographyTask(task));
+			((TChoreography)container).getFlowElement().add(_factory.createChoreographyTask(task));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createChoreographyTask(task));
+			((TSubChoreography)container).getFlowElement().add(_factory.createChoreographyTask(task));
+		}
+		
+		// If interaction represents a fault, then check if the associated error has been defined
+		Annotation ann=AnnotationDefinitions.getAnnotation(interaction.getAnnotations(),
+						AnnotationDefinitions.FAULT);
+		if (ann != null) {
+			
 		}
 
 		return(task);
@@ -364,9 +464,9 @@ public class BPMN2ModelFactory {
 				" to "+InteractionUtil.getToRole(activity));
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
+			((TProcess)container).getFlowElement().add(_factory.createTask(task));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createTask(task));
+			((TSubProcess)container).getFlowElement().add(_factory.createTask(task));
 		}
 
 		return(task);
@@ -380,9 +480,9 @@ public class BPMN2ModelFactory {
 				" from "+InteractionUtil.getFromRole(activity));
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
+			((TProcess)container).getFlowElement().add(_factory.createTask(task));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createTask(task));
+			((TSubProcess)container).getFlowElement().add(_factory.createTask(task));
 		}
 
 		return(task);
@@ -393,13 +493,13 @@ public class BPMN2ModelFactory {
 		gateway.setId(createId());
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
+			((TProcess)container).getFlowElement().add(_factory.createExclusiveGateway(gateway));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
+			((TSubProcess)container).getFlowElement().add(_factory.createExclusiveGateway(gateway));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
+			((TChoreography)container).getFlowElement().add(_factory.createExclusiveGateway(gateway));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
+			((TSubChoreography)container).getFlowElement().add(_factory.createExclusiveGateway(gateway));
 		}
 
 		return(gateway);
@@ -410,13 +510,13 @@ public class BPMN2ModelFactory {
 		gateway.setId(createId());
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
+			((TProcess)container).getFlowElement().add(_factory.createParallelGateway(gateway));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
+			((TSubProcess)container).getFlowElement().add(_factory.createParallelGateway(gateway));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
+			((TChoreography)container).getFlowElement().add(_factory.createParallelGateway(gateway));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
+			((TSubChoreography)container).getFlowElement().add(_factory.createParallelGateway(gateway));
 		}
 
 		return(gateway);
@@ -427,13 +527,13 @@ public class BPMN2ModelFactory {
 		gateway.setId(createId());
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
+			((TProcess)container).getFlowElement().add(_factory.createInclusiveGateway(gateway));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
+			((TSubProcess)container).getFlowElement().add(_factory.createInclusiveGateway(gateway));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
+			((TChoreography)container).getFlowElement().add(_factory.createInclusiveGateway(gateway));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
+			((TSubChoreography)container).getFlowElement().add(_factory.createInclusiveGateway(gateway));
 		}
 
 		return(gateway);
@@ -444,13 +544,13 @@ public class BPMN2ModelFactory {
 		endEvent.setId(createId());
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
+			((TProcess)container).getFlowElement().add(_factory.createEndEvent(endEvent));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
+			((TSubProcess)container).getFlowElement().add(_factory.createEndEvent(endEvent));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
+			((TChoreography)container).getFlowElement().add(_factory.createEndEvent(endEvent));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
+			((TSubChoreography)container).getFlowElement().add(_factory.createEndEvent(endEvent));
 		}
 		
 		return(endEvent);
@@ -461,13 +561,13 @@ public class BPMN2ModelFactory {
 		event.setId(createId());
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
+			((TProcess)container).getFlowElement().add(_factory.createBoundaryEvent(event));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
+			((TSubProcess)container).getFlowElement().add(_factory.createBoundaryEvent(event));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
+			((TChoreography)container).getFlowElement().add(_factory.createBoundaryEvent(event));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
+			((TSubChoreography)container).getFlowElement().add(_factory.createBoundaryEvent(event));
 		}
 		
 		return(event);
@@ -495,13 +595,13 @@ public class BPMN2ModelFactory {
 		}
 		
 		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createSequenceFlow(link));
+			((TProcess)container).getFlowElement().add(_factory.createSequenceFlow(link));
 		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createSequenceFlow(link));
+			((TSubProcess)container).getFlowElement().add(_factory.createSequenceFlow(link));
 		} else if (container instanceof TChoreography) {
-			((TChoreography)container).getFlowElement().add(m_factory.createSequenceFlow(link));
+			((TChoreography)container).getFlowElement().add(_factory.createSequenceFlow(link));
 		} else if (container instanceof TSubChoreography) {
-			((TSubChoreography)container).getFlowElement().add(m_factory.createSequenceFlow(link));
+			((TSubChoreography)container).getFlowElement().add(_factory.createSequenceFlow(link));
 		}
 		
 		return(link);
@@ -526,7 +626,7 @@ public class BPMN2ModelFactory {
 		// TODO: Define message and message ref
 		link.setName(receive.toString());
 		
-		m_collaboration.getMessageFlow().add(link);
+		_collaboration.getMessageFlow().add(link);
 
 		return(link);
 	}
@@ -681,7 +781,7 @@ public class BPMN2ModelFactory {
 		if (node instanceof TBaseElement) {
 			QName id=new QName(getDefinitions().getTargetNamespace(),((TBaseElement)node).getId());
 			
-			for (TMessageFlow mf : m_collaboration.getMessageFlow()) {
+			for (TMessageFlow mf : _collaboration.getMessageFlow()) {
 				if (mf.getTargetRef() != null &&
 						mf.getTargetRef().equals(id)) {
 					ret.add(mf);
@@ -699,7 +799,7 @@ public class BPMN2ModelFactory {
 		if (node instanceof TBaseElement) {
 			QName id=new QName(getDefinitions().getTargetNamespace(),((TBaseElement)node).getId());
 			
-			for (TMessageFlow mf : m_collaboration.getMessageFlow()) {
+			for (TMessageFlow mf : _collaboration.getMessageFlow()) {
 				if (mf.getSourceRef() != null &&
 						mf.getSourceRef().equals(id)) {
 					ret.add(mf);
