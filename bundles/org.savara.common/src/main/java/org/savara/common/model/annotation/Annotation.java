@@ -109,15 +109,17 @@ public class Annotation implements org.scribble.common.model.Annotation {
 			
 			java.util.Set<String> props=getProperties().keySet();
 			boolean f_first=true;
-			for (String prop : props) {
-				
-				if (!f_first) {
-					buf.append(",");
+			for (String prop : props) {				
+				Object val=getProperties().get(prop);
+				if (val != null) {
+					if (!f_first) {
+						buf.append(",");
+					}
+					buf.append(prop);
+					buf.append("=");
+					buf.append(val.toString());
+					f_first = false;
 				}
-				buf.append(prop);
-				buf.append("=");
-				buf.append(getProperties().get(prop).toString());
-				f_first = false;
 			}
 			
 			buf.append(")");

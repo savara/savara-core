@@ -1,3 +1,4 @@
+[[ Protocol() ]]
 [[ SourceComponent(id=Choreography_1) ]]
 protocol ComplexANDJoin(role X) {
 	X introduces Y;

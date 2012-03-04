@@ -10,6 +10,7 @@ import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed f
 [[ Type(location=logistics.xsd,prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
 [[ Type(location=store.xsd,prefix=ns1,namespace=http://www.jboss.org/examples/store) ]]
 [[ Type(location=creditAgency.xsd,prefix=ns3,namespace=http://www.jboss.org/examples/creditAgency) ]]
+[[ Protocol(namespace=http://www.savara.org/examples) ]]
 [[ SourceComponent(id=Choreography_1) ]]
 [[ Interface(name=Buyer,role=Buyer,namespace=http://www.savara.org/examples/Buyer) ]]
 [[ Type(prefix=pns1,namespace=http://www.savara.org/examples/Buyer) ]]
