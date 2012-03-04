@@ -15,6 +15,7 @@ import xsd "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http
 [[ Interface(name=PolicyQuoteCalculationService,role=PolicyQuoteCalculationService,namespace=http://www.example.org/policyQuoteCalculationService) ]]
 [[ Interface(name=PolicyQuoteEntityService,role=PolicyQuoteEntityService,namespace=http://www.example.org/policyQuoteEntityService) ]]
 [[ Interface(name=PolicyQuoteProcessService,role=PolicyQuoteProcessService,namespace=http://www.example.org/policyQuoteProcessService) ]]
+[[ Protocol(namespace=http://www.pi4soa.org/PolicyQuote) ]]
 [[ Type(prefix=tns,namespace=http://www.pi4soa.org/PolicyQuote) ]]
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(location=schema/policyQuote.xsd,prefix=pol,namespace=http://www.example.org/policyQuote) ]]

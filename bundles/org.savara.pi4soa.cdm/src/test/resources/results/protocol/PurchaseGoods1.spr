@@ -8,6 +8,7 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 [[ Interface(role=Buyer,namespace=http://www.jboss.org/savara/examples) ]]
 [[ Interface(name=CreditAgency,role=CreditAgency,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Interface(name=Store,role=Store,namespace=http://www.jboss.org/examples/store) ]]
+[[ Protocol(namespace=http://www.jboss.org/savara/examples) ]]
 [[ Type(prefix=tns,namespace=http://www.jboss.org/savara/examples) ]]
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(prefix=pur,namespace=java:org.jboss.savara.examples.purchasing) ]]

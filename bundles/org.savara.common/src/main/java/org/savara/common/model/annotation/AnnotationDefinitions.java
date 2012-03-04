@@ -36,6 +36,10 @@ public class AnnotationDefinitions {
 	public static final String LANGUAGE_PROPERTY="language";
 		
 	
+	// Protocol annotation (has namespace property)
+	// Defines protocol level properties
+	public static final String PROTOCOL = "Protocol";
+
 	// Interface annotation (has name property, and optional namespace and role properties)
 	// Can be used at the protocol level, to define the interface qname associated with
 	// a role, and also at the interaction level to indicate the specific interface name

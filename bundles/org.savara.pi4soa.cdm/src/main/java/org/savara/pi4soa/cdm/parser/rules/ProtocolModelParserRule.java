@@ -127,6 +127,12 @@ public class ProtocolModelParserRule implements ParserRule {
 					Protocol.class, choreo));
 			
 			if (ret.getProtocol() != null) {
+				Annotation prtannotation=new Annotation(AnnotationDefinitions.PROTOCOL);
+
+				prtannotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+								cdlpack.getTargetNamespace());
+				ret.getProtocol().getAnnotations().add(prtannotation);
+
 				// Store namespace prefix info
 				java.util.Iterator<NameSpace> nss=cdlpack.getTypeDefinitions().getNameSpaces().iterator();
 				

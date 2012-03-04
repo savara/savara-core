@@ -97,12 +97,20 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 				initialize(pm, defns);
 				
 				// Create annotation to link the protocol to the source choreography
-				Annotation pann=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
+				Annotation pann=new Annotation(AnnotationDefinitions.PROTOCOL);
 
-				pann.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
-							choreo.getId());
+				pann.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+							defns.getTargetNamespace());
 				
 				p.getAnnotations().add(pann);
+				
+				// Create annotation to link the protocol to the source choreography
+				Annotation scann=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
+
+				scann.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
+							choreo.getId());
+				
+				p.getAnnotations().add(scann);
 				
 				// Push scope when processing the choreography
 				parserContext.pushScope();
