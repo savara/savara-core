@@ -17,7 +17,7 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process.components;
+package org.savara.bpmn2.internal.generation.components;
 
 import org.savara.bpmn2.model.BPMNEdge;
 import org.savara.bpmn2.model.Point;
@@ -28,9 +28,9 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	public static final int HORIZONTAL_GAP = 50;
 	
 	private BPMNActivity m_parent=null;
-	private org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory m_modelFactory=null;
-	private org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory m_notationFactory=null;
-	private java.util.List<Object> m_childStates=new java.util.ArrayList<Object>();
+	private org.savara.bpmn2.internal.generation.BPMN2ModelFactory m_modelFactory=null;
+	private org.savara.bpmn2.internal.generation.BPMN2NotationFactory m_notationFactory=null;
+	private java.util.List<BPMNActivity> m_childStates=new java.util.ArrayList<BPMNActivity>();
 	private int m_x=0;
 	private int m_y=0;
 	private int m_width=0;
@@ -42,8 +42,8 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	 * @param parent The parent
 	 */
 	public AbstractBPMNActivity(BPMNActivity parent,
-			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
+			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation) {
 		m_parent = parent;
 		m_modelFactory = model;
 		m_notationFactory = notation;
@@ -80,7 +80,7 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	 * 
 	 * @return The model
 	 */
-	protected org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory getModelFactory() {
+	protected org.savara.bpmn2.internal.generation.BPMN2ModelFactory getModelFactory() {
 		return(m_modelFactory);
 	}
 	
@@ -89,7 +89,7 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	 * 
 	 * @return The notation factory
 	 */
-	protected org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory getNotationFactory() {
+	protected org.savara.bpmn2.internal.generation.BPMN2NotationFactory getNotationFactory() {
 		return(m_notationFactory);
 	}
 	
@@ -107,7 +107,7 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	 * 
 	 * @return The child states
 	 */
-	protected java.util.List<Object> getChildStates() {
+	protected java.util.List<BPMNActivity> getChildStates() {
 		return(m_childStates);
 	}
 	

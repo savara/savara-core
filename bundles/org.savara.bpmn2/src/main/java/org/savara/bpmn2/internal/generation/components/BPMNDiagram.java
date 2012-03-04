@@ -17,9 +17,9 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process.components;
+package org.savara.bpmn2.internal.generation.components;
 
-import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
+import org.savara.bpmn2.internal.generation.BPMN2GenerationException;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.Interaction;
@@ -54,8 +54,8 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 	 */
 	public BPMNDiagram(String choreoName, String diagramName,
 			BPMNActivity parent,
-			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation)
+			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation)
 							throws BPMN2GenerationException {
 		super(parent, model, notation);
 		
@@ -87,6 +87,19 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 		} else {
 			m_pools.put(participant, ret);
 		}
+		
+		return(ret);
+	}
+	
+	/**
+	 * This method sets the container associated with the
+	 * BPMN model.
+	 * 
+	 * @param container The container
+	 */
+	public Choreography createChoreography(String choreoName) {
+		Choreography ret=new Choreography(m_diagram, choreoName,
+					this, getModelFactory(), getNotationFactory());
 		
 		return(ret);
 	}
@@ -271,12 +284,12 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 		// Draw diagram
 		int cury=0;
 		
-		for (int i=0; i < getChildStates().size(); i++) {
-			BPMNPool pool=(BPMNPool)getChildStates().get(i);
+		for (int i=0; i < getChildStates().size(); i++) {			
+			BPMNActivity act=getChildStates().get(i);
 			
-			pool.calculatePosition(0, cury);
+			act.calculatePosition(0, cury);
 			
-			cury += (pool.getHeight()+100);
+			cury += (act.getHeight()+100);
 		}
 		
 		//getModelFactory().saveModel(m_folder+
@@ -288,31 +301,8 @@ public class BPMNDiagram extends AbstractBPMNActivity {
 					getX(), getY(), getWidth(), getHeight());
 		
 		for (int i=0; i < getChildStates().size(); i++) {
-			BPMNPool pool=(BPMNPool)getChildStates().get(i);
-
-			pool.draw(diagramNotation);	
+			getChildStates().get(i).draw(diagramNotation);
 		}
-		
-		/* GPB: 25/4/08
-		 * Don't generate message links, as diagram infers them
-		 * anyway - and in the latest version the link positions
-		 * the label incorrectly. If using the default message
-		 * link is an issue, then need to investigate how to
-		 * get label positioned correctly.
-		 * 
-		for (int i=0; i < messageLinks.size(); i++) {
-			Object mesglink=messageLinks.get(i);
-			
-			getNotationFactory().createMessageLink(getModelFactory(),
-								mesglink, diagramNotation);
-		}
-		*/
-
-		//getNotationFactory().saveNotation(m_folder+
-		//		java.io.File.separator+m_name+"."+
-		//		getModelFactory().getFileExtension(), m_diagram,
-		//		m_folder+java.io.File.separator+m_name+"."+
-		//		getNotationFactory().getFileExtension(), diagramNotation);
 	}
 	
 	protected void checkForRedundantTargetLinks(BPMNActivity source, BPMNActivity target) {

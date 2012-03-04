@@ -17,7 +17,7 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process.components;
+package org.savara.bpmn2.internal.generation.components;
 
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Run;
@@ -36,8 +36,8 @@ public class RunActivity extends SimpleActivity {
 	 * @param model The BPMN model
 	 */
 	public RunActivity(Activity act, BPMNActivity parent,
-			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
+			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation) {
 		super(act, parent, model, notation);
 	}
 	

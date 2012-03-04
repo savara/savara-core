@@ -17,7 +17,7 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process.components;
+package org.savara.bpmn2.internal.generation.components;
 
 /**
  * This class represents a sequence of states within a
@@ -34,8 +34,8 @@ public class SequenceActivity extends AbstractBPMNActivity {
 	 * @param model The BPMN model
 	 */
 	public SequenceActivity(BPMNActivity parent,
-			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
+			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
 		//addChildState(new SimpleState(null, this));

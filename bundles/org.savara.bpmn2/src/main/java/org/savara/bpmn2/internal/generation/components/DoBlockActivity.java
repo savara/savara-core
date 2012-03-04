@@ -17,34 +17,24 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process;
+package org.savara.bpmn2.internal.generation.components;
 
 /**
- * This class represents a BPMN generation exception.
- *
+ * This class represents the BPMN activity node for a Perform activity.
+ * 
  */
-public class BPMN2GenerationException extends Exception {
-
-	private static final long serialVersionUID = -8580109779260853013L;
+public class DoBlockActivity extends InlineActivity {
 
 	/**
-	 * This constructor initializes the UML generation exception
-	 * with a message.
+	 * This constructor initializes the receive state.
 	 * 
-	 * @param mesg The message
+	 * @param act The behavioral activity
+	 * @param parent The parent BPMN state
+	 * @param model The BPMN model
 	 */
-	public BPMN2GenerationException(String mesg) {
-		super(mesg);
-	}
-	
-	/**
-	 * This constructor initializes the UML generation exception
-	 * with a message and associated exception.
-	 * 
-	 * @param mesg The message
-	 * @param t The associated exception
-	 */
-	public BPMN2GenerationException(String mesg, Throwable t) {
-		super(mesg, t);
+	public DoBlockActivity(BPMNActivity parent,
+			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation) {
+		super(parent, model, notation);
 	}
 }

@@ -17,31 +17,66 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process.components;
+package org.savara.bpmn2.internal.generation.components;
+
+import org.scribble.protocol.model.Activity;
 
 /**
- * This class represents a junction within a
+ * This class represents a simple task within a
  * BPMN process.
  *
  */
-public class JunctionActivity extends AbstractBPMNActivity {
+public class SimpleActivity extends AbstractBPMNActivity {
+	
+	private Object m_node=null;
+	private int m_width=110;
 
 	/**
-	 * This constructor initializes the junction activity.
+	 * This constructor initializes the simple activity.
 	 * 
-	 * @param node The junction node
+	 * @param act The behavioral activity
 	 * @param parent The parent BPMN state
 	 * @param model The BPMN model
 	 */
-	public JunctionActivity(Object node,
-			BPMNActivity parent, org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
+	public SimpleActivity(Activity act, BPMNActivity parent,
+			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
-		m_node = node;
-		
+		m_node = createNode(act);
 	}
 	
+	protected Object createNode(Activity act) {
+		return(getModelFactory().createSimpleTask(getContainer(), act));
+	}
+	
+	/**
+	 * Internal constructor which can be used to wrap a vertex.
+	 * 
+	 * @param vertex The vertex
+	 * @param parent The parent state
+	 */
+	/*
+	protected SimpleActivity(org.eclipse.uml2.uml.ActivityNode node, BPMNActivity parent) {
+		super(parent);
+		
+		m_node = node;
+	}
+	*/
+	
+	/**
+	 * This method sets the association between this state and
+	 * the sub-state machine that it represents.
+	 * 
+	 * @param subMachine The sub state machine
+	 */
+	/*
+	public void setSubStateMachine(ActivityModel subMachine) {
+		
+		((State)m_node).setSubmachine(subMachine.getStateMachine());
+	}
+	*/
+
 	/**
 	 * This method returns the start node for the activites
 	 * represented by this UML activity implementation.
@@ -59,6 +94,10 @@ public class JunctionActivity extends AbstractBPMNActivity {
 	 * @return The ending node
 	 */
 	public Object getEndNode() {
+		return(m_node);
+	}
+	
+	protected Object getNode() {
 		return(m_node);
 	}
 	
@@ -81,20 +120,19 @@ public class JunctionActivity extends AbstractBPMNActivity {
 	}
 	
 	public int getWidth() {
-		return(30);
+		return(m_width);
 	}
 	
 	public int getHeight() {
-		return(30);
+		return(60);
+	}
+	
+	public void adjustWidth(int width) {
+		m_width = width;
 	}
 	
 	public void draw(Object parent) {
-		
-		if (getModelFactory().isDeleted(m_node) == false) {
-			getNotationFactory().createJunction(getModelFactory(),
-					m_node, parent, getX(), getY(), getWidth(), getHeight());
-		}
+		getNotationFactory().createTask(getModelFactory(),
+				m_node, parent, getX(), getY(), getWidth(), getHeight());
 	}
-	
-	private Object m_node=null;
 }

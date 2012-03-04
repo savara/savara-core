@@ -17,27 +17,27 @@
  * Change History:
  * 29 Jan 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process.components;
+package org.savara.bpmn2.internal.generation.components;
 
-public class BPMNPool extends AbstractBPMNActivity {
+public class Choreography extends AbstractBPMNActivity {
 
-	private boolean m_completed=false;
-	private Object m_pool=null;
-	private BPMNActivity m_initialState=null;
-	private BPMNActivity m_finalState=null;
+	private boolean _completed=false;
+	private Object _choreography=null;
+	private BPMNActivity _initialState=null;
+	private BPMNActivity _finalState=null;
 	
 	/**
-	 * This constructor initializes the pool state.
+	 * This constructor initializes the choreography state.
 	 * 
 	 * @param diagram The diagram
-	 * @param name The pool name
+	 * @param name The choreography name
 	 * @param parent The parent BPMN state
 	 * @param model The BPMN model
 	 */
-	public BPMNPool(Object diagram, String name,
+	public Choreography(Object diagram, String name,
 			BPMNActivity parent,
-			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
+			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation) {
 		super(parent, model, notation);
 		
 		initialize(diagram, name);
@@ -52,22 +52,14 @@ public class BPMNPool extends AbstractBPMNActivity {
 	 */
 	public void initialize(Object diagram, String name) {
 		
-		m_pool = getModelFactory().createPool(diagram, name);
+		_choreography = getModelFactory().createChoreography(diagram, name);
 		
-		/*
-		m_activityModel = (org.eclipse.uml2.uml.Activity)
-			servicePackage.createPackagedElement(null,
-				UMLPackage.eINSTANCE.getActivity());
-	
-		m_activityModel.setName(getName(elem));
-		*/
-
 		// Create initial state
-		m_initialState = new JunctionActivity(getModelFactory().createInitialNode(getContainer()),
+		_initialState = new JunctionActivity(getModelFactory().createInitialNode(getContainer()),
 				this, getModelFactory(), getNotationFactory());
 		
 		// Create final state
-		m_finalState = new JunctionActivity(getModelFactory().createFinalNode(getContainer()),
+		_finalState = new JunctionActivity(getModelFactory().createFinalNode(getContainer()),
 				this, getModelFactory(), getNotationFactory());
 		
 	}
@@ -79,15 +71,15 @@ public class BPMNPool extends AbstractBPMNActivity {
 	 * @return The container
 	 */
 	public Object getContainer() {
-		return(m_pool);
+		return(_choreography);
 	}
 		
 	public Object getStartNode() {
-		return(m_initialState.getStartNode());
+		return(_initialState.getStartNode());
 	}
 	
 	public Object getEndNode() {
-		return(m_finalState.getEndNode());
+		return(_finalState.getEndNode());
 	}
 	
 	/**
@@ -96,7 +88,7 @@ public class BPMNPool extends AbstractBPMNActivity {
 	 * @return The start state
 	 */
 	public BPMNActivity getStartState() {
-		return(m_initialState);
+		return(_initialState);
 	}
 	
 	/**
@@ -105,7 +97,7 @@ public class BPMNPool extends AbstractBPMNActivity {
 	 * @return The end state
 	 */
 	public BPMNActivity getEndState() {
-		return(m_finalState);
+		return(_finalState);
 	}
 	
 	/**
@@ -115,11 +107,11 @@ public class BPMNPool extends AbstractBPMNActivity {
 	 */
 	public void childrenComplete() {
 		
-		if (m_completed == false) {
+		if (_completed == false) {
 			
 			// Move the final state to the end of the list
-			if (getChildStates().remove(m_finalState)) {
-				getChildStates().add(m_finalState);
+			if (getChildStates().remove(_finalState)) {
+				getChildStates().add(_finalState);
 			}
 			
 			// Join the child state vertex with transitions
@@ -129,7 +121,7 @@ public class BPMNPool extends AbstractBPMNActivity {
 			setHeight(getHeight()+(VERTICAL_GAP*2));
 			setWidth(getWidth()+(HORIZONTAL_GAP*2));
 			
-			m_completed = true;
+			_completed = true;
 		}
 	}
 	
@@ -152,8 +144,8 @@ public class BPMNPool extends AbstractBPMNActivity {
 	public void draw(Object parent) {
 		
 		// Construct notation
-		getNotationFactory().createPool(getModelFactory(), m_pool,
-				parent, getX(), getY(), getWidth(), getHeight());
+		//getNotationFactory().createChoreography(getModelFactory(), _choreography,
+		//		parent, getX(), getY(), getWidth(), getHeight());
 		
 		//m_initialState.draw(notation);
 		//m_finalState.draw(notation);

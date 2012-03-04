@@ -1,23 +1,21 @@
 /*
- * Copyright 2005-8 Pi4 Technologies Ltd
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- *
- * Change History:
- * 24 Jul 2008 : Initial version created by gary
+ * JBoss, Home of Professional Open Source
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
+ * by the @authors tag. All rights reserved.
+ * See the copyright.txt in the distribution for a
+ * full listing of individual contributors.
+ * This copyrighted material is made available to anyone wishing to use,
+ * modify, copy, or redistribute it subject to the terms and conditions
+ * of the GNU Lesser General Public License, v. 2.1.
+ * This program is distributed in the hope that it will be useful, but WITHOUT A
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public License,
+ * v.2.1 along with this distribution; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA  02110-1301, USA.
  */
-package org.savara.bpmn2.generation.process;
+package org.savara.bpmn2.generation.choreo;
 
 import java.util.logging.Logger;
 
@@ -30,8 +28,9 @@ import org.savara.bpmn2.internal.generation.BPMN2NotationFactory;
 import org.savara.bpmn2.internal.generation.components.AbstractBPMNActivity;
 import org.savara.bpmn2.internal.generation.components.BPMNActivity;
 import org.savara.bpmn2.internal.generation.components.BPMNDiagram;
-import org.savara.bpmn2.internal.generation.components.BPMNPool;
 import org.savara.bpmn2.internal.generation.components.ChoiceActivity;
+import org.savara.bpmn2.internal.generation.components.Choreography;
+import org.savara.bpmn2.internal.generation.components.ChoreographyTask;
 import org.savara.bpmn2.internal.generation.components.DoActivity;
 import org.savara.bpmn2.internal.generation.components.DoBlockActivity;
 import org.savara.bpmn2.internal.generation.components.ForkActivity;
@@ -64,16 +63,16 @@ import org.savara.protocol.model.util.InteractionUtil;
 import org.scribble.protocol.model.*;
 
 /**
- * This class represents the Protocol to BPMN2 Process implementation of the model
+ * This class represents the Protocol to BPMN2 Choreography implementation of the model
  * generator interface.
  */
-public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
+public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 
 	private static final String BPMN_FILE_EXTENSION = ".bpmn";
-	private boolean m_consecutiveIds=false;
+	private boolean _consecutiveIds=false;
 	private org.savara.bpmn2.model.ObjectFactory _objectFactory=new org.savara.bpmn2.model.ObjectFactory();
 	
-	private static final Logger logger=Logger.getLogger(ProtocolToBPMN2ProcessModelGenerator.class.getName());
+	private static final Logger logger=Logger.getLogger(ProtocolToBPMN2ChoreoModelGenerator.class.getName());
 	
 	/**
 	 * This method determines whether consecutive ids should be used in the model and
@@ -82,7 +81,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 	 * @param b Whether to use consecutive ids
 	 */
 	public void setUseConsecutiveIds(boolean b) {
-		m_consecutiveIds = b;
+		_consecutiveIds = b;
 	}
 	
 	/**
@@ -95,7 +94,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 	 */
 	public boolean isSupported(Object source, String targetType) {
 		return(source instanceof ProtocolModel &&
-				((ProtocolModel)source).isLocated() &&
+				!((ProtocolModel)source).isLocated() &&
 				(targetType.equals("bpmn2") || targetType.equals("bpmn")));
 	}
 
@@ -103,46 +102,61 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 	 * {@inheritDoc}
 	 */
 	public java.util.Map<String,Object> generate(Object source, FeedbackHandler handler,
-							final ResourceLocator locator) {
-		java.util.Map<String,Object> ret=null;
+							ResourceLocator locator) {
+		java.util.Map<String,Object> ret=new java.util.HashMap<String,Object>();
 
 		if (source instanceof ProtocolModel) {
 			ProtocolModel pm=(ProtocolModel)source;
 			
-			TDefinitions defns=new TDefinitions();
-			
-			// Find namespace for role
-			initNamespace(defns, pm);
-			
-			initImports(defns, pm);
-			
-			initMessages(defns, pm);
-			
-			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model=
-				new org.savara.bpmn2.internal.generation.BPMN2ModelFactory(defns);
-			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation=
-					new org.savara.bpmn2.internal.generation.BPMN2NotationFactory(model);
-			
-			model.setUseConsecutiveIds(m_consecutiveIds);
-			notation.setUseConsecutiveIds(m_consecutiveIds);
-			
-			BPMN2ModelVisitor visitor=
-				new BPMN2ModelVisitor(pm.getProtocol().getName(),
-						model, notation);
-			
-			generateProcess(pm, visitor, handler, locator);
-			
-			visitor.completeModels();
-			
-			ret = new java.util.HashMap<String,Object>();
-			ret.put(pm.getProtocol().getName()+"_"+pm.getProtocol().getLocatedRole().getName()+
-								BPMN_FILE_EXTENSION, defns);
+			processProtocol(pm, pm.getProtocol(), ret, handler, locator);
 		}
 		
 		return(ret);
 	}
 	
+	protected String getProtocolName(Protocol p) {
+		String ret=p.getName();
+		
+		if (p.getParent() instanceof Protocol) {
+			ret = getProtocolName((Protocol)p.getParent())+"_"+ret;
+		}
+		
+		return(ret);
+	}
+	
+	protected void processProtocol(ProtocolModel pm, Protocol p, java.util.Map<String,Object> modelMap,
+						FeedbackHandler handler, ResourceLocator locator) {
+		TDefinitions defns=new TDefinitions();
+		
+		// Find namespace for role
+		initNamespace(defns, pm);
+		
+		initImports(defns, pm);
+		
+		initMessages(defns, pm);
+		
+		org.savara.bpmn2.internal.generation.BPMN2ModelFactory model=
+			new org.savara.bpmn2.internal.generation.BPMN2ModelFactory(defns);
+		org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation=
+				new org.savara.bpmn2.internal.generation.BPMN2NotationFactory(model);
+		
+		model.setUseConsecutiveIds(_consecutiveIds);
+		notation.setUseConsecutiveIds(_consecutiveIds);
+		
+		String modelName=getProtocolName(p);
+		
+		BPMN2ModelVisitor visitor=
+			new BPMN2ModelVisitor(modelName, p, model, notation);
+		
+		generateChoreography(p, visitor, handler, locator);
+		
+		visitor.completeModels();
+		
+		modelMap.put(modelName+BPMN_FILE_EXTENSION, defns);
+	}
+	
 	protected void initNamespace(TDefinitions defns, ProtocolModel pm) {
+		/*
 		String role=pm.getProtocol().getLocatedRole().getName();
 		
 		Annotation ann=AnnotationDefinitions.getAnnotationWithProperty(pm.getProtocol().getAnnotations(),
@@ -151,6 +165,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		if (ann != null) {
 			defns.setTargetNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY));
 		}
+		*/
 	}
 	
 	protected void initImports(TDefinitions defns, ProtocolModel pm) {
@@ -214,29 +229,31 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		return(ret);
 	}
 	
-	protected void generateProcess(ProtocolModel local, BPMN2ModelVisitor visitor,
+	protected void generateChoreography(Protocol p, BPMN2ModelVisitor visitor,
 					FeedbackHandler handler, ResourceLocator locator) {
-		local.visit(visitor);
+		p.visit(visitor);
 	}
 	
 	public class BPMN2ModelVisitor extends DefaultVisitor {
 		
-		private BPMN2ModelFactory m_modelFactory=null;
-		private BPMN2NotationFactory m_notationFactory=null;
-		private String m_choreoName=null;
-	    private java.util.List<BPMNActivity> m_bpmnActivityStack=new java.util.ArrayList<BPMNActivity>();
-	    private java.util.Map<String,BPMNDiagram> m_activityModels=
+		private BPMN2ModelFactory _modelFactory=null;
+		private BPMN2NotationFactory _notationFactory=null;
+		private String _choreoName=null;
+		private Protocol _protocol=null;
+	    private java.util.List<BPMNActivity> _bpmnActivityStack=new java.util.ArrayList<BPMNActivity>();
+	    private java.util.Map<String,BPMNDiagram> _activityModels=
 	    				new java.util.HashMap<String,BPMNDiagram>();
 
 	    /**
 		 * The constructor the BPMN model visitor.
 		 * 
 		 */
-		public BPMN2ModelVisitor(String choreoName,
+		public BPMN2ModelVisitor(String choreoName, Protocol p,
 				BPMN2ModelFactory model, BPMN2NotationFactory notation) {
-			m_choreoName = choreoName;
-			m_modelFactory = model;
-			m_notationFactory = notation;
+			_choreoName = choreoName;
+			_protocol = p;
+			_modelFactory = model;
+			_notationFactory = notation;
 		}
 		
 		/**
@@ -246,28 +263,22 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 */
 		public boolean start(Protocol elem) {
 			
-			try {
-				BPMNDiagram diagram=getBPMNModel(elem);
+			if (elem == _protocol) {
+				try {
+					BPMNDiagram diagram=getBPMNModel(elem);
+					
+					Choreography choreo=diagram.createChoreography(_choreoName);
+					
+					pushBPMNActivity(choreo);
+				} catch(Exception e) {
+					logger.severe("Failed to get state machine " +
+							"for behavior '"+elem+"': "+e);
+				}
 				
-				BPMNPool pool=diagram.createPool(getPoolName(elem));
-				
-				//diagram.initialize(elem);
-				
-				pushBPMNActivity(pool);
-			} catch(Exception e) {
-				logger.severe("Failed to get state machine " +
-						"for behavior '"+elem+"': "+e);
+				return (true);
 			}
 			
-			return(true);
-		}
-		
-		protected String getPoolName(Protocol elem) {
-			if (elem.getParent() instanceof ProtocolModel) {
-				return(elem.getLocatedRole().getName());
-			} else {
-				return(elem.getName()+"_"+elem.getLocatedRole().getName());
-			}
+			return (false);
 		}
 		
 		/**
@@ -277,13 +288,15 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 */
 		public void end(Protocol elem) {
 
-			BPMNActivity umls=getBPMNActivity();
-			
-			if (umls != null) {
-				umls.childrenComplete();
+			if (elem == _protocol) {
+				BPMNActivity umls=getBPMNActivity();
+				
+				if (umls != null) {
+					umls.childrenComplete();
+				}
+	
+				popBPMNActivity();
 			}
-
-			popBPMNActivity();
 		}
 		
 		/**
@@ -295,7 +308,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			try {
 				pushBPMNActivity(new ChoiceActivity(elem,
-						getBPMNActivity(), m_modelFactory, m_notationFactory));
+						getBPMNActivity(), _modelFactory, _notationFactory));
 				
 			} catch(Exception e) {
 				logger.severe("Failed to create choice state: "+e);
@@ -323,7 +336,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			try {
 				pushBPMNActivity(new ParallelActivity(elem,
-						getBPMNActivity(), m_modelFactory, m_notationFactory));
+						getBPMNActivity(), _modelFactory, _notationFactory));
 				
 			} catch(Exception e) {
 				logger.severe("Failed to create parallel state: "+e);
@@ -352,7 +365,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
-				new RunActivity(elem, umls, m_modelFactory, m_notationFactory);					
+				new RunActivity(elem, umls, _modelFactory, _notationFactory);					
 			}
 		}
 		
@@ -369,11 +382,11 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
 				state = new DoActivity(elem,
-					umls, m_modelFactory, m_notationFactory);
+					umls, _modelFactory, _notationFactory);
 			
 				pushBPMNActivity(state);
 				
-				DoBlockActivity inline=new DoBlockActivity(state, m_modelFactory, m_notationFactory);
+				DoBlockActivity inline=new DoBlockActivity(state, _modelFactory, _notationFactory);
 				
 				pushBPMNActivity(inline);
 			}
@@ -428,6 +441,13 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 */
 		public void accept(Interaction elem) {
 			
+			BPMNActivity umls=getBPMNActivity();
+			if (umls != null) {
+				ChoreographyTask ct=
+					new ChoreographyTask(elem, umls, _modelFactory, _notationFactory);
+			}	
+			
+			/*
 			// Check if a send
 			if (elem.getFromRole() == null ||
 					elem.getFromRole().equals(elem.getEnclosingProtocol().getLocatedRole())) {
@@ -435,7 +455,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				BPMNActivity umls=getBPMNActivity();
 				if (umls != null) {
 					SendActivity sa=
-						new SendActivity(elem, umls, m_modelFactory, m_notationFactory);
+						new SendActivity(elem, umls, _modelFactory, _notationFactory);
 					
 					// Register the send to enable links to be established
 					// with an appropriate receive
@@ -453,7 +473,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				BPMNActivity umls=getBPMNActivity();
 				if (umls != null) {
 					ReceiveActivity sa=
-						new ReceiveActivity(elem, umls, m_modelFactory, m_notationFactory);
+						new ReceiveActivity(elem, umls, _modelFactory, _notationFactory);
 					
 					// Register the receive to enable links to be established
 					// with an appropriate send
@@ -468,6 +488,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 					}
 				}
 			}
+			*/
 		}
 		
 		/**
@@ -478,7 +499,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		public boolean start(Block elem) {
 			
 			try {
-				pushBPMNActivity(new SequenceActivity(getBPMNActivity(), m_modelFactory, m_notationFactory));
+				pushBPMNActivity(new SequenceActivity(getBPMNActivity(), _modelFactory, _notationFactory));
 				
 			} catch(Exception e) {
 				logger.severe("Failed to create sequence state: "+e);
@@ -506,9 +527,9 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			try {
 				pushBPMNActivity(new RepeatActivity(elem,
-						getBPMNActivity(), m_modelFactory, m_notationFactory));
+						getBPMNActivity(), _modelFactory, _notationFactory));
 				
-				pushBPMNActivity(new SequenceActivity(getBPMNActivity(), m_modelFactory, m_notationFactory));
+				pushBPMNActivity(new SequenceActivity(getBPMNActivity(), _modelFactory, _notationFactory));
 				
 			} catch(Exception e) {
 				logger.severe("Failed to create while Activity: "+e);
@@ -537,28 +558,27 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			if (act instanceof Fork) {
 				BPMNActivity umls=getBPMNActivity();
 				if (umls != null) {
-					new ForkActivity((Fork)act, umls, m_modelFactory, m_notationFactory);
+					new ForkActivity((Fork)act, umls, _modelFactory, _notationFactory);
 				}
 			} else if (act instanceof Join) {
 				BPMNActivity umls=getBPMNActivity();
 				if (umls != null) {
-					new JoinActivity((Join)act, umls, m_modelFactory, m_notationFactory);
+					new JoinActivity((Join)act, umls, _modelFactory, _notationFactory);
 				}
 			}
 		}
 		
 		protected BPMNDiagram getBPMNModel(Protocol elem) throws BPMN2GenerationException {
-			Protocol main=elem.getTopLevelProtocol();
-			String name=main.getName();
+			String name=elem.getName();
 			
 			BPMNDiagram ret=(BPMNDiagram)
-						m_activityModels.get(name);
+						_activityModels.get(name);
 			
 			if (ret == null) {
-				ret = new BPMNDiagram(m_choreoName, name,
-						null, m_modelFactory, m_notationFactory);
+				ret = new BPMNDiagram(_choreoName, name,
+						null, _modelFactory, _notationFactory);
 				
-				m_activityModels.put(name, ret);
+				_activityModels.put(name, ret);
 			}
 			
 			return(ret);
@@ -571,7 +591,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * @param act The activity
 		 */
 		protected void pushBPMNActivity(BPMNActivity act) {
-			m_bpmnActivityStack.add(0, act);
+			_bpmnActivityStack.add(0, act);
 		}
 		
 		/**
@@ -583,8 +603,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		protected BPMNActivity getBPMNActivity() {
 			BPMNActivity ret=null;
 			
-			if (m_bpmnActivityStack.size() > 0) {
-				ret = (BPMNActivity)m_bpmnActivityStack.get(0);
+			if (_bpmnActivityStack.size() > 0) {
+				ret = (BPMNActivity)_bpmnActivityStack.get(0);
 			}
 			
 			return(ret);
@@ -602,8 +622,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				umls.childrenComplete();
 			}
 			
-			if (m_bpmnActivityStack.size() > 0) {
-				m_bpmnActivityStack.remove(0);
+			if (_bpmnActivityStack.size() > 0) {
+				_bpmnActivityStack.remove(0);
 			}
 		}
 		
@@ -613,7 +633,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 *
 		 */
 		public void completeModels() {
-			java.util.Iterator<BPMNDiagram> iter=m_activityModels.values().iterator();
+			java.util.Iterator<BPMNDiagram> iter=_activityModels.values().iterator();
 			
 			while (iter.hasNext()) {
 				BPMNDiagram amodel=iter.next();
@@ -639,13 +659,13 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			// Check for Message definition
 			for (JAXBElement<? extends TRootElement> rootElem :
-							m_modelFactory.getDefinitions().getRootElement()) {
+							_modelFactory.getDefinitions().getRootElement()) {
 				if (rootElem.getValue() instanceof TMessage) {
 					TMessage mesg=(TMessage)rootElem.getValue();
 					
 					if (mesg.getName().equals(interaction.getMessageSignature().
 									getTypeReferences().get(0).getName())) {
-						ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+						ret = new QName(_modelFactory.getDefinitions().getTargetNamespace(),
 											mesg.getId());
 						
 						// Check if fault, and if so, that an error has been defined
@@ -654,7 +674,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 							boolean found=false;
 							
 							for (JAXBElement<? extends TRootElement> subRootElem :
-								m_modelFactory.getDefinitions().getRootElement()) {
+								_modelFactory.getDefinitions().getRootElement()) {
 								
 								if (subRootElem.getValue() instanceof TError &&
 										((TError)subRootElem.getValue()).getStructureRef().equals(
@@ -670,7 +690,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 								error.setName(faultName);
 								error.setErrorCode(faultName);
 								error.setStructureRef(mesg.getItemRef());
-								m_modelFactory.getDefinitions().getRootElement().add(
+								_modelFactory.getDefinitions().getRootElement().add(
 										_objectFactory.createError(error));
 							}
 						}
@@ -722,7 +742,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				return (null);
 			}
 			
-			TInterface intf=getInterface(m_modelFactory.getDefinitions(), serverRole);
+			TInterface intf=getInterface(_modelFactory.getDefinitions(), serverRole);
 			
 			if (intf == null) {
 				// TODO: REPORT ERROR
@@ -748,7 +768,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				intf.getOperation().add(op);
 			}
 			
-			ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(), op.getId());
+			ret = new QName(_modelFactory.getDefinitions().getTargetNamespace(), op.getId());
 			
 			if (InteractionUtil.isRequest(interaction)) {
 				if (op.getInMessageRef() == null) {
@@ -762,7 +782,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				
 				// Check for Error definition with associated fault name and message ref
 				for (JAXBElement<? extends TRootElement> rootElem :
-							m_modelFactory.getDefinitions().getRootElement()) {
+							_modelFactory.getDefinitions().getRootElement()) {
 					if (rootElem.getValue() instanceof TError) {
 						TError cur=(TError)rootElem.getValue();
 						
@@ -776,7 +796,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				}
 				
 				if (error != null) {
-					QName qname=new QName(m_modelFactory.getDefinitions().getTargetNamespace(), error.getId());
+					QName qname=new QName(_modelFactory.getDefinitions().getTargetNamespace(), error.getId());
 					
 					if (!op.getErrorRef().contains(qname)) {
 						op.getErrorRef().add(qname);

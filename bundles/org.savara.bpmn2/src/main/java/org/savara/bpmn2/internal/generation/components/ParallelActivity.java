@@ -17,9 +17,9 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process.components;
+package org.savara.bpmn2.internal.generation.components;
 
-import org.savara.bpmn2.internal.generation.process.BPMN2GenerationException;
+import org.savara.bpmn2.internal.generation.BPMN2GenerationException;
 import org.scribble.protocol.model.Parallel;
 
 /**
@@ -37,8 +37,8 @@ public class ParallelActivity extends AbstractBPMNActivity {
 	 * @param model The BPMN model
 	 */
 	public ParallelActivity(Parallel parallel, BPMNActivity parent,
-			org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation)
+			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation)
 						throws BPMN2GenerationException {
 		super(parent, model, notation);
 		

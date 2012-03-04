@@ -17,7 +17,7 @@
  * Change History:
  * 26 Jan 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process;
+package org.savara.bpmn2.internal.generation;
 
 import java.util.UUID;
 
@@ -28,6 +28,9 @@ import org.savara.bpmn2.model.ObjectFactory;
 import org.savara.bpmn2.model.TBaseElement;
 import org.savara.bpmn2.model.TBoundaryEvent;
 import org.savara.bpmn2.model.TCallActivity;
+import org.savara.bpmn2.model.TCallChoreography;
+import org.savara.bpmn2.model.TChoreography;
+import org.savara.bpmn2.model.TChoreographyTask;
 import org.savara.bpmn2.model.TCollaboration;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TEndEvent;
@@ -47,11 +50,13 @@ import org.savara.bpmn2.model.TReceiveTask;
 import org.savara.bpmn2.model.TSendTask;
 import org.savara.bpmn2.model.TSequenceFlow;
 import org.savara.bpmn2.model.TStartEvent;
+import org.savara.bpmn2.model.TSubChoreography;
 import org.savara.bpmn2.model.TSubProcess;
 import org.savara.bpmn2.model.TTask;
 import org.savara.protocol.model.Join;
 import org.savara.protocol.model.Fork;
 import org.scribble.protocol.model.Activity;
+import org.scribble.protocol.model.Role;
 import org.scribble.protocol.model.Run;
 import org.scribble.protocol.model.Interaction;
 import org.scribble.protocol.util.InteractionUtil;
@@ -119,6 +124,17 @@ public class BPMN2ModelFactory {
 		return(process);
 	}
 	
+	public Object createChoreography(Object diagram, String name) {
+		TChoreography choreo=new TChoreography();
+		choreo.setId(createId());
+		
+		choreo.setName(name);
+		
+		m_definitions.getRootElement().add(m_factory.createChoreography(choreo));
+		
+		return(choreo);
+	}
+	
 	public Object createInitialNode(Object container) {
 		TStartEvent startEvent=new TStartEvent();
 		startEvent.setId(createId());
@@ -127,6 +143,10 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createStartEvent(startEvent));
 		}
 		
 		return(startEvent);
@@ -142,26 +162,51 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createTask(task));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createTask(task));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createTask(task));
 		}
 
 		return(task);
 	}
 	
 	public Object createCallActivity(Object container, Run run) {
-		TCallActivity task=new TCallActivity();
-			
-		task.setName("Call: "+run.getProtocolReference().getName()+"_"+
-				run.getProtocolReference().getRole());
+		Object ret=null;
 		
-		if (container instanceof TProcess) {
-			((TProcess)container).getFlowElement().add(m_factory.createCallActivity((TCallActivity)task));
-		} else if (container instanceof TSubProcess) {
-			((TSubProcess)container).getFlowElement().add(m_factory.createCallActivity((TCallActivity)task));
+		if (container instanceof TProcess || container instanceof TSubProcess) {
+			TCallActivity task=new TCallActivity();
+			
+			task.setName("Call: "+run.getProtocolReference().getName()+"_"+
+					run.getProtocolReference().getRole());
+
+			if (container instanceof TProcess) {
+				((TProcess)container).getFlowElement().add(m_factory.createCallActivity((TCallActivity)task));
+			} else if (container instanceof TSubProcess) {
+				((TSubProcess)container).getFlowElement().add(m_factory.createCallActivity((TCallActivity)task));
+			}
+
+			task.setId(createId());
+			
+			ret = task;
+		} else if (container instanceof TChoreography || container instanceof TSubChoreography) {
+			TCallChoreography task=new TCallChoreography();
+			
+			task.setName("Call: "+run.getProtocolReference().getName()+"_"+
+					run.getProtocolReference().getRole());
+
+			if (container instanceof TChoreography) {
+				((TChoreography)container).getFlowElement().add(m_factory.createCallChoreography((TCallChoreography)task));
+			} else if (container instanceof TSubChoreography) {
+				((TChoreography)container).getFlowElement().add(m_factory.createCallChoreography((TCallChoreography)task));
+			}
+
+			task.setId(createId());
+			
+			ret = task;
 		}
 
-		task.setId(createId());
-
-		return(task);
+		return (ret);
 	}
 	
 	public Object createSubProcess(Object container) {
@@ -195,6 +240,10 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createEvent(event));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createEvent(event));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createEvent(event));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createEvent(event));
 		}
 
 		return(event);
@@ -210,6 +259,10 @@ public class BPMN2ModelFactory {
 				((TProcess)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
 			} else if (container instanceof TSubProcess) {
 				((TSubProcess)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
+			} else if (container instanceof TChoreography) {
+				((TChoreography)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
+			} else if (container instanceof TSubChoreography) {
+				((TSubChoreography)container).getFlowElement().add(m_factory.createExclusiveGateway((TExclusiveGateway)gw));
 			}
 		} else {
 			gw = new TParallelGateway();
@@ -217,6 +270,10 @@ public class BPMN2ModelFactory {
 				((TProcess)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
 			} else if (container instanceof TSubProcess) {
 				((TSubProcess)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
+			} else if (container instanceof TChoreography) {
+				((TChoreography)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
+			} else if (container instanceof TSubChoreography) {
+				((TSubChoreography)container).getFlowElement().add(m_factory.createParallelGateway((TParallelGateway)gw));
 			}
 		}
 		
@@ -236,6 +293,10 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createIntermediateCatchEvent(linkTarget));
 		}
 		
 		linkTarget.setId(createId());
@@ -243,6 +304,56 @@ public class BPMN2ModelFactory {
 		linkTarget.setName(label);
 
 		return(linkTarget);
+	}
+	
+	public TParticipant getParticipant(String name) {
+		TParticipant participant=null;
+		
+		for (TParticipant p : m_collaboration.getParticipant()) {
+			if (p.getName().equals(name)) {
+				participant = p;
+				break;
+			}
+		}
+		
+		if (participant == null) {
+			// Create participant in collaboration and point to process
+			participant = new TParticipant();
+			participant.setId(createId());
+			participant.setName(name);
+			
+			m_collaboration.getParticipant().add(participant);
+		}
+		
+		return(participant);
+	}
+	
+	public Object createChoreographyTask(Object container, Activity activity) {
+		TChoreographyTask task=new TChoreographyTask();
+		task.setId(createId());
+		
+		task.setName(InteractionUtil.getMessageSignature(activity).toString());
+		
+		Role fromRole=InteractionUtil.getFromRole(activity);
+		TParticipant fromParticipant=getParticipant(fromRole.getName());
+		
+		Role toRole=InteractionUtil.getToRole(activity);
+		TParticipant toParticipant=getParticipant(toRole.getName());
+		
+		task.getParticipantRef().add(new QName(m_definitions.getTargetNamespace(),
+								fromParticipant.getId()));
+		task.getParticipantRef().add(new QName(m_definitions.getTargetNamespace(),
+								toParticipant.getId()));
+		task.setInitiatingParticipantRef(new QName(m_definitions.getTargetNamespace(),
+								fromParticipant.getId()));
+		
+		if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createChoreographyTask(task));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createChoreographyTask(task));
+		}
+
+		return(task);
 	}
 	
 	public Object createSendTask(Object container, Activity activity) {
@@ -277,8 +388,6 @@ public class BPMN2ModelFactory {
 		return(task);
 	}
 	
-	//public Object createDataBasedXORGateway(Object container);
-	
 	public Object createEventBasedXORGateway(Object container) {
 		TExclusiveGateway gateway=new TExclusiveGateway();
 		gateway.setId(createId());
@@ -287,6 +396,10 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
 		}
 
 		return(gateway);
@@ -300,6 +413,10 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
 		}
 
 		return(gateway);
@@ -313,6 +430,10 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
 		}
 
 		return(gateway);
@@ -326,6 +447,10 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createEndEvent(endEvent));
 		}
 		
 		return(endEvent);
@@ -339,6 +464,10 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createBoundaryEvent(event));
 		}
 		
 		return(event);
@@ -369,6 +498,10 @@ public class BPMN2ModelFactory {
 			((TProcess)container).getFlowElement().add(m_factory.createSequenceFlow(link));
 		} else if (container instanceof TSubProcess) {
 			((TSubProcess)container).getFlowElement().add(m_factory.createSequenceFlow(link));
+		} else if (container instanceof TChoreography) {
+			((TChoreography)container).getFlowElement().add(m_factory.createSequenceFlow(link));
+		} else if (container instanceof TSubChoreography) {
+			((TSubChoreography)container).getFlowElement().add(m_factory.createSequenceFlow(link));
 		}
 		
 		return(link);
@@ -492,6 +625,10 @@ public class BPMN2ModelFactory {
 			list = ((TProcess)node).getFlowElement();
 		} else if (node instanceof TSubProcess) {
 			list = ((TSubProcess)node).getFlowElement();
+		} else if (node instanceof TChoreography) {
+			list = ((TChoreography)node).getFlowElement();
+		} else if (node instanceof TSubChoreography) {
+			list = ((TSubChoreography)node).getFlowElement();
 		}
 		
 		if (list != null) {

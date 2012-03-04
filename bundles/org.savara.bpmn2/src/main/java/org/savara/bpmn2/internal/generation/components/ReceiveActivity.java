@@ -17,7 +17,7 @@
  * Change History:
  * Jan 25, 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process.components;
+package org.savara.bpmn2.internal.generation.components;
 
 import org.savara.bpmn2.model.TReceiveTask;
 import org.scribble.protocol.model.Activity;
@@ -39,8 +39,8 @@ public class ReceiveActivity extends SimpleActivity {
 	 * @param model The BPMN model
 	 */
 	public ReceiveActivity(Interaction act,
-			BPMNActivity parent, org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
+			BPMNActivity parent, org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation) {
 		super(act, parent, model, notation);
 		
 		m_receive = act;

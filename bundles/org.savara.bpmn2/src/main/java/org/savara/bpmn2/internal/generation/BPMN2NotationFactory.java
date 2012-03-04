@@ -17,7 +17,7 @@
  * Change History:
  * 30 Jan 2007 : Initial version created by gary
  */
-package org.savara.bpmn2.internal.generation.process;
+package org.savara.bpmn2.internal.generation;
 
 import java.util.UUID;
 
@@ -31,8 +31,10 @@ import org.savara.bpmn2.model.BPMNShape;
 import org.savara.bpmn2.model.Bounds;
 import org.savara.bpmn2.model.DiagramElement;
 import org.savara.bpmn2.model.ObjectFactory;
+import org.savara.bpmn2.model.ParticipantBandKind;
 import org.savara.bpmn2.model.Point;
 import org.savara.bpmn2.model.TBaseElement;
+import org.savara.bpmn2.model.TChoreographyTask;
 import org.savara.bpmn2.model.TGateway;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TProcess;
@@ -42,6 +44,7 @@ import org.savara.bpmn2.model.TSequenceFlow;
 
 public class BPMN2NotationFactory {
 
+	private static final int BAND_HEIGHT = 15;
 	private BPMN2ModelFactory m_modelFactory=null;
 	private BPMNPlane m_plane=null;
 	private ObjectFactory m_factory=new ObjectFactory();
@@ -147,6 +150,76 @@ public class BPMN2NotationFactory {
 			BPMNPlane plane=(BPMNPlane)parentNotation;
 			
 			plane.getDiagramElement().add(m_factory.createBPMNShape(shape));
+		}
+		
+		return(shape);
+	}
+	
+	public Object createChoreographyTask(BPMN2ModelFactory factory,
+			Object taskModel, Object parentNotation,
+					int x, int y, int width, int height) {
+		TChoreographyTask ct=(TChoreographyTask)taskModel;
+		QName otherParticipantRef=null;
+		
+		for (QName qname : ct.getParticipantRef()) {
+			if (!qname.equals(ct.getInitiatingParticipantRef())) {
+				otherParticipantRef = qname;
+				break;
+			}
+		}
+		
+		BPMNShape shape=new BPMNShape();
+		shape.setId(createId());
+		
+		BPMNShape initParticipant=new BPMNShape();
+		initParticipant.setChoreographyActivityShape(
+				new QName(m_modelFactory.getDefinitions().getTargetNamespace(), shape.getId()));
+		initParticipant.setParticipantBandKind(ParticipantBandKind.TOP_INITIATING);
+		initParticipant.setBpmnElement(ct.getInitiatingParticipantRef());
+		
+		BPMNShape targetParticipant=new BPMNShape();
+		targetParticipant.setChoreographyActivityShape(
+				new QName(m_modelFactory.getDefinitions().getTargetNamespace(), shape.getId()));
+		targetParticipant.setParticipantBandKind(ParticipantBandKind.BOTTOM_NON_INITIATING);
+		targetParticipant.setBpmnElement(otherParticipantRef);
+		
+		if (taskModel instanceof TBaseElement) {
+			TBaseElement base=(TBaseElement)taskModel;
+			
+			shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+										base.getId()));
+		}
+		
+		Bounds b=new Bounds();
+		b.setX(x);
+		b.setY(y);
+		b.setWidth(width);
+		b.setHeight(height);
+		
+		shape.setBounds(b);
+		
+		b=new Bounds();
+		b.setX(x);
+		b.setY(y);
+		b.setWidth(width);
+		b.setHeight(BAND_HEIGHT);
+		
+		initParticipant.setBounds(b);
+		
+		b=new Bounds();
+		b.setX(x);
+		b.setY(y+height-BAND_HEIGHT);
+		b.setWidth(width);
+		b.setHeight(BAND_HEIGHT);
+		
+		targetParticipant.setBounds(b);
+		
+		if (parentNotation instanceof BPMNPlane) {
+			BPMNPlane plane=(BPMNPlane)parentNotation;
+			
+			plane.getDiagramElement().add(m_factory.createBPMNShape(shape));
+			plane.getDiagramElement().add(m_factory.createBPMNShape(initParticipant));
+			plane.getDiagramElement().add(m_factory.createBPMNShape(targetParticipant));
 		}
 		
 		return(shape);

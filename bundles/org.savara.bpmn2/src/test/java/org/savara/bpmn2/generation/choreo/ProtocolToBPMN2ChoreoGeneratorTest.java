@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpmn2.generation.process;
+package org.savara.bpmn2.generation.choreo;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -28,28 +28,17 @@ import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.util.JournalProxy;
-import org.savara.protocol.util.ProtocolServices;
 import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.Content;
 import org.scribble.common.resource.ResourceContent;
-import org.scribble.protocol.DefaultProtocolContext;
-import org.scribble.protocol.model.ProtocolModel;
-import org.scribble.protocol.model.Role;
 import org.scribble.protocol.parser.antlr.ANTLRProtocolParser;
 
-public class ProtocolToBPMN2ProcessGeneratorTest {
+public class ProtocolToBPMN2ChoreoGeneratorTest {
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("Protocol->BPMN2 Process Generator Tests");
+        TestSuite suite = new TestSuite("Protocol->BPMN2 Choreography Generator Tests");
 
-        // TODO: SAVARA-244
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3"));
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition1"));
-        //suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition2"));
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoodsWithCancel"));
-        
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("Run1"));
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("Parallel1"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3", 1));
 
         return suite;
     }
@@ -57,16 +46,18 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     protected static class ProtocolToBPMN2GeneratorTester extends TestCase {
 
     	private String m_name=null;
-
+    	private int _numModels=1;
+    	
     	/**
     	 * This constructor is initialized with the test
     	 * name.
     	 * 
     	 * @param name The test name
     	 */
-    	public ProtocolToBPMN2GeneratorTester(String name) {
+    	public ProtocolToBPMN2GeneratorTester(String name, int numModels) {
     		super(name);
     		m_name = name;
+    		_numModels = numModels;
     	}
     	
     	/**
@@ -107,74 +98,55 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     			if (model == null) {
     				result.addError(this, new Throwable("Model is null"));
     			} else {
-    				java.util.List<Role> roles=model.getRoles();
+    				ProtocolToBPMN2ChoreoModelGenerator generator=
+    								new ProtocolToBPMN2ChoreoModelGenerator();
+    				generator.setUseConsecutiveIds(true);
     				
-    				for (Role role : roles) {
-    					DefaultProtocolContext context=
-    							new DefaultProtocolContext(ProtocolServices.getParserManager(),
-    									null);
-    					ProtocolModel local=ProtocolServices.getProtocolProjector().project(context, model,
-    									role, new JournalProxy(handler));
-    	
-    					if (local != null) {
-    						// TODO: SAVARA-167 - issue when projection is based on a sub-protocol
-    						if (AnnotationDefinitions.getAnnotation(local.getProtocol().getAnnotations(),
-    										AnnotationDefinitions.TYPE) == null &&
-    								AnnotationDefinitions.getAnnotation(model.getProtocol().getAnnotations(),
-    												AnnotationDefinitions.TYPE) != null) {				
-    							AnnotationDefinitions.copyAnnotations(model.getProtocol().getAnnotations(),
-    									local.getProtocol().getAnnotations(), AnnotationDefinitions.TYPE);
-    						}   						
-    		   				
-    	    				ProtocolToBPMN2ProcessModelGenerator generator=
-    	    								new ProtocolToBPMN2ProcessModelGenerator();
-    	    				generator.setUseConsecutiveIds(true);
-    	    				
-    						java.util.Map<String,Object> map=generator.generate(local, handler, null);
-    						
-    						if (map == null || map.size() != 1) {
-    							fail("Target should have one BPMN2 process definition");
-    						}
-    						
-    						Object target=map.values().iterator().next();
-    	    				
-    	    				if (target instanceof TDefinitions) {
-    	    					
-    							// Obtain any namespace prefix map
-    							java.util.Map<String, String> prefixes=
-    									new java.util.HashMap<String, String>();
-    							
-    							java.util.List<Annotation> list=
-    								AnnotationDefinitions.getAnnotations(model.getProtocol().getAnnotations(),
-    										AnnotationDefinitions.TYPE);
-    							
-    							for (Annotation annotation : list) {
-    								if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-    										annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-    									prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-    											(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-    								}
-    							}
-
-    							try {
-    								java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-    								
-    								BPMN2ModelUtil.serialize((TDefinitions)target, baos, prefixes);
-    								
-    								baos.close();
-    								
-    								String text=new String(baos.toByteArray());
-    								
-    								checkResults(result, local.getProtocol().getLocatedRole(), text);
-    							} catch(Exception e) {
-    								result.addError(this, e);
-    							}
-    						} else {
-    							result.addError(this,
-    									new Throwable("No BPMN2 generated"));						
-    	    				}
-    					}
-    				}
+					java.util.Map<String,Object> map=generator.generate(model, handler, null);
+					
+					if (map == null || map.size() != _numModels) {
+						fail("Target should have "+_numModels+" BPMN2 choreography definition");
+					}
+					
+					for (String modelName : map.keySet()) {
+						Object target=map.get(modelName);
+	    				
+	    				if (target instanceof TDefinitions) {
+	    					
+							// Obtain any namespace prefix map
+							java.util.Map<String, String> prefixes=
+									new java.util.HashMap<String, String>();
+							
+							java.util.List<Annotation> list=
+								AnnotationDefinitions.getAnnotations(model.getProtocol().getAnnotations(),
+										AnnotationDefinitions.TYPE);
+							
+							for (Annotation annotation : list) {
+								if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
+										annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
+									prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
+											(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
+								}
+							}
+	
+							try {
+								java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+								
+								BPMN2ModelUtil.serialize((TDefinitions)target, baos, prefixes);
+								
+								baos.close();
+								
+								String text=new String(baos.toByteArray());
+								
+								checkResults(result, modelName, text);
+							} catch(Exception e) {
+								result.addError(this, e);
+							}
+						} else {
+							result.addError(this,
+									new Throwable("No BPMN2 generated"));						
+	    				}
+					}
      			}
     		}
     		
@@ -186,13 +158,13 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     	 * previously stored correct version.
     	 * 
     	 * @param result The test result
-    	 * @param role The role
-    	 * @param protocol The protocol
+    	 * @param modelName The model name
+    	 * @param choreo The protocol
     	 */
-    	protected void checkResults(TestResult result, Role role, String protocol) {
+    	protected void checkResults(TestResult result, String modelName, String choreo) {
     		boolean f_valid=false;
 
-    		String filename="results/bpmn2/process/"+m_name+"@"+role.getName()+".bpmn2";
+    		String filename="results/bpmn2/choreo/"+modelName+".bpmn";
     		
     		java.io.InputStream is=
     				ClassLoader.getSystemResourceAsStream(filename);
@@ -208,9 +180,9 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     				
     				String orig=new String(b);
     				
-    				if (orig.equals(protocol) == false) {
+    				if (orig.equals(choreo) == false) {
     					result.addError(this,
-    							new Throwable("Generated protocol does not match stored version"));
+    							new Throwable("Generated choreography does not match stored version"));
     				} else {
     					f_valid = true;
     				}
@@ -218,11 +190,6 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     				result.addError(this, e);
     			}
     		} else {
-    			/*
-    			result.addError(this,
-    					new Throwable("Resulting protocol '"+filename+
-    							"' not found for comparison"));
-    							*/
     			System.err.println("Generating file, as comparison file not found");
     		}
     		
@@ -249,20 +216,20 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     				if (f != null && f.exists()) {
     					f = f.getParentFile().getParentFile().getParentFile();
     					
-    					java.io.File resultsDir=new java.io.File(f, "results/bpmn2/process");
+    					java.io.File resultsDir=new java.io.File(f, "results/bpmn2/choreo");
     					
     					if (resultsDir.exists() == false) {
     						resultsDir.mkdirs();
     					}
     					
     					java.io.File resultFile=new java.io.File(resultsDir,
-    										m_name+"@"+role.getName()+".generated");
+    										modelName+".generated");
     					
     					if (resultFile.exists() == false) {
     						try {
     							java.io.FileOutputStream fos=new java.io.FileOutputStream(resultFile);
     							
-    							fos.write(protocol.getBytes());
+    							fos.write(choreo.getBytes());
     							
     							fos.flush();
     							fos.close();
@@ -276,7 +243,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     					}
     				} else {
     					result.addError(this, new Throwable("Unable to obtain URL for BPMN2 model source '"+
-    							m_name+"' role "+role.getName()+": "+url));
+    							modelName+"': "+url));
     				}
     			}
     		}

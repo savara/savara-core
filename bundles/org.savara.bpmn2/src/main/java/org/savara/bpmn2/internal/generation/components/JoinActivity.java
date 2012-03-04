@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpmn2.internal.generation.process.components;
+package org.savara.bpmn2.internal.generation.components;
 
 import org.savara.protocol.model.Join;
 import org.scribble.protocol.model.Activity;
@@ -36,8 +36,8 @@ public class JoinActivity extends SimpleActivity {
 	 * @param model The BPMN model
 	 */
 	public JoinActivity(Join act,
-			BPMNActivity parent, org.savara.bpmn2.internal.generation.process.BPMN2ModelFactory model,
-			org.savara.bpmn2.internal.generation.process.BPMN2NotationFactory notation) {
+			BPMNActivity parent, org.savara.bpmn2.internal.generation.BPMN2ModelFactory model,
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation) {
 		super(act, parent, model, notation);
 		
 		_join = act;
