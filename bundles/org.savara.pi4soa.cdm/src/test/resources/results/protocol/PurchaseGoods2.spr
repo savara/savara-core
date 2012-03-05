@@ -12,6 +12,7 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 [[ Interface(name=Logistics,role=Logistics,namespace=http://www.jboss.org/examples/logistics) ]]
 [[ Interface(name=Store,role=Store,namespace=http://www.jboss.org/examples/store) ]]
 [[ Protocol(namespace=http://www.jboss.org/savara/examples) ]]
+[[ SourceComponent(id=//@choreographies.0,language=cdm) ]]
 [[ Type(prefix=tns,namespace=http://www.jboss.org/savara/examples) ]]
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(location=store.xsd,prefix=sto,namespace=http://www.jboss.org/examples/store) ]]

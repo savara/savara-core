@@ -59,7 +59,7 @@ public class AnnotationDefinitions {
 	// Type annotation and properties (prefix, namespace and location)
 	public static final String TYPE="Type";
 
-	// Source Component annotation (uses id property)
+	// Source Component annotation (uses id property, and optional language property)
 	public static final String SOURCE_COMPONENT="SourceComponent";
 
 	// Assertion properties (expression and language)

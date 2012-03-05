@@ -132,7 +132,8 @@ public class ProtocolToBPMN2ChoreoGeneratorTest {
 							try {
 								java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
 								
-								BPMN2ModelUtil.serialize((TDefinitions)target, baos, prefixes);
+								BPMN2ModelUtil.serialize((TDefinitions)target, baos, prefixes,
+											ProtocolToBPMN2ChoreoModelGenerator.class.getClassLoader());
 								
 								baos.close();
 								

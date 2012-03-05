@@ -49,6 +49,7 @@ import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TOperation;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TRootElement;
+import org.savara.bpmn2.util.BPMN2ModelUtil;
 import org.savara.bpmn2.util.BPMN2ServiceUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
@@ -66,6 +67,7 @@ import org.scribble.protocol.model.*;
  */
 public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 
+	private static final String XSD_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 	private static final String BPMN_FILE_EXTENSION = ".bpmn";
 	private boolean _consecutiveIds=false;
 	private org.savara.bpmn2.model.ObjectFactory _objectFactory=new org.savara.bpmn2.model.ObjectFactory();
@@ -127,7 +129,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		TDefinitions defns=new TDefinitions();
 		
 		// Find namespace for role
-		initNamespace(defns, pm);
+		initNamespace(defns, pm, p);
 		
 		initImports(defns, pm);
 		
@@ -163,17 +165,13 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		modelMap.put(modelName+BPMN_FILE_EXTENSION, defns);
 	}
 	
-	protected void initNamespace(TDefinitions defns, ProtocolModel pm) {
-		/*
-		String role=pm.getProtocol().getLocatedRole().getName();
-		
-		Annotation ann=AnnotationDefinitions.getAnnotationWithProperty(pm.getProtocol().getAnnotations(),
-				AnnotationDefinitions.INTERFACE, AnnotationDefinitions.ROLE_PROPERTY, role);
+	protected void initNamespace(TDefinitions defns, ProtocolModel pm, Protocol p) {
+		Annotation ann=AnnotationDefinitions.getAnnotation(p.getAnnotations(),
+							AnnotationDefinitions.PROTOCOL);
 		
 		if (ann != null) {
 			defns.setTargetNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY));
 		}
-		*/
 	}
 	
 	protected void initImports(TDefinitions defns, ProtocolModel pm) {
@@ -181,13 +179,18 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 						AnnotationDefinitions.TYPE);
 
 		for (Annotation ann : anns) {
-			// Add import
-			TImport imp=new TImport();
-			imp.setImportType("http://www.w3.org/2001/XMLSchema"); // Assume xsd for now
-			imp.setLocation((String)ann.getProperties().get(AnnotationDefinitions.LOCATION_PROPERTY));
-			imp.setNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY));
+			String ns=(String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY);
+			String loc=(String)ann.getProperties().get(AnnotationDefinitions.LOCATION_PROPERTY);
 			
-			defns.getImport().add(imp);
+			if (loc != null && !ns.equals(XSD_NAMESPACE)) {
+				// Add import
+				TImport imp=new TImport();
+				imp.setImportType(XSD_NAMESPACE); // Assume xsd for now
+				imp.setLocation(loc);
+				imp.setNamespace(ns);
+				
+				defns.getImport().add(imp);
+			}
 		}
 	}
 	

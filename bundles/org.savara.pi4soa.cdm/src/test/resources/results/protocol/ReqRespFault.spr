@@ -4,6 +4,7 @@ import xsd "CreditCheckRequest" as CreditInformation, "CreditCheckInvalid" as Cr
 [[ Interface(role=Buyer,namespace=http://www.pi4soa.org/ReqRespFault/Buyer) ]]
 [[ Interface(name=Seller,role=Seller,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
 [[ Protocol(namespace=http://www.pi4soa.org/ReqRespFault) ]]
+[[ SourceComponent(id=//@choreographies.0,language=cdm) ]]
 [[ Type(prefix=tns,namespace=http://www.pi4soa.org/ReqRespFault) ]]
 [[ Type(prefix=xsd,namespace=http://www.w3.org/2001/XMLSchema) ]]
 [[ Type(prefix=byr,namespace=http://www.pi4soa.org/ReqRespFault/Buyer) ]]

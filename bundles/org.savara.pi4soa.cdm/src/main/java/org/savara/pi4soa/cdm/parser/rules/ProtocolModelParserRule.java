@@ -26,6 +26,7 @@ import javax.xml.namespace.QName;
 import org.pi4soa.cdl.*;
 import org.pi4soa.cdl.util.CDLTypeUtil;
 import org.pi4soa.common.xml.XMLUtils;
+import org.savara.pi4soa.cdm.CDMDefinitions;
 import org.savara.protocol.model.util.TypeSystem;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
@@ -131,7 +132,17 @@ public class ProtocolModelParserRule implements ParserRule {
 
 				prtannotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
 								cdlpack.getTargetNamespace());
+				
 				ret.getProtocol().getAnnotations().add(prtannotation);
+
+				scannotation = new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
+
+				scannotation.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
+						CDLTypeUtil.getURIFragment(choreo));
+				scannotation.getProperties().put(AnnotationDefinitions.LANGUAGE_PROPERTY,
+						CDMDefinitions.CDM_NOTATION);
+				
+				ret.getProtocol().getAnnotations().add(scannotation);
 
 				// Store namespace prefix info
 				java.util.Iterator<NameSpace> nss=cdlpack.getTypeDefinitions().getNameSpaces().iterator();

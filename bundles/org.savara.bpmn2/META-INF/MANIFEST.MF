@@ -11,7 +11,8 @@ Require-Bundle: org.savara.common,
  org.savara.protocol,
  org.scribble.common,
  org.scribble.protocol
-Export-Package: org.savara.bpmn2.generation.process,
- org.savara.bpmn2.parser.choreo,
+Export-Package: org.savara.bpmn2.generation.choreo,
+ org.savara.bpmn2.generation.process,
  org.savara.bpmn2.model,
+ org.savara.bpmn2.parser.choreo,
  org.savara.bpmn2.util
