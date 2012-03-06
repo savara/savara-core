@@ -120,7 +120,7 @@
                 <ns4:waypoint x="290.0" y="115.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID8" id="NID7">
-                <dc:Bounds height="30.0" width="30.0" x="450.0" y="90.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="450.0" y="100.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID10" id="NID8">
                 <dc:Bounds height="60.0" width="110.0" x="530.0" y="40.0"/>
@@ -129,7 +129,7 @@
                 <dc:Bounds height="60.0" width="110.0" x="530.0" y="140.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID9" id="NID10">
-                <dc:Bounds height="30.0" width="30.0" x="690.0" y="90.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="690.0" y="100.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID18" id="NID11" sourceElement="NID7" targetElement="NID8">
                 <ns4:waypoint x="500.0" y="115.0"/>

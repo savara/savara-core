@@ -217,10 +217,10 @@
                 <ns4:waypoint x="290.0" y="225.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID8" id="NID7">
-                <dc:Bounds height="30.0" width="30.0" x="450.0" y="200.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="450.0" y="210.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID10" id="NID8">
-                <dc:Bounds height="30.0" width="30.0" x="530.0" y="145.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="530.0" y="155.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID12" id="NID9">
                 <dc:Bounds height="60.0" width="293.0" x="627.0" y="40.0"/>
@@ -243,7 +243,7 @@
                 <dc:Bounds height="60.0" width="110.0" x="610.0" y="190.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID16" id="NID15">
-                <dc:Bounds height="30.0" width="30.0" x="770.0" y="195.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="770.0" y="205.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID18" id="NID16">
                 <dc:Bounds height="60.0" width="345.0" x="853.0" y="140.0"/>
@@ -273,7 +273,7 @@
                 <ns4:waypoint x="1170.0" y="270.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID17" id="NID24">
-                <dc:Bounds height="30.0" width="30.0" x="1330.0" y="195.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="1330.0" y="205.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID38" id="NID25" sourceElement="NID15" targetElement="NID16">
                 <ns4:waypoint x="820.0" y="220.0"/>
@@ -304,7 +304,7 @@
                 <ns4:waypoint x="770.0" y="220.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID11" id="NID30">
-                <dc:Bounds height="30.0" width="30.0" x="1410.0" y="145.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="1410.0" y="155.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID43" id="NID31" sourceElement="NID8" targetElement="NID9">
                 <ns4:waypoint x="580.0" y="170.0"/>
@@ -340,33 +340,35 @@
                 <dc:Bounds height="30.0" width="30.0" x="811.0" y="340.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID47" id="NID38" sourceElement="NID35" targetElement="NID37">
-                <ns4:waypoint x="771.0" y="380.0"/>
+                <ns4:waypoint x="771.0" y="370.0"/>
                 <ns4:waypoint x="811.0" y="355.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID48" id="NID39" sourceElement="NID37" targetElement="NID36">
                 <ns4:waypoint x="841.0" y="355.0"/>
-                <ns4:waypoint x="891.0" y="380.0"/>
+                <ns4:waypoint x="891.0" y="370.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID25" id="NID40">
                 <dc:Bounds height="30.0" width="30.0" x="811.0" y="390.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID49" id="NID41" sourceElement="NID35" targetElement="NID40">
-                <ns4:waypoint x="771.0" y="380.0"/>
+                <ns4:waypoint x="771.0" y="370.0"/>
                 <ns4:waypoint x="811.0" y="405.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID50" id="NID42" sourceElement="NID40" targetElement="NID36">
                 <ns4:waypoint x="841.0" y="405.0"/>
-                <ns4:waypoint x="891.0" y="380.0"/>
+                <ns4:waypoint x="891.0" y="370.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID27" id="NID43">
                 <dc:Bounds height="60.0" width="278.0" x="971.0" y="350.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID51" id="NID44" sourceElement="NID36" targetElement="NID43">
-                <ns4:waypoint x="941.0" y="380.0"/>
+                <ns4:waypoint x="941.0" y="370.0"/>
+                <ns4:waypoint x="956.0" y="370.0"/>
+                <ns4:waypoint x="956.0" y="380.0"/>
                 <ns4:waypoint x="971.0" y="380.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID9" id="NID45">
-                <dc:Bounds height="30.0" width="30.0" x="1490.0" y="200.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="1490.0" y="210.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID52" id="NID46" sourceElement="NID7" targetElement="NID8">
                 <ns4:waypoint x="500.0" y="225.0"/>
@@ -383,8 +385,8 @@
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID54" id="NID48" sourceElement="NID7" targetElement="NID35">
                 <ns4:waypoint x="500.0" y="225.0"/>
                 <ns4:waypoint x="671.0" y="225.0"/>
-                <ns4:waypoint x="671.0" y="380.0"/>
-                <ns4:waypoint x="721.0" y="380.0"/>
+                <ns4:waypoint x="671.0" y="370.0"/>
+                <ns4:waypoint x="721.0" y="370.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID55" id="NID49" sourceElement="NID43" targetElement="NID45">
                 <ns4:waypoint x="1249.0" y="380.0"/>

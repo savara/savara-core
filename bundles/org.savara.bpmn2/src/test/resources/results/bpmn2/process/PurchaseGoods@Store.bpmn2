@@ -150,7 +150,7 @@
                 <ns4:waypoint x="290.0" y="170.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID8" id="NID7">
-                <dc:Bounds height="30.0" width="30.0" x="450.0" y="145.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="450.0" y="155.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID10" id="NID8">
                 <dc:Bounds height="60.0" width="305.0" x="575.0" y="40.0"/>
@@ -166,7 +166,7 @@
                 <dc:Bounds height="60.0" width="110.0" x="530.0" y="190.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID13" id="NID12">
-                <dc:Bounds height="30.0" width="30.0" x="690.0" y="195.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="690.0" y="205.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID15" id="NID13">
                 <dc:Bounds height="60.0" width="430.0" x="770.0" y="140.0"/>
@@ -189,7 +189,7 @@
                 <ns4:waypoint x="1090.0" y="270.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID14" id="NID19">
-                <dc:Bounds height="30.0" width="30.0" x="1250.0" y="195.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="1250.0" y="205.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID23" id="NID20" sourceElement="NID12" targetElement="NID13">
                 <ns4:waypoint x="740.0" y="220.0"/>
@@ -220,7 +220,7 @@
                 <ns4:waypoint x="690.0" y="220.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Store" bpmnElement="MID9" id="NID25">
-                <dc:Bounds height="30.0" width="30.0" x="1330.0" y="145.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="1330.0" y="155.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Store" bpmnElement="MID28" id="NID26" sourceElement="NID7" targetElement="NID8">
                 <ns4:waypoint x="500.0" y="170.0"/>

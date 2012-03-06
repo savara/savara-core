@@ -95,7 +95,7 @@
                 <dc:Bounds height="60.0" width="110.0" x="130.0" y="85.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID7" id="NID5">
-                <dc:Bounds height="30.0" width="30.0" x="290.0" y="90.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="290.0" y="100.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID9" id="NID6">
                 <dc:Bounds height="60.0" width="110.0" x="370.0" y="40.0"/>
@@ -104,7 +104,7 @@
                 <dc:Bounds height="60.0" width="110.0" x="370.0" y="140.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID8" id="NID8">
-                <dc:Bounds height="30.0" width="30.0" x="530.0" y="90.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="530.0" y="100.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID15" id="NID9" sourceElement="NID5" targetElement="NID6">
                 <ns4:waypoint x="340.0" y="115.0"/>

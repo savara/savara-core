@@ -90,7 +90,7 @@
                 <dc:Bounds height="60.0" width="110.0" x="130.0" y="95.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID7" id="NID5">
-                <dc:Bounds height="30.0" width="30.0" x="290.0" y="145.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="290.0" y="155.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.jboss.org/examples/store" bpmnElement="MID8" id="NID6">
                 <dc:Bounds height="60.0" width="110.0" x="370.0" y="100.0"/>

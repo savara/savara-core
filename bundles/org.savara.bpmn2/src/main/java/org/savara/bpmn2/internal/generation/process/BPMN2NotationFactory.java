@@ -188,12 +188,6 @@ public class BPMN2NotationFactory {
 		BPMNShape shape=new BPMNShape();
 		shape.setId(createId());
 		
-		int extra=0;
-		
-		if (junctionModel instanceof TGateway) {
-			extra = 10;
-		}
-		
 		if (junctionModel instanceof TBaseElement) {
 			TBaseElement base=(TBaseElement)junctionModel;
 			
@@ -203,7 +197,7 @@ public class BPMN2NotationFactory {
 		
 		Bounds b=new Bounds();
 		b.setX(x);
-		b.setY(y-extra);
+		b.setY(y);
 		b.setWidth(width);
 		b.setHeight(height);
 		
@@ -225,8 +219,6 @@ public class BPMN2NotationFactory {
 		BPMNShape source=null;
 		BPMNShape target=null;
 		int extrax=0;
-		int extray=0;
-		int textray=0;
 		
 		if (linkModel instanceof TSequenceFlow) {
 			TSequenceFlow seqflow=(TSequenceFlow)linkModel;
@@ -257,12 +249,7 @@ public class BPMN2NotationFactory {
 			
 			if (seqflow.getSourceRef() instanceof TGateway) {
 				extrax = 20;
-				extray = 10;
-			}
-			
-			if (seqflow.getTargetRef() instanceof TGateway) {
-				textray = 10;
-			}
+			}			
 		}
 		
 		if (diagramNotation instanceof BPMNPlane && source != null && target != null) {
@@ -275,12 +262,12 @@ public class BPMN2NotationFactory {
 			
 			Point sourcep=new Point();
 			sourcep.setX(source.getBounds().getX()+source.getBounds().getWidth()+extrax);
-			sourcep.setY(source.getBounds().getY()+(source.getBounds().getHeight()/2)+extray);
+			sourcep.setY(source.getBounds().getY()+(source.getBounds().getHeight()/2));
 			edge.getWaypoint().add(sourcep);
 			
 			Point targetp=new Point();
 			targetp.setX(target.getBounds().getX());
-			targetp.setY(target.getBounds().getY()+(target.getBounds().getHeight()/2)+textray);
+			targetp.setY(target.getBounds().getY()+(target.getBounds().getHeight()/2));
 			edge.getWaypoint().add(targetp);
 
 			/*

@@ -94,7 +94,7 @@
                 <dc:Bounds height="60.0" width="110.0" x="130.0" y="140.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Buyer" bpmnElement="MID7" id="NID5">
-                <dc:Bounds height="30.0" width="30.0" x="290.0" y="145.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="290.0" y="155.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Buyer" bpmnElement="MID9" id="NID6">
                 <dc:Bounds height="60.0" width="110.0" x="370.0" y="40.0"/>
@@ -106,7 +106,7 @@
                 <dc:Bounds height="60.0" width="110.0" x="370.0" y="240.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Buyer" bpmnElement="MID8" id="NID9">
-                <dc:Bounds height="30.0" width="30.0" x="530.0" y="145.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="530.0" y="155.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Buyer" bpmnElement="MID12" id="NID10" sourceElement="NID5" targetElement="NID6">
                 <ns4:waypoint x="340.0" y="170.0"/>

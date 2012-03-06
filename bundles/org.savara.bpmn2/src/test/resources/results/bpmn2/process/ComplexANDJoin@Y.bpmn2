@@ -214,7 +214,7 @@
                 <dc:Bounds height="60.0" width="110.0" x="130.0" y="270.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID7" id="NID5">
-                <dc:Bounds height="30.0" width="30.0" x="290.0" y="275.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="290.0" y="285.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID9" id="NID6">
                 <dc:Bounds height="60.0" width="264.0" x="461.0" y="40.0"/>
@@ -243,29 +243,31 @@
                 <dc:Bounds height="30.0" width="30.0" x="627.0" y="140.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID46" id="NID14" sourceElement="NID11" targetElement="NID13">
-                <ns4:waypoint x="587.0" y="180.0"/>
+                <ns4:waypoint x="587.0" y="170.0"/>
                 <ns4:waypoint x="627.0" y="155.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="MID47" id="NID15" sourceElement="NID13" targetElement="NID12">
                 <ns4:waypoint x="657.0" y="155.0"/>
-                <ns4:waypoint x="707.0" y="180.0"/>
+                <ns4:waypoint x="707.0" y="170.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID14" id="NID16">
                 <dc:Bounds height="30.0" width="30.0" x="627.0" y="190.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID48" id="NID17" sourceElement="NID11" targetElement="NID16">
-                <ns4:waypoint x="587.0" y="180.0"/>
+                <ns4:waypoint x="587.0" y="170.0"/>
                 <ns4:waypoint x="627.0" y="205.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="MID49" id="NID18" sourceElement="NID16" targetElement="NID12">
                 <ns4:waypoint x="657.0" y="205.0"/>
-                <ns4:waypoint x="707.0" y="180.0"/>
+                <ns4:waypoint x="707.0" y="170.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID16" id="NID19">
                 <dc:Bounds height="60.0" width="256.0" x="787.0" y="150.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID50" id="NID20" sourceElement="NID12" targetElement="NID19">
-                <ns4:waypoint x="757.0" y="180.0"/>
+                <ns4:waypoint x="757.0" y="170.0"/>
+                <ns4:waypoint x="772.0" y="170.0"/>
+                <ns4:waypoint x="772.0" y="180.0"/>
                 <ns4:waypoint x="787.0" y="180.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID17" id="NID21">
@@ -279,7 +281,7 @@
                 <ns4:waypoint x="530.0" y="365.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID19" id="NID24">
-                <dc:Bounds height="30.0" width="30.0" x="690.0" y="340.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="690.0" y="350.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID21" id="NID25">
                 <dc:Bounds height="30.0" width="30.0" x="935.0" y="260.0"/>
@@ -294,36 +296,38 @@
                 <dc:Bounds height="30.0" width="30.0" x="860.0" y="330.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID52" id="NID29" sourceElement="NID26" targetElement="NID28">
-                <ns4:waypoint x="820.0" y="370.0"/>
+                <ns4:waypoint x="820.0" y="360.0"/>
                 <ns4:waypoint x="860.0" y="345.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="MID53" id="NID30" sourceElement="NID28" targetElement="NID27">
                 <ns4:waypoint x="890.0" y="345.0"/>
-                <ns4:waypoint x="940.0" y="370.0"/>
+                <ns4:waypoint x="940.0" y="360.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID24" id="NID31">
                 <dc:Bounds height="30.0" width="30.0" x="860.0" y="380.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID54" id="NID32" sourceElement="NID26" targetElement="NID31">
-                <ns4:waypoint x="820.0" y="370.0"/>
+                <ns4:waypoint x="820.0" y="360.0"/>
                 <ns4:waypoint x="860.0" y="395.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="MID55" id="NID33" sourceElement="NID31" targetElement="NID27">
                 <ns4:waypoint x="890.0" y="395.0"/>
-                <ns4:waypoint x="940.0" y="370.0"/>
+                <ns4:waypoint x="940.0" y="360.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID26" id="NID34">
                 <dc:Bounds height="60.0" width="110.0" x="1020.0" y="340.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID56" id="NID35" sourceElement="NID27" targetElement="NID34">
-                <ns4:waypoint x="990.0" y="370.0"/>
+                <ns4:waypoint x="990.0" y="360.0"/>
+                <ns4:waypoint x="1005.0" y="360.0"/>
+                <ns4:waypoint x="1005.0" y="370.0"/>
                 <ns4:waypoint x="1020.0" y="370.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID27" id="NID36">
                 <dc:Bounds height="30.0" width="30.0" x="935.0" y="450.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="MID20" id="NID37">
-                <dc:Bounds height="30.0" width="30.0" x="1180.0" y="340.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="1180.0" y="350.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID57" id="NID38" sourceElement="NID24" targetElement="NID25">
                 <ns4:waypoint x="740.0" y="365.0"/>
@@ -340,8 +344,8 @@
             <bpmndi:BPMNEdge bpmnElement="MID59" id="NID40" sourceElement="NID24" targetElement="NID26">
                 <ns4:waypoint x="740.0" y="365.0"/>
                 <ns4:waypoint x="755.0" y="365.0"/>
-                <ns4:waypoint x="755.0" y="370.0"/>
-                <ns4:waypoint x="770.0" y="370.0"/>
+                <ns4:waypoint x="755.0" y="360.0"/>
+                <ns4:waypoint x="770.0" y="360.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="MID60" id="NID41" sourceElement="NID34" targetElement="NID37">
                 <ns4:waypoint x="1130.0" y="370.0"/>
@@ -376,7 +380,7 @@
                 <ns4:waypoint x="1043.0" y="540.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID8" id="NID48">
-                <dc:Bounds height="30.0" width="30.0" x="1260.0" y="275.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="1260.0" y="285.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="MID65" id="NID49" sourceElement="NID5" targetElement="NID6">
                 <ns4:waypoint x="340.0" y="300.0"/>
@@ -393,8 +397,8 @@
             <bpmndi:BPMNEdge bpmnElement="MID67" id="NID51" sourceElement="NID5" targetElement="NID11">
                 <ns4:waypoint x="340.0" y="300.0"/>
                 <ns4:waypoint x="487.0" y="300.0"/>
-                <ns4:waypoint x="487.0" y="180.0"/>
-                <ns4:waypoint x="537.0" y="180.0"/>
+                <ns4:waypoint x="487.0" y="170.0"/>
+                <ns4:waypoint x="537.0" y="170.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="MID68" id="NID52" sourceElement="NID19" targetElement="NID48">
                 <ns4:waypoint x="1043.0" y="180.0"/>
