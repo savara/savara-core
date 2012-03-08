@@ -17,7 +17,6 @@
  */
 package org.savara.monitor;
 
-import org.savara.monitor.internal.DefaultMonitor;
 
 /**
  * This class provides the factory capability on behalf of the protocol

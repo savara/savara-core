@@ -15,17 +15,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.monitor.internal;
+package org.savara.monitor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.savara.monitor.ConversationId;
-import org.savara.monitor.ConversationResolver;
-import org.savara.monitor.MonitorResult;
-import org.savara.monitor.SessionStore;
-import org.savara.monitor.Message;
-import org.savara.monitor.Monitor;
 import org.savara.protocol.ProtocolCriteria.Direction;
 import org.savara.protocol.ProtocolId;
 import org.savara.protocol.export.monitor.ForkJoinMonitorExportVisitor;
@@ -55,7 +49,7 @@ public class DefaultMonitor implements Monitor {
 	private ProtocolMonitor m_monitor=new DefaultProtocolMonitor();
 	private DescriptionCache m_descriptionCache=new DescriptionCache();
 	private MonitorProtocolExporter m_exporter=new MonitorProtocolExporter();
-	private	MonitorContext _context=new MonitorContextImpl();
+	private	MonitorContext _context=new DefautMonitorContext();
 	
 	private static final Logger logger=Logger.getLogger(DefaultMonitor.class.getName());
 	

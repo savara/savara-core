@@ -15,13 +15,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.monitor.internal;
+package org.savara.monitor;
 
 import java.io.Serializable;
 
 import org.savara.common.config.Configuration;
-import org.savara.monitor.ConversationId;
-import org.savara.monitor.SessionStore;
 import org.savara.protocol.ProtocolId;
 
 public class InMemorySessionStore implements SessionStore {

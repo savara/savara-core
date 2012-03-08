@@ -15,13 +15,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.monitor.internal;
+package org.savara.monitor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.savara.common.model.annotation.AnnotationDefinitions;
-import org.scribble.protocol.monitor.DefaultMonitorContext;
 import org.scribble.protocol.monitor.Message;
 import org.scribble.protocol.monitor.Result;
 import org.scribble.protocol.monitor.Session;
@@ -33,9 +32,9 @@ import org.scribble.protocol.monitor.model.MessageNode;
  * Scribble, to also verify fault names that may be defined.
  *
  */
-public class MonitorContextImpl extends DefaultMonitorContext {
+public class DefautMonitorContext extends org.scribble.protocol.monitor.DefaultMonitorContext {
 
-	private static final Logger LOG=Logger.getLogger(MonitorContextImpl.class.getName());
+	private static final Logger LOG=Logger.getLogger(DefautMonitorContext.class.getName());
 	
 	private static java.util.Map<MessageNode, String> _faultNames=
 					new java.util.HashMap<MessageNode, String>();

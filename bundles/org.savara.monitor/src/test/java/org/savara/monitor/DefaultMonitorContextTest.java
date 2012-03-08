@@ -15,22 +15,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.monitor.internal;
+package org.savara.monitor;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.savara.monitor.DefautMonitorContext;
 import org.savara.monitor.Message;
-import org.savara.monitor.internal.MonitorContextImpl;
 import org.scribble.protocol.monitor.Result;
 import org.scribble.protocol.monitor.model.Annotation;
 import org.scribble.protocol.monitor.model.MessageNode;
 
-public class MonitorContextImplTest {
+public class DefaultMonitorContextTest {
 
 	@Test
 	public void testValidateNoFaultValid() {
-		MonitorContextImpl context=new MonitorContextImpl();
+		DefautMonitorContext context=new DefautMonitorContext();
 		
 		MessageNode mesgNode=new MessageNode();
 		mesgNode.setOperator("buy");
@@ -47,7 +47,7 @@ public class MonitorContextImplTest {
 
 	@Test
 	public void testValidateNoFaultInvalid() {
-		MonitorContextImpl context=new MonitorContextImpl();
+		DefautMonitorContext context=new DefautMonitorContext();
 		
 		MessageNode mesgNode=new MessageNode();
 		mesgNode.setOperator("buy");
@@ -68,7 +68,7 @@ public class MonitorContextImplTest {
 	
 	@Test
 	public void testValidateFaultValid() {
-		MonitorContextImpl context=new MonitorContextImpl();
+		DefautMonitorContext context=new DefautMonitorContext();
 		
 		MessageNode mesgNode=new MessageNode();
 		mesgNode.setOperator("buy");
@@ -91,7 +91,7 @@ public class MonitorContextImplTest {
 	
 	@Test
 	public void testValidateNodeFaultInvalid() {
-		MonitorContextImpl context=new MonitorContextImpl();
+		DefautMonitorContext context=new DefautMonitorContext();
 		
 		MessageNode mesgNode=new MessageNode();
 		mesgNode.setOperator("buy");
@@ -113,7 +113,7 @@ public class MonitorContextImplTest {
 	
 	@Test
 	public void testValidateMessageFaultInvalid() {
-		MonitorContextImpl context=new MonitorContextImpl();
+		DefautMonitorContext context=new DefautMonitorContext();
 		
 		MessageNode mesgNode=new MessageNode();
 		mesgNode.setOperator("buy");
@@ -131,7 +131,7 @@ public class MonitorContextImplTest {
 	
 	@Test
 	public void testValidateMessageFaultEmptyValid() {
-		MonitorContextImpl context=new MonitorContextImpl();
+		DefautMonitorContext context=new DefautMonitorContext();
 		
 		MessageNode mesgNode=new MessageNode();
 		mesgNode.setOperator("buy");
