@@ -202,7 +202,7 @@
                 <ns4:waypoint x="290.0" y="230.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.jboss.org/savara/examples" bpmnElement="MID11" id="NID6">
-                <dc:Bounds height="30.0" width="30.0" x="450.0" y="205.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="450.0" y="215.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.jboss.org/savara/examples" bpmnElement="MID13" id="NID7">
                 <dc:Bounds height="100.0" width="110.0" x="530.0" y="110.0"/>
@@ -214,7 +214,7 @@
                 <dc:Bounds height="15.0" width="110.0" x="530.0" y="195.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.jboss.org/savara/examples" bpmnElement="MID15" id="NID8">
-                <dc:Bounds height="30.0" width="30.0" x="690.0" y="135.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="690.0" y="145.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.jboss.org/savara/examples" bpmnElement="MID17" id="NID9">
                 <dc:Bounds height="100.0" width="110.0" x="770.0" y="40.0"/>
@@ -261,7 +261,7 @@
                 <dc:Bounds height="15.0" width="430.0" x="770.0" y="265.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape xmlns="http://www.jboss.org/savara/examples" bpmnElement="MID16" id="NID15">
-                <dc:Bounds height="30.0" width="30.0" x="1250.0" y="135.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="1250.0" y="145.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.jboss.org/savara/examples" bpmnElement="MID33" id="NID16" sourceElement="NID8" targetElement="NID9">
                 <ns4:waypoint x="740.0" y="160.0"/>
@@ -314,7 +314,7 @@
                 <ns4:waypoint x="930.0" y="370.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape xmlns="http://www.jboss.org/savara/examples" bpmnElement="MID12" id="NID24">
-                <dc:Bounds height="30.0" width="30.0" x="1330.0" y="205.0"/>
+                <dc:Bounds height="30.0" width="30.0" x="1330.0" y="215.0"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge xmlns="http://www.jboss.org/savara/examples" bpmnElement="MID39" id="NID25" sourceElement="NID6" targetElement="NID7">
                 <ns4:waypoint x="500.0" y="230.0"/>
