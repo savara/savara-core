@@ -39,6 +39,7 @@ public class ProtocolToBPMN2ChoreoGeneratorTest {
         TestSuite suite = new TestSuite("Protocol->BPMN2 Choreography Generator Tests");
 
         suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3", 1));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("ESBBroker", 3));
 
         return suite;
     }

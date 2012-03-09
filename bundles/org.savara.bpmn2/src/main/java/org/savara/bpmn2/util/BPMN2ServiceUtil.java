@@ -85,7 +85,8 @@ public class BPMN2ServiceUtil {
 					processNode(startEvent, ret, new java.util.Vector<InteractionInfo>(),
 								new ModelInfo(choreo.getParticipant(),
 									choreo.getMessageFlow(), choreo.getFlowElement(),
-									defns.getRootElement(), defns.getTargetNamespace()));
+									defns.getRootElement(), defns.getTargetNamespace()),
+									new java.util.Vector<TFlowNode>());
 				}
 			}
 		}
@@ -94,19 +95,24 @@ public class BPMN2ServiceUtil {
 	}
 	
 	protected static void processNode(TFlowNode node, java.util.Map<TParticipant,TInterface> intfs,
-			java.util.List<InteractionInfo> ii, ModelInfo modelInfo) {
+			java.util.List<InteractionInfo> ii, ModelInfo modelInfo,
+				java.util.List<TFlowNode> processedNodes) {
 		
-		// Check if node is an interaction
-		if (node instanceof TChoreographyTask) {
-			processChoreographyTask((TChoreographyTask)node, intfs, ii, modelInfo);
-		}
-		
-		for (QName outgoing : node.getOutgoing()) {
-			TSequenceFlow sf=(TSequenceFlow)modelInfo.getFlowElement(outgoing.getLocalPart());
+		if (!processedNodes.contains(node)) {
+			processedNodes.add(node);
 			
-			if (sf != null) {
-				processNode((TFlowNode)sf.getTargetRef(), intfs,
-						new java.util.Vector<InteractionInfo>(ii), modelInfo);
+			// Check if node is an interaction
+			if (node instanceof TChoreographyTask) {
+				processChoreographyTask((TChoreographyTask)node, intfs, ii, modelInfo);
+			}
+			
+			for (QName outgoing : node.getOutgoing()) {
+				TSequenceFlow sf=(TSequenceFlow)modelInfo.getFlowElement(outgoing.getLocalPart());
+				
+				if (sf != null) {
+					processNode((TFlowNode)sf.getTargetRef(), intfs,
+							new java.util.Vector<InteractionInfo>(ii), modelInfo, processedNodes);
+				}
 			}
 		}
 	}

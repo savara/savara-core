@@ -24,7 +24,7 @@
     <bpmn2:message xmlns="http://www.jboss.org/savara/examples" id="IDIDType" itemRef="ITEMIDType" name="IDType"/>
     <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMURITokenType" structureRef="xs:anyURI"/>
     <bpmn2:message xmlns="http://www.jboss.org/savara/examples" id="IDURITokenType" itemRef="ITEMURITokenType" name="URITokenType"/>
-    <bpmn2:choreography id="MID1" name="PurchaseGoodsProcess">
+    <bpmn2:choreography id="MID1" name="PurchaseGoods3">
         <bpmn2:participant id="MID5" name="Buyer"/>
         <bpmn2:participant id="MID6" name="Store">
             <bpmn2:interfaceRef xmlns="http://www.jboss.org/savara/examples">StoreInterface</bpmn2:interfaceRef>
