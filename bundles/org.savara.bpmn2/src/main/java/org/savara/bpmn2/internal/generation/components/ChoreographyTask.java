@@ -27,6 +27,7 @@ import org.scribble.protocol.model.Interaction;
  */
 public class ChoreographyTask extends SimpleActivity {
 	
+	private static final int MESSAGE_DECORATOR_YPADDING = 30;
 	private Interaction _interaction=null;
 
 	/**
@@ -50,11 +51,19 @@ public class ChoreographyTask extends SimpleActivity {
 	
 	public void draw(Object parent) {
 		getNotationFactory().createChoreographyTask(getModelFactory(),
-				getNode(), parent, getX(), getY(), getWidth(), getHeight());
+				getNode(), parent, getX(), getRealY(), getWidth(), getRealHeight());
 	}
 
-	public int getHeight() {
+	public int getRealY() {
+		return(getY()+MESSAGE_DECORATOR_YPADDING);
+	}
+	
+	public int getRealHeight() {
 		return(100);
+	}
+	
+	public int getHeight() {
+		return(getRealHeight()+(2 * MESSAGE_DECORATOR_YPADDING));
 	}
 	
 	/**

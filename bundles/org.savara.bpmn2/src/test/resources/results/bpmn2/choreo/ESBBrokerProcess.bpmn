@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <bpmn2:import importType="http://www.omg.org/spec/BPMN/20100524/MODEL" location="ESBBrokerProcess_CompleteTransaction.bpmn"/>
+    <bpmn2:import importType="http://www.omg.org/spec/BPMN/20100524/MODEL" location="ESBBrokerProcess_RequestForQuote.bpmn"/>
+    <bpmn2:itemDefinition id="ITEMBookingReference" structureRef="bookingReference"/>
+    <bpmn2:message id="IDBookingReference" itemRef="ITEMBookingReference" name="BookingReference"/>
+    <bpmn2:itemDefinition id="ITEMBuy" structureRef="buy"/>
+    <bpmn2:message id="IDBuy" itemRef="ITEMBuy" name="Buy"/>
+    <bpmn2:itemDefinition id="ITEMCancel" structureRef="cancel"/>
+    <bpmn2:message id="IDCancel" itemRef="ITEMCancel" name="Cancel"/>
+    <bpmn2:itemDefinition id="ITEMCreditInformation" structureRef="CreditCheckRequest"/>
+    <bpmn2:message id="IDCreditInformation" itemRef="ITEMCreditInformation" name="CreditInformation"/>
+    <bpmn2:itemDefinition id="ITEMCreditInvalid" structureRef="CreditCheckInvalid"/>
+    <bpmn2:message id="IDCreditInvalid" itemRef="ITEMCreditInvalid" name="CreditInvalid"/>
+    <bpmn2:itemDefinition id="ITEMCreditValid" structureRef="CreditCheckOk"/>
+    <bpmn2:message id="IDCreditValid" itemRef="ITEMCreditValid" name="CreditValid"/>
+    <bpmn2:itemDefinition id="ITEMEnquiry" structureRef="enquiry"/>
+    <bpmn2:message id="IDEnquiry" itemRef="ITEMEnquiry" name="Enquiry"/>
+    <bpmn2:itemDefinition id="ITEMOrderConfirmed" structureRef="orderConfirmed"/>
+    <bpmn2:message id="IDOrderConfirmed" itemRef="ITEMOrderConfirmed" name="OrderConfirmed"/>
+    <bpmn2:itemDefinition id="ITEMOrderRejected" structureRef="orderRejected"/>
+    <bpmn2:message id="IDOrderRejected" itemRef="ITEMOrderRejected" name="OrderRejected"/>
+    <bpmn2:itemDefinition id="ITEMQuote" structureRef="quote"/>
+    <bpmn2:message id="IDQuote" itemRef="ITEMQuote" name="Quote"/>
+    <bpmn2:itemDefinition id="ITEMQuoteList" structureRef="quoteList"/>
+    <bpmn2:message id="IDQuoteList" itemRef="ITEMQuoteList" name="QuoteList"/>
+    <bpmn2:itemDefinition id="ITEMRequestForQuote" structureRef="requestForQuote"/>
+    <bpmn2:message id="IDRequestForQuote" itemRef="ITEMRequestForQuote" name="RequestForQuote"/>
+    <bpmn2:choreography id="MID1" name="ESBBrokerProcess">
+        <bpmn2:participant id="MID5" name="Buyer"/>
+        <bpmn2:participant id="MID6" name="Broker">
+            <bpmn2:interfaceRef>BrokerInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:messageFlow id="MID7" messageRef="IDEnquiry" sourceRef="MID5" targetRef="MID6"/>
+        <bpmn2:messageFlow id="MID11" messageRef="IDQuoteList" sourceRef="MID6" targetRef="MID5"/>
+        <bpmn2:messageFlow id="MID16" messageRef="IDCancel" sourceRef="MID5" targetRef="MID6"/>
+        <bpmn2:startEvent id="MID2">
+            <bpmn2:outgoing>MID26</bpmn2:outgoing>
+        </bpmn2:startEvent>
+        <bpmn2:endEvent id="MID3">
+            <bpmn2:incoming>MID27</bpmn2:incoming>
+        </bpmn2:endEvent>
+        <bpmn2:choreographyTask id="MID4" initiatingParticipantRef="MID5" name="makeEnquiry(Enquiry)">
+            <bpmn2:incoming>MID26</bpmn2:incoming>
+            <bpmn2:outgoing>MID19</bpmn2:outgoing>
+            <bpmn2:participantRef>MID5</bpmn2:participantRef>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID7</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:inclusiveGateway id="MID8">
+            <bpmn2:incoming>MID18</bpmn2:incoming>
+            <bpmn2:incoming>MID19</bpmn2:incoming>
+            <bpmn2:outgoing>MID17</bpmn2:outgoing>
+            <bpmn2:outgoing>MID20</bpmn2:outgoing>
+        </bpmn2:inclusiveGateway>
+        <bpmn2:callChoreography id="MID9" name="Call: RequestForQuote_null">
+            <bpmn2:incoming>MID17</bpmn2:incoming>
+            <bpmn2:outgoing>MID18</bpmn2:outgoing>
+        </bpmn2:callChoreography>
+        <bpmn2:choreographyTask id="MID10" initiatingParticipantRef="MID6" name="makeEnquiry(QuoteList)">
+            <bpmn2:incoming>MID20</bpmn2:incoming>
+            <bpmn2:outgoing>MID25</bpmn2:outgoing>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:participantRef>MID5</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID11</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:exclusiveGateway id="MID12">
+            <bpmn2:incoming>MID25</bpmn2:incoming>
+            <bpmn2:outgoing>MID21</bpmn2:outgoing>
+            <bpmn2:outgoing>MID23</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:exclusiveGateway id="MID13">
+            <bpmn2:incoming>MID22</bpmn2:incoming>
+            <bpmn2:incoming>MID24</bpmn2:incoming>
+            <bpmn2:outgoing>MID27</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:callChoreography id="MID14" name="Call: CompleteTransaction_null">
+            <bpmn2:incoming>MID21</bpmn2:incoming>
+            <bpmn2:outgoing>MID22</bpmn2:outgoing>
+        </bpmn2:callChoreography>
+        <bpmn2:choreographyTask id="MID15" initiatingParticipantRef="MID5" name="cancel(Cancel)">
+            <bpmn2:incoming>MID23</bpmn2:incoming>
+            <bpmn2:outgoing>MID24</bpmn2:outgoing>
+            <bpmn2:participantRef>MID5</bpmn2:participantRef>
+            <bpmn2:participantRef>MID6</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>MID16</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:sequenceFlow id="MID17" sourceRef="MID8" targetRef="MID9"/>
+        <bpmn2:sequenceFlow id="MID18" sourceRef="MID9" targetRef="MID8"/>
+        <bpmn2:sequenceFlow id="MID19" sourceRef="MID4" targetRef="MID8"/>
+        <bpmn2:sequenceFlow id="MID20" sourceRef="MID8" targetRef="MID10"/>
+        <bpmn2:sequenceFlow id="MID21" sourceRef="MID12" targetRef="MID14"/>
+        <bpmn2:sequenceFlow id="MID22" sourceRef="MID14" targetRef="MID13"/>
+        <bpmn2:sequenceFlow id="MID23" sourceRef="MID12" targetRef="MID15"/>
+        <bpmn2:sequenceFlow id="MID24" sourceRef="MID15" targetRef="MID13"/>
+        <bpmn2:sequenceFlow id="MID25" sourceRef="MID10" targetRef="MID12"/>
+        <bpmn2:sequenceFlow id="MID26" sourceRef="MID2" targetRef="MID4"/>
+        <bpmn2:sequenceFlow id="MID27" sourceRef="MID13" targetRef="MID3"/>
+    </bpmn2:choreography>
+    <bpmn2:interface xmlns="null/Broker" id="BrokerInterface" implementationRef="Broker" name="Broker">
+        <bpmn2:operation id="enquiry" name="enquiry">
+            <bpmn2:inMessageRef xmlns="" xmlns:ns6="null/Broker">IDEnquiry</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns="" xmlns:ns6="null/Broker">IDQuoteList</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmndi:BPMNDiagram id="NID1">
+        <bpmndi:BPMNPlane>
+            <bpmndi:BPMNShape bpmnElement="MID2" id="NID2">
+                <dc:Bounds height="30.0" width="30.0" x="50.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID4" id="NID3">
+                <dc:Bounds height="100.0" width="110.0" x="130.0" y="120.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID5" choreographyActivityShape="NID3" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="130.0" y="120.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID3" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="130.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID8" id="NID4">
+                <dc:Bounds height="30.0" width="30.0" x="290.0" y="200.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID9" id="NID5">
+                <dc:Bounds height="60.0" width="110.0" x="370.0" y="145.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="MID17" id="NID6" sourceElement="NID4" targetElement="NID5">
+                <ns4:waypoint x="340.0" y="215.0"/>
+                <ns4:waypoint x="355.0" y="215.0"/>
+                <ns4:waypoint x="355.0" y="175.0"/>
+                <ns4:waypoint x="370.0" y="175.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MID18" id="NID7" sourceElement="NID5" targetElement="NID4">
+                <ns4:waypoint x="480.0" y="175.0"/>
+                <ns4:waypoint x="520.0" y="175.0"/>
+                <ns4:waypoint x="520.0" y="125.0"/>
+                <ns4:waypoint x="312.0" y="125.0"/>
+                <ns4:waypoint x="312.0" y="193.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MID19" id="NID8" sourceElement="NID3" targetElement="NID4">
+                <ns4:waypoint x="240.0" y="170.0"/>
+                <ns4:waypoint x="265.0" y="170.0"/>
+                <ns4:waypoint x="265.0" y="215.0"/>
+                <ns4:waypoint x="290.0" y="215.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="MID10" id="NID9">
+                <dc:Bounds height="100.0" width="110.0" x="610.0" y="120.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID9" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="610.0" y="120.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID5" choreographyActivityShape="NID9" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="610.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="MID20" id="NID10" sourceElement="NID4" targetElement="NID9">
+                <ns4:waypoint x="340.0" y="215.0"/>
+                <ns4:waypoint x="570.0" y="215.0"/>
+                <ns4:waypoint x="570.0" y="170.0"/>
+                <ns4:waypoint x="610.0" y="170.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="MID12" id="NID11">
+                <dc:Bounds height="30.0" width="30.0" x="770.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID14" id="NID12">
+                <dc:Bounds height="60.0" width="110.0" x="850.0" y="40.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID15" id="NID13">
+                <dc:Bounds height="100.0" width="110.0" x="850.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID5" choreographyActivityShape="NID13" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="850.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID6" choreographyActivityShape="NID13" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="850.0" y="255.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID13" id="NID14">
+                <dc:Bounds height="30.0" width="30.0" x="1010.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="MID21" id="NID15" sourceElement="NID11" targetElement="NID12">
+                <ns4:waypoint x="820.0" y="170.0"/>
+                <ns4:waypoint x="835.0" y="170.0"/>
+                <ns4:waypoint x="835.0" y="70.0"/>
+                <ns4:waypoint x="850.0" y="70.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MID22" id="NID16" sourceElement="NID12" targetElement="NID14">
+                <ns4:waypoint x="960.0" y="70.0"/>
+                <ns4:waypoint x="985.0" y="70.0"/>
+                <ns4:waypoint x="985.0" y="170.0"/>
+                <ns4:waypoint x="1010.0" y="170.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MID23" id="NID17" sourceElement="NID11" targetElement="NID13">
+                <ns4:waypoint x="820.0" y="170.0"/>
+                <ns4:waypoint x="835.0" y="170.0"/>
+                <ns4:waypoint x="835.0" y="220.0"/>
+                <ns4:waypoint x="850.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MID24" id="NID18" sourceElement="NID13" targetElement="NID14">
+                <ns4:waypoint x="960.0" y="220.0"/>
+                <ns4:waypoint x="985.0" y="220.0"/>
+                <ns4:waypoint x="985.0" y="170.0"/>
+                <ns4:waypoint x="1010.0" y="170.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MID25" id="NID19" sourceElement="NID9" targetElement="NID11">
+                <ns4:waypoint x="720.0" y="170.0"/>
+                <ns4:waypoint x="770.0" y="170.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="MID26" id="NID20" sourceElement="NID2" targetElement="NID3">
+                <ns4:waypoint x="80.0" y="170.0"/>
+                <ns4:waypoint x="130.0" y="170.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="MID3" id="NID21">
+                <dc:Bounds height="30.0" width="30.0" x="1090.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="MID27" id="NID22" sourceElement="NID14" targetElement="NID21">
+                <ns4:waypoint x="1060.0" y="170.0"/>
+                <ns4:waypoint x="1090.0" y="170.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

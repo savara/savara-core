@@ -49,7 +49,6 @@ import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TOperation;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TRootElement;
-import org.savara.bpmn2.util.BPMN2ModelUtil;
 import org.savara.bpmn2.util.BPMN2ServiceUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
@@ -124,7 +123,18 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		return(ret);
 	}
 	
-	protected void processProtocol(ProtocolModel pm, Protocol p, java.util.Map<String,Object> modelMap,
+	/**
+	 * This method processes a protocol to derive the BPMN2 choreography model for the
+	 * top level or nested protocols.
+	 * 
+	 * @param pm The protocol model
+	 * @param p The protocol (top level or nested)
+	 * @param modelMap The model map
+	 * @param handler The handler
+	 * @param locator The resource locator
+	 * @return The model file
+	 */
+	protected String processProtocol(ProtocolModel pm, Protocol p, java.util.Map<String,Object> modelMap,
 						FeedbackHandler handler, ResourceLocator locator) {
 		TDefinitions defns=new TDefinitions();
 		
@@ -162,7 +172,28 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 			logger.fine("No interfaces detected in generated BPMN2 choreography");
 		}
 		
-		modelMap.put(modelName+BPMN_FILE_EXTENSION, defns);
+		String ret=modelName+BPMN_FILE_EXTENSION;
+		
+		modelMap.put(ret, defns);
+		
+		// Check if nested protocols have been defined
+		for (Protocol nested : p.getNestedProtocols()) {
+			
+			String nestedModelFile=processProtocol(pm, nested, modelMap, handler, locator);
+			
+			TDefinitions nestedDefn=(TDefinitions)modelMap.get(nestedModelFile);
+			
+			// Define import for nested protocol
+			TImport imp=new TImport();
+			
+			imp.setImportType("http://www.omg.org/spec/BPMN/20100524/MODEL");
+			imp.setLocation(nestedModelFile);
+			imp.setNamespace(nestedDefn.getTargetNamespace());
+			
+			defns.getImport().add(imp);
+		}
+		
+		return(ret);
 	}
 	
 	protected void initNamespace(TDefinitions defns, ProtocolModel pm, Protocol p) {
