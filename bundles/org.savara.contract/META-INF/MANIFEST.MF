@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Contract
 Bundle-SymbolicName: org.savara.contract
-Bundle-Version: 2.0.0.SNAPSHOT
+Bundle-Version: 2.0.0.Final
 Bundle-Activator: org.savara.contract.osgi.Activator
-Bundle-Vendor: www.savara.org
+Bundle-Vendor: Red Hat, Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.junit,
  org.osgi.framework

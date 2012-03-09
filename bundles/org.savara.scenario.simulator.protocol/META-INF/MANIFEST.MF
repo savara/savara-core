@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Scenario Simulator Protocol
 Bundle-SymbolicName: org.savara.scenario.simulator.protocol
-Bundle-Version: 2.0.0.SNAPSHOT
+Bundle-Version: 2.0.0.Final
 Bundle-Activator: org.savara.scenario.simulator.protocol.osgi.Activator
 Bundle-Vendor: Red Hat, Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
