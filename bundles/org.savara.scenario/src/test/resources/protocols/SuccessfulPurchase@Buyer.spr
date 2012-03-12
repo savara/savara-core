@@ -1,0 +1,7 @@
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
+import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
+protocol SuccessfulPurchase at Buyer {
+	Buyer introduces Store;
+	buy(BuyRequest) to Store;
+	buy(BuyConfirmed) from Store;
+}
