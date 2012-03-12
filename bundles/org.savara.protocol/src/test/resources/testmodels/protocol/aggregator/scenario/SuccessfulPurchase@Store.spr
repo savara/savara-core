@@ -1,0 +1,15 @@
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest;
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest;
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
+import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
+protocol SuccessfulPurchase at Store(role Buyer) {
+	Store introduces CreditAgency, Logistics;
+	buy(BuyRequest) from Buyer;
+	checkCredit(CreditCheckRequest) to CreditAgency;
+	checkCredit(CreditRating) from CreditAgency;
+	deliver(DeliveryRequest) to Logistics;
+	delivery(DeliveryConfirmed) from Logistics;
+	buy(BuyConfirmed) to Buyer;
+}

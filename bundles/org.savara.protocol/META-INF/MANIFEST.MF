@@ -17,6 +17,7 @@ Require-Bundle: org.scribble.common,
  org.scribble.protocol.export.monitor,
  org.scribble.protocol.monitor
 Export-Package: org.savara.protocol,
+ org.savara.protocol.aggregator,
  org.savara.protocol.contract.generator,
  org.savara.protocol.export.monitor,
  org.savara.protocol.export.text,
@@ -26,6 +27,7 @@ Export-Package: org.savara.protocol,
  org.savara.protocol.model.stateless,
  org.savara.protocol.model.util,
  org.savara.protocol.parser,
+ org.savara.protocol.projection,
  org.savara.protocol.repository,
  org.savara.protocol.util
 Bundle-ActivationPolicy: lazy

@@ -1,0 +1,12 @@
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest;
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
+import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
+protocol InsufficientCredit at Store(role Buyer) {
+	Store introduces CreditAgency;
+	buy(BuyRequest) from Buyer;
+	checkCredit(CreditCheckRequest) to CreditAgency;
+	checkCredit(CreditRating) from CreditAgency;
+	[[ Fault(name=BuyFailed) ]]
+	buy(BuyFailed) to Buyer;
+}

@@ -1,0 +1,6 @@
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest;
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
+protocol SuccessfulPurchase at Logistics(role Store) {
+	deliver(DeliveryRequest) from Store;
+	delivery(DeliveryConfirmed) to Store;
+}
