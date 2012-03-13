@@ -1,0 +1,23 @@
+package org.jboss.examples.store;
+
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebResult;
+import javax.jws.WebService;
+import javax.jws.soap.SOAPBinding;
+import javax.xml.bind.annotation.XmlSeeAlso;
+
+
+ 
+@WebService(targetNamespace = "http://www.jboss.org/examples/store", name = "StoreInterface")
+@XmlSeeAlso({ObjectFactory.class, org.jboss.examples.logistics.ObjectFactory.class, org.jboss.examples.creditagency.ObjectFactory.class})
+@SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
+public interface StoreInterface {
+
+    @WebResult(name = "BuyConfirmed", targetNamespace = "http://www.jboss.org/examples/store", partName = "content")
+    @WebMethod(action = "http://www.jboss.org/examples/store/buy")
+    public BuyConfirmedType buy(
+        @WebParam(partName = "content", name = "BuyRequest", targetNamespace = "http://www.jboss.org/examples/store")
+        BuyRequestType content
+    ) throws AccountNotFoundFault, BuyFailedFault;
+}

@@ -17,23 +17,19 @@
  */
 package org.savara.switchyard.java.generator;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.wsdl.PortType;
-import javax.wsdl.xml.WSDLReader;
 
-import org.apache.cxf.tools.common.ToolContext;
 import org.savara.common.resources.ResourceLocator;
+import org.savara.java.generator.JavaBehaviourGenerator;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 
-public class SwitchyardJavaGenerator {
+public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServiceGenerator {
 	
 	private static final Logger logger=Logger.getLogger(SwitchyardJavaGenerator.class.getName());
 	
-	private WSDLReader _reader=null;
-
 	public static void main(String[] args) {
 		SwitchyardJavaGenerator gen=new SwitchyardJavaGenerator();
 		
@@ -48,54 +44,21 @@ public class SwitchyardJavaGenerator {
 	}
 	
 	public SwitchyardJavaGenerator() {
-		try {
-			_reader = javax.wsdl.factory.WSDLFactory.newInstance().newWSDLReader();
-		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Failed to get WSDL reader", e);
-		}
 	}
 	
-	public void createServiceInterfaceFromWSDL(String wsdlPath, String wsdlLocation, String srcFolder) throws Exception {
-		String[] cxfargs=new String[]{
-				"-d", srcFolder,
-				"-wsdlLocation", wsdlLocation,
-				wsdlPath
-			};
-		
-		org.apache.cxf.tools.wsdlto.WSDLToJava wsdlToJava=new org.apache.cxf.tools.wsdlto.WSDLToJava(cxfargs);
-		
-		try {
-			wsdlToJava.run(new ToolContext());
-		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Failed to generate Java interfaces", e);
-			throw e;
-		}
-		
-		//makeSwitchyardService(wsdlPath, srcFolder);
-	}
-	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void createServiceImplementationFromWSDL(Role role, java.util.List<Role> refRoles,
 							ProtocolModel behaviour, String wsdlPath, String wsdlLocation,
 						java.util.List<String> refWsdlPaths, String srcFolder,
 						ResourceLocator locator) throws Exception {
-		String[] cxfargs=new String[]{
-				"-impl",
-				"-d", srcFolder,
-				"-wsdlLocation", wsdlLocation,
-				wsdlPath
-			};
-		
-		org.apache.cxf.tools.wsdlto.WSDLToJava wsdlToJava=new org.apache.cxf.tools.wsdlto.WSDLToJava(cxfargs);
-		
-		try {
-			wsdlToJava.run(new ToolContext());
-		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Failed to generate Java interfaces", e);
-			throw e;
-		}
+		super.createServiceImplementationFromWSDL(role, refRoles, behaviour, wsdlPath,
+						wsdlLocation, refWsdlPaths, srcFolder, locator);
 		
 		// Process the service implementation class
-		javax.wsdl.Definition defn=_reader.readWSDL(wsdlPath);
+		javax.wsdl.Definition defn=getWSDLReader().readWSDL(wsdlPath);
 		
 		if (defn != null) {
 			
@@ -186,7 +149,7 @@ public class SwitchyardJavaGenerator {
 		if (index != -1) {
 			
 			for (int i=0; i < refRoles.size(); i++) {
-				javax.wsdl.Definition refDefn=_reader.readWSDL(refWsdlPaths.get(i));
+				javax.wsdl.Definition refDefn=getWSDLReader().readWSDL(refWsdlPaths.get(i));
 				
 				if (refDefn != null) {
 					
@@ -226,7 +189,7 @@ public class SwitchyardJavaGenerator {
 	public void createServiceComposite(Role role, java.util.List<Role> refRoles,
 							String wsdlPath, java.util.List<String> refWsdlPaths,
 								String resourceFolder) throws Exception {
-		javax.wsdl.Definition defn=_reader.readWSDL(wsdlPath);
+		javax.wsdl.Definition defn=getWSDLReader().readWSDL(wsdlPath);
 		
 		if (defn != null) {
 			StringBuffer composite=new StringBuffer();
@@ -272,7 +235,7 @@ public class SwitchyardJavaGenerator {
 				
 				for (int i=0; i < refWsdlPaths.size(); i++){
 					String refWsdlPath=refWsdlPaths.get(i);
-					javax.wsdl.Definition refDefn=_reader.readWSDL(refWsdlPath);
+					javax.wsdl.Definition refDefn=getWSDLReader().readWSDL(refWsdlPath);
 					
 					if (refDefn != null) {
 						

@@ -23,10 +23,9 @@ import java.util.logging.Logger;
 import javax.wsdl.PortType;
 import javax.wsdl.xml.WSDLReader;
 
-import org.apache.cxf.tools.common.ToolContext;
 import org.scribble.protocol.model.Role;
 
-public class SCAJavaGenerator {
+public class SCAJavaGenerator extends org.savara.java.generator.JavaServiceGenerator {
 	
 	private static final Logger logger=Logger.getLogger(SCAJavaGenerator.class.getName());
 
@@ -43,21 +42,12 @@ public class SCAJavaGenerator {
 	public SCAJavaGenerator() {
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void createServiceInterfaceFromWSDL(String wsdlPath, String wsdlLocation, String srcFolder) throws Exception {
-		String[] cxfargs=new String[]{
-				"-d", srcFolder,
-				"-wsdlLocation", wsdlLocation,
-				wsdlPath
-			};
-		
-		org.apache.cxf.tools.wsdlto.WSDLToJava wsdlToJava=new org.apache.cxf.tools.wsdlto.WSDLToJava(cxfargs);
-		
-		try {
-			wsdlToJava.run(new ToolContext());
-		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Failed to generate Java interfaces", e);
-			throw e;
-		}
+		super.createServiceInterfaceFromWSDL(wsdlPath, wsdlLocation, srcFolder);
 		
 		makeServiceInterfaceRemotable(wsdlPath, srcFolder);
 	}
@@ -157,21 +147,8 @@ public class SCAJavaGenerator {
 	public void createServiceImplementationFromWSDL(Role role, java.util.List<Role> refRoles,
 							String wsdlPath, String wsdlLocation,
 						java.util.List<String> refWsdlPaths, String srcFolder) throws Exception {
-		String[] cxfargs=new String[]{
-				"-impl",
-				"-d", srcFolder,
-				"-wsdlLocation", wsdlLocation,
-				wsdlPath
-			};
-		
-		org.apache.cxf.tools.wsdlto.WSDLToJava wsdlToJava=new org.apache.cxf.tools.wsdlto.WSDLToJava(cxfargs);
-		
-		try {
-			wsdlToJava.run(new ToolContext());
-		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Failed to generate Java interfaces", e);
-			throw e;
-		}
+		super.createServiceImplementationFromWSDL(role, refRoles, null,
+						wsdlPath, wsdlLocation, refWsdlPaths, srcFolder, null);
 		
 		makeServiceInterfaceRemotable(wsdlPath, srcFolder);
 		

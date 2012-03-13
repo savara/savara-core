@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.switchyard.java.generator;
+package org.savara.java.generator;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,7 +106,7 @@ public class JavaBehaviourGenerator {
 		return(getLocalJavaType(ret));
 	}
 	
-	protected static String getJavaPackage(String namespace) {
+	public static String getJavaPackage(String namespace) {
 		String ret=null;
 		
 		try {
@@ -233,7 +233,7 @@ public class JavaBehaviourGenerator {
 		return(ret);
 	}
 	
-	protected static String getVariableName(String name) {
+	public static String getVariableName(String name) {
 		return(Character.toLowerCase(name.charAt(0))+name.substring(1));
 	}
 

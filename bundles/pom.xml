@@ -25,6 +25,7 @@
 		<module>org.savara.common</module>
 		<module>org.savara.common.config.file</module>
 		<module>org.savara.contract</module>
+		<module>org.savara.java</module>
 		<module>org.savara.monitor</module>
 		<module>org.savara.monitor.sstore.rdbms</module>
 		<module>org.savara.protocol</module>

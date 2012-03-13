@@ -15,25 +15,9 @@ Require-Bundle: org.apache.commons.logging,
  org.scribble.common,
  org.scribble.protocol,
  org.savara.protocol,
+ org.savara.java,
  org.scribble.protocol.projection
 Export-Package: org.savara.switchyard.java.generator
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .,
- lib/commons-collections.jar,
- lib/commons-lang.jar,
- lib/cxf-api.jar,
- lib/cxf-common-utilities.jar,
- lib/cxf-rt-core.jar,
- lib/cxf-tools-common.jar,
- lib/cxf-tools-validator.jar,
- lib/cxf-tools-wsdlto-core.jar,
- lib/cxf-tools-wsdlto-databinding-jaxb.jar,
- lib/cxf-tools-wsdlto-frontend-jaxws.jar,
- lib/jaxb-impl.jar,
- lib/jaxb-xjc.jar,
- lib/neethi.jar,
- lib/stax2-api.jar,
- lib/velocity.jar,
- lib/wsdl4j.jar,
- lib/xmlschema-core.jar
+Bundle-ClassPath: .
  

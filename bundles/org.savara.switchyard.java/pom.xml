@@ -54,6 +54,11 @@
 			<artifactId>org.savara.contract</artifactId>
 			<version>${savara.core.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.savara.bundles</groupId>
+			<artifactId>org.savara.java</artifactId>
+			<version>${savara.core.version}</version>
+		</dependency>
  		<dependency>
  			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-tools-wsdlto-core</artifactId> 
@@ -85,27 +90,4 @@
 		</dependency>
 	</dependencies>
    
-	<build>
-		<plugins>
-		  <plugin>
-		    <artifactId>maven-dependency-plugin</artifactId>
-		    <executions>
-		      <execution>
-		        <id>${project.artifactId}-fetch-deps</id>
-		        <phase>generate-sources</phase>
-		        <goals><goal>copy-dependencies</goal></goals>
-		        <configuration>
-		          <outputDirectory>${project.build.outputDirectory}/lib</outputDirectory>
-		          <stripVersion>true</stripVersion>
-		          <!-- >excludeTransitive>true</excludeTransitive -->
-		          <excludeArtifactIds>
-		          	junit,org.osgi.core,org.osgi.compendium,antlr-runtime,antlr,geronimo-javamail_1.4_spec,oro,stringtemplate,woodstox-core-asl,xml-resolver
-		          </excludeArtifactIds>
-		          <excludeGroupIds>org.savara.bundles,org.scribble.bundles</excludeGroupIds>
-		        </configuration>
-		      </execution>
-		    </executions>
-		  </plugin>
-		</plugins>
-	</build>
 </project>

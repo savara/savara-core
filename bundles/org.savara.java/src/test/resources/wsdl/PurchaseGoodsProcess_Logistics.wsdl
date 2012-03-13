@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:lg="http://www.jboss.org/examples/logistics" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="Logistics" targetNamespace="http://www.jboss.org/examples/logistics">
+    <types xmlns="http://schemas.xmlsoap.org/wsdl/">
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.jboss.org/examples/logistics" schemaLocation="logistics.xsd"/>
+        </schema>
+    </types>
+    <wsdl:message name="deliverResponse">
+        <wsdl:part element="lg:DeliveryConfirmed" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="deliverRequest">
+        <wsdl:part element="lg:DeliveryRequest" name="content">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="LogisticsInterface">
+        <wsdl:operation name="deliver">
+            <wsdl:input message="lg:deliverRequest">
+            </wsdl:input>
+            <wsdl:output message="lg:deliverResponse">
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="LogisticsInterfaceBinding" type="lg:LogisticsInterface">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="deliver">
+            <soap:operation soapAction="http://www.jboss.org/examples/logistics/deliver"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="LogisticsService">
+        <wsdl:port binding="lg:LogisticsInterfaceBinding" name="LogisticsInterfacePort">
+            <soap:address location="http://localhost:8080/LogisticsService/LogisticsInterfacePort"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
