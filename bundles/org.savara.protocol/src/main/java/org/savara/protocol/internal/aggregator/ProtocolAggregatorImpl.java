@@ -177,6 +177,7 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 			if (((Interaction)act).getToRoles().size() > 0) {
 				return(lpus.get(((Interaction)act).getToRoles().get(0)));
 			}
+			/*
 		} else if (act instanceof Choice) {
 			
 			// Need to find a role, that is not the choice decision maker,
@@ -194,6 +195,7 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 					}
 				}
 			}
+			*/
 		}
 		
 		return(null);

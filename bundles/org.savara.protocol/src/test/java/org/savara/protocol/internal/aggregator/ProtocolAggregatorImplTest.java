@@ -553,6 +553,12 @@ public class ProtocolAggregatorImplTest {
 	}
 	
 	@Test
+	public void testPurchasing2() {
+		testAggregateGlobalModel("Purchasing2", new String[] {
+				"Buyer", "Store", "CreditAgency", "Logistics"});
+	}
+	
+	@Test
 	public void testMultiPartyInteractionsAndChoice() {
 		testAggregateGlobalModel("MultiPartyInteractionsAndChoice", new String[] {
 				"Buyer", "Broker", "CreditAgency", "Seller"});

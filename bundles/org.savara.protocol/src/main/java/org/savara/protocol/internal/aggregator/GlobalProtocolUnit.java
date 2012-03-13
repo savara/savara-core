@@ -20,6 +20,7 @@ package org.savara.protocol.internal.aggregator;
 import java.util.logging.Logger;
 
 import org.savara.protocol.internal.aggregator.LocalProtocolUnit.ActivityCursor;
+import org.savara.protocol.model.util.ChoiceUtil;
 import org.scribble.common.model.Annotation;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
@@ -115,13 +116,33 @@ public class GlobalProtocolUnit {
 			}
 		} else if (individual instanceof Choice) {
 			
-			// Just create a cursor for each choice path, but don't assign a
-			// container yet, as we don't know which order the paths will
-			// be processed. They will become attached to a container when
-			// the first 'send' match is made.
-			// (Comment copied from matched process() above)
-			for (Block recvb : ((Choice)individual).getPaths()) {
-				individualCursor.createCursor(recvb);
+			if (ChoiceUtil.isDecisionMaker((Choice)individual)) {
+				Choice choice=new Choice();
+				choice.setRole(new Role(((Choice)individual).getRole()));
+				
+				container.add(choice);
+				
+				// Create a container for each send path, and associate a
+				// cursor from the local projection with the container
+				for (Block sendb : ((Choice)individual).getPaths()) {
+					Block newblock=new Block();
+					Container newcontainer=container.createContainer(newblock);
+					
+					choice.getPaths().add(newblock);
+					
+					ActivityCursor sendChildCursor=individualCursor.createCursor(sendb);
+					sendChildCursor.setContainer(newcontainer);
+				}
+			} else {
+			
+				// Just create a cursor for each choice path, but don't assign a
+				// container yet, as we don't know which order the paths will
+				// be processed. They will become attached to a container when
+				// the first 'send' match is made.
+				// (Comment copied from matched process() above)
+				for (Block recvb : ((Choice)individual).getPaths()) {
+					individualCursor.createCursor(recvb);
+				}
 			}
 		}
 	}

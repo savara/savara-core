@@ -11,8 +11,10 @@ Import-Package: org.junit,
  org.osgi.util.tracker
 Require-Bundle: org.scribble.common,
  org.savara.common,
- org.savara.monitor
+ org.savara.monitor,
+ org.scribble.protocol
 Export-Package: org.savara.scenario.model,
+ org.savara.scenario.protocol,
  org.savara.scenario.simulation,
  org.savara.scenario.simulation.model,
  org.savara.scenario.util

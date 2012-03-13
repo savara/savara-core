@@ -128,9 +128,11 @@ public class LocalProtocolUnit {
 			
 			if (act instanceof Interaction) {
 				ret = ((Interaction)act).getFromRole() == null;
+				/*
 			} else if (act instanceof Choice) {
 				ret = ((Choice)act).getRole() != null &&
 						((Choice)act).getRole().equals(_role);
+						*/
 			}
 			
 			return(ret);
@@ -143,7 +145,7 @@ public class LocalProtocolUnit {
 			if (act instanceof Introduces) {
 				ret = true;
 			} else if (act instanceof Choice) {
-				Choice choice=(Choice)act;
+				//Choice choice=(Choice)act;
 				
 				// Ok to treat as individual action if the choice
 				// is not associated with the decision maker
@@ -154,8 +156,9 @@ public class LocalProtocolUnit {
 				// current approach is that it may delay establishing
 				// the global choice until the decision maker has
 				// a matching receive choice.
-				ret = (choice.getRole() == null ||
-						!choice.getRole().equals(_role));
+				//ret = (choice.getRole() == null ||
+				//		!choice.getRole().equals(_role));
+				ret = true;
 			}
 			
 			return(ret);

@@ -1,0 +1,17 @@
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
+import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
+import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound;
+import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
+protocol Purchasing at Buyer {
+	Buyer introduces Store;
+	buy(BuyRequest) to Store;
+	choice at Store {
+		buy(BuyConfirmed) from Store;
+	} or {
+		[[ Fault(name=AccountNotFound) ]]
+		buy(AccountNotFound) from Store;
+	} or {
+		[[ Fault(name=BuyFailed) ]]
+		buy(BuyFailed) from Store;
+	}
+}

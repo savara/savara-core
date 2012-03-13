@@ -1,0 +1,31 @@
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest;
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest;
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
+import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
+import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown;
+import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound;
+import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
+protocol Purchasing at Store(role Buyer) {
+	Store introduces CreditAgency;
+	buy(BuyRequest) from Buyer;
+	checkCredit(CreditCheckRequest) to CreditAgency;
+	choice at CreditAgency {
+		[[ Fault(name=CustomerUnknown) ]]
+		checkCredit(CustomerUnknown) from CreditAgency;
+		[[ Fault(name=AccountNotFound) ]]
+		buy(AccountNotFound) to Buyer;
+	} or {
+		checkCredit(CreditRating) from CreditAgency;
+		choice at Store {
+			[[ Fault(name=BuyFailed) ]]
+			buy(BuyFailed) to Buyer;
+		} or {
+			Store introduces Logistics;
+			deliver(DeliveryRequest) to Logistics;
+			delivery(DeliveryConfirmed) from Logistics;
+			buy(BuyConfirmed) to Buyer;
+		}
+	}
+}
