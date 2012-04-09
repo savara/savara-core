@@ -209,13 +209,12 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 		}
 		
 		if (journal.hasErrors()) {
-			LOG.log(Level.SEVERE, "Errors detected projecting located protocol model for export to monitor description");			
+			//LOG.log(Level.SEVERE, "Errors detected projecting located protocol model for export to monitor description");			
 			journal.apply(new JournalLogger());
 			
 			local = null;
-		}
-
-		if (local != null) {
+			
+		} else if (local != null) {
 			try {
 				// Convert protocol model to monitoring description
 				java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
@@ -225,8 +224,8 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 				os.close();
 				
 				if (journal.hasErrors()) {
-					LOG.severe("Errors detected when exporting protocol '"+
-									local+"' to monitorable description");
+					//LOG.severe("Errors detected when exporting protocol '"+
+					//				local+"' to monitorable description");
 					
 					journal.apply(new ConsoleJournal());
 					

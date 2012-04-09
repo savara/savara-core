@@ -222,7 +222,7 @@ public class ScenarioSimulatorMain {
 
 								handler.roleInitialized(role);
 							} else {
-								logger.severe("Failed to load context for role '"+role.getName()+"'");
+								//logger.severe("Failed to load context for role '"+role.getName()+"'");
 								
 								handler.roleFailed(role, "Failed to load context for role '"+role.getName()+"'");
 							}
@@ -230,7 +230,7 @@ public class ScenarioSimulatorMain {
 							is.close();
 							
 						} else {
-							logger.severe("Failed to find model '"+details.getModel()+"'");
+							//logger.severe("Failed to find model '"+details.getModel()+"'");
 							
 							handler.roleFailed(role, "Failed to find model '"+details.getModel()+"'");
 						}
