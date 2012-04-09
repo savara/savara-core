@@ -331,7 +331,13 @@ public class ScenarioSimulatorMain {
 					}
 					
 					model = rsim.getModelForRole(model, localRole, locator);
-					ret.setModel(model);
+					
+					if (model == null) {
+						// Error occurred loading model, so don't return context
+						ret = null;
+					} else {
+						ret.setModel(model);
+					}
 				}
 				
 				is.close();

@@ -59,7 +59,7 @@ public interface RoleSimulator {
 	 * 
 	 * @param model The simulation model information
 	 * @param locator The optional resource locator
-	 * @return The supported model, or null if not handled
+	 * @return The supported model, or null if failed to load
 	 */
 	public Object getModel(SimulationModel model, ResourceLocator locator);
 	
@@ -81,7 +81,7 @@ public interface RoleSimulator {
 	 * @param model The model
 	 * @param role The role
 	 * @param locator The optional resource locator
-	 * @return The simulation model
+	 * @return The simulation model, or null if not able to create model for role
 	 */
 	public Object getModelForRole(Object model, Role role, ResourceLocator locator);
 	

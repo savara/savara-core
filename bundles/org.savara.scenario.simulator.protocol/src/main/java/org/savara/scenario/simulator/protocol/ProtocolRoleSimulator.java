@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.savara.common.logging.JournalLogger;
 import org.savara.common.resources.ResourceLocator;
 import org.savara.protocol.util.ProtocolServices;
 import org.savara.scenario.model.Event;
@@ -138,6 +139,8 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 			if (journal.hasErrors()) {
 				LOG.severe("Failed to parse model '"+model.getName()+"");
 				journal.apply(new ConsoleJournal());
+				
+				ret = null;
 			}
 		} catch(Exception e) {
 			LOG.log(Level.SEVERE, "Failed to get model", e);
@@ -207,7 +210,9 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 		
 		if (journal.hasErrors()) {
 			LOG.log(Level.SEVERE, "Errors detected projecting located protocol model for export to monitor description");			
-			journal.apply(new ConsoleJournal());
+			journal.apply(new JournalLogger());
+			
+			local = null;
 		}
 
 		if (local != null) {
@@ -224,6 +229,8 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 									local+"' to monitorable description");
 					
 					journal.apply(new ConsoleJournal());
+					
+					ret = null;
 				} else {
 					java.io.InputStream is=new java.io.ByteArrayInputStream(os.toByteArray());
 					
@@ -233,6 +240,8 @@ public class ProtocolRoleSimulator implements RoleSimulator {
 				}
 			} catch(Exception e) {
 				LOG.log(Level.SEVERE, "Failed to export monitor description for located protocol model", e);
+				
+				ret = null;
 			}
 		} else {
 			LOG.log(Level.SEVERE, "Failed to obtain located protocol model for export to monitor description");			
