@@ -44,7 +44,7 @@ public class CDMToProtocolParserTest {
         /* SAVARA-221
         suite.addTest(new ChoreographyToProtocolTester("PurchaseGoodsWithException"));
         */
-        
+
         return suite;
     }
     

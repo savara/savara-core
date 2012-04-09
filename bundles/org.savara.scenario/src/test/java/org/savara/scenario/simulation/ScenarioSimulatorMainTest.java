@@ -109,8 +109,16 @@ public class ScenarioSimulatorMainTest {
 		java.util.Map<Role, RoleSimulator> rsims=new java.util.HashMap<Role, RoleSimulator>();
 		rsims.put(scenario.getRole().get(1), new TestRoleSimulator());
 		
-		java.util.Map<Role, SimulationContext> contexts=
-					simulator.loadSimulationContexts(scenario, simulation, rsims);
+		java.util.Map<Role, SimulationContext> contexts=null;
+		
+		SimulationHandler handler=new TestSimulationHandler();
+		
+		try {
+			contexts = simulator.loadSimulationContexts(scenario, simulation, rsims, handler);
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Failed to load simulation contexts: "+e);
+		}
 		
 		if (contexts == null) {
 			fail("No simulation contexts");

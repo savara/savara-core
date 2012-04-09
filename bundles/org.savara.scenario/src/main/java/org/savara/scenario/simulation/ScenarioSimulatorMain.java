@@ -115,20 +115,20 @@ public class ScenarioSimulatorMain {
 		
 		if (scenario != null) {
 			
+			if (handler == null) {
+				handler = new ConsoleSimulationHandler();
+			} else {
+				handler = new ProxySimulationHandler(handler);
+			}
+			
 			java.util.Map<Role, RoleSimulator> roleSimulators=loadRoleSimulators(scenario, simulation);
 			
 			java.util.Map<Role, SimulationContext> contexts=loadSimulationContexts(scenario,
-								simulation, roleSimulators);
+								simulation, roleSimulators, handler);
 		
 			ScenarioSimulator simulator=getSimulator();
 			
 			if (simulator != null) {
-				if (handler == null) {
-					handler = new ConsoleSimulationHandler();
-				} else {
-					handler = new ProxySimulationHandler(handler);
-				}
-				
 				try {
 					simulator.simulate(scenario, roleSimulators, contexts, handler);
 					
@@ -187,13 +187,17 @@ public class ScenarioSimulatorMain {
 	}
 
 	protected java.util.Map<Role, SimulationContext> loadSimulationContexts(Scenario scenario,
-						Simulation simulation, java.util.Map<Role, RoleSimulator> roleSimulators) {
+						Simulation simulation, java.util.Map<Role, RoleSimulator> roleSimulators,
+							SimulationHandler handler) {
 		java.util.Map<Role, SimulationContext> ret=new java.util.HashMap<Role, SimulationContext>();
 		
 		for (Role role : scenario.getRole()) {
 			
 			for (RoleDetails details : simulation.getRoles()) {
 				if (details.getScenarioRole().equals(role.getName())) {
+					
+					handler.roleStart(role);
+					
 					RoleSimulator rsim=roleSimulators.get(role);
 					
 					try {
@@ -215,17 +219,26 @@ public class ScenarioSimulatorMain {
 							if (context != null) {
 								logger.fine("Adding context for role '"+role.getName()+"'");
 								ret.put(role, context);
+
+								handler.roleInitialized(role);
 							} else {
 								logger.severe("Failed to load context for role '"+role.getName()+"'");
+								
+								handler.roleFailed(role, "Failed to load context for role '"+role.getName()+"'");
 							}
 							
 							is.close();
+							
 						} else {
 							logger.severe("Failed to find model '"+details.getModel()+"'");
+							
+							handler.roleFailed(role, "Failed to find model '"+details.getModel()+"'");
 						}
 					} catch(Exception e) {
 						logger.log(Level.SEVERE, 
 								"Failed to load simulation model '"+details.getModel()+"'", e);
+						
+						handler.roleFailed(role, "Failed to load simulation model '"+details.getModel()+"': "+e);
 					}
 					
 				}
@@ -263,75 +276,70 @@ public class ScenarioSimulatorMain {
 	}
 	
 	protected SimulationContext loadContext(Simulation simulation, Role role,
-						RoleDetails details, RoleSimulator rsim) {
+						RoleDetails details, RoleSimulator rsim) throws Exception {
 		DefaultSimulationContext ret=null;
 		
-		try {
-			java.net.URL url=ClassLoader.getSystemResource(simulation.getScenario());
+		java.net.URL url=ClassLoader.getSystemResource(simulation.getScenario());
+		
+		java.io.File f=null;
+		
+		if (url != null) {
+			f = new java.io.File(url.getFile());
+		} else {
+			f = new java.io.File(simulation.getScenario());
 			
-			java.io.File f=null;
+			if (f.exists() == false) {
+				f = null;
+			}
+		}
+		
+		if (f != null) {
+			ret = new DefaultSimulationContext(f);	
+
+			java.io.InputStream is=null;
+			java.io.File modelFile=null;
+			
+			url = ClassLoader.getSystemResource(details.getModel());
 			
 			if (url != null) {
-				f = new java.io.File(url.getFile());
+				is=url.openStream();
+				modelFile = new java.io.File(url.getFile());
 			} else {
-				f = new java.io.File(simulation.getScenario());
-				
-				if (f.exists() == false) {
-					f = null;
+				modelFile = new java.io.File(details.getModel());
+				if (modelFile.exists()) {
+					is = new java.io.FileInputStream(modelFile);
+				} else {
+					modelFile = null;
 				}
 			}
 			
-			if (f != null) {
-				ret = new DefaultSimulationContext(f);	
-
-				java.io.InputStream is=null;
-				java.io.File modelFile=null;
+			if (modelFile != null && is != null) {
+				ResourceLocator locator=new DefaultResourceLocator(modelFile.getParentFile());
 				
-				url = ClassLoader.getSystemResource(details.getModel());
+				Object model=rsim.getModel(new SimulationModel(modelFile.getAbsolutePath(), is),
+										locator);
 				
-				if (url != null) {
-					is=url.openStream();
-					modelFile = new java.io.File(url.getFile());
+				// Check if model should be projected to a particular role
+				if (rsim.getModelRoles(model).size() == 0) {
+					ret.setModel(model);
 				} else {
-					modelFile = new java.io.File(details.getModel());
-					if (modelFile.exists()) {
-						is = new java.io.FileInputStream(modelFile);
-					} else {
-						modelFile = null;
-					}
-				}
-				
-				if (modelFile != null && is != null) {
-					ResourceLocator locator=new DefaultResourceLocator(modelFile.getParentFile());
+					Role localRole=role;
 					
-					Object model=rsim.getModel(new SimulationModel(modelFile.getAbsolutePath(), is),
-											locator);
-					
-					// Check if model should be projected to a particular role
-					if (rsim.getModelRoles(model).size() == 0) {
-						ret.setModel(model);
-					} else {
-						Role localRole=role;
-						
-						if (details.getModelRole() != null) {
-							localRole = new Role();
-							localRole.setName(details.getModelRole());
-						}
-						
-						model = rsim.getModelForRole(model, localRole, locator);
-						ret.setModel(model);
+					if (details.getModelRole() != null) {
+						localRole = new Role();
+						localRole.setName(details.getModelRole());
 					}
 					
-					is.close();
-				} else {
-					ret = null;
+					model = rsim.getModelForRole(model, localRole, locator);
+					ret.setModel(model);
 				}
+				
+				is.close();
 			} else {
-				logger.severe("Failed to locate scenario '"+simulation.getScenario()+"'");
+				ret = null;
 			}
-			
-		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Failed to load simulation context '"+details.getModel()+"'", e);
+		} else {
+			logger.severe("Failed to locate scenario '"+simulation.getScenario()+"'");
 		}
 		
 		return(ret);
@@ -340,6 +348,24 @@ public class ScenarioSimulatorMain {
 	public class SimulationHandlerBase implements SimulationHandler {
 		
 		private boolean m_failed=false;
+		
+		public void roleStart(Role role) {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("ROLE_START: "+role.getName());
+			}
+		}
+		
+		public void roleInitialized(Role role) {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("ROLE_INITIALIZED: "+role.getName());
+			}
+		}
+		
+		public void roleFailed(Role role, String mesg) {
+			if (logger.isLoggable(Level.FINE)) {
+				logger.fine("ROLE_FAILURE: "+role.getName()+" ["+mesg+"]");
+			}
+		}
 		
 		public void start(Event event) {
 			if (logger.isLoggable(Level.FINE)) {
@@ -414,6 +440,21 @@ public class ScenarioSimulatorMain {
 	
 	public class ConsoleSimulationHandler extends SimulationHandlerBase {
 
+		public void roleStart(Role role) {
+			super.roleStart(role);
+			System.err.println(">>> ROLE_START ["+role.getName()+"]");
+		}
+		
+		public void roleInitialized(Role role) {
+			super.roleInitialized(role);
+			System.err.println(">>> ROLE_INIT ["+role.getName()+"]");
+		}
+		
+		public void roleFailed(Role role, String mesg) {
+			super.roleFailed(role, mesg);
+			System.err.println(">>> ROLE_FAIL ["+role.getName()+"] "+mesg);
+		}
+		
 		public void start(Event event) {
 			super.start(event);
 			System.err.println(">>> START [ID="+event.getId()+"]");
@@ -459,6 +500,21 @@ public class ScenarioSimulatorMain {
 		
 		public ProxySimulationHandler(SimulationHandler handler) {
 			m_handler = handler;
+		}
+		
+		public void roleStart(Role role) {
+			super.roleStart(role);
+			m_handler.roleStart(role);
+		}
+		
+		public void roleInitialized(Role role) {
+			super.roleInitialized(role);
+			m_handler.roleInitialized(role);
+		}
+		
+		public void roleFailed(Role role, String mesg) {
+			super.roleFailed(role, mesg);
+			m_handler.roleFailed(role, mesg);
 		}
 		
 		public void start(Event event) {

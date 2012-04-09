@@ -18,6 +18,7 @@
 package org.savara.scenario.simulation;
 
 import org.savara.scenario.model.Event;
+import org.savara.scenario.model.Role;
 
 /**
  * This interface represents the callback handler for results from
@@ -30,6 +31,29 @@ import org.savara.scenario.model.Event;
  */
 public interface SimulationHandler {
 
+	/**
+	 * This method indicates that the role has begun initialization.
+	 * 
+	 * @param role The role
+	 */
+	public void roleStart(Role role);
+	
+	/**
+	 * This method indicates that the role has been initialized.
+	 * 
+	 * @param role The role
+	 */
+	public void roleInitialized(Role role);
+	
+	/**
+	 * This method indicates that the simulation initialization of a
+	 * role has failed.
+	 * 
+	 * @param role The role
+	 * @param mesg The message
+	 */
+	public void roleFailed(Role role, String mesg);
+	
 	/**
 	 * This method is called to indicate that the event has started
 	 * simulation.

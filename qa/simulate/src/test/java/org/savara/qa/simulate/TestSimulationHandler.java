@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.MessageEvent;
+import org.savara.scenario.model.Role;
 import org.savara.scenario.simulation.SimulationHandler;
 
 public class TestSimulationHandler implements SimulationHandler {
@@ -46,6 +47,21 @@ public class TestSimulationHandler implements SimulationHandler {
 	
 	public java.util.List<Event> getErrorEvents() {
 		return(m_errorEvents);
+	}
+
+	public void roleStart(Role role) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void roleInitialized(Role role) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void roleFailed(Role role, String mesg) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public void start(Event event) {

@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.ReceiveEvent;
+import org.savara.scenario.model.Role;
 import org.savara.scenario.model.SendEvent;
 import org.savara.scenario.simulation.SimulationHandler;
 
@@ -32,6 +33,21 @@ public class TestSimulationHandler implements SimulationHandler {
 	private java.util.List<Event> m_processed=new java.util.Vector<Event>();
 	private java.util.List<Event> m_unexpected=new java.util.Vector<Event>();
 	private java.util.List<Event> m_error=new java.util.Vector<Event>();
+
+	public void roleStart(Role role) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void roleInitialized(Role role) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void roleFailed(Role role, String mesg) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	public void start(Event event) {
 		logger.info("GTART: "+printable(event));
