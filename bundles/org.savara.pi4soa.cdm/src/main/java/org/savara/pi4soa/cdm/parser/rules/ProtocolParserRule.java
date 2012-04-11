@@ -60,10 +60,14 @@ public class ProtocolParserRule implements ParserRule {
 		
 		Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
 
+		Object uri=CDLTypeUtil.getURIFragment(choreo);
+		
 		scannotation.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
-				CDLTypeUtil.getURIFragment(choreo));
+				uri);
 		ret.getAnnotations().add(scannotation);
 			
+		ret.getProperties().put(ModelProperties.URI, uri);
+
 		context.pushScope();
 		
 		//LocatedName modelName=new LocatedName();

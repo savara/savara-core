@@ -67,9 +67,13 @@ public class ProtocolModelParserRule implements ParserRule {
 		
 		Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
 
+		Object uri=CDLTypeUtil.getURIFragment(cdlpack);
+		
 		scannotation.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
-				CDLTypeUtil.getURIFragment(cdlpack));
+				uri);
 		ret.getAnnotations().add(scannotation);
+		
+		ret.getProperties().put(ModelProperties.URI, uri);
 
 		
 		// Convert information types into type imports
@@ -137,12 +141,16 @@ public class ProtocolModelParserRule implements ParserRule {
 
 				scannotation = new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
 
+				uri = CDLTypeUtil.getURIFragment(choreo);
+				
 				scannotation.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
-						CDLTypeUtil.getURIFragment(choreo));
+						uri);
 				scannotation.getProperties().put(AnnotationDefinitions.LANGUAGE_PROPERTY,
 						CDMDefinitions.CDM_NOTATION);
 				
 				ret.getProtocol().getAnnotations().add(scannotation);
+				
+				ret.getProperties().put(ModelProperties.URI, uri);
 
 				// Store namespace prefix info
 				java.util.Iterator<NameSpace> nss=cdlpack.getTypeDefinitions().getNameSpaces().iterator();

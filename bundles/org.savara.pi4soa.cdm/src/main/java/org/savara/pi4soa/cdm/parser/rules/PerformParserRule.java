@@ -100,9 +100,13 @@ public class PerformParserRule implements ParserRule {
 			
 			Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
 
+			Object uri=CDLTypeUtil.getURIFragment(cdl);
+			
 			scannotation.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
-					CDLTypeUtil.getURIFragment(cdl));
+					uri);
 			run.getAnnotations().add(scannotation);
+			
+			run.getProperties().put(ModelProperties.URI, uri);
 	
 			ProtocolReference ref=new ProtocolReference();
 			ref.setName(cdl.getChoreography().getName());

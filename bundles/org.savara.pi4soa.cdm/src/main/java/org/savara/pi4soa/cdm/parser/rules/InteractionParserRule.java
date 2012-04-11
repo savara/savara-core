@@ -278,9 +278,14 @@ public class InteractionParserRule implements ParserRule {
 			
 			Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
 
+			Object uri=CDLTypeUtil.getURIFragment(details);
+			
 			scannotation.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
-						CDLTypeUtil.getURIFragment(details));
+						uri);
 			interaction.getAnnotations().add(scannotation);
+			
+			interaction.getProperties().put(ModelProperties.URI, uri);
+
 			
 			// Check if interaction's channel has been explicitly defined
 			/*

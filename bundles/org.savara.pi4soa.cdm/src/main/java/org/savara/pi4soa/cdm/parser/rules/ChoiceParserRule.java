@@ -256,9 +256,12 @@ public class ChoiceParserRule implements ParserRule {
 		if (ret != null) {
 			Annotation scannotation=new Annotation(AnnotationDefinitions.SOURCE_COMPONENT);
 			
-			scannotation.getProperties().put(AnnotationDefinitions.ID_PROPERTY,
-					CDLTypeUtil.getURIFragment(cdl));
+			Object uri=CDLTypeUtil.getURIFragment(cdl);
+			
+			scannotation.getProperties().put(AnnotationDefinitions.ID_PROPERTY, uri);
 			ret.getAnnotations().add(scannotation);
+			
+			ret.getProperties().put(ModelProperties.URI, uri);
 		}
 		
 		return(ret);

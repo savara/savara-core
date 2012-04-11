@@ -42,6 +42,7 @@ import org.scribble.common.resource.Content;
 import org.scribble.protocol.ProtocolContext;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.DataType;
+import org.scribble.protocol.model.ModelProperties;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.TypeImport;
@@ -111,6 +112,8 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 							choreo.getId());
 				
 				p.getAnnotations().add(scann);
+				
+				p.getProperties().put(ModelProperties.URI, choreo.getId());
 				
 				// Push scope when processing the choreography
 				parserContext.pushScope();
