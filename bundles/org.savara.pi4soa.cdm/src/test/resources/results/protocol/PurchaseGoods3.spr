@@ -8,9 +8,9 @@ import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as Deliv
 import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http://www.w3.org/2001/XMLSchema";
 [[ SourceComponent(id=//@choreographies.0) ]]
 [[ Interface(role=Buyer,namespace=http://www.jboss.org/savara/examples) ]]
+[[ Interface(name=Store,role=Store,namespace=http://www.jboss.org/examples/store) ]]
 [[ Interface(name=CreditAgency,role=CreditAgency,namespace=http://www.jboss.org/examples/creditAgency) ]]
 [[ Interface(name=Logistics,role=Logistics,namespace=http://www.jboss.org/examples/logistics) ]]
-[[ Interface(name=Store,role=Store,namespace=http://www.jboss.org/examples/store) ]]
 [[ Protocol(namespace=http://www.jboss.org/savara/examples) ]]
 [[ SourceComponent(id=//@choreographies.0,language=cdm) ]]
 [[ Type(prefix=tns,namespace=http://www.jboss.org/savara/examples) ]]
@@ -19,8 +19,8 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 [[ Type(location=creditAgency.xsd,prefix=ca,namespace=http://www.jboss.org/examples/creditAgency) ]]
 [[ Type(location=logistics.xsd,prefix=lg,namespace=http://www.jboss.org/examples/logistics) ]]
 protocol PurchaseGoodsProcess(role Buyer) {
-	Store introduces CreditAgency;
 	Buyer introduces Store;
+	Store introduces CreditAgency;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name=StoreInterface,namespace=http://www.jboss.org/examples/store) ]]
 	[[ Correlation(request=buy) ]]

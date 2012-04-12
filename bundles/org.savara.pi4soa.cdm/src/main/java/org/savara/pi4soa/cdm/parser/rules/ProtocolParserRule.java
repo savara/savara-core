@@ -25,6 +25,7 @@ import org.pi4soa.common.util.NamesUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
+import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.util.RoleUtil;
 
 public class ProtocolParserRule implements ParserRule {
@@ -327,34 +328,41 @@ public class ProtocolParserRule implements ParserRule {
 		 */
 		
 		// SAVARA-214 - check if declared roles should be moved to inner blocks
-		if (ret != null && ret.getBlock().size() > 0
-					&& ret.getBlock().get(0) instanceof Introduces) {
-			Introduces rl=(Introduces)ret.getBlock().get(0);
+		if (ret != null && ret.getBlock().size() > 0) {
 			
-			for (int i=rl.getIntroducedRoles().size()-1; i >= 0; i--) {
-				Role r=rl.getIntroducedRoles().get(i);
-				Block b=RoleUtil.getEnclosingBlock(ret, r, false);
-				
-				if (b == null) {
-					// Report error
-				} else if (b != ret.getBlock()){
-					Introduces innerrl=null;
+			for (Activity act : ret.getBlock().getContents()) {
+				if (act instanceof Introduces) {
+					Introduces rl=(Introduces)act;
 					
-					if (b.size() > 0 && b.get(0) instanceof Introduces) {
-						innerrl = (Introduces)b.get(0);
-					} else {
-						innerrl = new Introduces();
-						innerrl.setIntroducer(rl.getIntroducer());
-						b.getContents().add(0, innerrl);
+					for (int i=rl.getIntroducedRoles().size()-1; i >= 0; i--) {
+						Role r=rl.getIntroducedRoles().get(i);
+						Block b=RoleUtil.getEnclosingBlock(ret, r, false);
+						
+						if (b == null) {
+							// Report error
+						} else if (b != ret.getBlock()){
+							Introduces innerrl=null;
+							
+							if (b.size() > 0 && b.get(0) instanceof Introduces &&
+									((Introduces)b.get(0)).getIntroducer().equals(rl.getIntroducer())) {
+								innerrl = (Introduces)b.get(0);
+							} else {
+								innerrl = new Introduces();
+								innerrl.setIntroducer(rl.getIntroducer());
+								b.getContents().add(0, innerrl);
+							}
+							
+							rl.getIntroducedRoles().remove(r);
+							innerrl.getIntroducedRoles().add(r);
+						}
 					}
 					
-					rl.getIntroducedRoles().remove(r);
-					innerrl.getIntroducedRoles().add(r);
+					if (rl.getIntroducedRoles().size() == 0) {
+						ret.getBlock().remove(rl);
+					}					
+				} else {
+					break;
 				}
-			}
-			
-			if (rl.getIntroducedRoles().size() == 0) {
-				ret.getBlock().remove(rl);
 			}
 		}
 		

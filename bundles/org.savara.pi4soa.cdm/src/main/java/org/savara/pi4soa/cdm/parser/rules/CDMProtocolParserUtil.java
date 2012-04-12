@@ -19,6 +19,8 @@
  */
 package org.savara.pi4soa.cdm.parser.rules;
 
+import java.util.logging.Logger;
+
 import org.pi4soa.cdl.Choreography;
 import org.pi4soa.cdl.DefaultCDLVisitor;
 import org.pi4soa.cdl.ExchangeDetails;
@@ -35,6 +37,8 @@ import org.scribble.protocol.model.*;
  * This class defines some converter utility functions.
  */
 public class CDMProtocolParserUtil {
+	
+	private static final Logger LOG=Logger.getLogger(CDMProtocolParserUtil.class.getName());
 
 	/**
 	 * This method converts the supplied information type into a
@@ -339,7 +343,47 @@ public class CDMProtocolParserUtil {
 			}
 		}
 		
+		// Re-order list to ensure introducer has previously been introduced
+		reorderIntroduces(ret);
+		
 		return(ret);
+	}
+	
+	protected static void reorderIntroduces(java.util.List<Introduces> intros) {
+		int pos=0;
+		int retry=0;
+		
+		while (pos < intros.size()) {
+			Introduces cur=intros.get(pos);
+			
+			// Check if introducer is introduced in subsequent introduces statement
+			int introPos=-1;
+			
+			for (int i=pos+1; i < intros.size(); i++) {
+				Introduces intro=intros.get(i);
+				
+				if (intro.getIntroducedRoles().contains(cur.getIntroducer())) {
+					introPos = i;
+					break;
+				}
+			}
+			
+			if (introPos != -1) {
+				if (retry > intros.size()) {
+					// Breakout as unable to resolve probably due to circular
+					// introductions
+					LOG.severe("Failed to reorder introduce statements - possibly due to circular introductions");
+					return;
+				}
+				// Place current entry after introduced
+				intros.remove(pos);
+				intros.add(introPos, cur);
+				retry++;
+			} else {
+				pos++;
+				retry=0;
+			}
+		}
 	}
 	
 	protected static boolean isLocalParticipant(Choreography choreo, String name) {

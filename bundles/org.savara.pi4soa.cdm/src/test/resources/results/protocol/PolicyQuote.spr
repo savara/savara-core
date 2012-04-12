@@ -10,11 +10,11 @@ import xsd "{http://www.example.org/policyQuote}policyQuote" as PolicyQuote, "{h
 import xsd "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http://www.w3.org/2001/XMLSchema";
 [[ SourceComponent(id=//@choreographies.0) ]]
 [[ Interface(role=Driver,namespace=http://www.pi4soa.org/PolicyQuote) ]]
+[[ Interface(name=PolicyQuoteProcessService,role=PolicyQuoteProcessService,namespace=http://www.example.org/policyQuoteProcessService) ]]
 [[ Interface(name=CreditCheckService,role=CreditCheckService,namespace=http://creditagency.com/creditCheckService) ]]
 [[ Interface(name=DrivingRecordService,role=DrivingRecordService,namespace=http://dmv.com/drivingRecordService) ]]
 [[ Interface(name=PolicyQuoteCalculationService,role=PolicyQuoteCalculationService,namespace=http://www.example.org/policyQuoteCalculationService) ]]
 [[ Interface(name=PolicyQuoteEntityService,role=PolicyQuoteEntityService,namespace=http://www.example.org/policyQuoteEntityService) ]]
-[[ Interface(name=PolicyQuoteProcessService,role=PolicyQuoteProcessService,namespace=http://www.example.org/policyQuoteProcessService) ]]
 [[ Protocol(namespace=http://www.pi4soa.org/PolicyQuote) ]]
 [[ SourceComponent(id=//@choreographies.0,language=cdm) ]]
 [[ Type(prefix=tns,namespace=http://www.pi4soa.org/PolicyQuote) ]]
@@ -28,8 +28,8 @@ import xsd "{http://www.w3.org/2001/XMLSchema}anyURI" as URITokenType from "http
 [[ Type(prefix=dmv,namespace=http://dmv.com/drivingRecordService) ]]
 [[ Type(prefix=ca,namespace=http://creditagency.com/creditCheckService) ]]
 protocol PolicyQuoteProcess(role Driver) {
-	PolicyQuoteProcessService introduces DrivingRecordService;
 	Driver introduces PolicyQuoteProcessService;
+	PolicyQuoteProcessService introduces DrivingRecordService;
 	[[ SourceComponent(id=//@choreographies.0/@activities.0/@exchangeDetails.0) ]]
 	[[ Interface(name=PolicyQuoteProcessService,namespace=http://www.example.org/policyQuoteProcessService) ]]
 	[[ Correlation(request=receivePolicyQuote) ]]
