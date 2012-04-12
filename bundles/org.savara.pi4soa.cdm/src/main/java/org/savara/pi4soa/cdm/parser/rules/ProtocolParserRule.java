@@ -105,39 +105,6 @@ public class ProtocolParserRule implements ParserRule {
 		java.util.List<Introduces> declared=CDMProtocolParserUtil.getRoleDeclarations(choreo);
 		
 		if (declared.size() > 0) {
-			/*
-			Introduces rl=new Introduces();
-			
-			// TODO: Need to discover introducing role (or roles if need to be
-			// different for each introduced role)
-			// For now use any role in the list of parameters
-			if (roles.size() > 0) {
-				rl.setIntroducer(roles.get(0));
-			} else {
-				Role r=declared.get(0);
-				
-				ParameterDefinition pd=new ParameterDefinition();
-				pd.setName(r.getName());
-				ret.getParameterDefinitions().add(pd);
-				
-				context.setState(r.getName(), r);
-				
-				// Associate Namespace annotation with protocol
-				Annotation annotation=AnnotationDefinitions.getAnnotation(r.getAnnotations(),
-							AnnotationDefinitions.NAMESPACE);
-				
-				if (annotation != null) {
-					Annotation pa=new Annotation(AnnotationDefinitions.NAMESPACE);
-					pa.getProperties().putAll(annotation.getProperties());
-					pa.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, r.getName());
-					ret.getAnnotations().add(pa);
-				}
-
-				rl.setIntroducer(r);
-				declared.remove(0);
-			}
-			*/
-			
 			for (Introduces intro : declared) {
 				
 				for (Role r : intro.getIntroducedRoles()) {
@@ -159,8 +126,6 @@ public class ProtocolParserRule implements ParserRule {
 				
 				ret.getBlock().add(intro);
 			}
-			
-			//ret.getBlock().add(rl);
 		}
 		
 		// Check if root, then need to project other sibling choreos
@@ -232,12 +197,6 @@ public class ProtocolParserRule implements ParserRule {
 			}
 		}
 		
-		// Convert variables
-		//convertVariables(context, choreo, ret.getBlock());
-		
-		// Define identities
-		//convertIdentities(context, choreo, ret);
-		
 		// Check if exception handlers have been defined
 		// and/or completion condition
 		if (NamesUtil.isSet(choreo.getCompletionCondition()) ||
@@ -305,28 +264,6 @@ public class ProtocolParserRule implements ParserRule {
 			convertActivities(context, choreo.getActivities(), ret.getBlock());
 		}
 		
-		// Transfer sub-conversations to end of block
-		/* TODO: Should no longer be required, as nested protocols no longer
-		 * stored as part of the block contents.
-		if (ret.getBlock().getContents().size() > 0) {
-			org.scribble.protocol.model.Activity lastAct=
-				ret.getBlock().getContents().get(ret.getBlock().getContents().size()-1);
-			int pos=0;
-			while (ret.getBlock().get(pos) != lastAct) {
-				if (ret.getBlock().get(pos) instanceof Protocol) {
-					Protocol c=(Protocol)ret.getBlock().get(pos);
-	
-					ret.getBlock().getContents().remove(pos);
-					ret.getBlock().getContents().add(c);
-					
-					context.removeProtocol(c);
-				} else {
-					pos++;
-				}
-			}
-		}
-		 */
-		
 		// SAVARA-214 - check if declared roles should be moved to inner blocks
 		if (ret != null && ret.getBlock().size() > 0) {
 			
@@ -364,6 +301,17 @@ public class ProtocolParserRule implements ParserRule {
 					break;
 				}
 			}
+		}
+		
+		// Check if top level protocol needs role parameters
+		if (choreo.getRoot() == Boolean.TRUE && ret.getParameterDefinitions().size() == 0 &&
+				ret.getBlock().size() > 0 && ret.getBlock().get(0) instanceof Introduces) {
+			Introduces intros=(Introduces)ret.getBlock().get(0);
+			
+			ParameterDefinition pd=new ParameterDefinition();
+			pd.setName(intros.getIntroducer().getName());
+			
+			ret.getParameterDefinitions().add(pd);
 		}
 		
 		context.popScope();
