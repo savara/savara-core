@@ -40,11 +40,11 @@ protocol PurchaseGoodsProcess(role Buyer) {
 		[[ Fault(name=CreditCheckFailed) ]]
 		[[ Interface(name=CreditAgencyInterface,namespace=java:org.jboss.savara.examples.purchasing) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit(CreditCheckInvalid) from CreditAgency to Store;
+		checkCredit-CreditCheckFailed(CreditCheckInvalid) from CreditAgency to Store;
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.1/@activities.1/@exchangeDetails.0) ]]
 		[[ Fault(name=BuyFailed) ]]
 		[[ Interface(name=StoreInterface,namespace=http://www.jboss.org/examples/store) ]]
 		[[ Correlation(replyTo=buy) ]]
-		buy(BuyFailed) from Store to Buyer;
+		buy-BuyFailed(BuyFailed) from Store to Buyer;
 	}
 }

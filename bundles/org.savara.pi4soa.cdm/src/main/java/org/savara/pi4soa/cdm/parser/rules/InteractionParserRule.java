@@ -758,6 +758,9 @@ public class InteractionParserRule implements ParserRule {
 			Annotation annotation=new Annotation(AnnotationDefinitions.FAULT);
 			annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, details.getFaultName());
 			parent.getAnnotations().add(annotation);
+			
+			// Append fault name to operation to distinguish it from a normal response
+			ms.setOperation(cdl.getOperation()+"-"+details.getFaultName());
 		}
 
 		// Define interaction message type

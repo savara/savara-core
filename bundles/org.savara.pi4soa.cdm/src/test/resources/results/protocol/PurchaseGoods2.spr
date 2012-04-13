@@ -55,18 +55,18 @@ protocol PurchaseGoodsProcess(role Buyer) {
 			[[ Fault(name=BuyFailed) ]]
 			[[ Interface(name=StoreInterface,namespace=http://www.jboss.org/examples/store) ]]
 			[[ Correlation(replyTo=buy) ]]
-			buy(BuyFailed) from Store to Buyer;
+			buy-BuyFailed(BuyFailed) from Store to Buyer;
 		}
 	} or {
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.1/@activities.0/@exchangeDetails.0) ]]
 		[[ Fault(name=CustomerUnknown) ]]
 		[[ Interface(name=CreditAgencyInterface,namespace=http://www.jboss.org/examples/creditAgency) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit(CustomerUnknown) from CreditAgency to Store;
+		checkCredit-CustomerUnknown(CustomerUnknown) from CreditAgency to Store;
 		[[ SourceComponent(id=//@choreographies.0/@activities.2/@activities.1/@activities.1/@exchangeDetails.0) ]]
 		[[ Fault(name=BuyFailed) ]]
 		[[ Interface(name=StoreInterface,namespace=http://www.jboss.org/examples/store) ]]
 		[[ Correlation(replyTo=buy) ]]
-		buy(BuyFailed) from Store to Buyer;
+		buy-BuyFailed(BuyFailed) from Store to Buyer;
 	}
 }
