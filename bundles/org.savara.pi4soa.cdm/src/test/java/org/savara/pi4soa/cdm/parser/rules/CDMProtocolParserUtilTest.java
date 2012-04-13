@@ -207,7 +207,7 @@ public class CDMProtocolParserUtilTest {
 		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleParameters(sub);
 		
 		if (roles.size() != 1) {
-			fail("Was expecting 1 roles");
+			fail("Was expecting 1 roles: "+roles.size());
 		}
 		
 		if (roles.contains(new Role("Broker")) == false) {
@@ -241,7 +241,7 @@ public class CDMProtocolParserUtilTest {
 		java.util.List<Role> roles=CDMProtocolParserUtil.getRoleParameters(sub);
 		
 		if (roles.size() != 3) {
-			fail("Was expecting 3 roles");
+			fail("Was expecting 3 roles: "+roles.size());
 		}
 		
 		if (roles.contains(new Role("Broker")) == false) {

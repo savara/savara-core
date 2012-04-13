@@ -105,7 +105,7 @@ public class CDMProtocolParserUtil {
 	}
 	
 	public static java.util.List<Role> getRoleParameters(final Choreography choreo) {
-		java.util.List<Role> ret=new java.util.Vector<Role>();
+		final java.util.List<Role> ret=new java.util.Vector<Role>();
 		
 		final java.util.List<ParticipantType> partTypes=new java.util.Vector<ParticipantType>();
 		final java.util.List<Participant> partInstances=new java.util.Vector<Participant>();
@@ -131,6 +131,12 @@ public class CDMProtocolParserUtil {
 				if (interaction.getFromParticipant() != null) {
 					if (partInstances.contains(interaction.getFromParticipant()) == false) {
 						partInstances.add(interaction.getFromParticipant());
+						
+						// Only include 'free' participant instances, as these are bound by
+						// a calling protocol.
+						if (interaction.getFromParticipant().getFree() == Boolean.TRUE) {
+							ret.add(createRole(interaction.getFromParticipant()));
+						}
 					}
 				} else {
 					ParticipantType ptype=
@@ -140,6 +146,8 @@ public class CDMProtocolParserUtil {
 					if (ptype != null &&
 							partTypes.contains(ptype) == false) {
 						partTypes.add(ptype);
+						
+						ret.add(createRole(ptype));
 					}
 				}
 				
@@ -147,6 +155,12 @@ public class CDMProtocolParserUtil {
 					if (interaction.getToParticipant() != null) {
 						if (partInstances.contains(interaction.getToParticipant()) == false) {
 							partInstances.add(interaction.getToParticipant());
+							
+							// Only include 'free' participant instances, as these are bound by
+							// a calling protocol.
+							if (interaction.getToParticipant().getFree() == Boolean.TRUE) {
+								ret.add(createRole(interaction.getToParticipant()));
+							}
 						}
 					} else {
 						ParticipantType ptype=
@@ -156,52 +170,42 @@ public class CDMProtocolParserUtil {
 						if (ptype != null &&
 								partTypes.contains(ptype) == false) {
 							partTypes.add(ptype);
+							
+							ret.add(createRole(ptype));
 						}
 					}
 				}
 			}
 		});
 
-		// Define roles
-		java.util.Iterator<ParticipantType> ptiter=partTypes.iterator();
-
-		while (ptiter.hasNext()) {
-			ParticipantType ptype=ptiter.next();
-
-			Role role=new Role();
-			role.setName(XMLUtils.getLocalname(ptype.getName()));
-			
-			Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
-			annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
-						CDLTypeUtil.getNamespace(ptype.getName(), ptype, true));
-			annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, role.getName());
-			role.getAnnotations().add(annotation);
-			
-			ret.add(role);
-		}
-		
-		java.util.Iterator<Participant> piter=partInstances.iterator();
-		
-		while (piter.hasNext()) {
-			Participant pinst=piter.next();
-			
-			// Only include 'free' participant instances, as these are bound by
-			// a calling protocol.
-			if (pinst.getFree() == Boolean.TRUE) {
-				Role role=new Role();
-				role.setName(XMLUtils.getLocalname(pinst.getName()));
-				
-				Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
-				annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
-							CDLTypeUtil.getNamespace(pinst.getName(), pinst, true));
-				annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, role.getName());
-				role.getAnnotations().add(annotation);
-				
-				ret.add(role);
-			}
-		}
 
 		return(ret);
+	}
+	
+	protected static Role createRole(ParticipantType ptype) {
+		Role role=new Role();
+		role.setName(XMLUtils.getLocalname(ptype.getName()));
+		
+		Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
+		annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+					CDLTypeUtil.getNamespace(ptype.getName(), ptype, true));
+		annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, role.getName());
+		role.getAnnotations().add(annotation);
+		
+		return (role);
+	}
+	
+	protected static Role createRole(Participant pinst) {
+		Role role=new Role();
+		role.setName(XMLUtils.getLocalname(pinst.getName()));
+		
+		Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
+		annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+					CDLTypeUtil.getNamespace(pinst.getName(), pinst, true));
+		annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY, role.getName());
+		role.getAnnotations().add(annotation);
+		
+		return (role);
 	}
 
 	public static java.util.List<Introduces> getRoleDeclarations(final Choreography choreo) {

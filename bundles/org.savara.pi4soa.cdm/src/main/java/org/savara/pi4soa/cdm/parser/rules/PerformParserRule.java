@@ -122,6 +122,11 @@ public class PerformParserRule implements ParserRule {
 				run.getParameters().add(p);
 			}
 			
+			// Set 'from' role as the first
+			if (roles.size() > 0) {
+				run.setFromRole(new Role(roles.get(0)));
+			}
+			
 			// Convert binding parameters
 			java.util.List<BindDetails> bds=cdl.getBindDetails();
 			
