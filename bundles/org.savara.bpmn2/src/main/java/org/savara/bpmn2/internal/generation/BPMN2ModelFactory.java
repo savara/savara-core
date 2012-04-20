@@ -52,6 +52,7 @@ import org.savara.bpmn2.model.TReceiveTask;
 import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.model.TSendTask;
 import org.savara.bpmn2.model.TSequenceFlow;
+import org.savara.bpmn2.model.TServiceTask;
 import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TSubChoreography;
 import org.savara.bpmn2.model.TSubProcess;
@@ -83,7 +84,7 @@ public class BPMN2ModelFactory {
 		m_consecutiveIds = b;
 	}
 	
-	protected String createId() {
+	public String createId() {
 		if (m_consecutiveIds) {
 			return("MID"+(m_id++));
 		}
@@ -457,6 +458,22 @@ public class BPMN2ModelFactory {
 		return(task);
 	}
 
+	public Object createServiceTask(Object container, Activity activity) {
+		TServiceTask task=new TServiceTask();
+		task.setId(createId());
+		
+		task.setName("Service: "+InteractionUtil.getMessageSignature(activity)+
+				" to "+InteractionUtil.getToRole(activity));
+		
+		if (container instanceof TProcess) {
+			((TProcess)container).getFlowElement().add(m_factory.createTask(task));
+		} else if (container instanceof TSubProcess) {
+			((TSubProcess)container).getFlowElement().add(m_factory.createTask(task));
+		}
+
+		return(task);
+	}
+	
 	public Object createSendTask(Object container, Activity activity) {
 		TSendTask task=new TSendTask();
 		task.setId(createId());

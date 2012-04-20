@@ -31,6 +31,7 @@ import org.savara.bpmn2.internal.generation.components.AbstractBPMNActivity;
 import org.savara.bpmn2.internal.generation.components.BPMNActivity;
 import org.savara.bpmn2.internal.generation.components.BPMNDiagram;
 import org.savara.bpmn2.internal.generation.components.BPMNPool;
+import org.savara.bpmn2.internal.generation.components.BoundaryEvent;
 import org.savara.bpmn2.internal.generation.components.ChoiceActivity;
 import org.savara.bpmn2.internal.generation.components.DoActivity;
 import org.savara.bpmn2.internal.generation.components.DoBlockActivity;
@@ -42,8 +43,11 @@ import org.savara.bpmn2.internal.generation.components.RepeatActivity;
 import org.savara.bpmn2.internal.generation.components.RunActivity;
 import org.savara.bpmn2.internal.generation.components.SendActivity;
 import org.savara.bpmn2.internal.generation.components.SequenceActivity;
+import org.savara.bpmn2.internal.generation.components.ServiceInvocationActivity;
+import org.savara.bpmn2.model.TBoundaryEvent;
 import org.savara.bpmn2.model.TDefinitions;
 import org.savara.bpmn2.model.TError;
+import org.savara.bpmn2.model.TErrorEventDefinition;
 import org.savara.bpmn2.model.TImport;
 import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TItemDefinition;
@@ -52,6 +56,7 @@ import org.savara.bpmn2.model.TOperation;
 import org.savara.bpmn2.model.TReceiveTask;
 import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.model.TSendTask;
+import org.savara.bpmn2.model.TServiceTask;
 import org.savara.bpmn2.util.BPMN2ServiceUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
@@ -70,7 +75,8 @@ import org.scribble.protocol.model.*;
 public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 
 	private static final String BPMN_FILE_EXTENSION = ".bpmn";
-	private boolean m_consecutiveIds=false;
+	private boolean _consecutiveIds=false;
+	private boolean _messageBasedInvocation=true;
 	private org.savara.bpmn2.model.ObjectFactory _objectFactory=new org.savara.bpmn2.model.ObjectFactory();
 	
 	private static final Logger logger=Logger.getLogger(ProtocolToBPMN2ProcessModelGenerator.class.getName());
@@ -82,7 +88,30 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 	 * @param b Whether to use consecutive ids
 	 */
 	public void setUseConsecutiveIds(boolean b) {
-		m_consecutiveIds = b;
+		_consecutiveIds = b;
+	}
+	
+	/**
+	 * This method sets whether message based invocation should be used. If true
+	 * then a process invoking an external service will be represented based on
+	 * separate send and receive tasks (and a choice construct if faults may
+	 * be received). If false, then a service task will be used, with message
+	 * based boundary event definitions to represent received faults.
+	 * 
+	 * @param b Whether message based invocation should be used
+	 */
+	public void setMessageBasedInvocation(boolean b) {
+		_messageBasedInvocation = b;
+	}
+	
+	/**
+	 * This method indicates whether message based invocation should be
+	 * used.
+	 * 
+	 * @return Whether message based invocation should be used
+	 */
+	public boolean getMessageBasedInvocation() {
+		return (_messageBasedInvocation);
 	}
 	
 	/**
@@ -123,8 +152,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation=
 					new org.savara.bpmn2.internal.generation.BPMN2NotationFactory(model);
 			
-			model.setUseConsecutiveIds(m_consecutiveIds);
-			notation.setUseConsecutiveIds(m_consecutiveIds);
+			model.setUseConsecutiveIds(_consecutiveIds);
+			notation.setUseConsecutiveIds(_consecutiveIds);
 			
 			BPMN2ModelVisitor visitor=
 				new BPMN2ModelVisitor(pm.getProtocol().getName(),
@@ -293,12 +322,14 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 */
 		public boolean start(Choice elem) {
 			
-			try {
-				pushBPMNActivity(new ChoiceActivity(elem,
-						getBPMNActivity(), m_modelFactory, m_notationFactory));
-				
-			} catch(Exception e) {
-				logger.severe("Failed to create choice state: "+e);
+			if (!(getBPMNActivity() instanceof ServiceInvocationActivity)) {
+				try {
+					pushBPMNActivity(new ChoiceActivity(elem,
+							getBPMNActivity(), m_modelFactory, m_notationFactory));
+					
+				} catch(Exception e) {
+					logger.severe("Failed to create choice state: "+e);
+				}
 			}
 			
 			return(true);
@@ -311,7 +342,9 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 */
 		public void end(Choice elem) {
 			
-			popBPMNActivity();
+			//if (!(getBPMNActivity() instanceof ServiceActivity)) {
+				popBPMNActivity();
+			//}
 		}
 		
 		/**
@@ -429,45 +462,130 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		public void accept(Interaction elem) {
 			
 			// Check if a send
-			if (elem.getFromRole() == null ||
-					elem.getFromRole().equals(elem.getEnclosingProtocol().getLocatedRole())) {
-				
-				BPMNActivity umls=getBPMNActivity();
-				if (umls != null) {
-					SendActivity sa=
-						new SendActivity(elem, umls, m_modelFactory, m_notationFactory);
+			if (InteractionUtil.isSend(elem)) {
+			
+				if (getMessageBasedInvocation() || !InteractionUtil.isRequest(elem)) {
 					
-					// Register the send to enable links to be established
-					// with an appropriate receive
-					BPMNDiagram amodel=umls.getBPMNDiagram();		
-					amodel.registerSendActivity(elem, sa);
-					
-					TSendTask task=sa.getSendTask();
-					
-					if (task != null) {
-						task.setMessageRef(getMessageReference(elem));
-						task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
+					BPMNActivity umls=getBPMNActivity();
+					if (umls != null) {
+						SendActivity sa=
+							new SendActivity(elem, umls, m_modelFactory, m_notationFactory);
+						
+						// Register the send to enable links to be established
+						// with an appropriate receive
+						BPMNDiagram amodel=umls.getBPMNDiagram();		
+						amodel.registerSendActivity(elem, sa);
+						
+						TSendTask task=sa.getSendTask();
+						
+						if (task != null) {
+							task.setMessageRef(getMessageReference(elem));
+							task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
+						}
+					}
+				} else {
+					// Use service task
+					BPMNActivity umls=getBPMNActivity();
+					if (umls != null) {
+						try {
+							ServiceInvocationActivity sa=
+								new ServiceInvocationActivity(elem, umls, m_modelFactory, m_notationFactory);
+							
+							// Register the send to enable links to be established
+							// with an appropriate receive
+							BPMNDiagram amodel=umls.getBPMNDiagram();		
+							amodel.registerSendActivity(elem, sa);
+							
+							TServiceTask task=sa.getServiceTask();
+							
+							if (task != null) {
+								task.setOperationRef(getOperationReference(elem, getMessageReference(elem)));
+							}
+							
+							pushBPMNActivity(sa);
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			} else {
-				BPMNActivity umls=getBPMNActivity();
-				if (umls != null) {
-					ReceiveActivity sa=
-						new ReceiveActivity(elem, umls, m_modelFactory, m_notationFactory);
+				
+				// Check if service task is on the stack
+				ServiceInvocationActivity act=getServiceInvocationActivity();
+
+				if (InteractionUtil.isRequest(elem) ||
+						getMessageBasedInvocation() || act == null) {
 					
-					// Register the receive to enable links to be established
-					// with an appropriate send
-					BPMNDiagram amodel=umls.getBPMNDiagram();		
-					amodel.registerReceiveActivity(elem, sa);
-					
-					TReceiveTask task=sa.getReceiveTask();
-					
-					if (task != null) {
-						task.setMessageRef(getMessageReference(elem));
-						task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
+					BPMNActivity umls=getBPMNActivity();
+					if (umls != null) {
+						ReceiveActivity sa=
+							new ReceiveActivity(elem, umls, m_modelFactory, m_notationFactory);
+						
+						// Register the receive to enable links to be established
+						// with an appropriate send
+						BPMNDiagram amodel=umls.getBPMNDiagram();		
+						amodel.registerReceiveActivity(elem, sa);
+						
+						TReceiveTask task=sa.getReceiveTask();
+						
+						if (task != null) {
+							task.setMessageRef(getMessageReference(elem));
+							task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
+						}
+					}
+				} else {
+					if (InteractionUtil.isFaultResponse(elem)) {
+						
+						BPMNActivity umls=getBPMNActivity();
+
+						// Create boundary event for fault
+						TBoundaryEvent event=(TBoundaryEvent)
+									m_modelFactory.createBoundaryEvent(umls.getContainer());
+						
+						TErrorEventDefinition eed=new TErrorEventDefinition();
+						eed.setId(m_modelFactory.createId());
+						eed.setErrorRef(getErrorReference(elem));
+						
+						// Call this method to establish the error reference on the
+						// appropriate service interface (if not already defined)
+						getOperationReference(elem, eed.getErrorRef());
+						
+						event.getEventDefinition().add(_objectFactory.createErrorEventDefinition(eed));
+						
+						event.setAttachedToRef(new QName(
+								m_modelFactory.getDefinitions().getTargetNamespace(),
+											act.getServiceTask().getId()));
+
+						BoundaryEvent be=new BoundaryEvent(event, act.getStartState(),
+										m_modelFactory, m_notationFactory);
+						
+						act.register(umls, be);
+						
+					} else {
+						// Need to associate response with service interface - task will then
+						// be automatically associated with it via the operation reference
+						getOperationReference(elem, getMessageReference(elem));
 					}
 				}
 			}
+		}
+		
+		protected ServiceInvocationActivity getServiceInvocationActivity() {
+			ServiceInvocationActivity ret=null;
+			
+			if (m_bpmnActivityStack.size() > 0) {
+				BPMNActivity ba=(BPMNActivity)m_bpmnActivityStack.get(0);
+				
+				if (ba instanceof ServiceInvocationActivity) {
+					ret = (ServiceInvocationActivity)ba;
+				} else if (ba instanceof SequenceActivity &&
+						m_bpmnActivityStack.size() > 1 &&
+						//m_bpmnActivityStack.get(1) instanceof ChoiceActivity &&
+						m_bpmnActivityStack.get(1) instanceof ServiceInvocationActivity) {
+					ret = (ServiceInvocationActivity)m_bpmnActivityStack.get(1);
+				}
+			}
+			return (ret);
 		}
 		
 		/**
@@ -570,7 +688,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * 
 		 * @param act The activity
 		 */
-		protected void pushBPMNActivity(BPMNActivity act) {
+		protected void pushBPMNActivity(BPMNActivity act) {			
 			m_bpmnActivityStack.add(0, act);
 		}
 		
@@ -596,15 +714,19 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 *
 		 */
 		protected void popBPMNActivity() {
-			BPMNActivity umls=getBPMNActivity();
+			BPMNActivity umls=null;
 			
-			if (umls != null) {
-				umls.childrenComplete();
-			}
-			
-			if (m_bpmnActivityStack.size() > 0) {
-				m_bpmnActivityStack.remove(0);
-			}
+			do {
+				umls = getBPMNActivity();
+				
+				if (umls != null) {
+					umls.childrenComplete();
+				}
+				
+				if (m_bpmnActivityStack.size() > 0) {
+					m_bpmnActivityStack.remove(0);
+				}
+			} while (umls instanceof ServiceInvocationActivity);
 		}
 		
 		/**
@@ -684,13 +806,82 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		}
 		
 		/**
-		 * This method establishes the associated operation details,
+		 * This method establishes the associated message details,
 		 * if not defined, and returns a reference to it.
 		 * 
 		 * @param interaction The interaction
+		 * @return The message reference
+		 */
+		protected QName getErrorReference(Interaction interaction) {
+			QName ret=null;
+			
+			if (interaction.getMessageSignature() == null ||
+					interaction.getMessageSignature().getTypeReferences().size() == 0) {
+				return(null);
+			}
+			
+			if (!InteractionUtil.isFaultResponse(interaction)) {
+				return(null);
+			}
+			
+			// Check for error definition
+			for (JAXBElement<? extends TRootElement> rootElem :
+							m_modelFactory.getDefinitions().getRootElement()) {
+				if (rootElem.getValue() instanceof TMessage) {
+					TMessage mesg=(TMessage)rootElem.getValue();
+					
+					if (mesg.getName().equals(interaction.getMessageSignature().
+									getTypeReferences().get(0).getName())) {
+
+						String faultName=InteractionUtil.getFaultName(interaction);
+						TError error=null;
+						
+						for (JAXBElement<? extends TRootElement> subRootElem :
+							m_modelFactory.getDefinitions().getRootElement()) {
+							
+							if (subRootElem.getValue() instanceof TError &&
+									((TError)subRootElem.getValue()).getStructureRef().equals(
+											mesg.getItemRef()) &&
+									((TError)subRootElem.getValue()).getName().equals(faultName)) {
+								error = (TError)subRootElem.getValue();
+								
+								break;
+							}
+						}
+						
+						if (error == null) {
+							error = new TError();
+							error.setId("ERR"+faultName);
+							error.setName(faultName);
+							error.setErrorCode(faultName);
+							error.setStructureRef(mesg.getItemRef());
+							m_modelFactory.getDefinitions().getRootElement().add(
+									_objectFactory.createError(error));
+						}
+						
+						ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
+								error.getId());
+
+						break;
+					}
+				}
+			}
+			
+			return(ret);
+		}
+
+		/**
+		 * This method establishes the associated operation details,
+		 * if not defined, and returns a reference to it. If the
+		 * interaction represents a fault, then the error reference
+		 * is supplied, otherwise the associated message reference
+		 * is supplied.
+		 * 
+		 * @param interaction The interaction
+		 * @param messageOrErrorRef The message or error ref
 		 * @return The operation reference
 		 */
-		protected QName getOperationReference(Interaction interaction, QName messageRef) {
+		protected QName getOperationReference(Interaction interaction, QName messageOrErrorRef) {
 			QName ret=null;
 			
 			// Check that interaction has an operation name
@@ -752,8 +943,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			if (InteractionUtil.isRequest(interaction)) {
 				if (op.getInMessageRef() == null) {
-					op.setInMessageRef(messageRef);
-				} else if (!op.getInMessageRef().equals(messageRef)) {
+					op.setInMessageRef(messageOrErrorRef);
+				} else if (!op.getInMessageRef().equals(messageOrErrorRef)) {
 					// TODO: Report mismatch
 				}
 			} else if (InteractionUtil.isFaultResponse(interaction)) {
@@ -787,8 +978,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			} else {
 				// Normal response
 				if (op.getOutMessageRef() == null) {
-					op.setOutMessageRef(messageRef);
-				} else if (!op.getOutMessageRef().equals(messageRef)) {
+					op.setOutMessageRef(messageOrErrorRef);
+				} else if (!op.getOutMessageRef().equals(messageOrErrorRef)) {
 					// TODO: Report mismatch
 				}
 			}
