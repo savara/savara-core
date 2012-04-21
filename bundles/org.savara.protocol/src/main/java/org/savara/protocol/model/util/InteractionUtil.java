@@ -26,6 +26,8 @@ import org.scribble.protocol.model.*;
  */
 public class InteractionUtil {
 	
+	private static final String OPERATOR_FAULT_SEPARATOR = "-";
+
 	/**
 	 * This method returns the name associated with the interaction.
 	 * 
@@ -251,4 +253,21 @@ public class InteractionUtil {
 		return(ret);
 	}
 
+	/**
+	 * This method constructs the scribble operator name from the
+	 * invocation operation and optional fault name.
+	 * 
+	 * @param operation The operation
+	 * @param fault The optional fault name
+	 * @return The operator name
+	 */
+	public static String getOperator(String operation, String fault) {
+		String ret=operation;
+		
+		if (fault != null && fault.trim().length() > 0) {
+			ret += OPERATOR_FAULT_SEPARATOR+fault;
+		}
+		
+		return (ret);
+	}
 }

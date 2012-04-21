@@ -19,7 +19,6 @@ package org.savara.qa.simulate;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.savara.protocol.util.ProtocolServices;
 import org.savara.scenario.simulation.ScenarioSimulatorMain;
@@ -89,7 +88,6 @@ public class SimulateCDMTest {
 	}
 
 	@Test
-	@Ignore
 	public void testInvalidStoreBehaviour() {
 		
 		ProtocolServices.getParserManager().getParsers().add(

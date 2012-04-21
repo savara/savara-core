@@ -20,12 +20,12 @@ package org.savara.monitor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.protocol.model.util.InteractionUtil;
 import org.scribble.protocol.monitor.Message;
 import org.scribble.protocol.monitor.Result;
 import org.scribble.protocol.monitor.Session;
-import org.scribble.protocol.monitor.model.Annotation;
 import org.scribble.protocol.monitor.model.MessageNode;
+import org.scribble.protocol.monitor.model.MessageType;
 
 /**
  * This class extends the default monitor context, provided by
@@ -36,88 +36,56 @@ public class DefautMonitorContext extends org.scribble.protocol.monitor.DefaultM
 
 	private static final Logger LOG=Logger.getLogger(DefautMonitorContext.class.getName());
 	
-	private static java.util.Map<MessageNode, String> _faultNames=
-					new java.util.HashMap<MessageNode, String>();
-	
     /**
      * {@inheritDoc}
      */
 	@Override
     public Result validate(Session session, MessageNode mesgNode, Message mesg) {
-        Result ret=super.validate(session, mesgNode, mesg);
+        // Do direct comparison for now, but could also check for derived
+        // types
+        Result ret=Result.NOT_HANDLED;
         
-        // Only check for fault names if the result is currently considered valid
-        if (ret != null && ret.isValid() && mesg instanceof org.savara.monitor.Message) {
-    		String mesgFaultName=((org.savara.monitor.Message)mesg).getFault();
+        if (mesgNode.getOperator() != null
+                && mesg.getOperator() != null) {
+        	String op=mesg.getOperator();
         	
-        	// Check if fault defined for message node
-        	String nodeFaultName=_faultNames.get(mesgNode);
-        	
-			if (LOG.isLoggable(Level.FINEST)) {
-				LOG.finest("Node fault name '"+nodeFaultName+"'");        			
-			}
-
-			if (nodeFaultName == null) {
-        		// Discover if message node has a fault defined
-        		java.util.List<Annotation> annotations=mesgNode.getAnnotation();
-        		
-        		for (Annotation ann : annotations) {
-					if (LOG.isLoggable(Level.FINEST)) {
-						LOG.finest("Checking annotation ID="+ann.getId()+" VALUE="+ann.getValue());        			
-					}
-        			if (ann.getValue().startsWith(" "+AnnotationDefinitions.FAULT+"(")) {
-        				
-        				// Extract name field
-        				int startpos=ann.getValue().indexOf("name=");
-        				int endpos=ann.getValue().indexOf(")");
-        				
-        				if (startpos != -1 && endpos != -1) {
-        					nodeFaultName = ann.getValue().substring(startpos+5, endpos);
-        	    			if (LOG.isLoggable(Level.FINEST)) {
-        	    				LOG.finest("Extracted fault name '"+nodeFaultName+
-        	    						"' from node annotation");        			
-        	    			}
-        				}
-        				break;
-        			}
-        		}
-        		
-        		if (nodeFaultName == null) {
-        			nodeFaultName = "";
-        		}
-
-        		_faultNames.put(mesgNode, nodeFaultName);
+        	if (mesg instanceof org.savara.monitor.Message
+        			&& ((org.savara.monitor.Message)mesg).getFault() != null) {
+        		op = InteractionUtil.getOperator(op, ((org.savara.monitor.Message)mesg).getFault());
         	}
         	
-        	if (nodeFaultName.length() > 0) {
-        		// Check if message has fault defined
-    			if (LOG.isLoggable(Level.FINEST)) {
-    				LOG.finest("Compare message fault name '"+mesgFaultName+
-    						"' against node '"+nodeFaultName+"'");        			
-    			}
-
-        		if (mesgFaultName == null) {       			
-        			if (LOG.isLoggable(Level.FINEST)) {
-        				LOG.finest("Message node had fault '"+nodeFaultName+
-        						"', but message had no fault");
-        			}
-        			ret = Result.INVALID;
-        		} else if (!mesgFaultName.equals(nodeFaultName)) {
-        			if (LOG.isLoggable(Level.FINEST)) {
-        				LOG.finest("Message node had fault '"+nodeFaultName+
-        						"' not compatible with message fault '"+mesgFaultName+"'");
-        			}
-        			ret = Result.INVALID;
-        		}
-        	} else if (mesgFaultName != null && mesgFaultName.trim().length() > 0) {
-    			if (LOG.isLoggable(Level.FINEST)) {
-    				LOG.finest("Message had fault '"+mesgFaultName+
-    						"', but node had no fault");
-    			}
-        		ret = Result.INVALID;
-        	}
+            if (mesgNode.getOperator().equals(op)) {
+            	ret = Result.VALID;
+            }
         }
         
-        return(ret);
+        if (ret.isValid() && mesgNode.getMessageType().size() > 0) {
+            
+            if (mesgNode.getMessageType().size() == mesg.getTypes().size()) {
+                ret = Result.VALID;
+                
+                // If message type defined on message node, then compare against it
+                for (int i=0; i < mesgNode.getMessageType().size(); i++) {
+                    MessageType mt=mesgNode.getMessageType().get(i);
+                    
+                    if (mt.getValue() == null || !mt.getValue().equals(mesg.getTypes().get(i))) {
+                        ret = Result.NOT_HANDLED;
+                        break;
+                    }
+                }
+            } else if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Number of message types different ("+mesgNode.getMessageType().size()+" : "
+                            +mesg.getTypes().size()+")");
+                
+                ret = Result.INVALID;
+            }
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Session ("+session+") validate message '"+mesg+"' against node "
+                        +mesgNode+" ret = "+ret);
+        }
+        
+        return (ret);
 	}
 }

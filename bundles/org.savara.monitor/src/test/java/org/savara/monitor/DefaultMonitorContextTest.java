@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.savara.monitor.DefautMonitorContext;
 import org.savara.monitor.Message;
+import org.savara.protocol.model.util.InteractionUtil;
 import org.scribble.protocol.monitor.Result;
 import org.scribble.protocol.monitor.model.Annotation;
 import org.scribble.protocol.monitor.model.MessageNode;
@@ -71,7 +72,7 @@ public class DefaultMonitorContextTest {
 		DefautMonitorContext context=new DefautMonitorContext();
 		
 		MessageNode mesgNode=new MessageNode();
-		mesgNode.setOperator("buy");
+		mesgNode.setOperator(InteractionUtil.getOperator("buy", "BuyFailed"));
 		
 		Annotation ann=new Annotation();
 		mesgNode.getAnnotation().add(ann);
@@ -94,7 +95,7 @@ public class DefaultMonitorContextTest {
 		DefautMonitorContext context=new DefautMonitorContext();
 		
 		MessageNode mesgNode=new MessageNode();
-		mesgNode.setOperator("buy");
+		mesgNode.setOperator(InteractionUtil.getOperator("buy", "BuyFailed"));
 		
 		Annotation ann=new Annotation();
 		mesgNode.getAnnotation().add(ann);
@@ -134,7 +135,7 @@ public class DefaultMonitorContextTest {
 		DefautMonitorContext context=new DefautMonitorContext();
 		
 		MessageNode mesgNode=new MessageNode();
-		mesgNode.setOperator("buy");
+		mesgNode.setOperator(InteractionUtil.getOperator("buy", ""));
 		
 		Message mesg=new Message();
 		mesg.setOperator("buy");

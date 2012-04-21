@@ -186,7 +186,6 @@ public class ServiceInvocationActivity extends AbstractBPMNActivity {
 	
 	public void calculatePosition(int x, int y) {
 		int cury=y;
-		int midx=x+(getWidth()/2);
 		int midy=y+(getHeight()/2);
 		
 		setX(x);
@@ -197,8 +196,7 @@ public class ServiceInvocationActivity extends AbstractBPMNActivity {
 		for (int i=1; i < getChildStates().size()-1; i++) {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			
-			act.calculatePosition(x+_serviceTaskState.getWidth()+HORIZONTAL_GAP, cury);//midx-(act.getWidth()/2), cury);
-			//midy-(act.getHeight()/2));
+			act.calculatePosition(x+_serviceTaskState.getWidth()+HORIZONTAL_GAP, cury);
 
 			cury += (act.getHeight()+VERTICAL_GAP);
 			
