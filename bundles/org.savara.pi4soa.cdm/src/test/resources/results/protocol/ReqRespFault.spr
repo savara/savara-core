@@ -26,6 +26,6 @@ protocol ReqRespFaultProcess(role Buyer) {
 		[[ Fault(name=insufficientCredit) ]]
 		[[ Interface(name=SellerBehavior,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit-insufficientCredit(CreditInvalid) from Seller to Buyer;
+		checkCredit_insufficientCredit(CreditInvalid) from Seller to Buyer;
 	}
 }

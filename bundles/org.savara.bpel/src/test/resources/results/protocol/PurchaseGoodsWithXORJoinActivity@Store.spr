@@ -37,7 +37,7 @@ protocol PurchaseGoods_Store at Store {
 		} or {
 			[[ Fault(name=CustomerUnknown) ]]
 			[[ Correlation(replyTo=creditCheck) ]]
-			creditCheck(CustomerUnknown) from CreditAgency;
+			creditCheck_CustomerUnknown(CustomerUnknown) from CreditAgency;
 			[[ Fault(name=AccountNotFound) ]]
 			[[ Correlation(replyTo=buy) ]]
 			buy(AccountNotFound) to Buyer;

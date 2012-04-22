@@ -21,7 +21,7 @@ protocol ESBBrokerProcess_Buyer at Buyer {
 		} or {
 			[[ Fault(name=rejected) ]]
 			[[ Correlation(replyTo=buy) ]]
-			buy(orderRejected) from Broker;
+			buy_rejected(orderRejected) from Broker;
 		}
 	} or {
 		[[ Correlation(request=cancel) ]]

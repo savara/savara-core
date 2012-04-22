@@ -79,7 +79,7 @@
             <bpmn2:incoming>MID21</bpmn2:incoming>
             <bpmn2:outgoing>MID25</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" messageRef="IDCustomerUnknown" name="Receive: creditCheck(CustomerUnknown) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" messageRef="IDCustomerUnknown" name="Receive: creditCheck_CustomerUnknown(CustomerUnknown) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID30</bpmn2:incoming>
             <bpmn2:outgoing>MID27</bpmn2:outgoing>
         </bpmn2:task>

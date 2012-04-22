@@ -26,7 +26,7 @@ import org.scribble.protocol.model.*;
  */
 public class InteractionUtil {
 	
-	private static final String OPERATOR_FAULT_SEPARATOR = "-";
+	private static final String OPERATOR_FAULT_SEPARATOR = "_";
 
 	/**
 	 * This method returns the name associated with the interaction.
@@ -266,6 +266,30 @@ public class InteractionUtil {
 		
 		if (fault != null && fault.trim().length() > 0) {
 			ret += OPERATOR_FAULT_SEPARATOR+fault;
+		}
+		
+		return (ret);
+	}
+	
+	/**
+	 * This method returns the operation name for the supplied
+	 * interaction.
+	 * 
+	 * @param interaction The interaction
+	 * @return The operation
+	 */
+	public static String getOperationName(Interaction interaction) {
+		String ret=interaction.getMessageSignature().getOperation();
+		
+		Annotation ann=AnnotationDefinitions.getAnnotation(interaction.getAnnotations(),
+						AnnotationDefinitions.FAULT);
+		
+		if (ann != null) {
+			String faultName=(String)ann.getProperties().get(AnnotationDefinitions.NAME_PROPERTY);
+			
+			if (ret.endsWith(faultName)) {
+				ret = ret.substring(0, ret.length()-faultName.length()-1);
+			}
 		}
 		
 		return (ret);

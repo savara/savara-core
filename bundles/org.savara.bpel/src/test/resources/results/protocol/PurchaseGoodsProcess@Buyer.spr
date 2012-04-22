@@ -14,6 +14,6 @@ protocol PurchaseGoodsProcess_Buyer at Buyer {
 	} or {
 		[[ Fault(name=BuyFailed) ]]
 		[[ Correlation(replyTo=buy) ]]
-		buy(BuyFailed) from Store;
+		buy_BuyFailed(BuyFailed) from Store;
 	}
 }

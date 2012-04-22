@@ -923,9 +923,10 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			// Find operation
 			TOperation op=null;
 			
+			String opName=InteractionUtil.getOperationName(interaction);
+			
 			for (TOperation curop : intf.getOperation()) {
-				if (interaction.getMessageSignature().getOperation() != null &&
-						curop.getName().equals(interaction.getMessageSignature().getOperation())) {
+				if (curop.getName().equals(opName)) {
 					op = curop;
 					break;
 				}
@@ -933,7 +934,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			if (op == null) {
 				op = new TOperation();
-				op.setName(interaction.getMessageSignature().getOperation());
+				op.setName(opName);
 				op.setId("OP_"+serverRole.getName()+"_"+op.getName());
 				
 				intf.getOperation().add(op);

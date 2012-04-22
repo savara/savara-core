@@ -153,7 +153,7 @@
         <bpmn2:sequenceFlow id="MID28" sourceRef="MID19" targetRef="MID17"/>
         <bpmn2:sequenceFlow id="MID29" sourceRef="MID16" targetRef="MID20"/>
         <bpmn2:sequenceFlow id="MID30" sourceRef="MID24" targetRef="MID17"/>
-        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID31" messageRef="IDCustomerUnknown" name="Receive: creditCheck(CustomerUnknown) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID31" messageRef="IDCustomerUnknown" name="Receive: creditCheck_CustomerUnknown(CustomerUnknown) from CreditAgency" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID67</bpmn2:incoming>
             <bpmn2:outgoing>MID63</bpmn2:outgoing>
         </bpmn2:task>

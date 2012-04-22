@@ -21,7 +21,7 @@ protocol PurchaseGoodsProcess_Store at StoreInterface {
 	} or {
 		[[ Fault(name=CreditCheckFailed) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit(CreditCheckInvalid) from CreditAgency;
+		checkCredit_CreditCheckFailed(CreditCheckInvalid) from CreditAgency;
 		[[ Fault(name=BuyFailed) ]]
 		[[ Correlation(replyTo=buy) ]]
 		buy(BuyFailed) to Buyer;

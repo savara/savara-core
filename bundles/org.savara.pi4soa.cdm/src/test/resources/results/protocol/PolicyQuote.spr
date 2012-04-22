@@ -76,6 +76,6 @@ protocol PolicyQuoteProcess(role Driver) {
 		[[ Fault(name=policyQuoteFault) ]]
 		[[ Interface(name=PolicyQuoteProcessService,namespace=http://www.example.org/policyQuoteProcessService) ]]
 		[[ Correlation(replyTo=receivePolicyQuote) ]]
-		receivePolicyQuote-policyQuoteFault(PolicyQuoteFault) from PolicyQuoteProcessService to Driver;
+		receivePolicyQuote_policyQuoteFault(PolicyQuoteFault) from PolicyQuoteProcessService to Driver;
 	}
 }

@@ -31,6 +31,7 @@ import org.savara.bpel.util.TypeReferenceUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.protocol.model.util.InteractionUtil;
 import org.scribble.protocol.model.*;
 
 /**
@@ -230,7 +231,7 @@ public class InvokeParserRule implements ProtocolParserRule {
 		}
 		
 		MessageSignature ms=new MessageSignature();
-		ms.setOperation(invoke.getOperation());
+		ms.setOperation(InteractionUtil.getOperator(invoke.getOperation(), faultName.getLocalPart()));
 		ms.getTypeReferences().add(tref);
 		
 		String fromRole=PartnerLinkUtil.getClientPartnerRole(invoke.getPartnerLink());

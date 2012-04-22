@@ -12,6 +12,6 @@ protocol ReqRespFaultProcess_Buyer {
 	} or {
 		[[ Fault(name=insufficientCredit) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit(CreditCheckInvalid) from Seller;
+		checkCredit_insufficientCredit(CreditCheckInvalid) from Seller;
 	}
 }
