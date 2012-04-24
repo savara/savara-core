@@ -105,14 +105,31 @@ public class BoundaryEvent extends AbstractBPMNActivity {
 		
 		BPMNEdge edge=(BPMNEdge)getNotationFactory().createSequenceLink(getModelFactory(), ret, parent);
 		
-		if (edge.getWaypoint().size() > 1 &&
-					edge.getWaypoint().get(0).getY() != edge.getWaypoint().get(1).getY()) {
+		if (edge.getWaypoint().size() > 1) {
+			if (edge.getWaypoint().get(0).getY() == edge.getWaypoint().get(1).getY()) {
 			
-			Point p1=new Point();
-			p1.setY(edge.getWaypoint().get(1).getY());
-			p1.setX(edge.getWaypoint().get(0).getX()-15);
-			
-			edge.getWaypoint().add(1, p1);
+				Point p1=new Point();
+				p1.setY(edge.getWaypoint().get(0).getY()+45);
+				p1.setX(edge.getWaypoint().get(0).getX()-15);
+				
+				Point p2=new Point();
+				p2.setY(edge.getWaypoint().get(0).getY()+45);
+				p2.setX(edge.getWaypoint().get(1).getX()-45);
+				
+				Point p3=new Point();
+				p3.setY(edge.getWaypoint().get(1).getY());
+				p3.setX(edge.getWaypoint().get(1).getX()-45);
+				
+				edge.getWaypoint().add(1, p1);
+				edge.getWaypoint().add(2, p2);
+				edge.getWaypoint().add(3, p3);
+			} else {
+				Point p1=new Point();
+				p1.setY(edge.getWaypoint().get(1).getY());
+				p1.setX(edge.getWaypoint().get(0).getX()-15);
+				
+				edge.getWaypoint().add(1, p1);		
+			}
 		}
 	}
 	

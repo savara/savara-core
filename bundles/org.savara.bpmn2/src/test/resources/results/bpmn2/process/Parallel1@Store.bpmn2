@@ -35,7 +35,7 @@
             <bpmn2:incoming>MID24</bpmn2:incoming>
             <bpmn2:outgoing>MID17</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" messageRef="IDCreditCheckRequest" name="Send: checkCredit(CreditCheckRequest) to CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Service: checkCredit(CreditCheckRequest) to CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tServiceTask">
             <bpmn2:incoming>MID17</bpmn2:incoming>
             <bpmn2:outgoing>MID22</bpmn2:outgoing>
         </bpmn2:task>
@@ -53,13 +53,13 @@
             <bpmn2:incoming>MID21</bpmn2:incoming>
             <bpmn2:outgoing>MID23</bpmn2:outgoing>
         </bpmn2:parallelGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" messageRef="IDCreditRating" name="Receive: checkCredit(CreditRating) from CreditAgency" operationRef="OP_Store_checkCredit" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" messageRef="IDCreditRating" name="Receive: checkCredit(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID12</bpmn2:incoming>
             <bpmn2:incoming>MID18</bpmn2:incoming>
             <bpmn2:outgoing>MID13</bpmn2:outgoing>
             <bpmn2:outgoing>MID19</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID11" messageRef="IDCreditRating" name="Receive: checkCredit(CreditRating) from CreditAgency" operationRef="OP_Store_checkCredit" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID11" messageRef="IDCreditRating" name="Receive: checkCredit(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID14</bpmn2:incoming>
             <bpmn2:incoming>MID20</bpmn2:incoming>
             <bpmn2:outgoing>MID15</bpmn2:outgoing>
@@ -69,7 +69,7 @@
         <bpmn2:sequenceFlow id="MID13" sourceRef="MID10" targetRef="MID9"/>
         <bpmn2:sequenceFlow id="MID14" sourceRef="MID8" targetRef="MID11"/>
         <bpmn2:sequenceFlow id="MID15" sourceRef="MID11" targetRef="MID9"/>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Buyer_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID23</bpmn2:incoming>
             <bpmn2:outgoing>MID25</bpmn2:outgoing>
         </bpmn2:task>
@@ -86,19 +86,13 @@
     <bpmn2:interface id="StoreInterface" name="Store">
         <bpmn2:operation id="OP_Store_buy" name="buy">
             <bpmn2:inMessageRef>IDBuyRequest</bpmn2:inMessageRef>
-        </bpmn2:operation>
-        <bpmn2:operation id="OP_Store_checkCredit" name="checkCredit">
-            <bpmn2:inMessageRef>IDCreditRating</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDBuyConfirmed</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
     <bpmn2:interface id="CreditAgencyInterface" name="CreditAgency">
         <bpmn2:operation id="OP_CreditAgency_checkCredit" name="checkCredit">
             <bpmn2:inMessageRef>IDCreditCheckRequest</bpmn2:inMessageRef>
-        </bpmn2:operation>
-    </bpmn2:interface>
-    <bpmn2:interface id="BuyerInterface" name="Buyer">
-        <bpmn2:operation id="OP_Buyer_buy" name="buy">
-            <bpmn2:inMessageRef>IDBuyConfirmed</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDCreditRating</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
     <bpmndi:BPMNDiagram id="NID1">

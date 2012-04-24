@@ -43,12 +43,20 @@ public class BPELToBPMNProcessTest extends TestCase {
 	public static TestSuite suite() {
         TestSuite suite = new TestSuite("BPEL->BPMN Process Transform Tests");
         
-        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoodsWithANDJoinActivity@Store"));
-        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoodsWithXORJoinActivity@Store"));
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoodsWithANDJoinActivity@Store", true));
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoodsWithXORJoinActivity@Store", true));
         
-        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Store"));       
-        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@CreditAgency"));       
-        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Logistics"));       
+        // SAVARA-325 - need to also review the output from these
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoodsWithANDJoinActivity@Store", false));
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoodsWithXORJoinActivity@Store", false));
+        
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Store", true));       
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@CreditAgency", true));       
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Logistics", true));       
+
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Store", false));       
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@CreditAgency", false));       
+        suite.addTest(new BPELToBPMNProcessTestCase("PurchaseGoods@Logistics", false));       
 
         return suite;
     }
@@ -59,6 +67,7 @@ public class BPELToBPMNProcessTest extends TestCase {
 	protected static class BPELToBPMNProcessTestCase extends TestCase {
 
 		private String _name=null;
+		private boolean _useMessageBasedInvocation=false;
 		
 		/**
 		 * This constructor is initialized with the test
@@ -66,9 +75,10 @@ public class BPELToBPMNProcessTest extends TestCase {
 		 * 
 		 * @param name The test name
 		 */
-		public BPELToBPMNProcessTestCase(String name) {
-			super(name);
+		public BPELToBPMNProcessTestCase(String name, boolean mom) {
+			super(name+"[mom="+mom+"]");
 			_name = name;
+			_useMessageBasedInvocation = mom;
 		}
 		
 		/**
@@ -120,6 +130,7 @@ public class BPELToBPMNProcessTest extends TestCase {
     				ProtocolToBPMN2ProcessModelGenerator generator=
 							new ProtocolToBPMN2ProcessModelGenerator();
 					generator.setUseConsecutiveIds(true);
+					generator.setMessageBasedInvocation(_useMessageBasedInvocation);
 					
         			DefaultFeedbackHandler handler=new DefaultFeedbackHandler();
 
@@ -182,11 +193,13 @@ public class BPELToBPMNProcessTest extends TestCase {
 		protected void checkResults(TestResult result, String conv) {
 			boolean f_valid=false;
 
-			String filename="qaresults/bpmn_from_bpel/"+_name+".bpmn";
+			String filename=_name+(_useMessageBasedInvocation?"_mom":"")+".bpmn";
+			
+			String filepath="qaresults/bpmn_from_bpel/"+filename;
 			
 			java.io.InputStream is=
 				//ParserTest.class.getResourceAsStream(filename);
-				ClassLoader.getSystemResourceAsStream(filename);
+				ClassLoader.getSystemResourceAsStream(filepath);
 			
 			if (is != null) {
 				
@@ -210,7 +223,7 @@ public class BPELToBPMNProcessTest extends TestCase {
 				}
 			} else {
 				result.addError(this,
-						new Throwable("Resulting BPMN process '"+filename+
+						new Throwable("Resulting BPMN process '"+filepath+
 								"' not found for comparison"));
 			}
 			
@@ -252,7 +265,7 @@ public class BPELToBPMNProcessTest extends TestCase {
 							resultsDir.mkdirs();
 						}
 						
-						java.io.File resultFile=new java.io.File(resultsDir, _name+".generated");
+						java.io.File resultFile=new java.io.File(resultsDir, filename+".generated");
 						
 						if (resultFile.exists() == false) {
 							try {

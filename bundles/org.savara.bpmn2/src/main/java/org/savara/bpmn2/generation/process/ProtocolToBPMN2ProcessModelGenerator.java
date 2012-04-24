@@ -76,7 +76,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 
 	private static final String BPMN_FILE_EXTENSION = ".bpmn";
 	private boolean _consecutiveIds=false;
-	private boolean _messageBasedInvocation=true;
+	private boolean _messageBasedInvocation=false;
 	private org.savara.bpmn2.model.ObjectFactory _objectFactory=new org.savara.bpmn2.model.ObjectFactory();
 	
 	private static final Logger logger=Logger.getLogger(ProtocolToBPMN2ProcessModelGenerator.class.getName());
@@ -688,7 +688,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		 * 
 		 * @param act The activity
 		 */
-		protected void pushBPMNActivity(BPMNActivity act) {			
+		protected void pushBPMNActivity(BPMNActivity act) {
 			m_bpmnActivityStack.add(0, act);
 		}
 		

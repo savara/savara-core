@@ -112,6 +112,25 @@ public abstract class AbstractBPMNActivity implements BPMNActivity {
 	}
 	
 	/**
+	 * This method moves the specified child activity to the nominated
+	 * parent, being located after the specified activity.
+	 * 
+	 * @param child The child
+	 * @param parent The parent
+	 * @param after The activity to insert after
+	 */
+	protected void promote(java.util.List<BPMNActivity> children,
+						AbstractBPMNActivity parent, BPMNActivity after) {
+		int pos=parent.getChildStates().indexOf(after);
+		
+		if (pos != -1) {
+			parent.getChildStates().addAll(pos+1, children);
+		} else {
+			parent.getChildStates().addAll(children);
+		}
+	}
+	
+	/**
 	 * This method indicates that the BPMN state for the
 	 * child nodes is complete.
 	 *

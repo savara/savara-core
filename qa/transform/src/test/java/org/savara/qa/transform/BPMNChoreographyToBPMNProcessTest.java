@@ -43,20 +43,32 @@ public class BPMNChoreographyToBPMNProcessTest {
     public static Test suite() {
         TestSuite suite = new TestSuite("BPMN2 Choreo->BPMN2 Process Transform Tests");
 
-        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "Store"));
-        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "CreditAgency"));
-        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "Logistics"));
-        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "Store"));
-        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency"));
-        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "Logistics"));
+        // SAVARA-325
+        //suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "Store", false));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "CreditAgency", false));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "Logistics", false));
+
+        // SAVARA-325
+        //suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "Store", false));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency", false));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "Logistics", false));
+
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "Store", true));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "CreditAgency", true));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithANDJoinActivity", "Logistics", true));
+
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "Store", true));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "CreditAgency", true));
+        suite.addTest(new BPMN2ChoreographyToBPMNProcessTester("PurchaseGoodsWithXORJoinActivity", "Logistics", true));
 
         return suite;
     }
     
     protected static class BPMN2ChoreographyToBPMNProcessTester extends TestCase {
 
-    	private String m_name=null;
-    	private String m_role=null;
+    	private String _name=null;
+    	private String _role=null;
+    	private boolean _useMessageBasedInvocation=false;
 
     	/**
     	 * This constructor is initialized with the test
@@ -64,10 +76,11 @@ public class BPMNChoreographyToBPMNProcessTest {
     	 * 
     	 * @param name The test name
     	 */
-    	public BPMN2ChoreographyToBPMNProcessTester(String name, String role) {
-    		super(name+"["+role+"]");
-    		m_name = name;
-    		m_role = role;
+    	public BPMN2ChoreographyToBPMNProcessTester(String name, String role, boolean mom) {
+    		super(name+"["+role+"/mom="+mom+"]");
+    		_name = name;
+    		_role = role;
+    		_useMessageBasedInvocation = mom;
     	}
     	
     	/**
@@ -80,7 +93,7 @@ public class BPMNChoreographyToBPMNProcessTest {
     		// Run test
     		result.startTest(this);
     		
-    		String filename="qamodels/bpmn/"+m_name+".bpmn";
+    		String filename="qamodels/bpmn/"+_name+".bpmn";
     		
     		java.net.URL url=
     			ClassLoader.getSystemResource(filename);
@@ -114,14 +127,14 @@ public class BPMNChoreographyToBPMNProcessTest {
     				java.util.List<org.scribble.protocol.model.Role> roles=model.getRoles();
     				
     				for (int i=0; role == null && i < roles.size(); i++) {
-    					if (roles.get(i).getName().equals(m_role)) {
+    					if (roles.get(i).getName().equals(_role)) {
     						role = roles.get(i);
     					}
     				}
     				
     				if (role == null) {
     					result.addError(this,
-    							new Throwable("Role '"+m_role+"' not found"));						
+    							new Throwable("Role '"+_role+"' not found"));						
     				} else {
     					DefaultProtocolContext context=
     							new DefaultProtocolContext(ProtocolServices.getParserManager(),
@@ -143,6 +156,7 @@ public class BPMNChoreographyToBPMNProcessTest {
     	    				ProtocolToBPMN2ProcessModelGenerator generator=
     	    								new ProtocolToBPMN2ProcessModelGenerator();
     	    				generator.setUseConsecutiveIds(true);
+    	    				generator.setMessageBasedInvocation(_useMessageBasedInvocation);
     	    				
     	 					java.util.Map<String,Object> map=generator.generate(local, handler, null);
     						
@@ -206,10 +220,12 @@ public class BPMNChoreographyToBPMNProcessTest {
     	protected void checkResults(TestResult result, Role role, String protocol) {
     		boolean f_valid=false;
 
-    		String filename="qaresults/bpmn_from_bpmn_choreo/"+m_name+"@"+role.getName()+".bpmn";
+    		String filename=_name+"@"+role.getName()+(_useMessageBasedInvocation?"_mom":"")+".bpmn";
+    		
+    		String filepath="qaresults/bpmn_from_bpmn_choreo/"+filename;
     		
     		java.io.InputStream is=
-    				ClassLoader.getSystemResourceAsStream(filename);
+    				ClassLoader.getSystemResourceAsStream(filepath);
     		
     		if (is != null) {
     			
@@ -270,7 +286,7 @@ public class BPMNChoreographyToBPMNProcessTest {
     					}
     					
     					java.io.File resultFile=new java.io.File(resultsDir,
-    										m_name+"@"+role.getName()+".generated");
+    										filename+".generated");
     					
     					if (resultFile.exists() == false) {
     						try {
@@ -290,7 +306,7 @@ public class BPMNChoreographyToBPMNProcessTest {
     					}
     				} else {
     					result.addError(this, new Throwable("Unable to obtain URL for BPMN2 model source '"+
-    							m_name+"' role "+role.getName()+": "+url));
+    							_name+"' role "+role.getName()+": "+url));
     				}
     			}
     		}

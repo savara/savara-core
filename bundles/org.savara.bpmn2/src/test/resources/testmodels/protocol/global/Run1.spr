@@ -6,16 +6,20 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 protocol Run1(role Buyer) {
 	Buyer introduces Store;
 
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer to Store;
 	
 	run CheckCredit(Store) from Store;
 	
+	[[ Correlation(replyTo=buy) ]]
 	buy(BuyConfirmed) from Store to Buyer;
 	
 	protocol CheckCredit(role Store) {
 		Store introduces CreditAgency;
 	
+		[[ Correlation(request=checkCredit) ]]
 		checkCredit(CreditCheckRequest) from Store to CreditAgency;
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditRating) from CreditAgency to Store;
 	}
 }

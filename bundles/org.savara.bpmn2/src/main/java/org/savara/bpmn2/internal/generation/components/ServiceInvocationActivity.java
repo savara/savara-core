@@ -62,14 +62,25 @@ public class ServiceInvocationActivity extends AbstractBPMNActivity {
 		// Create choice state
 		_serviceTaskState = new ServiceTaskActivity(req, this,
 				getModelFactory(), getNotationFactory());
-		
-		// Create junction state
-		Object junctionState=getModelFactory().createEventBasedXORGateway(getContainer());
-
-		_junctionState = new JunctionActivity(junctionState, this,
-				getModelFactory(), getNotationFactory());
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void addChildState(BPMNActivity child) {
+		// Only create a junction if a sequence being created, which indicates a choice
+		// following the initial send
+		if (_junctionState == null && child instanceof SequenceActivity) {
+			// Create junction state
+			Object junctionState=getModelFactory().createEventBasedXORGateway(getContainer());
+
+			_junctionState = new JunctionActivity(junctionState, this,
+					getModelFactory(), getNotationFactory());
+		}
+		
+		super.addChildState(child);
+	}
+
 	public TServiceTask getServiceTask() {
 		return(_serviceTaskState.getServiceTask());
 	}
@@ -86,99 +97,81 @@ public class ServiceInvocationActivity extends AbstractBPMNActivity {
 	public void childrenComplete() {
 		
 		if (_completed == false) {
-			int width=_serviceTaskState.getWidth()+_junctionState.getWidth()+
-						(2 * HORIZONTAL_GAP);
-			int height=0;
-								
+			
 			// Move the junction state to the end of the list
 			if (getChildStates().remove(_junctionState)) {
 				getChildStates().add(_junctionState);
 			}
 			
-			// Join the child state vertex with transitions
-			int maxwidth=0;
-			
-			BPMNActivity normalPath=null;
-			
-			for (int i=1; i < getChildStates().size()-1; i++) {
-				BPMNActivity umls=(BPMNActivity)getChildStates().get(i);
+			if (_junctionState == null) {
 				
-				if (!_faults.containsKey(umls) && i > 1) {
-					normalPath = umls;
-				}
+				java.util.List<BPMNActivity> children=new java.util.Vector<BPMNActivity>();
 				
-				height += umls.getHeight();
-				
-				if (i != 1) {
-					height += VERTICAL_GAP;
-				}
-				
-				if (umls.getWidth() > maxwidth) {
-					maxwidth = umls.getWidth();
-				}
-				
-				/*
-				String expr=null;
-				
-				if (m_expressions.size() > 0) {
-					expr = (String)m_expressions.get(i-1);
+				while (getChildStates().size() > 1) {
+					BPMNActivity act=(BPMNActivity)getChildStates().get(1);
 					
-					if (expr != null && expr.length() == 0) {
-						expr = null;
-					}
+					// Move to the parent of the service invocation activity
+					getChildStates().remove(1);
+					
+					children.add(act);
 				}
-				*/
-				
-				/*
-				umls.transitionFrom(m_choiceState, null);
-				
-				// Check if state is a junction
-				Object endNode=umls.getEndNode();
-				*/
-				/*
-				if (umls.getEndState().canDeleteEndNode() &&
-						(getModelFactory().isJoin(endNode) || // instanceof org.eclipse.uml2.uml.MergeNode ||
-						getModelFactory().isTerminal(endNode))) { // instanceof org.eclipse.uml2.uml.FlowFinalNode) {
 
-					// Move the incoming transitions from the junction
-					// to the next state
-					java.util.List list=getModelFactory().getInboundControlLinks(endNode);
-					for (int j=list.size()-1; j >= 0; j--) {
-						Object transition=list.get(j);
-						
-						getModelFactory().setTarget(transition, m_junctionState.getStartNode());
-						//transition.setTarget(m_junctionState.getStartNode());
+				if (children.size() > 0) {
+					promote(children, (AbstractBPMNActivity)getParent(), this);					
+				}
+				
+				setWidth(_serviceTaskState.getWidth());
+				setHeight(_serviceTaskState.getHeight());
+				
+			} else {
+				int width=_serviceTaskState.getWidth()+_junctionState.getWidth()+
+							(2 * HORIZONTAL_GAP);
+				int height=0;
+									
+				// Join the child state vertex with transitions
+				int maxwidth=0;
+				
+				BPMNActivity normalPath=null;
+				
+				for (int i=1; i < getChildStates().size()-1; i++) {
+					BPMNActivity umls=(BPMNActivity)getChildStates().get(i);
+					
+					if (!_faults.containsKey(umls) && i > 1) {
+						normalPath = umls;
 					}
 					
-					// Remove the junction
-					//endNode.destroy();
-					getModelFactory().delete(endNode);
-				} else {
-				*/
-					//m_junctionState.transitionFrom(umls, null);
-				//}
+					height += umls.getHeight();
+					
+					if (i != 1) {
+						height += VERTICAL_GAP;
+					}
+					
+					if (umls.getWidth() > maxwidth) {
+						maxwidth = umls.getWidth();
+					}
+				}
+				
+				if (normalPath != null) {
+					// Move normal path to be first
+					getChildStates().remove(normalPath);
+					getChildStates().add(1, normalPath);
+				}
+				
+				width += maxwidth;
+				
+				if (height < _serviceTaskState.getHeight()) {
+					height = _serviceTaskState.getHeight();
+				}
+				
+				if (height < _junctionState.getHeight()) {
+					height = _junctionState.getHeight();
+				}
+				
+				setWidth(width);
+				setHeight(height);
+				
+				adjustWidth(width);
 			}
-			
-			if (normalPath != null) {
-				// Move normal path to be first
-				getChildStates().remove(normalPath);
-				getChildStates().add(1, normalPath);
-			}
-			
-			width += maxwidth;
-			
-			if (height < _serviceTaskState.getHeight()) {
-				height = _serviceTaskState.getHeight();
-			}
-			
-			if (height < _junctionState.getHeight()) {
-				height = _junctionState.getHeight();
-			}
-			
-			setWidth(width);
-			setHeight(height);
-			
-			adjustWidth(width);
 			
 			_completed = true;
 		}
@@ -208,9 +201,12 @@ public class ServiceInvocationActivity extends AbstractBPMNActivity {
 		}
 		
 		_serviceTaskState.calculatePosition(x, midy-(_serviceTaskState.getHeight()/2));
-		_junctionState.calculatePosition(x+getWidth()-
-				_junctionState.getWidth(),
-				midy-(_junctionState.getHeight()/2));
+		
+		if (_junctionState != null) {
+			_junctionState.calculatePosition(x+getWidth()-
+					_junctionState.getWidth(),
+					midy-(_junctionState.getHeight()/2));
+		}
 	}
 	
 	/**
@@ -230,7 +226,7 @@ public class ServiceInvocationActivity extends AbstractBPMNActivity {
 	 * @return The ending node
 	 */
 	public Object getEndNode() {
-		return(_junctionState.getEndNode());
+		return(_junctionState == null ? _serviceTaskState.getEndNode() : _junctionState.getEndNode());
 	}
 		
 	/**
@@ -248,21 +244,25 @@ public class ServiceInvocationActivity extends AbstractBPMNActivity {
 	 * @return The end state
 	 */
 	public BPMNActivity getEndState() {
-		return(_junctionState);
+		return(_junctionState == null ? _serviceTaskState : _junctionState);
 	}
 	
 	public void adjustWidth(int width) {
 		
-		int extrawidth=_serviceTaskState.getWidth()+_junctionState.getWidth()+
-						(2 * HORIZONTAL_GAP);
-		
-		setWidth(width);
-		
-		// Adjust child widths
-		for (int i=1; i < getChildStates().size()-1; i++) {
-			BPMNActivity umls=(BPMNActivity)getChildStates().get(i);
+		if (_junctionState == null) {
+			setWidth(width);
+		} else {
+			int extrawidth=_serviceTaskState.getWidth()+_junctionState.getWidth()+
+							(2 * HORIZONTAL_GAP);
 			
-			umls.adjustWidth(width-extrawidth);
+			setWidth(width);
+			
+			// Adjust child widths
+			for (int i=1; i < getChildStates().size()-1; i++) {
+				BPMNActivity umls=(BPMNActivity)getChildStates().get(i);
+				
+				umls.adjustWidth(width-extrawidth);
+			}
 		}
 	}
 	
@@ -275,32 +275,34 @@ public class ServiceInvocationActivity extends AbstractBPMNActivity {
 			act.draw(parent);
 		}
 	
-		// Construct sequence links
-		for (int i=1; i < getChildStates().size(); i++) {
-			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
-			if (act != _junctionState) {
-				BoundaryEvent be=_faults.get(act);
-				
-				if (be != null) {
-					be.draw(parent);
+		if (_junctionState != null) {
+			// Construct sequence links
+			for (int i=1; i < getChildStates().size(); i++) {
+				BPMNActivity act=(BPMNActivity)getChildStates().get(i);
+				if (act != _junctionState) {
+					BoundaryEvent be=_faults.get(act);
 					
-					be.transitionTo(act, null, parent);
-				} else {
-					getStartState().transitionTo(act, null, parent);
+					if (be != null) {
+						be.draw(parent);
+						
+						if (act.getStartState() != null) {
+							be.transitionTo(act, null, parent);
+						} else {
+							be.transitionTo(_junctionState, null, parent);
+						}
+					} else {
+						if (act.getStartState() != null) {
+							getStartState().transitionTo(act, null, parent);
+						} else {
+							getStartState().transitionTo(_junctionState, null, parent);
+						}
+					}
+					
+					if (act.getEndState() != null) {
+						act.getEndState().transitionTo(_junctionState, null, parent);
+					}
 				}
-				act.getEndState().transitionTo(_junctionState, null, parent);
 			}
 		}
 	}
-	
-	/*
-	public void transitionTo(BPMNActivity toNode, String expression, Object parent) {
-		for (Object act : getChildStates()) {
-			Object link=getModelFactory().createControlLink(getContainer(),
-					((BPMNActivity)act).getEndNode(), toNode.getStartNode(), expression);
-			
-			getNotationFactory().createSequenceLink(getModelFactory(), link, parent);
-		}
-	}
-	*/
 }

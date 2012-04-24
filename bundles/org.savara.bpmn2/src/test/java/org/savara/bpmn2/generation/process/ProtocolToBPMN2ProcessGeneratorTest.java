@@ -43,20 +43,27 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
         TestSuite suite = new TestSuite("Protocol->BPMN2 Process Generator Tests");
 
         // TODO: SAVARA-244
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3"));
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition1"));
-        //suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition2"));
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoodsWithCancel"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3", true));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoods3", false));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition1", true));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition1", false));
+        //suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition2", true));
+        //suite.addTest(new ProtocolToBPMN2GeneratorTester("Repetition2", false));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoodsWithCancel", true));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("PurchaseGoodsWithCancel", false));
         
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("Run1"));
-        suite.addTest(new ProtocolToBPMN2GeneratorTester("Parallel1"));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Run1", true));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Run1", false));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Parallel1", true));
+        suite.addTest(new ProtocolToBPMN2GeneratorTester("Parallel1", false));
 
         return suite;
     }
     
     protected static class ProtocolToBPMN2GeneratorTester extends TestCase {
 
-    	private String m_name=null;
+    	private String _name=null;
+    	private boolean _useMessageBasedInvocation=false;
 
     	/**
     	 * This constructor is initialized with the test
@@ -64,9 +71,10 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     	 * 
     	 * @param name The test name
     	 */
-    	public ProtocolToBPMN2GeneratorTester(String name) {
-    		super(name);
-    		m_name = name;
+    	public ProtocolToBPMN2GeneratorTester(String name, boolean mom) {
+    		super(name+"[mom="+mom+"]");
+    		_name = name;
+    		_useMessageBasedInvocation = mom;
     	}
     	
     	/**
@@ -79,7 +87,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     		// Run test
     		result.startTest(this);
     		
-    		String filename="testmodels/protocol/global/"+m_name+".spr";
+    		String filename="testmodels/protocol/global/"+_name+".spr";
     		
     		java.net.URL url=
     			ClassLoader.getSystemResource(filename);
@@ -129,6 +137,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     	    				ProtocolToBPMN2ProcessModelGenerator generator=
     	    								new ProtocolToBPMN2ProcessModelGenerator();
     	    				generator.setUseConsecutiveIds(true);
+    	    				generator.setMessageBasedInvocation(_useMessageBasedInvocation);
     	    				
     						java.util.Map<String,Object> map=generator.generate(local, handler, null);
     						
@@ -192,10 +201,12 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     	protected void checkResults(TestResult result, Role role, String protocol) {
     		boolean f_valid=false;
 
-    		String filename="results/bpmn2/process/"+m_name+"@"+role.getName()+".bpmn2";
-    		
+    		String filename=_name+"@"+role.getName()+(_useMessageBasedInvocation?"_mom":"")+".bpmn2";
+		
+    		String filepath="results/bpmn2/process/"+filename;
+		
     		java.io.InputStream is=
-    				ClassLoader.getSystemResourceAsStream(filename);
+    				ClassLoader.getSystemResourceAsStream(filepath);
     		
     		if (is != null) {
     			
@@ -256,7 +267,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     					}
     					
     					java.io.File resultFile=new java.io.File(resultsDir,
-    										m_name+"@"+role.getName()+".generated");
+    										filename+".generated");
     					
     					if (resultFile.exists() == false) {
     						try {
@@ -276,7 +287,7 @@ public class ProtocolToBPMN2ProcessGeneratorTest {
     					}
     				} else {
     					result.addError(this, new Throwable("Unable to obtain URL for BPMN2 model source '"+
-    							m_name+"' role "+role.getName()+": "+url));
+    							_name+"' role "+role.getName()+": "+url));
     				}
     			}
     		}

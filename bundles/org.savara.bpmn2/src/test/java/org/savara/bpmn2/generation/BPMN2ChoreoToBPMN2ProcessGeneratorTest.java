@@ -51,7 +51,8 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     
     protected static class BPMN2ChoreoToBPMN2ProcessGeneratorTester extends TestCase {
 
-    	private String m_name=null;
+    	private String _name=null;
+    	private boolean _useMessageBasedInvocation=true;
 
     	/**
     	 * This constructor is initialized with the test
@@ -61,7 +62,7 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     	 */
     	public BPMN2ChoreoToBPMN2ProcessGeneratorTester(String name) {
     		super(name);
-    		m_name = name;
+    		_name = name;
     	}
     	
     	/**
@@ -74,7 +75,7 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     		// Run test
     		result.startTest(this);
     		
-    		String filename="testmodels/bpmn2/choreo/"+m_name+".bpmn";
+    		String filename="testmodels/bpmn2/choreo/"+_name+".bpmn";
     		
     		java.net.URL url=
     			ClassLoader.getSystemResource(filename);
@@ -132,6 +133,7 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     	    				ProtocolToBPMN2ProcessModelGenerator generator=
     	    								new ProtocolToBPMN2ProcessModelGenerator();
     	    				generator.setUseConsecutiveIds(true);
+    	    				generator.setMessageBasedInvocation(_useMessageBasedInvocation);
     	    				
     						java.util.Map<String,Object> map=generator.generate(local, handler, null);
     						
@@ -195,10 +197,12 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     	protected void checkResults(TestResult result, Role role, String protocol) {
     		boolean f_valid=false;
 
-    		String filename="results/bpmn2/process/"+m_name+"@"+role.getName()+".bpmn2";
+    		String filename=_name+"@"+role.getName()+(_useMessageBasedInvocation?"_mom":"")+".bpmn2";
+    		
+    		String filepath="results/bpmn2/process/"+filename;
     		
     		java.io.InputStream is=
-    				ClassLoader.getSystemResourceAsStream(filename);
+    				ClassLoader.getSystemResourceAsStream(filepath);
     		
     		if (is != null) {
     			
@@ -259,7 +263,7 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     					}
     					
     					java.io.File resultFile=new java.io.File(resultsDir,
-    										m_name+"@"+role.getName()+".generated");
+    										filename+".generated");
     					
     					if (resultFile.exists() == false) {
     						try {
@@ -279,7 +283,7 @@ public class BPMN2ChoreoToBPMN2ProcessGeneratorTest {
     					}
     				} else {
     					result.addError(this, new Throwable("Unable to obtain URL for BPMN2 model source '"+
-    							m_name+"' role "+role.getName()+": "+url));
+    							_name+"' role "+role.getName()+": "+url));
     				}
     			}
     		}

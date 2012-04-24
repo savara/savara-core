@@ -6,25 +6,35 @@ import xsd "{http://www.w3.org/2001/XMLSchema}string" as IDType, "{http://www.w3
 protocol PurchaseGoodsWithCancel(role Buyer) {
 	Buyer introduces Store;
 
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer to Store;
 
 	do {
 		Store introduces CreditAgency;
 
+		[[ Correlation(request=checkCredit) ]]
 		checkCredit(CreditCheckRequest) from Store to CreditAgency;
 	
 		choice at CreditAgency {
+			[[ Correlation(replyTo=checkCredit) ]]
 			checkCredit(CreditRating) from CreditAgency to Store;
+			[[ Correlation(replyTo=buy) ]]
 			buy(BuyConfirmed) from Store to Buyer;
 		} or {
+			[[ Correlation(replyTo=checkCredit) ]]
 			checkCredit(CustomerUnknown) from CreditAgency to Store;
+			[[ Correlation(replyTo=buy) ]]
+			[[ Fault(name=AccountNotFound) ]]
 			buy(AccountNotFound) from Store to Buyer;
 		}
 	} interrupt {
+		[[ Correlation(request=cancel) ]]
 		cancel(CancelOrder) from Buyer to Store;
 	
 	} interrupt {
+		[[ Correlation(request=cancel2) ]]
 		cancel(OtherRequest) from Buyer to Store;
-		OtherResponse from Store to Buyer;
+		[[ Correlation(replyTo=cancel2) ]]
+		cancel(OtherResponse) from Store to Buyer;
 	}
 }

@@ -7,15 +7,21 @@ protocol Parallel1 (role Buyer) {
 	Buyer introduces Store;
 	Store introduces CreditAgency;
 
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer to Store;
+
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Store to CreditAgency;
 	
 	parallel {
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditRating) from CreditAgency to Store;
 	} and {
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditRating) from CreditAgency to Store;
 	}
 	
+	[[ Correlation(replyTo=buy) ]]
 	buy(BuyConfirmed) from Store to Buyer;
 	
 }
