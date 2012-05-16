@@ -2,7 +2,9 @@ import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
 import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound;
 protocol CustomerUnknown at Buyer {
 	Buyer introduces Store;
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) to Store;
 	[[ Fault(name=AccountNotFound) ]]
+	[[ Correlation(replyTo=buy) ]]
 	buy(AccountNotFound) from Store;
 }

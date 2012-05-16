@@ -1,6 +1,8 @@
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest;
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
 protocol SuccessfulPurchase at Logistics(role Store) {
+	[[ Correlation(request=deliver) ]]
 	deliver(DeliveryRequest) from Store;
-	delivery(DeliveryConfirmed) to Store;
+	[[ Correlation(replyTo=deliver) ]]
+	deliver(DeliveryConfirmed) to Store;
 }

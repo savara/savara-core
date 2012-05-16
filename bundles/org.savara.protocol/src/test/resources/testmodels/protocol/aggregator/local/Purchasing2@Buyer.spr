@@ -4,14 +4,18 @@ import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotF
 import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
 protocol Purchasing at Buyer {
 	Buyer introduces Store;
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) to Store;
 	choice at Store {
+		[[ Correlation(replyTo=buy) ]]
 		buy(BuyConfirmed) from Store;
 	} or {
 		[[ Fault(name=AccountNotFound) ]]
+		[[ Correlation(replyTo=buy) ]]
 		buy(AccountNotFound) from Store;
 	} or {
 		[[ Fault(name=BuyFailed) ]]
+		[[ Correlation(replyTo=buy) ]]
 		buy(BuyFailed) from Store;
 	}
 }

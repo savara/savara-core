@@ -9,23 +9,32 @@ import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotF
 import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
 protocol Purchasing at Store(role Buyer) {
 	Store introduces CreditAgency;
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer;
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) to CreditAgency;
 	choice at CreditAgency {
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditRating) from CreditAgency;
 		choice at Store {
 			Store introduces Logistics;
+			[[ Correlation(request=deliver) ]]
 			deliver(DeliveryRequest) to Logistics;
-			delivery(DeliveryConfirmed) from Logistics;
+			[[ Correlation(replyTo=deliver) ]]
+			deliver(DeliveryConfirmed) from Logistics;
+			[[ Correlation(replyTo=buy) ]]
 			buy(BuyConfirmed) to Buyer;
 		} or {
 			[[ Fault(name=BuyFailed) ]]
+			[[ Correlation(replyTo=buy) ]]
 			buy(BuyFailed) to Buyer;
 		}
 	} or {
 		[[ Fault(name=CustomerUnknown) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CustomerUnknown) from CreditAgency;
 		[[ Fault(name=AccountNotFound) ]]
+		[[ Correlation(replyTo=buy) ]]
 		buy(AccountNotFound) to Buyer;
 	}
 }

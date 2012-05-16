@@ -4,10 +4,14 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as Cust
 import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound;
 protocol CustomerUnknown at Store(role Buyer) {
 	Store introduces CreditAgency;
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer;
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) to CreditAgency;
 	[[ Fault(name=CustomerUnknown) ]]
+	[[ Correlation(replyTo=checkCredit) ]]
 	checkCredit(CustomerUnknown) from CreditAgency;
 	[[ Fault(name=AccountNotFound) ]]
+	[[ Correlation(replyTo=buy) ]]
 	buy(AccountNotFound) to Buyer;
 }

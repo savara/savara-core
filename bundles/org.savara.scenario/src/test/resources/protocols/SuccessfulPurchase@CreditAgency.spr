@@ -1,6 +1,8 @@
 import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest;
 import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
 protocol SuccessfulPurchase at CreditAgency(role Store) {
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Store;
+	[[ Correlation(replyTo=checkCredit) ]]
 	checkCredit(CreditRating) to Store;
 }

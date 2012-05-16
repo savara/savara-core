@@ -6,10 +6,16 @@ import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as Deliv
 import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
 protocol SuccessfulPurchase at Store(role Buyer) {
 	Store introduces CreditAgency, Logistics;
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer;
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) to CreditAgency;
+	[[ Correlation(replyTo=checkCredit) ]]
 	checkCredit(CreditRating) from CreditAgency;
+	[[ Correlation(request=deliver) ]]
 	deliver(DeliveryRequest) to Logistics;
-	delivery(DeliveryConfirmed) from Logistics;
+	[[ Correlation(replyTo=deliver) ]]
+	deliver(DeliveryConfirmed) from Logistics;
+	[[ Correlation(replyTo=buy) ]]
 	buy(BuyConfirmed) to Buyer;
 }

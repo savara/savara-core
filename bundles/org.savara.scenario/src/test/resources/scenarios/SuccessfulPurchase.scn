@@ -28,10 +28,10 @@
     <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="deliver" role="afab8c91-2980-401b-9e7f-f190abe9cba7" id="1329e3d4-c9f3-485a-9ef5-182587dec6ef">
         <parameter value="DeliveryRequest.xml" type="{http://www.jboss.org/examples/logistics}DeliveryRequest"/>
     </event>
-    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="delivery" role="afab8c91-2980-401b-9e7f-f190abe9cba7" id="dbfdf811-a0ea-4466-96e8-3094faa67fab">
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="deliver" role="afab8c91-2980-401b-9e7f-f190abe9cba7" id="dbfdf811-a0ea-4466-96e8-3094faa67fab">
         <parameter value="DeliveryConfirmed.xml" type="{http://www.jboss.org/examples/logistics}DeliveryConfirmed"/>
     </event>
-    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="delivery" role="231e55ce-3f9f-4f14-9a6d-9075aab58d35" id="a5aa647d-f33a-4350-ac90-9d584e91e9d7">
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="deliver" role="231e55ce-3f9f-4f14-9a6d-9075aab58d35" id="a5aa647d-f33a-4350-ac90-9d584e91e9d7">
         <parameter value="DeliveryConfirmed.xml" type="{http://www.jboss.org/examples/logistics}DeliveryConfirmed"/>
     </event>
     <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="buy" role="231e55ce-3f9f-4f14-9a6d-9075aab58d35" id="e42dbd0e-3c3d-4205-9840-cbe3dc06c654">

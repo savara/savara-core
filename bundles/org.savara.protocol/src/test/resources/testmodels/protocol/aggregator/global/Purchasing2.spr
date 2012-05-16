@@ -10,22 +10,31 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as Cust
 protocol Purchasing(role Buyer) {
 	Buyer introduces Store;
 	Store introduces CreditAgency;
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer to Store;
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Store to CreditAgency;
 	choice at CreditAgency {
 		[[ Fault(name=CustomerUnknown) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CustomerUnknown) from CreditAgency to Store;
 		[[ Fault(name=AccountNotFound) ]]
+		[[ Correlation(replyTo=buy) ]]
 		buy(AccountNotFound) from Store to Buyer;
 	} or {
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditRating) from CreditAgency to Store;
 		choice at Store {
 			[[ Fault(name=BuyFailed) ]]
+			[[ Correlation(replyTo=buy) ]]
 			buy(BuyFailed) from Store to Buyer;
 		} or {
 			Store introduces Logistics;
+			[[ Correlation(request=deliver) ]]
 			deliver(DeliveryRequest) from Store to Logistics;
-			delivery(DeliveryConfirmed) from Logistics to Store;
+			[[ Correlation(replyTo=deliver) ]]
+			deliver(DeliveryConfirmed) from Logistics to Store;
+			[[ Correlation(replyTo=buy) ]]
 			buy(BuyConfirmed) from Store to Buyer;
 		}
 	}

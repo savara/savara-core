@@ -72,6 +72,7 @@ public class ProtocolModelGeneratorImplTest {
 			}
 			
 		} catch(Exception e) {
+			e.printStackTrace();
 			fail("Failed to load scenario: "+e);
 		}
 	}

@@ -90,6 +90,16 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, se.getFaultName());
 				in.getAnnotations().add(annotation);
 			}
+			
+			if (isRequest(scenario, pm.getProtocol(), se)) {
+				Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+				annotation.getProperties().put(AnnotationDefinitions.REQUEST_PROPERTY, se.getOperationName());
+				in.getAnnotations().add(annotation);
+			} else {
+				Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+				annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY, se.getOperationName());
+				in.getAnnotations().add(annotation);
+			}
 
 			for (Parameter p : se.getParameter()) {
 				TypeReference tref=getTypeReference(p.getType(), pm);
@@ -121,6 +131,16 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 			if (re.getFaultName() != null && re.getFaultName().trim().length() > 0) {
 				Annotation annotation=new Annotation(AnnotationDefinitions.FAULT);
 				annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY, re.getFaultName());
+				in.getAnnotations().add(annotation);
+			}
+
+			if (isRequest(scenario, pm.getProtocol(), re)) {
+				Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+				annotation.getProperties().put(AnnotationDefinitions.REQUEST_PROPERTY, re.getOperationName());
+				in.getAnnotations().add(annotation);
+			} else {
+				Annotation annotation=new Annotation(AnnotationDefinitions.CORRELATION);
+				annotation.getProperties().put(AnnotationDefinitions.REPLY_TO_PROPERTY, re.getOperationName());
 				in.getAnnotations().add(annotation);
 			}
 
@@ -243,5 +263,47 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 		}
 		
 		return(ret);
+	}
+	
+	/**
+	 * This method determines if this message event relates to a request.
+	 * 
+	 * @param me The message event
+	 * @return Whether it is a request
+	 */
+	protected static boolean isRequest(Scenario scenario, Protocol p, MessageEvent me) {
+		boolean ret=false;
+		
+		// Need to find event's other role
+		String otherRole=null;
+				
+		for (Link link : scenario.getLink()) {
+			if (me instanceof SendEvent && link.getSource() == me) {
+				otherRole=((Role)((MessageEvent)link.getTarget()).getRole()).getName();
+				break;
+			} else if (me instanceof ReceiveEvent && link.getTarget() == me) {
+				otherRole=((Role)((MessageEvent)link.getSource()).getRole()).getName();
+				break;
+			}
+		}
+		
+		if (otherRole != null) {
+			// Check if client role
+			if (p.getParameterDefinitions().size() > 0 &&
+					p.getParameterDefinitions().get(0).getName().equals(otherRole)) {
+				ret = me instanceof ReceiveEvent;
+				
+			} else if (me instanceof SendEvent) {
+				
+				if (p.getBlock().size() > 0 &&
+						p.getBlock().get(0) instanceof Introduces) {
+					Introduces intro = (Introduces)p.getBlock().get(0);
+
+					ret = intro.getIntroducedRole(otherRole) != null;
+				}
+			}
+		}
+		
+		return (ret);
 	}
 }

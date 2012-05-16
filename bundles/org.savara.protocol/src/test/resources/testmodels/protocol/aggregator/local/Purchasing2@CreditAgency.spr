@@ -2,11 +2,14 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as C
 import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
 import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown;
 protocol Purchasing at CreditAgency(role Store) {
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Store;
 	choice at CreditAgency {
 		[[ Fault(name=CustomerUnknown) ]]
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CustomerUnknown) to Store;
 	} or {
+		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditRating) to Store;
 	}
 }

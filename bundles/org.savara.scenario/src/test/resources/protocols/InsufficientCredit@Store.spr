@@ -4,9 +4,13 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditR
 import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
 protocol InsufficientCredit at Store(role Buyer) {
 	Store introduces CreditAgency;
+	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer;
+	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) to CreditAgency;
+	[[ Correlation(replyTo=checkCredit) ]]
 	checkCredit(CreditRating) from CreditAgency;
 	[[ Fault(name=BuyFailed) ]]
+	[[ Correlation(replyTo=buy) ]]
 	buy(BuyFailed) to Buyer;
 }
