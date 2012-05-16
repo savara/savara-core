@@ -56,6 +56,9 @@ import org.scribble.protocol.util.TypesUtil;
  */
 public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 
+	private static final String NAMESPACE_PREFIX = "http://namespace/";
+	private static final String INTERFACE_SUFFIX = "Interface";
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -213,6 +216,8 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 			ret.getProtocol().setLocatedRole(new org.scribble.protocol.model.Role(role));
 			ret.getProtocol().setBlock(new Block());
 			
+			createInterface(ret.getProtocol(), role);
+			
 			if (event instanceof ReceiveEvent) {
 				// Need to find send event's role
 				for (Link link : scenario.getLink()) {
@@ -254,6 +259,8 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 						
 						if (intro.getIntroducedRole(otherRole) == null) {
 							intro.getIntroducedRoles().add(new org.scribble.protocol.model.Role(otherRole));
+							
+							createInterface(ret.getProtocol(), otherRole);
 						}
 					}
 					
@@ -263,6 +270,24 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 		}
 		
 		return(ret);
+	}
+	
+	/**
+	 * This method creates an interface annotation for the supplied role
+	 * on the supplied protocol.
+	 * 
+	 * @param p The protocol
+	 * @param role The role
+	 */
+	protected void createInterface(Protocol p, String role) {
+		Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
+		annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+				NAMESPACE_PREFIX+role);
+		annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
+				role+INTERFACE_SUFFIX);
+		annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY,
+				role);
+		p.getAnnotations().add(annotation);
 	}
 	
 	/**

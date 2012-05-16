@@ -4,6 +4,9 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditR
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest;
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
 import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
+[[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
+[[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://namespace/CreditAgency) ]]
+[[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://namespace/Logistics) ]]
 protocol SuccessfulPurchase at Store(role Buyer) {
 	Store introduces CreditAgency, Logistics;
 	[[ Correlation(request=buy) ]]

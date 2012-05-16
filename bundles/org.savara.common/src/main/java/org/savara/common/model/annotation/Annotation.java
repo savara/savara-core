@@ -98,6 +98,30 @@ public class Annotation implements org.scribble.common.model.Annotation {
 		return(m_properties);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean equals(Object obj) {
+		
+		if (obj instanceof Annotation) {
+			Annotation other=(Annotation)obj;
+			
+			if (getName().equals(other.getName()) &&
+					getProperties().equals(other.getProperties())) {
+				return (true);
+			}
+		}
+		
+		return (false);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public int hashCode() {
+		return(getName().hashCode());
+	}
+	
 	public String toString() {
 		StringBuffer buf=new StringBuffer();
 		

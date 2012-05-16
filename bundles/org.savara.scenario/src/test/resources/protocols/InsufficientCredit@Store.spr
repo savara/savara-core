@@ -2,6 +2,8 @@ import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
 import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest;
 import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
 import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
+[[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
+[[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://namespace/CreditAgency) ]]
 protocol InsufficientCredit at Store(role Buyer) {
 	Store introduces CreditAgency;
 	[[ Correlation(request=buy) ]]

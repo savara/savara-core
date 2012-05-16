@@ -23,6 +23,7 @@ import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.protocol.aggregator.ProtocolAggregator;
 import org.savara.protocol.internal.aggregator.LocalProtocolUnit.ActivityCursor;
+import org.scribble.common.model.Annotation;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Choice;
@@ -69,6 +70,11 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		GlobalProtocolUnit gpu=new GlobalProtocolUnit(ret);
 		
 		for (ProtocolModel local : locals) {
+			
+			// Merge annotations
+			mergeAnnotations(ret.getProtocol().getAnnotations(),
+					local.getProtocol().getAnnotations(), handler);
+			
 			if (protocol.getName() == null) {
 				protocol.setName(local.getProtocol().getName());
 			} else if (!protocol.getName().equals(local.getProtocol().getName())) {
@@ -221,6 +227,11 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		String introducingRole=null;
 		
 		for (ProtocolModel lm : locals) {
+			
+			// Merge annotations
+			mergeAnnotations(ret.getProtocol().getAnnotations(),
+					lm.getProtocol().getAnnotations(), handler);
+			
 			if (role == null) {
 				role = lm.getProtocol().getLocatedRole();
 			} else if (!role.equals(lm.getProtocol().getLocatedRole())) {
@@ -322,6 +333,19 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 					}
 				} else if (implist instanceof ProtocolImportList) {
 					// TODO:
+				}
+			}
+		}
+	}
+	
+	protected void mergeAnnotations(java.util.Collection<Annotation> main,
+			java.util.Collection<Annotation> source, FeedbackHandler handler) {
+		
+		for (Annotation ann : source) {
+			if (ann instanceof org.savara.common.model.annotation.Annotation) {
+				if (!main.contains(ann)) {
+					main.add(new org.savara.common.model.annotation.Annotation(
+							(org.savara.common.model.annotation.Annotation)ann));
 				}
 			}
 		}

@@ -7,6 +7,9 @@ import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
 import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown;
 import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound;
 import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
+[[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
+[[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://namespace/CreditAgency) ]]
+[[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://namespace/Logistics) ]]
 protocol Purchasing at Store(role Buyer) {
 	Store introduces CreditAgency;
 	[[ Correlation(request=buy) ]]
