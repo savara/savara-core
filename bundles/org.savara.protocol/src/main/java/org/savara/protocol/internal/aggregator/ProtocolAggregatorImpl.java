@@ -348,6 +348,7 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 	
 	protected void mergeAnnotations(java.util.List<Annotation> main,
 			java.util.List<Annotation> source, FeedbackHandler handler) {
+		int ansCount=0;
 		
 		for (Annotation ann : source) {
 			if (ann instanceof org.savara.common.model.annotation.Annotation) {
@@ -362,8 +363,21 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 							AnnotationDefinitions.TYPE, AnnotationDefinitions.NAMESPACE_PROPERTY,
 								((org.savara.common.model.annotation.Annotation) ann).getProperties().
 									get( AnnotationDefinitions.NAMESPACE_PROPERTY)) == null) {
-						main.add(new org.savara.common.model.annotation.Annotation(
-								(org.savara.common.model.annotation.Annotation)ann));
+						
+						org.savara.common.model.annotation.Annotation newAnn=
+								new org.savara.common.model.annotation.Annotation(
+								(org.savara.common.model.annotation.Annotation)ann);
+						
+						// Check if prefix is duplicated
+						if (AnnotationDefinitions.getAnnotationWithProperty(main,
+							AnnotationDefinitions.TYPE, AnnotationDefinitions.PREFIX_PROPERTY,
+								((org.savara.common.model.annotation.Annotation) ann).getProperties().
+									get( AnnotationDefinitions.PREFIX_PROPERTY)) != null) {
+							newAnn.getProperties().put(AnnotationDefinitions.PREFIX_PROPERTY,
+									"ans"+(ansCount++));
+						}
+						
+						main.add(newAnn);
 					}
 				}
 			}

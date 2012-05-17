@@ -142,6 +142,7 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 	
 	protected void initialize(ProtocolModel pm, org.savara.bpmn2.model.TDefinitions defns) {
 		java.util.Map<String, String> nsprefix=new java.util.HashMap<String, String>();
+		java.util.List<String> defaultprefix=new java.util.Vector<String>();
 		java.util.Map<String, String> nslocation=new java.util.HashMap<String, String>();
 		
 		for (JAXBElement<? extends TRootElement> elem : defns.getRootElement()) {
@@ -161,12 +162,23 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 					continue;
 				}
 				
-				// Store namespace
-				if (itemdefn.getStructureRef().getPrefix() != null) {
-					nsprefix.put(itemdefn.getStructureRef().getPrefix(),
-									itemdefn.getStructureRef().getNamespaceURI());
+				// Store namespace - and if prefix is not set, use a default, but ensure
+				// only one default prefix is used per namespace uri
+				String prefix=itemdefn.getStructureRef().getPrefix();
+				if (prefix == null || prefix.trim().length() == 0) {
+					if (!defaultprefix.contains(itemdefn.getStructureRef().getNamespaceURI())) {
+						prefix = "defns"+nsprefix.size();
+						defaultprefix.add(itemdefn.getStructureRef().getNamespaceURI());
+					} else {
+						prefix = null;
+					}
 				}
 				
+				if (prefix != null) {
+					nsprefix.put(prefix, itemdefn.getStructureRef().getNamespaceURI());
+				}
+				
+				// Create the type import
 				TypeImport ti=new TypeImport();
 				ti.setName(message.getName());
 				
@@ -191,9 +203,9 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 					}
 				}
 				
-				if (location != null) {
+				if (location != null && prefix != null) {
 					tilist.setLocation(location);
-					nslocation.put(itemdefn.getStructureRef().getPrefix(), location);
+					nslocation.put(prefix, location);
 				}
 				
 				tilist.getTypeImports().add(ti);

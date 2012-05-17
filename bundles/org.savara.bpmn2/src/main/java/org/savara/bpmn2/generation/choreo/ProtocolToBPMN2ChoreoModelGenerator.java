@@ -208,7 +208,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 	protected void initImports(TDefinitions defns, ProtocolModel pm) {
 		java.util.List<Annotation> anns=AnnotationDefinitions.getAnnotations(pm.getProtocol().getAnnotations(),
 						AnnotationDefinitions.TYPE);
-
+		
 		for (Annotation ann : anns) {
 			String ns=(String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY);
 			String loc=(String)ann.getProperties().get(AnnotationDefinitions.LOCATION_PROPERTY);
