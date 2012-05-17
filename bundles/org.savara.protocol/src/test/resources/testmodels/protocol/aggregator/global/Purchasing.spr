@@ -10,11 +10,11 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as Cust
 [[ Protocol(namespace=http://namespace) ]]
 [[ Interface(name=BuyerInterface,role=Buyer,namespace=http://namespace/Buyer) ]]
 [[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
-[[ Type(namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(prefix=ns0,namespace=http://www.jboss.org/examples/store) ]]
 [[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://namespace/CreditAgency) ]]
-[[ Type(namespace=http://www.jboss.org/examples/creditAgency) ]]
+[[ Type(prefix=ns1,namespace=http://www.jboss.org/examples/creditAgency) ]]
 [[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://namespace/Logistics) ]]
-[[ Type(namespace=http://www.jboss.org/examples/logistics) ]]
+[[ Type(prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
 protocol Purchasing(role Buyer) {
 	Buyer introduces Store;
 	Store introduces CreditAgency;

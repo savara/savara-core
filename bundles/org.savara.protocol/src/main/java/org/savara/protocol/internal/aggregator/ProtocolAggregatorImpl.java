@@ -346,14 +346,25 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		}
 	}
 	
-	protected void mergeAnnotations(java.util.Collection<Annotation> main,
-			java.util.Collection<Annotation> source, FeedbackHandler handler) {
+	protected void mergeAnnotations(java.util.List<Annotation> main,
+			java.util.List<Annotation> source, FeedbackHandler handler) {
 		
 		for (Annotation ann : source) {
 			if (ann instanceof org.savara.common.model.annotation.Annotation) {
 				if (!main.contains(ann)) {
-					main.add(new org.savara.common.model.annotation.Annotation(
-							(org.savara.common.model.annotation.Annotation)ann));
+					
+					// If annotation is a Type, then need to check if namespace
+					// has already been declare
+					if (!((org.savara.common.model.annotation.Annotation) ann).getName().equals(
+							AnnotationDefinitions.TYPE) ||
+							AnnotationDefinitions.getAnnotationWithProperty(
+									main,
+							AnnotationDefinitions.TYPE, AnnotationDefinitions.NAMESPACE_PROPERTY,
+								((org.savara.common.model.annotation.Annotation) ann).getProperties().
+									get( AnnotationDefinitions.NAMESPACE_PROPERTY)) == null) {
+						main.add(new org.savara.common.model.annotation.Annotation(
+								(org.savara.common.model.annotation.Annotation)ann));
+					}
 				}
 			}
 		}

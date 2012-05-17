@@ -8,11 +8,11 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as Cust
 import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound;
 import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
 [[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
-[[ Type(namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(prefix=ns0,namespace=http://www.jboss.org/examples/store) ]]
 [[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://namespace/CreditAgency) ]]
-[[ Type(namespace=http://www.jboss.org/examples/creditAgency) ]]
+[[ Type(prefix=ns1,namespace=http://www.jboss.org/examples/creditAgency) ]]
 [[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://namespace/Logistics) ]]
-[[ Type(namespace=http://www.jboss.org/examples/logistics) ]]
+[[ Type(prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
 protocol Purchasing at Store(role Buyer) {
 	Store introduces CreditAgency;
 	[[ Correlation(request=buy) ]]

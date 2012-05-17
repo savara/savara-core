@@ -2,7 +2,7 @@ import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
 import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
 [[ Interface(name=BuyerInterface,role=Buyer,namespace=http://namespace/Buyer) ]]
 [[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
-[[ Type(namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(prefix=ns0,namespace=http://www.jboss.org/examples/store) ]]
 protocol InsufficientCredit at Buyer {
 	Buyer introduces Store;
 	[[ Correlation(request=buy) ]]

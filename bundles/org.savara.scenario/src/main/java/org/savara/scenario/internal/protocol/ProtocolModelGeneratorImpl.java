@@ -194,11 +194,18 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 			model.getImports().add(il);
 			
 			// Create annotation to provide type details
-			org.savara.common.model.annotation.Annotation protocolAnn=
-					new org.savara.common.model.annotation.Annotation(AnnotationDefinitions.TYPE);
-			protocolAnn.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY, qname.getNamespaceURI());
-
-			if (!model.getProtocol().getAnnotations().contains(protocolAnn)) {
+			if (AnnotationDefinitions.getAnnotationWithProperty(model.getProtocol().getAnnotations(),
+					AnnotationDefinitions.TYPE, AnnotationDefinitions.NAMESPACE_PROPERTY,
+					qname.getNamespaceURI()) == null) {
+			
+				int nsCount=AnnotationDefinitions.getAnnotations(model.getProtocol().getAnnotations(),
+											AnnotationDefinitions.TYPE).size();
+				
+				org.savara.common.model.annotation.Annotation protocolAnn=
+						new org.savara.common.model.annotation.Annotation(AnnotationDefinitions.TYPE);
+				protocolAnn.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY, qname.getNamespaceURI());
+				protocolAnn.getProperties().put(AnnotationDefinitions.PREFIX_PROPERTY, "ns"+nsCount);
+	
 				model.getProtocol().getAnnotations().add(protocolAnn);
 			}
 		}
