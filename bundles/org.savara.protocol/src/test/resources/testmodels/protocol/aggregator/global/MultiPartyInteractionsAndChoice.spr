@@ -4,6 +4,7 @@ import CreditOk;
 import Confirmation;
 import OutOfStock;
 import InsufficientCredit;
+[[ Protocol(namespace=http://namespace) ]]
 protocol MultiPartyInteractionsAndChoice(role Buyer) {
 	Buyer introduces Broker;
 	Broker introduces CreditAgency;

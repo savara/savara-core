@@ -1,6 +1,7 @@
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest;
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
 [[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://namespace/Logistics) ]]
+[[ Type(namespace=http://www.jboss.org/examples/logistics) ]]
 protocol Purchasing at Logistics(role Store) {
 	[[ Correlation(request=deliver) ]]
 	deliver(DeliveryRequest) from Store;

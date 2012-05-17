@@ -319,25 +319,30 @@ public class ScenarioSimulatorMain {
 				Object model=rsim.getModel(new SimulationModel(modelFile.getAbsolutePath(), is),
 										locator);
 				
-				// Check if model should be projected to a particular role
-				if (rsim.getModelRoles(model).size() == 0) {
-					ret.setModel(model);
-				} else {
-					Role localRole=role;
-					
-					if (details.getModelRole() != null) {
-						localRole = new Role();
-						localRole.setName(details.getModelRole());
-					}
-					
-					model = rsim.getModelForRole(model, localRole, locator);
-					
-					if (model == null) {
-						// Error occurred loading model, so don't return context
-						ret = null;
-					} else {
+				if (model != null) {
+					// Check if model should be projected to a particular role
+					if (rsim.getModelRoles(model).size() == 0) {
 						ret.setModel(model);
+					} else {
+						Role localRole=role;
+						
+						if (details.getModelRole() != null) {
+							localRole = new Role();
+							localRole.setName(details.getModelRole());
+						}
+						
+						model = rsim.getModelForRole(model, localRole, locator);
+						
+						if (model == null) {
+							// Error occurred loading model, so don't return context
+							ret = null;
+						} else {
+							ret.setModel(model);
+						}
 					}
+				} else {
+					// No model, so return no context
+					ret = null;
 				}
 				
 				is.close();

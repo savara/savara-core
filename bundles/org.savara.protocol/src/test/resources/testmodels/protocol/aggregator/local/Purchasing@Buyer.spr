@@ -4,6 +4,7 @@ import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotF
 import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
 [[ Interface(name=BuyerInterface,role=Buyer,namespace=http://namespace/Buyer) ]]
 [[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
+[[ Type(namespace=http://www.jboss.org/examples/store) ]]
 protocol Purchasing at Buyer {
 	Buyer introduces Store;
 	[[ Correlation(request=buy) ]]

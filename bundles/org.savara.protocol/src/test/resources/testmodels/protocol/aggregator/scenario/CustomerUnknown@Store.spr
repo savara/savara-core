@@ -3,7 +3,9 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as C
 import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown;
 import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound;
 [[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
+[[ Type(namespace=http://www.jboss.org/examples/store) ]]
 [[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://namespace/CreditAgency) ]]
+[[ Type(namespace=http://www.jboss.org/examples/creditAgency) ]]
 protocol CustomerUnknown at Store(role Buyer) {
 	Store introduces CreditAgency;
 	[[ Correlation(request=buy) ]]

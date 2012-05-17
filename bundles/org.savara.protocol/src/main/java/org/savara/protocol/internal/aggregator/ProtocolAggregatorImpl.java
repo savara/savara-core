@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.aggregator.ProtocolAggregator;
 import org.savara.protocol.internal.aggregator.LocalProtocolUnit.ActivityCursor;
 import org.scribble.common.model.Annotation;
@@ -59,6 +60,13 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		
 		Protocol protocol=new Protocol();		
 		ret.setProtocol(protocol);
+		
+		// Define protocol namespace
+		org.savara.common.model.annotation.Annotation protocolAnn=
+					new org.savara.common.model.annotation.Annotation(AnnotationDefinitions.PROTOCOL);
+		protocolAnn.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY, "http://namespace");
+		
+		protocol.getAnnotations().add(protocolAnn);
 		
 		// Merge imports
 		mergeImports(ret, locals, handler);

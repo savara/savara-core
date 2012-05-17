@@ -192,6 +192,15 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 			il.setFormat(TypeSystem.XSD);
 			il.getTypeImports().add(ti);
 			model.getImports().add(il);
+			
+			// Create annotation to provide type details
+			org.savara.common.model.annotation.Annotation protocolAnn=
+					new org.savara.common.model.annotation.Annotation(AnnotationDefinitions.TYPE);
+			protocolAnn.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY, qname.getNamespaceURI());
+
+			if (!model.getProtocol().getAnnotations().contains(protocolAnn)) {
+				model.getProtocol().getAnnotations().add(protocolAnn);
+			}
 		}
 		
 		return(ret);
