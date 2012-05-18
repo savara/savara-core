@@ -45,6 +45,26 @@ public class ProtocolModelGeneratorImplTest {
 		testScenarioToProtocolModels("InsufficientCredit");
 	}
 	
+	@Test
+	public void testFirstOfferAccept() {
+		testScenarioToProtocolModels("FirstOfferAccept");
+	}
+	
+	@Test
+	public void testSecondOfferAccept() {
+		testScenarioToProtocolModels("SecondOfferAccept");
+	}
+	
+	@Test
+	public void testThirdOfferAccept() {
+		testScenarioToProtocolModels("ThirdOfferAccept");
+	}
+	
+	@Test
+	public void testThirdOfferReject() {
+		testScenarioToProtocolModels("ThirdOfferRejected");
+	}
+	
 	protected void testScenarioToProtocolModels(String scenarioName) {
 		try {
 			String scenarioPath="scenarios/"+scenarioName+".scn";

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scenario xmlns="http://www.savara.org/scenario" name="SecondOfferAccept">
+    <role name="Buyer" id="e0120f90-5637-4a8e-91a5-6acee7a63a58"/>
+    <role name="Seller" id="2434bef8-9515-4e41-8a3a-2db6fe0f7d26"/>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="d82b2878-dc70-4967-9d63-78521682b384">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="561e974b-5a43-47d3-b356-f8d5a9173161">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="1185f6f3-2e02-4b5d-955c-7b2a74f5e2af">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="efbb1750-bd3d-4a0e-adb8-96e91d1950d4">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="74970b01-51c3-4a47-8b5d-5a98ecb86964">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="b3918745-a6e7-4717-a038-eacb4ecb2c78">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="814771bb-c7fc-4e85-83b0-8b6c5d1ae1a1">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="21fde8f3-e848-48bf-acc1-bb3128fd52ec">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="payment" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="0dd53483-e952-4d91-8844-ff1ae5d71ce5">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Payment"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="payment" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="f4d16d1a-120a-4e70-96b2-54de712cb90c">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Payment"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="payment" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="ac31d842-eb34-4fb1-8f1b-191c42fbd85c">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Receipt"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="payment" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="6ecd69ee-8a53-41da-be9e-d0a48b9c4712">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Receipt"/>
+    </event>
+    <link target="561e974b-5a43-47d3-b356-f8d5a9173161" source="d82b2878-dc70-4967-9d63-78521682b384"/>
+    <link target="efbb1750-bd3d-4a0e-adb8-96e91d1950d4" source="1185f6f3-2e02-4b5d-955c-7b2a74f5e2af"/>
+    <link target="f4d16d1a-120a-4e70-96b2-54de712cb90c" source="0dd53483-e952-4d91-8844-ff1ae5d71ce5"/>
+    <link target="6ecd69ee-8a53-41da-be9e-d0a48b9c4712" source="ac31d842-eb34-4fb1-8f1b-191c42fbd85c"/>
+    <link target="b3918745-a6e7-4717-a038-eacb4ecb2c78" source="74970b01-51c3-4a47-8b5d-5a98ecb86964"/>
+    <link target="21fde8f3-e848-48bf-acc1-bb3128fd52ec" source="814771bb-c7fc-4e85-83b0-8b6c5d1ae1a1"/>
+</scenario>

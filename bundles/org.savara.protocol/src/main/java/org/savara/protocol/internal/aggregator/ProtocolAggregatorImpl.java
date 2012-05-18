@@ -295,6 +295,8 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		// Merge paths from individual local models into single local model
 		mergePaths(sourcePaths, b, handler);
 		
+		postProcessMerged(b, handler);
+		
 		// Establish 'introduces' clauses in the correct scopes
 		for (Role ir : introducedRoles) {
 			

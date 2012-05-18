@@ -19,6 +19,7 @@ package org.savara.protocol.internal.aggregator;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.logging.FeedbackHandler;
@@ -563,6 +564,30 @@ public class ProtocolAggregatorImplTest {
 		testAggregateGlobalModel("MultiPartyInteractionsAndChoice", new String[] {
 				"Buyer", "Broker", "CreditAgency", "Seller"});
 	}
+	
+	@Test
+	public void testBarterLocalAggregationAtBuyer() {
+		testAggregateLocalModel("Barter", "Buyer", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept"});
+				// TODO: Allow alternate paths after repetition
+				//"FirstOfferRejected", "SecondOfferRejected", "ThirdOfferRejected"});
+	}
+	
+	@Test
+	public void testBarterLocalAggregationAtSeller() {
+		testAggregateLocalModel("Barter", "Seller", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept"});
+				// TODO: Allow alternate paths after repetition
+				//"FirstOfferRejected", "SecondOfferRejected", "ThirdOfferRejected"});
+	}
+	
+	@Test
+	@Ignore("Subject to SAVARA-335 being fixed")
+	public void testBarter() {
+		testAggregateGlobalModel("Barter", new String[] {
+				"Buyer", "Seller"});
+	}
+	
 	
 	protected void testAggregateLocalModel(String localName, String role,
 						String[] scenarioLocalModels) {

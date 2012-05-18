@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<scenario xmlns="http://www.savara.org/scenario" name="ThirdOfferRejected">
+    <role name="Buyer" id="e0120f90-5637-4a8e-91a5-6acee7a63a58"/>
+    <role name="Seller" id="2434bef8-9515-4e41-8a3a-2db6fe0f7d26"/>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="d82b2878-dc70-4967-9d63-78521682b384">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="561e974b-5a43-47d3-b356-f8d5a9173161">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="1185f6f3-2e02-4b5d-955c-7b2a74f5e2af">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="efbb1750-bd3d-4a0e-adb8-96e91d1950d4">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="ca73147b-6ad5-497b-81df-ebf3b57cbdcb">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="69129455-7be5-4803-a77c-d27ba0d194a5">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="fb57b850-8bc4-4e07-9bc1-c9ba5f9050b1">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="201103e0-70c5-41a4-af79-fb42d40583d0">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="2d0a5493-57ba-4094-b6be-dfcfc4fbfcfc">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="19366fa6-837e-412a-80f8-a56a17abfc15">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Offer"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="offer" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="d5f34790-f767-46dd-8156-131b6e714bd3">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="offer" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="7ce85bac-f869-454f-9c57-b4c64ca663d2">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Decision"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="SendEvent" operationName="quit" role="e0120f90-5637-4a8e-91a5-6acee7a63a58" id="0dd53483-e952-4d91-8844-ff1ae5d71ce5">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Quit"/>
+    </event>
+    <event xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ReceiveEvent" operationName="quit" role="2434bef8-9515-4e41-8a3a-2db6fe0f7d26" id="f4d16d1a-120a-4e70-96b2-54de712cb90c">
+        <parameter value="" type="{http://www.savara.org/examples/barter}Quit"/>
+    </event>
+    <link target="561e974b-5a43-47d3-b356-f8d5a9173161" source="d82b2878-dc70-4967-9d63-78521682b384"/>
+    <link target="efbb1750-bd3d-4a0e-adb8-96e91d1950d4" source="1185f6f3-2e02-4b5d-955c-7b2a74f5e2af"/>
+    <link target="f4d16d1a-120a-4e70-96b2-54de712cb90c" source="0dd53483-e952-4d91-8844-ff1ae5d71ce5"/>
+    <link target="69129455-7be5-4803-a77c-d27ba0d194a5" source="ca73147b-6ad5-497b-81df-ebf3b57cbdcb"/>
+    <link target="201103e0-70c5-41a4-af79-fb42d40583d0" source="fb57b850-8bc4-4e07-9bc1-c9ba5f9050b1"/>
+    <link target="19366fa6-837e-412a-80f8-a56a17abfc15" source="2d0a5493-57ba-4094-b6be-dfcfc4fbfcfc"/>
+    <link target="7ce85bac-f869-454f-9c57-b4c64ca663d2" source="d5f34790-f767-46dd-8156-131b6e714bd3"/>
+</scenario>
