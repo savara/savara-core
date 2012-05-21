@@ -30,6 +30,7 @@ import org.scribble.protocol.model.Introduces;
 import org.scribble.protocol.model.MessageSignature;
 import org.scribble.protocol.model.ParameterDefinition;
 import org.scribble.protocol.model.ProtocolModel;
+import org.scribble.protocol.model.Repeat;
 import org.scribble.protocol.model.Role;
 
 public class GlobalProtocolUnit {
@@ -144,6 +145,38 @@ public class GlobalProtocolUnit {
 					individualCursor.createCursor(recvb);
 				}
 			}
+		}
+	}
+
+	public void processRepetition(java.util.Collection<ActivityCursor> cursors) {
+	
+		// Find container
+		Container container=null;
+		
+		for (ActivityCursor cursor : cursors) {
+			if (container == null) {
+				container = cursor.getContainer();
+			} else if (cursor.getContainer() != null &&
+					container != cursor.getContainer()) {
+				LOG.severe("Repeat cursors have different containers");
+			}
+		}
+		
+		if (container == null) {
+			container = _container;
+		}
+		
+		Repeat repeat=new Repeat();
+		container.add(repeat);
+		
+		Block newblock=new Block();
+		Container newcontainer=container.createContainer(newblock);
+		
+		repeat.setBlock(newblock);
+		
+		for (ActivityCursor cursor : cursors) {
+			ActivityCursor repeatCursor=cursor.createCursor(((Repeat)cursor.peek()).getBlock());
+			repeatCursor.setContainer(newcontainer);
 		}
 	}
 

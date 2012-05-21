@@ -24,7 +24,9 @@ import org.scribble.protocol.model.Choice;
 import org.scribble.protocol.model.Interaction;
 import org.scribble.protocol.model.Introduces;
 import org.scribble.protocol.model.ProtocolModel;
+import org.scribble.protocol.model.Repeat;
 import org.scribble.protocol.model.Role;
+import org.scribble.protocol.util.RoleUtil;
 
 public class LocalProtocolUnit {
 	
@@ -51,6 +53,10 @@ public class LocalProtocolUnit {
 		return(_cursor.getIndividualCursor());
 	}
 	
+	public ActivityCursor getRepetitionCursor() {
+		return(_cursor.getRepetitionCursor());
+	}
+	
 	public class ActivityCursor {
 		
 		private Role _role=null;
@@ -68,6 +74,10 @@ public class LocalProtocolUnit {
 		public ActivityCursor(ActivityCursor parent, Role r, Block b) {
 			this(r, b);
 			_parent = parent;
+		}
+		
+		public Role getRole() {
+			return (_role);
 		}
 		
 		public ActivityCursor createCursor(Block b) {
@@ -122,6 +132,23 @@ public class LocalProtocolUnit {
 			return(ret);
 		}
 		
+		private ActivityCursor getRepetitionCursor() {
+			ActivityCursor ret=null;
+			
+			if (_cursors.size() > 0) {
+				for (ActivityCursor cur : _cursors) {
+					ret = cur.getRepetitionCursor();
+					if (ret != null) {
+						break;
+					}
+				}
+			} else if (isRepetitionAction()) {
+				ret = this;
+			}
+			
+			return(ret);
+		}
+		
 		protected boolean isSendingAction() {
 			boolean ret=false;
 			Activity act=peek();
@@ -162,6 +189,37 @@ public class LocalProtocolUnit {
 			}
 			
 			return(ret);
+		}
+		
+		protected boolean isRepetitionAction() {
+			boolean ret=false;
+			Activity act=peek();
+			
+			if (act instanceof Repeat) {
+				ret = true;
+			}
+			
+			return(ret);
+		}
+		
+		/**
+		 * This method determines the list of roles involved in
+		 * the repetition construct.
+		 * 
+		 * @return The roles
+		 */
+		public java.util.Set<Role> getRepetitionRoles() {
+			java.util.Set<Role> ret=null;
+			
+			Activity act=peek();
+			
+			if (act != null && isRepetitionAction()) {
+				ret = RoleUtil.getUsedRoles(act);
+			} else {
+				ret = new java.util.HashSet<Role>();
+			}
+			
+			return (ret);
 		}
 		
 		public Activity peek() {

@@ -19,7 +19,6 @@ package org.savara.protocol.internal.aggregator;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.logging.FeedbackHandler;
@@ -582,7 +581,6 @@ public class ProtocolAggregatorImplTest {
 	}
 	
 	@Test
-	@Ignore("Subject to SAVARA-335 being fixed")
 	public void testBarter() {
 		testAggregateGlobalModel("Barter", new String[] {
 				"Buyer", "Seller"});

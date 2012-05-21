@@ -17,6 +17,7 @@
  */
 package org.savara.protocol.internal.aggregator;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.savara.common.logging.DefaultFeedbackHandler;
@@ -24,6 +25,7 @@ import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.aggregator.ProtocolAggregator;
 import org.savara.protocol.internal.aggregator.LocalProtocolUnit.ActivityCursor;
+import org.savara.protocol.model.util.RepeatUtil;
 import org.scribble.common.model.Annotation;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
@@ -105,7 +107,38 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		
 		while (processProtocolUnits(gpu, protocolUnits, handler));
 		
+		// Post process global model
+		postProcessGlobal(ret);
+		
+		// TODO: Should check for incomplete local protocols?
+		
 		return(ret);
+	}
+	
+	/**
+	 * This method post-processes a global model to complete the
+	 * description.
+	 * 
+	 * @param global The global model
+	 */
+	protected void postProcessGlobal(ProtocolModel global) {
+		
+		global.visit(new DefaultVisitor() {
+			
+		    public void end(Repeat elem) {
+		    	if (elem.getRoles().size() == 0) {
+		    		// Find decision maker
+		    		Role decisionMaker=RepeatUtil.getDecisionMaker(elem);
+		    		
+		    		if (decisionMaker != null) {
+		    			elem.getRoles().add(decisionMaker);
+		    			
+		    		} else if (LOG.isLoggable(Level.FINE)) {
+		    			LOG.fine("Could not find decision maker for repeat: "+elem);
+		    		}
+		    	}
+		    }
+		});
 	}
 	
 	protected Activity createActivity(Activity act) {
@@ -157,6 +190,48 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 				break;
 			}
 		}
+		
+		// Check for repetition
+		
+		for (Role r : lpus.keySet()) {
+			java.util.List<Role> roles=new java.util.LinkedList<Role>();
+			java.util.List<Role> processed=new java.util.LinkedList<Role>();
+			java.util.Map<Role, ActivityCursor> cursors=new java.util.HashMap<Role, ActivityCursor>();
+
+			roles.add(r);
+			
+			for (int i=0; i < roles.size(); i++) {
+				Role rr=roles.get(i);
+
+				LocalProtocolUnit lpu=lpus.get(rr);
+				ActivityCursor cursor=lpu.getRepetitionCursor();
+				
+				if (cursor != null) {
+					cursors.put(rr, cursor);
+					
+					for (Role deprole : cursor.getRepetitionRoles()) {
+						if (!roles.contains(deprole)) {
+							roles.add(deprole);
+						}
+					}
+					
+					processed.add(rr);
+				} else {
+					break;
+				}
+			}
+			
+			// Repetition is detected if roles contains more than the
+			// original role. All relevant roles will be synchronized
+			// if the number of roles is equal to the number processed.
+			// Otherwise ignore for now.
+			if (roles.size() > 1 && roles.size() == processed.size()) {
+				// Generate global repetition and process 
+				gpu.processRepetition(cursors.values());
+				
+				ret = true;
+			}
+		}		
 		
 		// If no send/receive match, then check for individual actions that may
 		// help make progress through the local projections
