@@ -18,4 +18,8 @@ protocol Barter(role Buyer) {
 		[[ Correlation(replyTo=offer) ]]
 		offer(Decision) from Seller to Buyer;
 	}
+	[[ Correlation(request=payment) ]]
+	payment(Payment) from Buyer to Seller;
+	[[ Correlation(replyTo=payment) ]]
+	payment(Receipt) from Seller to Buyer;
 }

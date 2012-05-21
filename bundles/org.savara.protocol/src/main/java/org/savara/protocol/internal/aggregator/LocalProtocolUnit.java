@@ -229,7 +229,28 @@ public class LocalProtocolUnit {
 		public boolean next() {
 			_position++;
 			
-			return(_position < _block.size());
+			boolean ret=_position < _block.size();
+			
+			if (!ret) {
+				delete();
+			}
+			
+			return(ret);
+		}
+		
+		protected void delete() {
+			if (_cursors.size() == 0 && _parent != null) {
+				_parent.deleteCursor(this);
+			}
+		}
+		
+		protected void deleteCursor(ActivityCursor cursor) {
+			_cursors.remove(cursor);
+			
+			// Check if should propagate deletion
+			if (_position >= _block.size()) {
+				delete();
+			}
 		}
 		
 		public ActivityCursor findReceivingCursor(Activity send) {

@@ -19,4 +19,13 @@ protocol BarterWithReject(role Buyer) {
 		[[ Correlation(replyTo=offer) ]]
 		offer(Decision) from Seller to Buyer;
 	}
+	choice at Buyer {
+		[[ Correlation(request=payment) ]]
+		payment(Payment) from Buyer to Seller;
+		[[ Correlation(replyTo=payment) ]]
+		payment(Receipt) from Seller to Buyer;
+	} or {
+		[[ Correlation(request=quit) ]]
+		quit(Quit) from Buyer to Seller;
+	}
 }

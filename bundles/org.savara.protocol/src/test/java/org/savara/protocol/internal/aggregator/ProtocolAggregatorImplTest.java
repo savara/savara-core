@@ -552,7 +552,7 @@ public class ProtocolAggregatorImplTest {
 		testAggregateGlobalModel("Purchasing", new String[] {
 				"Buyer", "Store", "CreditAgency", "Logistics"});
 	}
-	
+
 	@Test
 	public void testPurchasing2() {
 		testAggregateGlobalModel("Purchasing2", new String[] {

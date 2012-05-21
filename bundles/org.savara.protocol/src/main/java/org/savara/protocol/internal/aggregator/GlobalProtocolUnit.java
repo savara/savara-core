@@ -214,12 +214,12 @@ public class GlobalProtocolUnit {
 		}
 		
 		public void add(Activity act) {
-			if (_children.size() > 0) {
+			//if (_children.size() > 0) {
 				// TODO: Do we need to add activity to children instead???
-				LOG.severe("NOT YET SUPPORTED: Adding activity '"+act+"' when children are defined");
-			} else {
+				//LOG.severe("NOT YET SUPPORTED: Adding activity '"+act+"' when children are defined");
+			//} else {
 				_block.add(act);
-			}
+			//}
 		}
 		
 		public Container createContainer(Block b) {

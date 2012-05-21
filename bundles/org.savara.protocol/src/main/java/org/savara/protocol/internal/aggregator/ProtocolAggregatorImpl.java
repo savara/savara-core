@@ -229,6 +229,10 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 				// Generate global repetition and process 
 				gpu.processRepetition(cursors.values());
 				
+				for (ActivityCursor cursor : cursors.values()) {
+					cursor.next();
+				}
+				
 				ret = true;
 			}
 		}		
