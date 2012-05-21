@@ -561,105 +561,177 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		});
 	}
 	
-	protected void checkForRepetition(Choice choice) {
+	/**
+	 * This method recursively determines whether the choice is an
+	 * appropriate structure to represent a repetition. A valid
+	 * structure has at most one child path containing a choice,
+	 * and the choice must be preceded by activities which represent
+	 * the repeated activities. The choice may be optionally
+	 * followed by activities that would follow the repetition.
+	 * 
+	 * @param choice The choice
+	 * @return Whether the structure is valid for a repetition
+	 */
+	protected boolean isChoiceValidForRepetition(Choice choice) {
+		boolean ret=true;
 		
-		// Check if choice has two paths, one optional, and the other only
-		// containing interations (i.e. no sub-choices)
-		if (choice.getPaths().size() == 2) {
-			Block b=null;
-			
-			if (choice.getPaths().get(0).size() == 0) {
-				b = choice.getPaths().get(1);
-			} else if (choice.getPaths().get(1).size() == 0) {
-				b = choice.getPaths().get(0);
+		Choice child=null;
+		
+		for (Block path : choice.getPaths()) {
+		
+			for (int i=0; i < path.getContents().size(); i++) {
+				
+				if (path.getContents().get(i) instanceof Choice) {
+					if (child != null) {
+						ret = false;
+					} else {
+						child = (Choice)path.getContents().get(i);
+						
+						if (i == 0) {
+							ret = false; // Other activities should preceed the choice
+							
+						} else if (!choice.getRole().equals(child.getRole())) {
+							ret = false; // Needs to be same decision maker
+						}
+					}
+				}
+				
+				if (!ret) {
+					break;
+				}
 			}
 			
-			if (b != null && b.size() > 0) {
-				Interaction in=(Interaction)b.get(0);
-				boolean candidate=true;
-				
-				for (int i=1; i < b.size(); i++) {
-					if (b.get(i) instanceof Choice) {
-						candidate = false;
-						break;
-					}
-				}
-				
-				if (candidate) {
-					java.util.List<Block> sourcePaths=
-								new java.util.Vector<Block>();
-					
-					sourcePaths.add(b);
-					
-					// Work up hierarchy accumulating relevant
-					// paths and identifying root choice to be
-					// replaced by repeat.
-					Choice root=checkChoiceParent(in, choice, sourcePaths);
-					
-					Block merged=new Block();
-					mergePaths(sourcePaths, merged, new DefaultFeedbackHandler());
-					
-					Repeat repeat=new Repeat();
-					repeat.setBlock(merged);
-					
-					Block parent=(Block)root.getParent();
-					int pos=parent.indexOf(root);
-					
-					parent.getContents().remove(pos);
-					parent.getContents().add(pos, repeat);
-					
-					// Check for located role
-					if (merged.size() > 0 && merged.get(0) instanceof Interaction) {
-						Role role=null;
-						Interaction in2=(Interaction)merged.get(0);
-							
-						if (in2.getFromRole() == null) {
-							role = in2.getEnclosingProtocol().getLocatedRole();
-						} else {
-							role = in2.getFromRole();
-						}
-						if (role != null) {							
-							repeat.getRoles().add(new Role(role));
-						}
-					}
-				}
+			if (!ret) {
+				break;
 			}
 		}
-	}
-	
-	protected Choice checkChoiceParent(Interaction in, Choice choice,
-							java.util.List<Block> sourcePaths) {
-		Choice ret=choice;
 		
-		if (choice.getParent() instanceof Block
-					&& choice.getParent().getParent() instanceof Choice) {
-			Block b=(Block)choice.getParent();
-			Choice parent=(Choice)choice.getParent().getParent();
-			
-			// Check if parent choice has two paths and
-			// parent choice has an optional path and
-			// supplied choice is last element in block
-			// and block starts with the same interaction
-			if (parent.getPaths().size() == 2 &&
-					(parent.getPaths().get(0).size() == 0 ||
-					parent.getPaths().get(1).size() == 0) &&
-					b.indexOf(choice) == b.size()-1 &&
-								b.get(0).equals(in)) {
-				
-				Block copy=new Block();
-				for (int i=0; i < b.size()-1; i++) {
-					copy.add(new Interaction((Interaction)b.get(i)));
-				}
-				
-				sourcePaths.add(copy);
-				
-				ret = checkChoiceParent(in, parent, sourcePaths);
-			}
+		if (ret && child == null) {
+			ret = false;
 		}
 		
 		return(ret);
 	}
+	
+	protected void checkForRepetition(Choice choice) {
 		
+		// Check if top level choice and has a valid structure to
+		// represent a repetition
+		if ((choice.getParent() == null || choice.getParent().getParent() == null ||
+				!(choice.getParent().getParent() instanceof Choice)) &&
+				isChoiceValidForRepetition(choice)) {
+			final java.util.List<Block> repeated=new java.util.Vector<Block>();
+			final java.util.List<Block> nonrepeated=new java.util.Vector<Block>();
+			
+			choice.visit(new DefaultVisitor() {
+				
+				public boolean start(Block block) {
+					boolean ret=false;
+					
+					// Check if contains a choice
+					for (Activity act : block.getContents()) {
+						if (act instanceof Choice) {
+							ret = true;
+							break;
+						}
+					}
+					
+					if (ret) {
+						// Separate the activities before and after the choice
+						// into repeating and non-repeating blocks
+						Block b=new Block();
+						
+						for (Activity act : block.getContents()) {
+							if (act instanceof Choice) {
+								repeated.add(b);
+								b = new Block();
+							} else {
+								b.add(act);
+							}
+						}
+						
+						if (b.size() > 0) {
+							nonrepeated.add(b);
+						}
+						
+					} else {
+						// Check if choice is a terminating repetition
+						// condition, where one path is the repeating activities
+						// and the other is empty
+						Choice parent=(Choice)block.getParent();
+						
+						if (parent.getPaths().size() == 2 &&
+								(parent.getPaths().get(0).size() == 0 ||
+								parent.getPaths().get(1).size() == 0)) {
+							// Repeating block - but only the one with contents
+							// is relevant
+							if (block.size() > 0) {
+								repeated.add(block);
+							}
+						} else {
+							// Non repeating block
+							nonrepeated.add(block);							
+						}
+					}
+					
+					return(ret);
+				}
+			});
+
+			//Role locatedRole=choice.getEnclosingProtocol().getLocatedRole();
+			
+			Block parent=(Block)choice.getParent();
+			int pos=parent.indexOf(choice);
+			
+			Repeat repeat=new Repeat();
+			Block merged=new Block();
+
+			repeat.setBlock(merged);
+			
+			parent.getContents().add(pos+1, repeat);
+
+			mergePaths(repeated, merged, new DefaultFeedbackHandler());
+			
+			parent.getContents().remove(pos);
+			
+			// Get decision role
+    		Role decisionMaker=RepeatUtil.getDecisionMaker(repeat);
+    		
+    		if (decisionMaker != null) {
+    			repeat.getRoles().add(decisionMaker);
+    		} else {
+    			decisionMaker = repeat.getEnclosingProtocol().getLocatedRole();
+    			
+    			if (decisionMaker != null) {
+    				repeat.getRoles().add(decisionMaker);
+    			}
+    		}
+			
+			Repeat repeat2=new Repeat();
+			Block merged2=new Block();
+
+			repeat2.setBlock(merged2);
+			
+			// Need to create a temporary protocol to provide the located role information
+			// to the merging algorithm
+			/*
+			Protocol p=new Protocol();
+			p.setLocatedRole(locatedRole);
+			
+			Choice c2=new Choice();
+			c2.getPaths().addAll(nonrepeated);				
+
+			p.getBlock().add(c2);
+			*/
+			parent.getContents().add(pos+1, repeat2);	
+
+			mergePaths(nonrepeated, merged2, new DefaultFeedbackHandler());
+			
+			parent.getContents().remove(pos+1);
+			parent.getContents().addAll(pos+1, merged2.getContents());	
+		}
+	}
+	
 	protected boolean transferCommonComponent(Block targetPath, int targetPos,
 					java.util.List<Block> sourcePaths, int sourcePos,
 							FeedbackHandler handler) {

@@ -1,0 +1,30 @@
+import xsd "{http://www.savara.org/examples/barter}Offer" as Offer;
+import xsd "{http://www.savara.org/examples/barter}Decision" as Decision;
+import xsd "{http://www.savara.org/examples/barter}Payment" as Payment;
+import xsd "{http://www.savara.org/examples/barter}Receipt" as Receipt;
+import xsd "{http://www.savara.org/examples/barter}Quit" as Quit;
+[[ Interface(name=BuyerInterface,role=Buyer,namespace=http://namespace/Buyer) ]]
+[[ Interface(name=SellerInterface,role=Seller,namespace=http://namespace/Seller) ]]
+[[ Type(prefix=ns0,namespace=http://www.savara.org/examples/barter) ]]
+protocol BarterWithReject at Buyer {
+	Buyer introduces Seller;
+	[[ Correlation(request=offer) ]]
+	offer(Offer) to Seller;
+	[[ Correlation(replyTo=offer) ]]
+	offer(Decision) from Seller;
+	repeat at Buyer {
+		[[ Correlation(request=offer) ]]
+		offer(Offer) to Seller;
+		[[ Correlation(replyTo=offer) ]]
+		offer(Decision) from Seller;
+	}
+	choice at Buyer {
+		[[ Correlation(request=payment) ]]
+		payment(Payment) to Seller;
+		[[ Correlation(replyTo=payment) ]]
+		payment(Receipt) from Seller;
+	} or {
+		[[ Correlation(request=quit) ]]
+		quit(Quit) to Seller;
+	}
+}

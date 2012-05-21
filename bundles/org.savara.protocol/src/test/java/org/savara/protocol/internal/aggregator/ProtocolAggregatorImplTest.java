@@ -19,6 +19,7 @@ package org.savara.protocol.internal.aggregator;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.logging.FeedbackHandler;
@@ -571,7 +572,7 @@ public class ProtocolAggregatorImplTest {
 				// TODO: Allow alternate paths after repetition
 				//"FirstOfferRejected", "SecondOfferRejected", "ThirdOfferRejected"});
 	}
-	
+
 	@Test
 	public void testBarterLocalAggregationAtSeller() {
 		testAggregateLocalModel("Barter", "Seller", new String[]{
@@ -579,13 +580,76 @@ public class ProtocolAggregatorImplTest {
 				// TODO: Allow alternate paths after repetition
 				//"FirstOfferRejected", "SecondOfferRejected", "ThirdOfferRejected"});
 	}
-	
+
 	@Test
 	public void testBarter() {
 		testAggregateGlobalModel("Barter", new String[] {
 				"Buyer", "Seller"});
 	}
+
+	@Test
+	public void testBarterLocalAggregationWithRejectPathAtBuyer() {
+		testAggregateLocalModel("BarterWithReject", "Buyer", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept",
+				"FirstOfferRejected"});
+	}
 	
+	@Test
+	public void testBarterLocalAggregationWithRejectPathAtSeller() {
+		testAggregateLocalModel("BarterWithReject", "Seller", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept",
+				"FirstOfferRejected"});
+	}
+
+	@Test
+	@Ignore("SAVARA-337")
+	public void testBarterLocalAggregationWithReject2PathAtBuyer() {
+		testAggregateLocalModel("BarterWithReject2", "Buyer", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept",
+				"FirstOfferRejected", "SecondOfferRejected"});
+	}
+	
+	@Test
+	@Ignore("SAVARA-337")
+	public void testBarterLocalAggregationWithReject2PathAtSeller() {
+		testAggregateLocalModel("BarterWithReject2", "Seller", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept",
+				"FirstOfferRejected", "SecondOfferRejected"});
+	}
+
+	@Test
+	public void testBarterLocalAggregationWithReject3PathAtBuyer() {
+		testAggregateLocalModel("BarterWithReject3", "Buyer", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept",
+				"FirstOfferRejected", "ThirdOfferRejected"});
+	}
+	
+	@Test
+	public void testBarterLocalAggregationWithReject3PathAtSeller() {
+		testAggregateLocalModel("BarterWithReject3", "Seller", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept",
+				"FirstOfferRejected", "ThirdOfferRejected"});
+	}
+	
+	@Test
+	public void testBarterLocalAggregationWithReject4PathAtBuyer() {
+		testAggregateLocalModel("BarterWithReject4", "Buyer", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept",
+				"FirstOfferRejected", "SecondOfferRejected", "ThirdOfferRejected"});
+	}
+	
+	@Test
+	public void testBarterLocalAggregationWithReject4PathAtSeller() {
+		testAggregateLocalModel("BarterWithReject4", "Seller", new String[]{
+				"FirstOfferAccept", "SecondOfferAccept", "ThirdOfferAccept",
+				"FirstOfferRejected", "SecondOfferRejected", "ThirdOfferRejected"});
+	}
+	
+	@Test
+	public void testBarterWithReject() {
+		testAggregateGlobalModel("BarterWithReject", new String[] {
+				"Buyer", "Seller"});
+	}
 	
 	protected void testAggregateLocalModel(String localName, String role,
 						String[] scenarioLocalModels) {
