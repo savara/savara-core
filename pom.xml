@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara</groupId>
 	<artifactId>parent</artifactId>
-	<version>2.1.0-SNAPSHOT</version>
+	<version>2.1.0.20120522-M1</version>
 	<packaging>pom</packaging>
     <name>Savara</name>
 	<url>http://www.savara.org</url>
@@ -50,8 +50,8 @@
 	</developers>
 
 	<properties>
-		<savara.core.version>2.1.0-SNAPSHOT</savara.core.version>
-		<scribble.version>2.1.0-SNAPSHOT</scribble.version>
+		<savara.core.version>2.1.0.20120522-M1</savara.core.version>
+		<scribble.version>2.1.0.20120522-M2</scribble.version>
 		<pi4soa.version>3.1.1-SNAPSHOT</pi4soa.version> <!-- Actually taken from
 						Tycho built update site, not Nexus, so
 						snapshot is irrelevant. -->
@@ -171,6 +171,21 @@
 		</snapshots>
 	    </repository>
 	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Maven Repository Group</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+			<layout>default</layout>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<distributionManagement>
 		<repository>
