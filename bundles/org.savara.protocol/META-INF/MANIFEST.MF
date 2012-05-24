@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Protocol
 Bundle-SymbolicName: org.savara.protocol;singleton:=true
-Bundle-Version: 2.1.0.20120522-M1
+Bundle-Version: 2.1.0.SNAPSHOT
 Bundle-Activator: org.savara.protocol.osgi.Activator
 Bundle-Vendor: Red Hat, Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Switchyard Java
 Bundle-SymbolicName: org.savara.switchyard.java;singleton:=true
-Bundle-Version: 2.1.0.20120522-M1
+Bundle-Version: 2.1.0.SNAPSHOT
 Bundle-Activator: org.savara.switchyard.java.osgi.Activator
 Bundle-Vendor: www.savara.org
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
