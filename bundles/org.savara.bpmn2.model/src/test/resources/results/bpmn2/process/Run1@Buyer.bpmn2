@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI">
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMAccountNotFound" structureRef="AccountNotFound"/>
+    <bpmn2:message id="IDAccountNotFound" itemRef="ITEMAccountNotFound" name="AccountNotFound"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyConfirmed" structureRef="BuyConfirmed"/>
+    <bpmn2:message id="IDBuyConfirmed" itemRef="ITEMBuyConfirmed" name="BuyConfirmed"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyFailed" structureRef="BuyFailed"/>
+    <bpmn2:message id="IDBuyFailed" itemRef="ITEMBuyFailed" name="BuyFailed"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMBuyRequest" structureRef="BuyRequest"/>
+    <bpmn2:message id="IDBuyRequest" itemRef="ITEMBuyRequest" name="BuyRequest"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCreditCheckRequest" structureRef="CreditCheckRequest"/>
+    <bpmn2:message id="IDCreditCheckRequest" itemRef="ITEMCreditCheckRequest" name="CreditCheckRequest"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCreditRating" structureRef="CreditRating"/>
+    <bpmn2:message id="IDCreditRating" itemRef="ITEMCreditRating" name="CreditRating"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCustomerUnknown" structureRef="CustomerUnknown"/>
+    <bpmn2:message id="IDCustomerUnknown" itemRef="ITEMCustomerUnknown" name="CustomerUnknown"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryConfirmed" structureRef="DeliveryConfirmed"/>
+    <bpmn2:message id="IDDeliveryConfirmed" itemRef="ITEMDeliveryConfirmed" name="DeliveryConfirmed"/>
+    <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryRequest" structureRef="DeliveryRequest"/>
+    <bpmn2:message id="IDDeliveryRequest" itemRef="ITEMDeliveryRequest" name="DeliveryRequest"/>
+    <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMIDType" structureRef="xs:string"/>
+    <bpmn2:message id="IDIDType" itemRef="ITEMIDType" name="IDType"/>
+    <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMURITokenType" structureRef="xs:anyURI"/>
+    <bpmn2:message id="IDURITokenType" itemRef="ITEMURITokenType" name="URITokenType"/>
+    <bpmn2:collaboration id="MID1">
+        <bpmn2:participant id="MID3" name="Buyer" processRef="MID2"/>
+    </bpmn2:collaboration>
+    <bpmn2:process id="MID2" name="Buyer">
+        <bpmn2:startEvent id="MID4">
+            <bpmn2:outgoing>MID7</bpmn2:outgoing>
+        </bpmn2:startEvent>
+        <bpmn2:endEvent id="MID5">
+            <bpmn2:incoming>MID8</bpmn2:incoming>
+        </bpmn2:endEvent>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" name="Service: buy(BuyRequest) to Store" operationRef="OP_Store_buy" xsi:type="bpmn2:tServiceTask">
+            <bpmn2:incoming>MID7</bpmn2:incoming>
+            <bpmn2:outgoing>MID8</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:sequenceFlow id="MID7" sourceRef="MID4" targetRef="MID6"/>
+        <bpmn2:sequenceFlow id="MID8" sourceRef="MID6" targetRef="MID5"/>
+    </bpmn2:process>
+    <bpmn2:interface id="StoreInterface" name="Store">
+        <bpmn2:operation id="OP_Store_buy" name="buy">
+            <bpmn2:inMessageRef>IDBuyRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDBuyConfirmed</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmndi:BPMNDiagram id="NID1">
+        <bpmndi:BPMNPlane>
+            <bpmndi:BPMNShape bpmnElement="MID3" id="NID2">
+                <dc:Bounds height="140.0" width="370.0" x="0.0" y="0.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID4" id="NID3">
+                <dc:Bounds height="30.0" width="30.0" x="50.0" y="55.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="MID6" id="NID4">
+                <dc:Bounds height="60.0" width="110.0" x="130.0" y="40.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="MID7" id="NID5" sourceElement="NID3" targetElement="NID4">
+                <ns4:waypoint x="80.0" y="70.0"/>
+                <ns4:waypoint x="130.0" y="70.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="MID5" id="NID6">
+                <dc:Bounds height="30.0" width="30.0" x="290.0" y="55.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="MID8" id="NID7" sourceElement="NID4" targetElement="NID6">
+                <ns4:waypoint x="240.0" y="70.0"/>
+                <ns4:waypoint x="290.0" y="70.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

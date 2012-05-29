@@ -1,0 +1,69 @@
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest from "store.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheck from "creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as CustomerUnknown from "creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating from "creditAgency.xsd";
+import xsd "{http://www.jboss.org/examples/store}AccountNotFound" as AccountNotFound from "store.xsd";
+import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed from "store.xsd";
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest from "logistics.xsd";
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed from "logistics.xsd";
+import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed from "store.xsd";
+[[ Type(location=logistics.xsd,prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
+[[ Type(location=store.xsd,prefix=ns1,namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(location=creditAgency.xsd,prefix=ns3,namespace=http://www.jboss.org/examples/creditAgency) ]]
+[[ Protocol(namespace=http://www.savara.org/examples) ]]
+[[ SourceComponent(id=Choreography_1) ]]
+[[ Interface(name=Buyer,role=Buyer,namespace=http://www.savara.org/examples/Buyer) ]]
+[[ Type(prefix=pns1,namespace=http://www.savara.org/examples/Buyer) ]]
+[[ Interface(name=Store,role=Store,namespace=http://www.savara.org/examples/Store) ]]
+[[ Type(prefix=pns2,namespace=http://www.savara.org/examples/Store) ]]
+[[ Interface(name=CreditAgency,role=CreditAgency,namespace=http://www.savara.org/examples/CreditAgency) ]]
+[[ Type(prefix=pns3,namespace=http://www.savara.org/examples/CreditAgency) ]]
+[[ Interface(name=Logistics,role=Logistics,namespace=http://www.savara.org/examples/Logistics) ]]
+[[ Type(prefix=pns4,namespace=http://www.savara.org/examples/Logistics) ]]
+protocol PurchaseGoods(role Buyer) {
+	Buyer introduces Store;
+	[[ Correlation(request=buy) ]]
+	buy(BuyRequest) from Buyer to Store;
+	parallel {
+		Store introduces CreditAgency;
+		[[ Correlation(request=creditCheck) ]]
+		creditCheck(CreditCheck) from Store to CreditAgency;
+		parallel {
+			choice at CreditAgency {
+				[[ Fault(name=CustomerUnknown) ]]
+				[[ Correlation(replyTo=creditCheck) ]]
+				creditCheck(CustomerUnknown) from CreditAgency to Store;
+				[[ Fault(name=AccountNotFound) ]]
+				[[ Correlation(replyTo=buy) ]]
+				buy(AccountNotFound) from Store to Buyer;
+				sync L11 at Buyer,Store;
+			} or {
+				[[ Correlation(replyTo=creditCheck) ]]
+				creditCheck(CreditRating) from CreditAgency to Store;
+				[[ Fault(name=InsufficientCredit) ]]
+				[[ Correlation(replyTo=buy) ]]
+				buy(BuyFailed) from Store to Buyer;
+				parallel {
+					sync L13 at Buyer,Store;
+				} and {
+					sync L22 at Buyer,Store;
+				} and {
+					join L22 and L23 at Buyer,Store;
+					[[ Correlation(replyTo=buy) ]]
+					buy(BuyConfirmed) from Store to Buyer;
+				}
+			}
+		} and {
+			join L11 or L13 at Buyer,Store;
+			[[ Correlation(replyTo=buy) ]]
+			buy(BuyConfirmed) from Store to Buyer;
+		}
+	} and {
+		Store introduces Logistics;
+		[[ Correlation(request=delivery) ]]
+		delivery(DeliveryRequest) from Store to Logistics;
+		[[ Correlation(replyTo=delivery) ]]
+		delivery(DeliveryConfirmed) from Logistics to Store;
+		sync L23 at Buyer,Store;
+	}
+}

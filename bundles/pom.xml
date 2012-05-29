@@ -21,6 +21,7 @@
 
 	<modules>
 		<module>org.savara.bpel</module>
+		<module>org.savara.bpmn2.model</module>
 		<module>org.savara.bpmn2</module>
 		<module>org.savara.common</module>
 		<module>org.savara.common.config.file</module>

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bpmn2.util;
+package org.savara.bpmn2.model.util;
 
 import java.io.IOException;
 
@@ -34,8 +34,6 @@ public class BPMN2ModelUtil {
 	 * @param is The input stream
 	 * @return The BPMN2 definition
 	 * @throws IOException Failed to deserialize
-	 * 
-	 * @deprecated Should use the org.savara.bpmn2.model.util.BPMN2ModelUtil class
 	 */
 	public static TDefinitions deserialize(java.io.InputStream is) throws IOException {
 		TDefinitions ret=null;
@@ -66,8 +64,6 @@ public class BPMN2ModelUtil {
 	 * @param os The output stream
 	 * @param prefixes The optional map of prefixes against namespaces
 	 * @throws IOException Failed to serialize
-	 * 
-	 * @deprecated Should use the org.savara.bpmn2.model.util.BPMN2ModelUtil class
 	 */
 	public static void serialize(TDefinitions defns, java.io.OutputStream os,
 			java.util.Map<String, String> prefixes) throws IOException {
@@ -82,8 +78,6 @@ public class BPMN2ModelUtil {
 	 * @param prefixes The optional map of prefixes against namespaces
 	 * @param classLoader The classloader to be used
 	 * @throws IOException Failed to serialize
-	 * 
-	 * @deprecated Should use the org.savara.bpmn2.model.util.BPMN2ModelUtil class
 	 */
 	public static void serialize(TDefinitions defns, java.io.OutputStream os,
 					java.util.Map<String, String> prefixes,
