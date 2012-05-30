@@ -62,7 +62,7 @@
 		<jaxbri.version>2.2.4-1</jaxbri.version>
 		<jboss.version>5.1.0.GA</jboss.version>
 		<jbossws.version>3.2.2.GA</jbossws.version>
-		<jackson.version>1.9.2</jackson.version>
+		<jackson.version>2.0.2</jackson.version>
 		<emfcommon.version>2.3.0</emfcommon.version>
 		<emfecore.version>2.3.1</emfecore.version>
 		<xalan.version>2.7.1</xalan.version>
