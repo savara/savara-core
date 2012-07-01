@@ -193,6 +193,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 		
 		if (defn != null) {
 			StringBuffer composite=new StringBuffer();
+			StringBuffer component=new StringBuffer();
 			
 			String targetNamespace=defn.getTargetNamespace();
 			String name=role.getName();
@@ -220,11 +221,13 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 				String wsdlName=wsdlPath;
 				int ind=wsdlName.lastIndexOf('/');
 				if (ind != -1) {
-					wsdlName = wsdlName.substring(ind+1);
+					wsdlName = wsdlName.substring(ind+1)
+							+"#wsdl.porttype("+portType.getQName().getLocalPart()+")";
 				}
 				
 				composite.append("\t\t<service name=\""+portType.getQName().getLocalPart()+
-						"\" promote=\""+portType.getQName().getLocalPart()+"\">\r\n");
+						"\" promote=\""+portType.getQName().getLocalPart()+"Component/"
+						+portType.getQName().getLocalPart()+"\">\r\n");
 				
 				composite.append("\t\t\t<binding.soap xmlns=\"urn:switchyard-component-soap:config:1.0\">\r\n");
 				composite.append("\t\t\t\t<wsdl>wsdl/"+wsdlName+"</wsdl>\r\n");
@@ -232,6 +235,19 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 				composite.append("\t\t\t</binding.soap>\r\n");
 								
 				composite.append("\t\t</service>\r\n");
+
+				
+				String pack=JavaBehaviourGenerator.getJavaPackage(defn.getTargetNamespace());
+
+				component.append("\t\t<component name=\""+portType.getQName().getLocalPart()+"Component\">\r\n");
+				
+				component.append("\t\t\t<implementation.bean xmlns=\"urn:switchyard-component-bean:config:1.0\" " +
+						"class=\""+pack+"."+portType.getQName().getLocalPart()+"Impl\"/>\r\n");
+				
+				component.append("\t\t\t<service name=\""+portType.getQName().getLocalPart()+"\" >\r\n");
+				component.append("\t\t\t\t<interface.java interface=\""+pack+"."
+									+portType.getQName().getLocalPart()+"\"/>\r\n");
+				component.append("\t\t\t</service>\r\n");
 				
 				for (int i=0; i < refWsdlPaths.size(); i++){
 					String refWsdlPath=refWsdlPaths.get(i);
@@ -248,19 +264,32 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 							String refWsdlName=refWsdlPath;
 							ind = refWsdlName.lastIndexOf('/');
 							if (ind != -1) {
-								refWsdlName = refWsdlName.substring(ind+1);
+								refWsdlName = refWsdlName.substring(ind+1)
+										+"#wsdl.porttype("+refPortType.getQName().getLocalPart()+")";
 							}
 							
 							composite.append("\t\t<reference name=\""+refPortType.getQName().getLocalPart()+
-									"\" promote=\""+refPortType.getQName().getLocalPart()+"\" multiplicity=\"1..1\" >\r\n");
+									"\" promote=\""+portType.getQName().getLocalPart()+"Component/"
+									+refPortType.getQName().getLocalPart()+"\" multiplicity=\"1..1\" >\r\n");
 							composite.append("\t\t\t<binding.soap xmlns=\"urn:switchyard-component-soap:config:1.0\">\r\n");
 							composite.append("\t\t\t\t<wsdl>wsdl/"+refWsdlName+"</wsdl>\r\n");
 							composite.append("\t\t\t\t<socketAddr>:18001</socketAddr>\r\n");
 							composite.append("\t\t\t</binding.soap>\r\n");
 							composite.append("\t\t</reference>\r\n");
-						}
+							
+							String refPack=JavaBehaviourGenerator.getJavaPackage(refDefn.getTargetNamespace());
+
+							component.append("\t\t\t<reference name=\""+refPortType.getQName().getLocalPart()+"\" >\r\n");
+							component.append("\t\t\t\t<interface.java interface=\""+refPack+"."
+												+refPortType.getQName().getLocalPart()+"\"/>\r\n");
+							component.append("\t\t\t</reference>\r\n");
+						}						
 					}
 				}
+				
+				component.append("\t\t</component>\r\n");
+				
+				composite.append(component.toString());
 			}
 
 			composite.append("\t</composite>\r\n");

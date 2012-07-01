@@ -32,7 +32,7 @@ import org.savara.bpmn2.model.TImport;
 import org.savara.bpmn2.model.TItemDefinition;
 import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TRootElement;
-import org.savara.bpmn2.util.BPMN2ModelUtil;
+import org.savara.bpmn2.model.util.BPMN2ModelUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.model.util.TypeSystem;

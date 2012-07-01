@@ -84,9 +84,23 @@ public class BPMN2ModelJSONUtilTest {
 			String xml2=new String(b);
 			
 			if (!xml.equals(xml2)) {
-				System.out.println("GENERATED=\r\n"+xml+"\r\nEXPECTED=\r\n"+xml2);
 				
-				fail("XML serialization of BPMN2 model does not match stored");
+				java.io.InputStream is3=
+						ClassLoader.getSystemResourceAsStream("results/bpmn2/choreo/xml/PurchaseGoods-v2.bpmn");
+
+				b=new byte[is3.available()];
+				is3.read(b);
+				
+				is3.close();
+				
+				String xml3=new String(b);
+				
+				if (!xml.equals(xml3)) {
+					System.out.println("GENERATED=\r\n"+xml+"\r\nEXPECTED=\r\n"+xml2
+							+"\r\nOR ALTERNATIVELY=\r\n"+xml3);
+					
+					fail("XML serialization of BPMN2 model does not match stored");
+				}
 			}
 
 		} catch(Exception e) {
