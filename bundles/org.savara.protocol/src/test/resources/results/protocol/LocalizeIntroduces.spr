@@ -1,0 +1,9 @@
+protocol LocalizeIntroduces(role Buyer) {
+	Buyer introduces Broker;
+	Order from Buyer to Broker;
+	run HandleOrder(Broker) from Broker;
+	protocol HandleOrder(role Broker) {
+		Broker introduces Supplier;
+		ProcessOrder from Broker to Supplier;
+	}
+}

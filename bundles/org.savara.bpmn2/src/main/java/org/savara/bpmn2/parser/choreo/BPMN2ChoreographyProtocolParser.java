@@ -37,6 +37,7 @@ import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.model.util.TypeSystem;
 import org.savara.protocol.util.FeedbackHandlerProxy;
+import org.savara.protocol.util.ProtocolUtils;
 import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.Content;
 import org.scribble.protocol.ProtocolContext;
@@ -126,6 +127,10 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 				rule.parse(parserContext, choreo, p.getBlock());
 				
 				parserContext.popScope();
+				
+				// Localise the role introductions to the inner most
+				// block within which their behaviour exists
+				ProtocolUtils.localizeRoleIntroductions(pm);
 				
 				ret = pm;
 				

@@ -19,6 +19,8 @@
  */
 package org.savara.bpmn2.internal.generation.components;
 
+import java.util.logging.Logger;
+
 import org.savara.bpmn2.internal.generation.BPMN2GenerationException;
 import org.scribble.protocol.model.Choice;
 
@@ -28,6 +30,8 @@ import org.scribble.protocol.model.Choice;
  *
  */
 public class ChoiceActivity extends AbstractBPMNActivity {
+	
+	private static Logger LOG=Logger.getLogger(ChoiceActivity.class.getName());
 
 	/**
 	 * This constructor initializes the choice state.
@@ -251,7 +255,13 @@ public class ChoiceActivity extends AbstractBPMNActivity {
 			BPMNActivity act=(BPMNActivity)getChildStates().get(i);
 			if (act != m_junctionState) {
 				getStartState().transitionTo(act, null, parent);
-				act.getEndState().transitionTo(m_junctionState, null, parent);
+				
+				if (act.getEndState() != null) {
+					act.getEndState().transitionTo(m_junctionState, null, parent);
+				} else {
+					LOG.severe("Attempting to link activity "+act
+							+" 'null' end state to junction "+m_junctionState);
+				}
 			}
 		}
 	}

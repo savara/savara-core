@@ -17,16 +17,31 @@
  */
 package org.savara.protocol.util;
 
+import java.util.logging.Logger;
+
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.scribble.protocol.model.Activity;
+import org.scribble.protocol.model.Block;
+import org.scribble.protocol.model.DefaultVisitor;
+import org.scribble.protocol.model.Introduces;
 import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.ModelProperties;
+import org.scribble.protocol.model.Parameter;
+import org.scribble.protocol.model.ParameterDefinition;
+import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.ProtocolModel;
+import org.scribble.protocol.model.Role;
+import org.scribble.protocol.model.Run;
+import org.scribble.protocol.util.RoleUtil;
+import org.scribble.protocol.util.RunUtil;
 
 /**
  * This class defines a set of protocol related utility functions.
  */
 public final class ProtocolUtils {
+	
+	private static final Logger LOG=Logger.getLogger(ProtocolUtils.class.getName());
 		
 	/**
 	 * This method calculates the start and end position of a supplied DOM element, within
@@ -124,4 +139,145 @@ public final class ProtocolUtils {
 		return(annotation == null ? null :
 				(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
 	}
+	
+	/**
+	 * This method ensures that all introduced roles are declared at
+	 * the most local block where their behaviour is defined.
+	 * 
+	 * @param pm The protocol model
+	 */
+	public static void localizeRoleIntroductions(ProtocolModel pm) {
+		final java.util.List<Role> unused=new java.util.ArrayList<Role>();
+		
+		pm.visit(new DefaultVisitor() {
+			
+			public boolean start(Protocol p) {
+				
+				java.util.Iterator<Activity> iter=p.getBlock().getContents().iterator();
+				
+				while (iter.hasNext()) {
+					Activity act=iter.next();
+					
+					if (act instanceof Introduces) {
+						Introduces rl=(Introduces)act;
+						
+						for (int i=rl.getIntroducedRoles().size()-1; i >= 0; i--) {
+							Role r=rl.getIntroducedRoles().get(i);
+							Block b=RoleUtil.getEnclosingBlock(p, r, false);
+							
+							if (b == null) {
+								// Report unused role
+								unused.add(r);
+								
+							} else if (b != p.getBlock()) {
+								Introduces innerrl=null;
+								
+								if (b.size() > 0 && b.get(0) instanceof Introduces &&
+										((Introduces)b.get(0)).getIntroducer().equals(rl.getIntroducer())) {
+									innerrl = (Introduces)b.get(0);
+								} else {
+									innerrl = new Introduces();
+									innerrl.setIntroducer(rl.getIntroducer());
+									b.getContents().add(0, innerrl);
+								}
+								
+								rl.getIntroducedRoles().remove(r);
+								innerrl.getIntroducedRoles().add(r);
+							}
+						}
+						
+						if (rl.getIntroducedRoles().size() == 0) {
+							iter.remove();
+						}					
+					} else {
+						break;
+					}
+				}
+				
+				return (true);
+			}			
+		});
+		
+
+		for (Role role : unused) {
+			
+			if (role.getParent() instanceof Introduces) {
+				// Locate introduces
+				Introduces introduces=(Introduces)role.getParent();
+			
+				Protocol protocol=introduces.getEnclosingProtocol();
+				
+				locateRoleIntroductionWithinRun(protocol, role, introduces.getIntroducer());
+
+				introduces.getIntroducedRoles().remove(role);
+				
+				if (introduces.getIntroducedRoles().size() == 0) {
+					((Block)introduces.getParent()).remove(introduces);
+				}
+			}
+		}
+	}
+
+	protected static void locateRoleIntroductionWithinRun(Protocol protocol,
+						final Role role, final Role introducer) {
+		
+		// Find run constructs that use the role
+		protocol.visit(new DefaultVisitor() {
+			
+			public void accept(Run elem) {
+				Parameter p=elem.getParameter(role.getName());
+
+				if (p != null) {
+					// Remove role parameter
+					elem.getParameters().remove(p);
+
+					Protocol target=RunUtil.getInnerProtocol(elem.getEnclosingProtocol(),
+							elem.getProtocolReference());
+					
+					if (target == null) {
+						// Error
+						LOG.severe("Failed to find inner protocol '"
+								+elem.getProtocolReference()+"'");
+					} else {
+						
+						// Remove role as parameter
+						ParameterDefinition pd=target.getParameterDefinition(role.getName());
+						
+						if (pd != null) {
+							target.getParameterDefinitions().remove(pd);
+						} else {
+							LOG.severe("Failed to find parameter definition for role '"
+									+role.getName()+"'");
+						}
+						
+						// Find enclosing block in target protocol
+						Block b=RoleUtil.getEnclosingBlock(target,
+										role, false);
+						
+						if (b == null) {
+							
+							// Find run constructs
+							locateRoleIntroductionWithinRun(target, role, introducer);
+							
+						// Check if should add to existing Introduces
+						} else if (b.size() > 0 &&
+								b.get(0) instanceof Introduces &&
+								((Introduces)b.get(0)).getIntroducer().equals(introducer)) {
+							((Introduces)b.get(0)).getIntroducedRoles().add(new Role(role));
+							
+						// Create new Introduces
+						} else {
+							Introduces intro=new Introduces();
+							intro.setIntroducer(new Role(introducer));
+							
+							intro.getIntroducedRoles().add(new Role(role));
+							
+							b.getContents().add(0, intro);
+						}
+					}
+				}
+			}
+		});
+	}
+	
 }

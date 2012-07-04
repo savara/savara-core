@@ -1,8 +1,8 @@
 [[ Protocol() ]]
 [[ SourceComponent(id=Choreography_1) ]]
 protocol ComplexXORJoin(role X) {
-	X introduces Y;
 	Y introduces Z;
+	X introduces Y;
 	M1 from X to Y;
 	parallel {
 		choice at Y {

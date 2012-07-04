@@ -28,6 +28,7 @@ import org.pi4soa.cdl.util.CDLTypeUtil;
 import org.pi4soa.common.xml.XMLUtils;
 import org.savara.pi4soa.cdm.CDMDefinitions;
 import org.savara.protocol.model.util.TypeSystem;
+import org.savara.protocol.util.ProtocolUtils;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.scribble.protocol.model.*;
@@ -79,36 +80,6 @@ public class ProtocolModelParserRule implements ParserRule {
 		// Convert information types into type imports
 		for (org.pi4soa.cdl.InformationType itype : cdlpack.getTypeDefinitions().getInformationTypes()) {
 			setupTypeImport(itype, ret);
-			/*
-			// TODO: Create type import for the info type
-			TypeImportList til=new TypeImportList();
-			
-			TypeImport ti=new TypeImport();
-			ti.setName(itype.getName());
-			
-			DataType dt=new DataType();
-			
-			if (itype.getElementName() != null && itype.getElementName().trim().length() > 0) {
-				String namespace=XMLUtils.getNamespace(itype.getElementName(), resolver, targetNamespace)
-				dt.setDetails(itype.getElementName());
-				
-				AnnotationDefinitions.createAnnotation(til.getProperties(),
-								AnnotationDefinitions.XSD_ELEMENT);
-			} else if (itype.getTypeName() != null && itype.getTypeName().trim().length() > 0) {
-				dt.setDetails(itype.getTypeName());
-				
-				AnnotationDefinitions.createAnnotation(til.getProperties(),
-								AnnotationDefinitions.XSD_TYPE);
-			}
-			
-			ti.setDataType(dt);
-			til.setFormat(TypeSystem.XSD);
-			til.getTypeImports().add(ti);
-			
-			// Check for schema location
-			
-			ret.getImports().add(til);
-			*/
 		}
 		
 		// Convert root choreography
@@ -185,44 +156,53 @@ public class ProtocolModelParserRule implements ParserRule {
 				});
 				
 				// Initialize any choices
-				ret.getProtocol().visit(new DefaultVisitor() {
-					
-					public boolean start(Choice elem) {
-						Role fromRole=null;
-
-						for (Block b : elem.getPaths()) {
-							// Identify 'from' role
-							if (fromRole == null) {
-								java.util.List<ModelObject> list=org.scribble.protocol.util.InteractionUtil.getInitialInteractions(b);
-							
-								for (ModelObject mo : list) {
-									if (mo instanceof org.scribble.protocol.model.Interaction) {
-										fromRole = ((org.scribble.protocol.model.Interaction)mo).getFromRole();
-										
-										if (fromRole != null) {
-											break;
-										}
-									}
-								}
-							}
-							if (fromRole != null) {
-								break;
-							}
-						}
-						
-						if (fromRole != null) {
-							elem.setRole(new Role(fromRole));
-						}
-
-						return(true);
-					}
-				});
+				initializeChoices(ret);
+				
+				// Localise the role introductions to their inner
+				// most blocks
+				ProtocolUtils.localizeRoleIntroductions(ret);
 			}
 		} else {
 			logger.severe("Failed to find conversation conversion rule");
 		}
 		
 		return(ret);
+	}
+	
+	protected void initializeChoices(ProtocolModel pm) {
+		
+		pm.getProtocol().visit(new DefaultVisitor() {
+			
+			public boolean start(Choice elem) {
+				Role fromRole=null;
+
+				for (Block b : elem.getPaths()) {
+					// Identify 'from' role
+					if (fromRole == null) {
+						java.util.List<ModelObject> list=org.scribble.protocol.util.InteractionUtil.getInitialInteractions(b);
+					
+						for (ModelObject mo : list) {
+							if (mo instanceof org.scribble.protocol.model.Interaction) {
+								fromRole = ((org.scribble.protocol.model.Interaction)mo).getFromRole();
+								
+								if (fromRole != null) {
+									break;
+								}
+							}
+						}
+					}
+					if (fromRole != null) {
+						break;
+					}
+				}
+				
+				if (fromRole != null) {
+					elem.setRole(new Role(fromRole));
+				}
+
+				return(true);
+			}
+		});		
 	}
 	
 	protected void setupTypeImport(org.pi4soa.cdl.InformationType infoType, ProtocolModel model) {

@@ -41,13 +41,11 @@ import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
 import org.scribble.protocol.model.Choice;
 import org.scribble.protocol.model.CustomActivity;
-import org.scribble.protocol.model.Introduces;
 import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.Parallel;
 import org.scribble.protocol.model.Protocol;
 import org.scribble.protocol.model.Role;
 import org.scribble.protocol.util.ActivityUtil;
-import org.scribble.protocol.util.RoleUtil;
 
 public class TChoreographyParserRule implements BPMN2ParserRule {
 
@@ -101,56 +99,14 @@ public class TChoreographyParserRule implements BPMN2ParserRule {
 			
 			cleanUpJoins(context);
 			
-			localiseIntroductions(context, container);
+			// Add introduces statements to the container
+			container.getContents().addAll(0,
+					context.getScope().getIntroduces().values());
 			
 			defineNamespaces(context, container);
 		}
 	}
-	
-	/**
-	 * This method processes the introduce statements to localise the introductions to
-	 * the most appropriate blocks.
-	 * 
-	 * @param context The context
-	 * @param container The container
-	 */
-	protected void localiseIntroductions(BPMN2ParserContext context, Block container) {
-		
-		// Work through introduced roles to localise the introduction
-		java.util.Iterator<Introduces> intros=
-					context.getScope().getIntroduces().values().iterator();
-		
-		while (intros.hasNext()) {
-			Introduces rl=intros.next();
-			
-			for (int i=rl.getIntroducedRoles().size()-1; i >= 0; i--) {
-				Role r=rl.getIntroducedRoles().get(i);
-				Block b=RoleUtil.getEnclosingBlock(container.getEnclosingProtocol(), r, false);
-				
-				if (b == null) {
-					// Report error
-				} else if (b != container.getEnclosingProtocol().getBlock()){
-					Introduces innerrl=null;
-					
-					if (b.size() > 0 && b.get(0) instanceof Introduces) {
-						innerrl = (Introduces)b.get(0);
-					} else {
-						innerrl = new Introduces();
-						innerrl.setIntroducer(rl.getIntroducer());
-						b.getContents().add(0, innerrl);
-					}
-					
-					rl.getIntroducedRoles().remove(r);
-					innerrl.getIntroducedRoles().add(r);
-				}
-			}
-			
-			if (rl.getIntroducedRoles().size() > 0) {
-				container.getEnclosingProtocol().getBlock().getContents().add(0, rl);
-			}
-		}
-	}
-	
+
 	/**
 	 * Check whether some of the parallel constructs, added to support the
 	 * fork/join, can be removed to leave a simplified choice/parallel.
