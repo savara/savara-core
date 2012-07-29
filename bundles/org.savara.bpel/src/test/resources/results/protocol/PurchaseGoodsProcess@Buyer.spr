@@ -6,6 +6,7 @@ import "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
 [[ Type(location=PurchaseGoodsProcess_Store.wsdl,namespace=http://www.jboss.org/examples/store) ]]
 [[ Type(location=PurchaseGoodsProcess_BuyerArtifacts.wsdl,namespace=http://www.jboss.org/savara/examples) ]]
 protocol PurchaseGoodsProcess_Buyer at Buyer {
+	Buyer introduces Store;
 	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) to Store;
 	choice at Store {

@@ -1,9 +1,11 @@
 import "CreditCheckRequest" as CreditCheckRequest;
 import "CreditCheckOk" as CreditCheckOk;
 import "CreditCheckInvalid" as CreditCheckInvalid;
+[[ Interface(name=Buyer,role=Buyer,namespace=http://www.pi4soa.org/ReqRespFault/Buyer) ]]
 [[ Type(location=ReqRespFaultProcess_Seller.wsdl,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
 [[ Type(location=ReqRespFaultProcess_BuyerArtifacts.wsdl,namespace=http://www.pi4soa.org/ReqRespFault/Buyer) ]]
-protocol ReqRespFaultProcess_Buyer {
+protocol ReqRespFaultProcess_Buyer at Buyer {
+	Buyer introduces Seller;
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) to Seller;
 	choice at Seller {

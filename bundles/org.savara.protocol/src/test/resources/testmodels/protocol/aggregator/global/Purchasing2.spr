@@ -15,7 +15,7 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CustomerUnknown" as Cust
 [[ Type(prefix=ns1,namespace=http://www.jboss.org/examples/creditAgency) ]]
 [[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://namespace/Logistics) ]]
 [[ Type(prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
-protocol Purchasing(role Buyer) {
+protocol Purchasing2(role Buyer) {
 	Buyer introduces Store;
 	Store introduces CreditAgency;
 	[[ Correlation(request=buy) ]]

@@ -20,6 +20,7 @@ package org.savara.bpmn2.util;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
@@ -110,8 +111,13 @@ public class BPMN2ServiceUtil {
 				TSequenceFlow sf=(TSequenceFlow)modelInfo.getFlowElement(outgoing.getLocalPart());
 				
 				if (sf != null) {
-					processNode((TFlowNode)sf.getTargetRef(), intfs,
-							new java.util.Vector<InteractionInfo>(ii), modelInfo, processedNodes);
+					
+					if (sf.getTargetRef() != null) {
+						processNode((TFlowNode)sf.getTargetRef(), intfs,
+								new java.util.Vector<InteractionInfo>(ii), modelInfo, processedNodes);
+					} else if (LOG.isLoggable(Level.FINE)) {
+						LOG.fine("Node's outgoing flow has no target ref: "+node);
+					}
 				}
 			}
 		}

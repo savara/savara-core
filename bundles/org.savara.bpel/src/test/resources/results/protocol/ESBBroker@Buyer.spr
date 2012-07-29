@@ -8,6 +8,7 @@ import "orderRejected" as orderRejected;
 [[ Type(location=ESBBrokerProcess_Supplier.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 [[ Type(location=ESBBrokerProcess_BuyerArtifacts.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Buyer) ]]
 protocol ESBBrokerProcess_Buyer at Buyer {
+	Buyer introduces Broker;
 	[[ Correlation(request=makeEnquiry) ]]
 	makeEnquiry(enquiry) to Broker;
 	[[ Correlation(replyTo=makeEnquiry) ]]

@@ -5,7 +5,8 @@ import "{java:org.jboss.savara.examples.purchasing}CreditCheckInvalid" as Credit
 [[ Type(location=PurchaseGoodsProcess_CreditAgency.wsdl,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Type(location=PurchaseGoodsProcess_Store.wsdl,namespace=http://www.jboss.org/examples/store) ]]
 [[ Type(location=PurchaseGoodsProcess_CreditAgencyArtifacts.wsdl,namespace=java:org.jboss.savara.examples.purchasing) ]]
-protocol PurchaseGoodsProcess_CreditAgency at CreditAgencyInterface {
+protocol PurchaseGoodsProcess_CreditAgency at CreditAgencyInterface(role Store) {
+	Store introduces CreditAgencyInterface;
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Store;
 	choice {

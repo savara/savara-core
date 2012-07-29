@@ -56,11 +56,14 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ProtocolModel aggregateGlobalModel(java.util.Collection<ProtocolModel> locals,
+	public ProtocolModel aggregateGlobalModel(String protocolName,
+				java.util.Collection<ProtocolModel> locals,
 							FeedbackHandler handler) {
 		ProtocolModel ret=new ProtocolModel();
 		
-		Protocol protocol=new Protocol();		
+		Protocol protocol=new Protocol();
+		protocol.setName(protocolName);
+		
 		ret.setProtocol(protocol);
 		
 		// Define protocol namespace
@@ -87,8 +90,6 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 			
 			if (protocol.getName() == null) {
 				protocol.setName(local.getProtocol().getName());
-			} else if (!protocol.getName().equals(local.getProtocol().getName())) {
-				throw new IllegalArgumentException("All local models must have the same protocol name");
 			}
 			
 			if (local.getProtocol().getLocatedRole() == null) {

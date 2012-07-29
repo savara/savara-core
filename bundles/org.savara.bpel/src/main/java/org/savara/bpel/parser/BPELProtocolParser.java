@@ -28,6 +28,7 @@ import org.savara.bpel.util.BPELModelUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.util.FeedbackHandlerProxy;
+import org.savara.protocol.util.ProtocolUtils;
 import org.savara.protocol.util.SavaraResourceLocatorProxy;
 import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.Content;
@@ -99,6 +100,43 @@ public class BPELProtocolParser implements ProtocolParser {
 		
 		convContext.parse(process, protocol.getBlock().getContents(),
 							new FeedbackHandlerProxy(journal));
+		
+		// Define introduction of roles
+		java.util.Map<String,Introduces> introduces=new java.util.HashMap<String,Introduces>();
+		
+		for (String introduced : convContext.getIntroducers().keySet()) {
+			String introducee=convContext.getIntroducers().get(introduced);
+			
+			if (introduced.equals(convContext.getRole())) {
+				// Add parameter to protocol
+				ParameterDefinition pd=new ParameterDefinition();
+				pd.setName(introducee);
+				
+				protocol.getParameterDefinitions().add(pd);
+				
+			}
+			
+			Introduces intros=introduces.get(introducee);
+			
+			if (intros == null) {
+				intros = new Introduces();
+				intros.setIntroducer(new Role(introducee));
+				
+				introduces.put(introducee, intros);
+			}
+			
+			if (intros.getIntroducedRole(introduced) == null) {
+				intros.getIntroducedRoles().add(new Role(introduced));
+			}
+		}
+		
+		for (Introduces intros : introduces.values()) {
+			protocol.getBlock().getContents().add(0, intros);
+		}
+				
+		// Localise the role introductions to their inner
+		// most blocks
+		ProtocolUtils.localizeRoleIntroductions(ret);
 		
 		return(ret);
 	}

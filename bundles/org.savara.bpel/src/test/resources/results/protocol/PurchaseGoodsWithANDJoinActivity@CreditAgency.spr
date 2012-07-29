@@ -4,7 +4,8 @@ import "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRatin
 [[ Interface(name=CreditAgency,role=CreditAgency,namespace=http://www.savara.org/examples/CreditAgency) ]]
 [[ Type(location=PurchaseGoods_CreditAgency.wsdl,namespace=http://www.savara.org/examples/CreditAgency) ]]
 [[ Type(location=PurchaseGoods_CreditAgencyArtifacts.wsdl,namespace=http://www.savara.org/examples/CreditAgency) ]]
-protocol PurchaseGoods_CreditAgency at CreditAgency {
+protocol PurchaseGoods_CreditAgency at CreditAgency(role Store) {
+	Store introduces CreditAgency;
 	[[ Correlation(request=creditCheck) ]]
 	creditCheck(CreditCheckRequest) from Store;
 	choice {

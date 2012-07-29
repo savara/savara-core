@@ -71,6 +71,10 @@ public class ReceiveParserRule implements ProtocolParserRule {
 		
 		if (fromRole != null) {
 			interaction.setFromRole(new Role(fromRole));
+			
+			if (!context.getIntroducers().containsKey(context.getRole())) {
+				context.getIntroducers().put(context.getRole(), fromRole);
+			}
 		}
 		
 		//if (context.getRole() != null) {

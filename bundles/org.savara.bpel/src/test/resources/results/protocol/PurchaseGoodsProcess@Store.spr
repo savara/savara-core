@@ -8,7 +8,9 @@ import "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
 [[ Type(location=PurchaseGoodsProcess_Store.wsdl,namespace=http://www.jboss.org/examples/store) ]]
 [[ Type(location=PurchaseGoodsProcess_CreditAgency.wsdl,namespace=java:org.jboss.savara.examples.purchasing) ]]
 [[ Type(location=PurchaseGoodsProcess_StoreArtifacts.wsdl,namespace=http://www.jboss.org/examples/store) ]]
-protocol PurchaseGoodsProcess_Store at StoreInterface {
+protocol PurchaseGoodsProcess_Store at StoreInterface(role Buyer) {
+	Buyer introduces StoreInterface;
+	StoreInterface introduces CreditAgency;
 	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer;
 	[[ Correlation(request=checkCredit) ]]

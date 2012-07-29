@@ -43,6 +43,8 @@ public class DefaultParserContext implements ParserContext {
 	private java.util.Map<String,TVariable> m_variables=
 					new java.util.HashMap<String,TVariable>();
 	private java.util.Stack<TScope> m_scopeStack=new java.util.Stack<TScope>();
+	private java.util.Map<String,String> _introducers=
+					new java.util.HashMap<String,String>();
 	
 	private static java.util.List<ProtocolParserRule> m_rules=
 					new java.util.Vector<ProtocolParserRule>();
@@ -225,4 +227,12 @@ public class DefaultParserContext implements ParserContext {
 	public TScope getScope() {
 		return(m_scopeStack.size() > 0 ? m_scopeStack.peek() : null);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public java.util.Map<String, String> getIntroducers() {
+		return (_introducers);
+	}
+
 }

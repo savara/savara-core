@@ -148,6 +148,8 @@ public class InvokeParserRule implements ProtocolParserRule {
 		
 		if (toRole != null) {
 			interaction.getToRoles().add(new Role(toRole));
+			
+			context.getIntroducers().put(toRole, context.getRole());
 		}
 		
 		interaction.setMessageSignature(ms);

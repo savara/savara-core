@@ -3,7 +3,8 @@ import "bookingReference" as bookingReference;
 [[ Interface(name=SupplierTxnProcessor,role=SupplierTxnProcessor,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 [[ Type(location=CompleteTransaction_SupplierTxnProcessor.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 [[ Type(location=CompleteTransaction_SupplierTxnProcessorArtifacts.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
-protocol CompleteTransaction_SupplierTxnProcessor at SupplierTxnProcessor {
+protocol CompleteTransaction_SupplierTxnProcessor at SupplierTxnProcessor(role Broker) {
+	Broker introduces SupplierTxnProcessor;
 	[[ Correlation(request=confirm) ]]
 	confirm(orderConfirmed) from Broker;
 	[[ Correlation(replyTo=confirm) ]]

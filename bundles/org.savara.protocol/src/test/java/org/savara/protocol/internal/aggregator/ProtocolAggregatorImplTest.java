@@ -553,12 +553,30 @@ public class ProtocolAggregatorImplTest {
 				"Buyer", "Store", "CreditAgency", "Logistics"});
 	}
 
+	/* Behaviour must be identical but imports and annotations maybe in different order
+	@Test
+	public void testPurchasingReorderedRoles() {
+		testAggregateGlobalModel("Purchasing", new String[] {
+				"CreditAgency", "Logistics", "Buyer", "Store"});
+	}
+	*/
+
 	@Test
 	public void testPurchasing2() {
 		testAggregateGlobalModel("Purchasing2", new String[] {
 				"Buyer", "Store", "CreditAgency", "Logistics"});
 	}
 	
+	// Protocols generated from BPEL
+	// SAVARA-350 - currently does not aggregate the behaviour correctly
+	/*
+	@Test
+	public void testPurchaseGoods() {
+		testAggregateGlobalModel("PurchaseGoods", new String[] {
+				"Store", "CreditAgency", "Logistics"});
+	}
+	*/
+
 	@Test
 	public void testMultiPartyInteractionsAndChoice() {
 		testAggregateGlobalModel("MultiPartyInteractionsAndChoice", new String[] {
@@ -718,7 +736,8 @@ public class ProtocolAggregatorImplTest {
 		
 		DefaultFeedbackHandler feedback=new DefaultFeedbackHandler();
 
-		ProtocolModel aggregated=aggregator.aggregateGlobalModel(locals, feedback);
+		ProtocolModel aggregated=aggregator.aggregateGlobalModel(globalName,
+							locals, feedback);
 		
 		if (feedback.getIssues().size() > 0) {
 			fail("Issues detected");

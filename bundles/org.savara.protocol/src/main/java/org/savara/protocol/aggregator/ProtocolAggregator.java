@@ -32,11 +32,13 @@ public interface ProtocolAggregator {
 	 * This method aggregates a set of protocol local models into a
 	 * single global model.
 	 * 
+	 * @param protocolName The name of the aggregated global model
 	 * @param locals The localmodels
 	 * @param handler The handler
 	 * @return The global model
 	 */
-	public ProtocolModel aggregateGlobalModel(java.util.Collection<ProtocolModel> locals,
+	public ProtocolModel aggregateGlobalModel(String protocolName,
+			java.util.Collection<ProtocolModel> locals,
 					FeedbackHandler handler);
 
 	/**

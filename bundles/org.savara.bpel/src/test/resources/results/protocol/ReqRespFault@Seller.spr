@@ -4,7 +4,8 @@ import "CreditCheckInvalid" as CreditCheckInvalid;
 [[ Interface(name=SellerBehavior,role=SellerBehavior,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
 [[ Type(location=ReqRespFaultProcess_Seller.wsdl,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
 [[ Type(location=ReqRespFaultProcess_SellerArtifacts.wsdl,namespace=http://www.pi4soa.org/ReqRespFault/Seller) ]]
-protocol ReqRespFaultProcess_Seller at SellerBehavior {
+protocol ReqRespFaultProcess_Seller at SellerBehavior(role Buyer) {
+	Buyer introduces SellerBehavior;
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Buyer;
 	choice {

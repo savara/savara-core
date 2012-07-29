@@ -12,11 +12,13 @@ import "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryC
 [[ Type(location=PurchaseGoods_CreditAgency.wsdl,namespace=http://www.savara.org/examples/CreditAgency) ]]
 [[ Type(location=PurchaseGoods_Logistics.wsdl,namespace=http://www.savara.org/examples/Logistics) ]]
 [[ Type(location=PurchaseGoods_StoreArtifacts.wsdl,namespace=http://www.savara.org/examples/Store) ]]
-protocol PurchaseGoods_Store at Store {
+protocol PurchaseGoods_Store at Store(role Buyer) {
+	Buyer introduces Store;
 	[[ Correlation(request=buy) ]]
 	buy(BuyRequest) from Buyer;
 	parallel {
 		parallel {
+			Store introduces CreditAgency;
 			[[ Correlation(request=creditCheck) ]]
 			creditCheck(CreditCheckRequest) to CreditAgency;
 			choice at CreditAgency {
@@ -49,6 +51,7 @@ protocol PurchaseGoods_Store at Store {
 			buy(BuyConfirmed) to Buyer;
 		}
 	} and {
+		Store introduces Logistics;
 		[[ Correlation(request=delivery) ]]
 		delivery(DeliveryRequest) to Logistics;
 		[[ Correlation(replyTo=delivery) ]]

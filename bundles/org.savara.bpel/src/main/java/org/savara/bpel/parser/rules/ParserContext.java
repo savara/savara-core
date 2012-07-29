@@ -108,4 +108,12 @@ public interface ParserContext {
 	 */
 	public TScope getScope();
 	
+	/**
+	 * This method returns a map of introduced to
+	 * introducee roles.
+	 * 
+	 * @return The introducers map
+	 */
+	public java.util.Map<String, String> getIntroducers();
+	
 }

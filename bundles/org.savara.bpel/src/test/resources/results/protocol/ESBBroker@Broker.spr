@@ -15,10 +15,12 @@ import "cancel" as cancel;
 [[ Type(location=ESBBrokerProcess_CreditAgency.wsdl,namespace=http://www.pi4soa.org/ESBBroker/CreditAgency) ]]
 [[ Type(location=ESBBrokerProcess_Supplier.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Supplier) ]]
 [[ Type(location=ESBBrokerProcess_BrokerArtifacts.wsdl,namespace=http://www.pi4soa.org/ESBBroker/Broker) ]]
-protocol ESBBrokerProcess_Broker at BrokerBehavior {
+protocol ESBBrokerProcess_Broker at BrokerBehavior(role Buyer) {
+	Buyer introduces BrokerBehavior;
 	[[ Correlation(request=makeEnquiry) ]]
 	makeEnquiry(enquiry) from Buyer;
 	repeat {
+		BrokerBehavior introduces SupplierQuoteEngine;
 		[[ Correlation(request=getQuote) ]]
 		getQuote(requestForQuote) to SupplierQuoteEngine;
 		[[ Correlation(replyTo=getQuote) ]]
@@ -27,10 +29,12 @@ protocol ESBBrokerProcess_Broker at BrokerBehavior {
 	[[ Correlation(replyTo=makeEnquiry) ]]
 	makeEnquiry(quoteList) to Buyer;
 	choice at Buyer {
+		BrokerBehavior introduces CreditAgency;
 		buy(buy) from Buyer;
 		[[ Correlation(request=checkCredit) ]]
 		checkCredit(CreditCheckRequest) to CreditAgency;
 		choice at CreditAgency {
+			BrokerBehavior introduces SupplierTxnProcessor;
 			[[ Correlation(replyTo=checkCredit) ]]
 			checkCredit(CreditCheckOk) from CreditAgency;
 			[[ Correlation(request=confirm) ]]
