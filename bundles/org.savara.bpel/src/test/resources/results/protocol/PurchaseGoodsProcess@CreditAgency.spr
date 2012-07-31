@@ -9,12 +9,12 @@ protocol PurchaseGoodsProcess_CreditAgency at CreditAgencyInterface(role Store) 
 	Store introduces CreditAgencyInterface;
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Store;
-	choice {
+	choice at CreditAgencyInterface {
 		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckOk) to Store;
 	} or {
 		[[ Fault(name=CreditCheckFailed) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit(CreditCheckInvalid) to Store;
+		checkCredit_CreditCheckFailed(CreditCheckInvalid) to Store;
 	}
 }

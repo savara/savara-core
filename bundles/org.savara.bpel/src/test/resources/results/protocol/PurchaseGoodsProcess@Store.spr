@@ -26,6 +26,6 @@ protocol PurchaseGoodsProcess_Store at StoreInterface(role Buyer) {
 		checkCredit_CreditCheckFailed(CreditCheckInvalid) from CreditAgency;
 		[[ Fault(name=BuyFailed) ]]
 		[[ Correlation(replyTo=buy) ]]
-		buy(BuyFailed) to Buyer;
+		buy_BuyFailed(BuyFailed) to Buyer;
 	}
 }

@@ -31,7 +31,7 @@
             <bpmn2:incoming xmlns="http://www.savara.org/examples/CreditAgency">MID14</bpmn2:incoming>
             <bpmn2:outgoing xmlns="http://www.savara.org/examples/CreditAgency">MID17</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns="http://www.savara.org/examples/CreditAgency" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" messageRef="IDCustomerUnknown" name="Send: creditCheck(CustomerUnknown) to Store" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/CreditAgency" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" messageRef="IDCustomerUnknown" name="Send: creditCheck_CustomerUnknown(CustomerUnknown) to Store" operationRef="OP_CreditAgency_creditCheck" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID11</bpmn2:incoming>
             <bpmn2:outgoing>MID12</bpmn2:outgoing>
         </bpmn2:task>

@@ -26,7 +26,7 @@ protocol PurchaseGoods_Store at Store(role Buyer) {
 				creditCheck(CreditRating) from CreditAgency;
 				[[ Fault(name=InsufficientCredit) ]]
 				[[ Correlation(replyTo=buy) ]]
-				buy(BuyFailed) to Buyer;
+				buy_InsufficientCredit(BuyFailed) to Buyer;
 				parallel {
 					sync L13;
 				} and {
@@ -42,7 +42,7 @@ protocol PurchaseGoods_Store at Store(role Buyer) {
 				creditCheck_CustomerUnknown(CustomerUnknown) from CreditAgency;
 				[[ Fault(name=AccountNotFound) ]]
 				[[ Correlation(replyTo=buy) ]]
-				buy(AccountNotFound) to Buyer;
+				buy_AccountNotFound(AccountNotFound) to Buyer;
 				sync L11;
 			}
 		} and {

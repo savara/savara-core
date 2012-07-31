@@ -40,6 +40,14 @@ import org.scribble.protocol.model.Choice;
 
 public class ProtocolAggregatorImplTest {
 
+	// Protocols generated from BPEL
+	// SAVARA-350 - currently does not aggregate the behaviour correctly
+	@Test
+	public void testPurchaseGoods() {
+		testAggregateGlobalModel("PurchaseGoods", new String[] {
+				"Store", "CreditAgency", "Logistics"});
+	}
+
 	@Test
 	public void testMergePathsSimple() {
 		Block b1=new Block();
@@ -567,16 +575,6 @@ public class ProtocolAggregatorImplTest {
 				"Buyer", "Store", "CreditAgency", "Logistics"});
 	}
 	
-	// Protocols generated from BPEL
-	// SAVARA-350 - currently does not aggregate the behaviour correctly
-	/*
-	@Test
-	public void testPurchaseGoods() {
-		testAggregateGlobalModel("PurchaseGoods", new String[] {
-				"Store", "CreditAgency", "Logistics"});
-	}
-	*/
-
 	@Test
 	public void testMultiPartyInteractionsAndChoice() {
 		testAggregateGlobalModel("MultiPartyInteractionsAndChoice", new String[] {

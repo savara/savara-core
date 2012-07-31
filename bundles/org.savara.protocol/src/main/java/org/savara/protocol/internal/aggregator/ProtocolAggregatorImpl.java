@@ -82,6 +82,9 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		
 		GlobalProtocolUnit gpu=new GlobalProtocolUnit(ret);
 		
+		java.util.List<Role> clientRoles=new java.util.Vector<Role>();
+		java.util.List<Role> serverRoles=new java.util.Vector<Role>();
+		
 		for (ProtocolModel local : locals) {
 			
 			// Merge annotations
@@ -104,9 +107,30 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 			LocalProtocolUnit lpu=new LocalProtocolUnit(local);
 			
 			protocolUnits.put(local.getProtocol().getLocatedRole(), lpu);
+			
+			// Check for client roles
+			for (ParameterDefinition pd : local.getProtocol().getParameterDefinitions()) {
+				if (pd.getRole() != null) {
+					clientRoles.add(pd.getRole());
+				}
+			}
+			
+			serverRoles.add(local.getProtocol().getLocatedRole());
 		}
 		
-		while (processProtocolUnits(gpu, protocolUnits, handler));
+		clientRoles.removeAll(serverRoles);
+		
+		Role clientRole=null;
+		
+		if (clientRoles.size() > 0) {
+			clientRole = clientRoles.get(0);
+			
+			if (clientRoles.size() > 1) {
+				LOG.warning("More than one client roles found for aggregation");
+			}
+		}
+		
+		while (processProtocolUnits(gpu, protocolUnits, clientRole, handler));
 		
 		// Post process global model
 		postProcessGlobal(ret);
@@ -153,13 +177,18 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 	}
 	
 	protected boolean processProtocolUnits(GlobalProtocolUnit gpu,
-				java.util.Map<Role, LocalProtocolUnit> lpus, FeedbackHandler handler) {
+				java.util.Map<Role, LocalProtocolUnit> lpus, 
+				Role client, FeedbackHandler handler) {
 		boolean ret=false;
+		
+		LOG.finest("Process protocol units: "+lpus+" clientRole="+client);
 		
 		// Find sending protocol unit
 		for (LocalProtocolUnit lpu : lpus.values()) {
 			ActivityCursor cursor = lpu.getSendingCursor();
 
+			LOG.finest("LocalPU ("+lpu+") Sending cursor: "+cursor);
+			
 			if (cursor != null) {
 				Activity send=cursor.peek();
 				
@@ -173,13 +202,21 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 					LOG.warning("Couldn't find receive for sending action '"+send+"'");
 				}
 				
+				LOG.finest("LocalPU ("+lpu+") Send="+send+" ReceiverPU="
+							+receiver+" ReceiveCursor="+receiveCursor);
+				
 				if (receiveCursor != null) {
 					Activity receive=receiveCursor.getReceiveAction(send);
 					
+					LOG.finest("LocalPU ("+lpu+") Receive="+receive);
+				
 					if (receive != null) {
 						gpu.process(send, cursor, receive, receiveCursor);
 						
 						ret = true;
+						
+						LOG.finest("LocalPU ("+lpu
+								+") Move send/receive cursors to next activity");
 						
 						receiveCursor.next();
 						cursor.next();
@@ -188,6 +225,8 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 			}
 			
 			if (ret) {
+				LOG.finest("LocalPU ("+lpu+") Ret="+ret+" so break.");
+				
 				break;
 			}
 		}
@@ -201,11 +240,15 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 
 			roles.add(r);
 			
+			LOG.finest("Check for repetition: role="+r);
+			
 			for (int i=0; i < roles.size(); i++) {
 				Role rr=roles.get(i);
 
 				LocalProtocolUnit lpu=lpus.get(rr);
 				ActivityCursor cursor=lpu.getRepetitionCursor();
+				
+				LOG.finest("Other role="+rr+" lpu="+lpu+" cursor="+cursor);
 				
 				if (cursor != null) {
 					cursors.put(rr, cursor);
@@ -227,6 +270,8 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 			// if the number of roles is equal to the number processed.
 			// Otherwise ignore for now.
 			if (roles.size() > 1 && roles.size() == processed.size()) {
+				LOG.finest("Generate repetition: "+cursors.values());
+				
 				// Generate global repetition and process 
 				gpu.processRepetition(cursors.values());
 				
@@ -242,6 +287,8 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		// help make progress through the local projections
 		if (!ret) {
 			
+			LOG.finest("Check for endpoint specific actions");
+			
 			// Check for endpoint specific actions that can be transferred
 			for (LocalProtocolUnit lpu : lpus.values()) {
 				ActivityCursor individualCursor=null;
@@ -249,8 +296,12 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 				do {
 					individualCursor=lpu.getIndividualCursor();
 					
+					LOG.finest("LPU Individual cursor="+individualCursor);
+					
 					if (individualCursor != null) {
 						Activity individual=individualCursor.peek();
+						
+						LOG.finest("Process individual activity="+individual);
 						
 						gpu.process(individual, individualCursor);
 						
@@ -261,6 +312,33 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 				} while (individualCursor != null);
 			}
 		}
+		
+		// Last chance - if client role specified, then just look
+		// for a receiver activity with the client role as sender
+		if (!ret && client != null) {
+			for (LocalProtocolUnit lpu : lpus.values()) {
+				ActivityCursor cursor = lpu.getActivityWithClientCursor(client);
+
+				LOG.finest("LocalPU ("+lpu+") Activity with client ("+client
+						+") cursor: "+cursor);
+				
+				if (cursor != null) {
+					Activity individual=cursor.peek();
+					
+					LOG.finest("Process activity with client activity="+individual);
+					
+					gpu.process(individual, cursor);
+					
+					cursor.next();
+					
+					ret = true;
+					
+					break;
+				}
+			}
+		}
+		
+		LOG.finest("Process protocol units: ret="+ret);
 		
 		return(ret);
 	}

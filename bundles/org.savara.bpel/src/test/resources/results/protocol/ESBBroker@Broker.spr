@@ -49,7 +49,7 @@ protocol ESBBrokerProcess_Broker at BrokerBehavior(role Buyer) {
 			checkCredit_invalidCredit(CreditCheckInvalid) from CreditAgency;
 			[[ Fault(name=rejected) ]]
 			[[ Correlation(replyTo=buy) ]]
-			buy(orderRejected) to Buyer;
+			buy_rejected(orderRejected) to Buyer;
 		}
 	} or {
 		cancel(cancel) from Buyer;

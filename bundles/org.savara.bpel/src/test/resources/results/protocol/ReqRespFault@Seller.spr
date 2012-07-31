@@ -8,12 +8,12 @@ protocol ReqRespFaultProcess_Seller at SellerBehavior(role Buyer) {
 	Buyer introduces SellerBehavior;
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Buyer;
-	choice {
+	choice at SellerBehavior {
 		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckOk) to Buyer;
 	} or {
 		[[ Fault(name=insufficientCredit) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit(CreditCheckInvalid) to Buyer;
+		checkCredit_insufficientCredit(CreditCheckInvalid) to Buyer;
 	}
 }

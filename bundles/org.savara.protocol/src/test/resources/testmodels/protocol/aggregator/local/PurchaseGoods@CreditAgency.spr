@@ -8,10 +8,10 @@ protocol PurchaseGoods_CreditAgency at CreditAgency(role Store) {
 	Store introduces CreditAgency;
 	[[ Correlation(request=creditCheck) ]]
 	creditCheck(CreditCheckRequest) from Store;
-	choice {
+	choice at CreditAgency {
 		[[ Fault(name=CustomerUnknown) ]]
 		[[ Correlation(replyTo=creditCheck) ]]
-		creditCheck(CustomerUnknown) to Store;
+		creditCheck_CustomerUnknown(CustomerUnknown) to Store;
 	} or {
 		[[ Correlation(replyTo=creditCheck) ]]
 		creditCheck(CreditRating) to Store;

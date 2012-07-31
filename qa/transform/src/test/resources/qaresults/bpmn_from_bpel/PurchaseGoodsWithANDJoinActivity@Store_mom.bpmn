@@ -85,7 +85,7 @@
             <bpmn2:incoming>MID65</bpmn2:incoming>
             <bpmn2:outgoing>MID50</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID15" messageRef="IDBuyFailed" name="Send: buy(BuyFailed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID15" messageRef="IDBuyFailed" name="Send: buy_InsufficientCredit(BuyFailed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID50</bpmn2:incoming>
             <bpmn2:outgoing>MID62</bpmn2:outgoing>
         </bpmn2:task>
@@ -157,7 +157,7 @@
             <bpmn2:incoming>MID67</bpmn2:incoming>
             <bpmn2:outgoing>MID63</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID32" messageRef="IDAccountNotFound" name="Send: buy(AccountNotFound) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID32" messageRef="IDAccountNotFound" name="Send: buy_AccountNotFound(AccountNotFound) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID63</bpmn2:incoming>
             <bpmn2:outgoing>MID64</bpmn2:outgoing>
         </bpmn2:task>

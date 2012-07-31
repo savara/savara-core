@@ -44,6 +44,7 @@ public class IfParserRule implements ProtocolParserRule {
 		
 		org.scribble.protocol.model.Choice elem=
 					new org.scribble.protocol.model.Choice();
+		elem.setRole(new Role(context.getRole()));
 		
 		Block cb=new Block();
 		

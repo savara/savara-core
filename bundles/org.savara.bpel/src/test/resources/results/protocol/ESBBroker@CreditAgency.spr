@@ -11,12 +11,12 @@ protocol ESBBrokerProcess_CreditAgency at CreditAgency(role Broker) {
 	Broker introduces CreditAgency;
 	[[ Correlation(request=checkCredit) ]]
 	checkCredit(CreditCheckRequest) from Broker;
-	choice {
+	choice at CreditAgency {
 		[[ Correlation(replyTo=checkCredit) ]]
 		checkCredit(CreditCheckOk) to Broker;
 	} or {
 		[[ Fault(name=invalidCredit) ]]
 		[[ Correlation(replyTo=checkCredit) ]]
-		checkCredit(CreditCheckInvalid) to Broker;
+		checkCredit_invalidCredit(CreditCheckInvalid) to Broker;
 	}
 }

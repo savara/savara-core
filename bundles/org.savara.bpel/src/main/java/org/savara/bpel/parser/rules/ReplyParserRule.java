@@ -27,6 +27,7 @@ import org.savara.bpel.util.TypeReferenceUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.protocol.model.util.InteractionUtil;
 import org.scribble.protocol.model.*;
 
 /**
@@ -75,6 +76,9 @@ public class ReplyParserRule implements ProtocolParserRule {
 		interaction.setMessageSignature(ms);
 		
 		if (reply.getFaultName() != null) {
+			ms.setOperation(InteractionUtil.getOperator(reply.getOperation(),
+						reply.getFaultName().getLocalPart()));
+			
 			Annotation annotation=new Annotation(AnnotationDefinitions.FAULT);
 			annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
 						reply.getFaultName().getLocalPart());

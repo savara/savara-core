@@ -103,7 +103,15 @@ public class GlobalProtocolUnit {
 			container = _container;
 		}
 
-		if (individual instanceof Introduces) {
+		// Check if receive activity from client
+		if (individual instanceof Interaction) {
+			Interaction interaction=createInteraction(
+					individualCursor.getRole(),
+					(Interaction)individual);
+				
+			container.add(interaction);	
+			
+		} else if (individual instanceof Introduces) {
 			Introduces introduces=new Introduces((Introduces)individual);
 			
 			// TODO: Temporary - need to add to specific path
@@ -200,6 +208,32 @@ public class GlobalProtocolUnit {
 		// Merge annotations from receive??? Not for now.
 		//for (Annotation an : receive.getAnnotations()) {
 		//}
+		
+		return(ret);
+	}
+
+	protected Interaction createInteraction(Role role, Interaction interaction) {
+		Interaction ret=new Interaction();
+		ret.setMessageSignature(new MessageSignature(interaction.getMessageSignature()));
+		
+		if (interaction.getFromRole() != null) {
+			ret.setFromRole(new Role(interaction.getFromRole()));
+			ret.getToRoles().add(role);
+		} else {
+			ret.setFromRole(role);
+			for (Role r : interaction.getToRoles()) {
+				ret.getToRoles().add(new Role(r));
+			}
+		}
+		
+		// Copy send annotations
+		for (Annotation an : interaction.getAnnotations()) {
+			if (an instanceof org.savara.common.model.annotation.Annotation) {
+				Annotation copy=new org.savara.common.model.annotation.Annotation(
+							(org.savara.common.model.annotation.Annotation)an);
+				ret.getAnnotations().add(copy);
+			}
+		}
 		
 		return(ret);
 	}

@@ -17,6 +17,8 @@
  */
 package org.savara.protocol.internal.aggregator;
 
+import java.util.logging.Logger;
+
 import org.savara.protocol.internal.aggregator.GlobalProtocolUnit.Container;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
@@ -29,6 +31,8 @@ import org.scribble.protocol.model.Role;
 import org.scribble.protocol.util.RoleUtil;
 
 public class LocalProtocolUnit {
+	
+	private static final Logger LOG=Logger.getLogger(LocalProtocolUnit.class.getName());
 	
 	private ActivityCursor _cursor=null;
 
@@ -45,6 +49,10 @@ public class LocalProtocolUnit {
 		return(_cursor.getSendingCursor());
 	}
 	
+	public ActivityCursor getActivityWithClientCursor(Role role) {
+		return(_cursor.getActivityWithClientCursor(role));
+	}
+	
 	public ActivityCursor findReceivingCursor(Activity send) {
 		return(_cursor.findReceivingCursor(send));
 	}
@@ -58,7 +66,7 @@ public class LocalProtocolUnit {
 	}
 	
 	public class ActivityCursor {
-		
+
 		private Role _role=null;
 		private Block _block=null;
 		private int _position=0;
@@ -115,6 +123,23 @@ public class LocalProtocolUnit {
 			return(ret);
 		}
 		
+		private ActivityCursor getActivityWithClientCursor(Role role) {
+			ActivityCursor ret=null;
+			
+			if (_cursors.size() > 0) {
+				for (ActivityCursor cur : _cursors) {
+					ret = cur.getActivityWithClientCursor(role);
+					if (ret != null) {
+						break;
+					}
+				}
+			} else if (isActivityWithClientAction(role)) {
+				ret = this;
+			}
+			
+			return(ret);
+		}
+		
 		private ActivityCursor getIndividualCursor() {
 			ActivityCursor ret=null;
 			
@@ -161,6 +186,22 @@ public class LocalProtocolUnit {
 						((Choice)act).getRole().equals(_role);
 						*/
 			}
+			
+			return(ret);
+		}
+		
+		protected boolean isActivityWithClientAction(Role role) {
+			boolean ret=false;
+			Activity act=peek();
+			
+			if (act instanceof Interaction) {
+				ret = (((Interaction)act).getFromRole() != null
+						&& ((Interaction)act).getFromRole().equals(role)) ||
+						((Interaction)act).getToRoles().contains(role);
+			}
+			
+			LOG.finest("Is activity with client action ("+act
+					+") for role="+role+"? "+ret);
 			
 			return(ret);
 		}

@@ -66,7 +66,7 @@
             <bpmn2:incoming xmlns="http://www.savara.org/examples/Store">MID33</bpmn2:incoming>
             <bpmn2:outgoing xmlns="http://www.savara.org/examples/Store">MID36</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID13" messageRef="IDBuyFailed" name="Send: buy(BuyFailed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID13" messageRef="IDBuyFailed" name="Send: buy_InsufficientCredit(BuyFailed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID30</bpmn2:incoming>
             <bpmn2:outgoing>MID28</bpmn2:outgoing>
         </bpmn2:task>
@@ -87,7 +87,7 @@
             <bpmn2:outgoing>MID37</bpmn2:outgoing>
             <bpmn2:errorEventDefinition errorRef="ERRCustomerUnknown" id="MID18"/>
         </bpmn2:boundaryEvent>
-        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID19" messageRef="IDAccountNotFound" name="Send: buy(AccountNotFound) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns="http://www.savara.org/examples/Store" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID19" messageRef="IDAccountNotFound" name="Send: buy_AccountNotFound(AccountNotFound) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>MID37</bpmn2:incoming>
             <bpmn2:outgoing>MID34</bpmn2:outgoing>
         </bpmn2:task>

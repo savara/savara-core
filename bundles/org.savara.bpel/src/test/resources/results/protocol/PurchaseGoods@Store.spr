@@ -22,10 +22,10 @@ protocol PurchaseGoods_Store at Store(role Buyer) {
 	choice at CreditAgency {
 		[[ Correlation(replyTo=creditCheck) ]]
 		creditCheck(CreditRating) from CreditAgency;
-		choice {
+		choice at Store {
 			[[ Fault(name=InsufficientCredit) ]]
 			[[ Correlation(replyTo=buy) ]]
-			buy(BuyFailed) to Buyer;
+			buy_InsufficientCredit(BuyFailed) to Buyer;
 		} or {
 			Store introduces Logistics;
 			[[ Correlation(request=delivery) ]]
@@ -41,6 +41,6 @@ protocol PurchaseGoods_Store at Store(role Buyer) {
 		creditCheck_CustomerUnknown(CustomerUnknown) from CreditAgency;
 		[[ Fault(name=AccountNotFound) ]]
 		[[ Correlation(replyTo=buy) ]]
-		buy(AccountNotFound) to Buyer;
+		buy_AccountNotFound(AccountNotFound) to Buyer;
 	}
 }

@@ -13,7 +13,7 @@ protocol ESBBrokerProcess_Buyer at Buyer {
 	makeEnquiry(enquiry) to Broker;
 	[[ Correlation(replyTo=makeEnquiry) ]]
 	makeEnquiry(quoteList) from Broker;
-	choice {
+	choice at Buyer {
 		[[ Correlation(request=buy) ]]
 		buy() to Broker;
 		choice at Broker {
