@@ -30,6 +30,22 @@ public class MessageUtil {
 	public static boolean isValid(String paramValue, Object mesgValue) {
 		boolean ret=false;
 		
+		if (mesgValue instanceof String) {
+				
+			// Initially check strings directly, but if fail, then
+			// resort to checking against the DOM
+			ret = paramValue.equals(mesgValue);
+			
+			if (!ret) {
+				// Convert to DOM
+				try {
+					mesgValue = XMLUtils.getNode((String)mesgValue);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
 		if (mesgValue instanceof org.w3c.dom.Node) {			
 			try {
 				logger.info("Validating value="+XMLUtils.toText((org.w3c.dom.Node)mesgValue));
@@ -44,8 +60,6 @@ public class MessageUtil {
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
-		} else if (mesgValue instanceof String) {
-			ret = paramValue.equals(mesgValue);
 		}
 
 		return(ret);

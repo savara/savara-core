@@ -1,0 +1,71 @@
+<switchyard xmlns="urn:switchyard-config:switchyard:1.0"
+		targetNamespace="http://www.savara.org/examples/Store"
+		name="Store">
+	<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+			targetNamespace="http://www.savara.org/examples/Store"
+			name="Store" >
+		<service name="Store" promote="StoreComponent/Store">
+            <interface.wsdl interface="wsdl/PurchaseGoods_Store.wsdl#wsdl.porttype(Store)"/>
+			<binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+				<wsdl>wsdl/PurchaseGoods_Store.wsdl#wsdl.porttype(Store)</wsdl>
+				<socketAddr>:18001</socketAddr>
+			</binding.soap>
+		</service>
+		<reference name="Logistics" promote="StoreComponent/Logistics" multiplicity="1..1" >
+            <interface.wsdl interface="wsdl/PurchaseGoods_Logistics.wsdl#wsdl.porttype(Logistics)"/>
+			<binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+				<wsdl>wsdl/PurchaseGoods_Logistics.wsdl#wsdl.porttype(Logistics)</wsdl>
+				<socketAddr>:18001</socketAddr>
+			</binding.soap>
+		</reference>
+		<reference name="CreditAgency" promote="StoreComponent/CreditAgency" multiplicity="1..1" >
+            <interface.wsdl interface="wsdl/PurchaseGoods_CreditAgency.wsdl#wsdl.porttype(CreditAgency)"/>
+			<binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+				<wsdl>wsdl/PurchaseGoods_CreditAgency.wsdl#wsdl.porttype(CreditAgency)</wsdl>
+				<socketAddr>:18001</socketAddr>
+			</binding.soap>
+		</reference>
+		<component name="StoreComponent">
+			<implementation.bean xmlns="urn:switchyard-component-bean:config:1.0" class="org.savara.examples.store.StoreImpl"/>
+			<service name="Store" >
+				<interface.java interface="org.savara.examples.store.Store"/>
+			</service>
+			<reference name="Logistics" >
+				<interface.java interface="org.savara.examples.logistics.Logistics"/>
+			</reference>
+			<reference name="CreditAgency" >
+				<interface.java interface="org.savara.examples.creditagency.CreditAgency"/>
+			</reference>
+		</component>
+	</composite>
+    <transforms xmlns:xform="urn:switchyard-config:transform:1.0">
+        <xform:transform.jaxb 
+            from="{http://www.jboss.org/examples/store}BuyRequest" 
+            to="java:org.jboss.examples.store.BuyRequestType" 
+            contextPath="org.jboss.examples.store"/>
+        <xform:transform.jaxb 
+            from="java:org.jboss.examples.store.BuyConfirmedType" 
+            to="{http://www.jboss.org/examples/store}BuyConfirmed" 
+            contextPath="org.jboss.examples.store"/>
+        <xform:transform.jaxb 
+            from="java:org.jboss.examples.creditagency.CreditCheckType" 
+            to="{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" 
+            contextPath="org.jboss.examples.creditagency"/>
+        <xform:transform.jaxb 
+            from="{http://www.jboss.org/examples/creditAgency}CreditRating" 
+            to="java:org.jboss.examples.creditagency.CreditRatingType" 
+            contextPath="org.jboss.examples.creditagency"/>
+        <xform:transform.jaxb 
+            from="{http://www.jboss.org/examples/creditAgency}CustomerUnknown" 
+            to="java:org.savara.examples.creditagency.CustomerUnknownFault" 
+            contextPath="org.jboss.examples.creditagency"/>
+        <xform:transform.jaxb 
+            from="java:org.jboss.examples.logistics.DeliveryRequestType" 
+            to="{http://www.jboss.org/examples/logistics}DeliveryRequest" 
+            contextPath="org.jboss.examples.logistics"/>
+        <xform:transform.jaxb 
+            from="{http://www.jboss.org/examples/logistics}DeliveryConfirmed" 
+            to="java:org.jboss.examples.logistics.DeliveryConfirmedType" 
+            contextPath="org.jboss.examples.logistics"/>
+    </transforms>
+</switchyard>

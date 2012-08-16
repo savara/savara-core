@@ -1,0 +1,26 @@
+<switchyard xmlns="urn:switchyard-config:switchyard:1.0"
+		targetNamespace="http://www.savara.org/examples/Store"
+		name="Store">
+	<composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+			targetNamespace="http://www.savara.org/examples/Store"
+			name="Store" >
+		<service name="Store" promote="Store">
+			<binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+				<wsdl>wsdl/PurchaseGoods_Store.wsdl</wsdl>
+				<socketAddr>:18001</socketAddr>
+			</binding.soap>
+		</service>
+		<reference name="Logistics" promote="Logistics" multiplicity="1..1" >
+			<binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+				<wsdl>wsdl/PurchaseGoods_Logistics.wsdl</wsdl>
+				<socketAddr>:18001</socketAddr>
+			</binding.soap>
+		</reference>
+		<reference name="CreditAgency" promote="CreditAgency" multiplicity="1..1" >
+			<binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+				<wsdl>wsdl/PurchaseGoods_CreditAgency.wsdl</wsdl>
+				<socketAddr>:18001</socketAddr>
+			</binding.soap>
+		</reference>
+	</composite>
+</switchyard>
