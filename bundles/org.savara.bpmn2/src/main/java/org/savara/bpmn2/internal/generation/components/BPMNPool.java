@@ -19,6 +19,8 @@
  */
 package org.savara.bpmn2.internal.generation.components;
 
+import org.savara.bpmn2.model.TProcess;
+
 public class BPMNPool extends AbstractBPMNActivity {
 
 	private boolean m_completed=false;
@@ -70,6 +72,15 @@ public class BPMNPool extends AbstractBPMNActivity {
 		m_finalState = new JunctionActivity(getModelFactory().createFinalNode(getContainer()),
 				this, getModelFactory(), getNotationFactory());
 		
+	}
+	
+	/**
+	 * This method returns the BPMN2 Process associated with the pool.
+	 * 
+	 * @return The process
+	 */
+	public TProcess getProcess() {
+		return ((TProcess)getContainer());
 	}
 	
 	/**

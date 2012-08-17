@@ -53,6 +53,7 @@ import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TItemDefinition;
 import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TOperation;
+import org.savara.bpmn2.model.TProcess;
 import org.savara.bpmn2.model.TReceiveTask;
 import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.model.TSendTask;
@@ -67,6 +68,7 @@ import org.savara.protocol.model.Join;
 import org.savara.protocol.model.Fork;
 import org.savara.protocol.model.util.InteractionUtil;
 import org.scribble.protocol.model.*;
+import org.scribble.protocol.util.RunUtil;
 
 /**
  * This class represents the Protocol to BPMN2 Process implementation of the model
@@ -256,6 +258,9 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 	    private java.util.List<BPMNActivity> m_bpmnActivityStack=new java.util.ArrayList<BPMNActivity>();
 	    private java.util.Map<String,BPMNDiagram> m_activityModels=
 	    				new java.util.HashMap<String,BPMNDiagram>();
+	    private java.util.Map<Protocol, TProcess> _protocolProcessMap=new java.util.HashMap<Protocol, TProcess>();
+	    private java.util.Map<Protocol, java.util.List<RunActivity>> _pendingCalledActivityId=
+	    				new java.util.HashMap<Protocol, java.util.List<RunActivity>>();
 
 	    /**
 		 * The constructor the BPMN model visitor.
@@ -279,6 +284,23 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				BPMNDiagram diagram=getBPMNModel(elem);
 				
 				BPMNPool pool=diagram.createPool(getPoolName(elem));
+				
+				if (pool != null) {
+					_protocolProcessMap.put(elem, pool.getProcess());
+				
+					// See whether this protocol is the target of run
+					// activities, and if so, setup the called element id
+					if (_pendingCalledActivityId.containsKey(elem)) {
+						
+						java.util.List<RunActivity> list=_pendingCalledActivityId.get(elem);
+						
+						for (RunActivity ra : list) {
+							ra.setCalledActivityId(new QName(
+									m_modelFactory.getDefinitions().getTargetNamespace(),
+									pool.getProcess().getId()));
+						}
+					}
+				}
 				
 				//diagram.initialize(elem);
 				
@@ -385,7 +407,30 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			BPMNActivity umls=getBPMNActivity();
 			if (umls != null) {
-				new RunActivity(elem, umls, m_modelFactory, m_notationFactory);					
+				RunActivity ra=new RunActivity(elem, umls, m_modelFactory, m_notationFactory);
+				
+				// Check if called protocol is available
+				Protocol called=RunUtil.getInnerProtocol(elem.getEnclosingProtocol(),
+									elem.getProtocolReference());
+				
+				if (called != null) {
+					TProcess proc=_protocolProcessMap.get(called);
+					
+					if (proc != null) {
+						ra.setCalledActivityId(new QName(
+								m_modelFactory.getDefinitions().getTargetNamespace(),
+								proc.getId()));
+					} else {
+						java.util.List<RunActivity> list=_pendingCalledActivityId.get(called);
+						
+						if (list == null) {
+							list = new java.util.ArrayList<RunActivity>();
+							_pendingCalledActivityId.put(called, list);
+						}
+						
+						list.add(ra);
+					}
+				}
 			}
 		}
 		

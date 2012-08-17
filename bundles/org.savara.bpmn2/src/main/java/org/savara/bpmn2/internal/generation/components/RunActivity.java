@@ -19,6 +19,10 @@
  */
 package org.savara.bpmn2.internal.generation.components;
 
+import javax.xml.namespace.QName;
+
+import org.savara.bpmn2.model.TCallActivity;
+import org.savara.bpmn2.model.TCallChoreography;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Run;
 
@@ -43,6 +47,21 @@ public class RunActivity extends SimpleActivity {
 	
 	protected Object createNode(Activity act) {
 		return(getModelFactory().createCallActivity(getContainer(), (Run)act));
+	}
+	
+	/**
+	 * This method sets the id of the called activity.
+	 * 
+	 * @param value The called activity id
+	 */
+	public void setCalledActivityId(QName value) {
+		Object node=getNode();
+		
+		if (node instanceof TCallActivity) {
+			((TCallActivity)node).setCalledElement(value);
+		} else if (node instanceof TCallChoreography) {
+			((TCallChoreography)node).setCalledChoreographyRef(value);
+		}
 	}
 	
 	/**

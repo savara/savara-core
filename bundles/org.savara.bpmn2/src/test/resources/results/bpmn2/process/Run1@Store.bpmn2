@@ -36,7 +36,7 @@
             <bpmn2:incoming>MID16</bpmn2:incoming>
             <bpmn2:outgoing>MID14</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:callActivity id="MID7" name="Call: CheckCredit_Store">
+        <bpmn2:callActivity calledElement="MID9" id="MID7" name="Call: CheckCredit_Store">
             <bpmn2:incoming>MID14</bpmn2:incoming>
             <bpmn2:outgoing>MID15</bpmn2:outgoing>
         </bpmn2:callActivity>
