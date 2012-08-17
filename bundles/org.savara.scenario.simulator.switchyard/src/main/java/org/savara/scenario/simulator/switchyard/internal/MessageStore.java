@@ -31,7 +31,7 @@ import org.savara.scenario.util.MessageUtil;
 
 public class MessageStore {
 
-	private static final int TIMEOUT = 2000;
+	private static final int TIMEOUT = 5000;
 
 	private static final Logger LOG=Logger.getLogger(MessageStore.class.getName());
 	
