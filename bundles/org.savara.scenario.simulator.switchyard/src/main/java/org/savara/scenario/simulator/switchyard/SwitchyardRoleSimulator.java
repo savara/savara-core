@@ -17,12 +17,24 @@
  */
 package org.savara.scenario.simulator.switchyard;
 
+import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.naming.Binding;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.Name;
+import javax.naming.NameClassPair;
+import javax.naming.NameParser;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import javax.xml.namespace.QName;
 
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
+import org.jboss.weld.environment.se.events.ContainerInitialized;
 import org.savara.common.resources.ResourceLocator;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.ReceiveEvent;
@@ -37,7 +49,7 @@ import org.savara.scenario.simulator.switchyard.binding.soap.deploy.SOAPActivato
 import org.savara.scenario.simulator.switchyard.internal.MessageStore;
 import org.switchyard.SwitchYard;
 import org.switchyard.deploy.Activator;
-import org.switchyard.test.mixins.CDIMixIn;
+//import org.switchyard.test.mixins.CDIMixIn;
 
 /**
  * The Switchyard based implementation of the RoleSimulator.
@@ -45,10 +57,16 @@ import org.switchyard.test.mixins.CDIMixIn;
  */
 public class SwitchyardRoleSimulator implements RoleSimulator {
 
-	private static final String SWITCHYARD_SIMULATOR = "Switchyard simulator";
+    private static final String BINDING_CONTEXT = "java:comp";
+    private static final String BEAN_MANAGER_NAME = "BeanManager";
+
+    private static final String SWITCHYARD_SIMULATOR = "Switchyard simulator";
 	private static final String SWITCHYARD_DESCRIPTOR = "switchyard.xml";
 	
-	private SimulationContext _context=null;
+    //private static final String INITIAL_CONTEXT_FACTORY_NAME = "org.jboss.as.naming.InitialContextFactory";
+    private static final String INITIAL_CONTEXT_FACTORY_NAME = "tyrex.naming.MemoryContextFactory";
+
+    private SimulationContext _context=null;
 	
 	private SwitchYard _switchyard=null;
 	private SOAPActivator _activator=null;
@@ -82,9 +100,15 @@ public class SwitchyardRoleSimulator implements RoleSimulator {
 			
 			is.close();
 			
-			CDIMixIn mix=new CDIMixIn();
-			mix.initialize();
-			
+			//CDIMixIn mix=new CDIMixIn();
+			//mix.initialize();
+	        // Deploy the weld container...
+        	
+	        
+	        System.getProperties().put(InitialContext.INITIAL_CONTEXT_FACTORY, JNDIFactory.class.getName());
+	        
+	        InitialContext ctx=new InitialContext();
+	        
 			_switchyard.start();
 			
 			for (Activator activator : _switchyard.getActivatorList()) {
@@ -118,7 +142,7 @@ public class SwitchyardRoleSimulator implements RoleSimulator {
 	 * @return Whether the model is supported by this role simulator
 	 */
 	public boolean isSupported(SimulationModel model) {
-		return(model.getName().equals(SWITCHYARD_DESCRIPTOR));
+		return(model.getName().endsWith(SWITCHYARD_DESCRIPTOR));
 	}
 	
 	/**
@@ -293,5 +317,189 @@ public class SwitchyardRoleSimulator implements RoleSimulator {
 		if (_switchyard != null) {
 			_switchyard.stop();
 		}
+	}
+	
+	public static class JNDIFactory implements javax.naming.spi.InitialContextFactory {
+
+		public Context getInitialContext(Hashtable<?, ?> environment)
+				throws NamingException {
+			return new JNDIContext();
+		}	
+	}
+	
+	public static class JNDIContext implements javax.naming.Context {
+
+		java.util.Map<String, Object> _contents=new java.util.HashMap<String, Object>();
+		
+	    private static Weld _weld;
+	    private static WeldContainer _weldContainer;
+		
+		static {
+	        _weld = new Weld();
+	        _weldContainer = _weld.initialize();
+	        _weldContainer.event().select(ContainerInitialized.class).fire(new ContainerInitialized());
+		}
+		
+		public Object lookup(Name name) throws NamingException {
+			return (lookup(name.toString()));
+		}
+
+		public Object lookup(String name) throws NamingException {
+			if (!_contents.containsKey(name)) {
+				
+				if (name.equals(BINDING_CONTEXT)) {
+					return (this);
+				} else if (name.equals(BEAN_MANAGER_NAME)) {
+					return (_weldContainer.getBeanManager());
+				}
+				
+				throw new NamingException("Item '"+name+"' not found");
+			}
+			return (_contents.get(name));
+		}
+
+		public void bind(Name name, Object obj) throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void bind(String name, Object obj) throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void rebind(Name name, Object obj) throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void rebind(String name, Object obj) throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void unbind(Name name) throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void unbind(String name) throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void rename(Name oldName, Name newName) throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void rename(String oldName, String newName)
+				throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public NamingEnumeration<NameClassPair> list(Name name)
+				throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public NamingEnumeration<NameClassPair> list(String name)
+				throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public NamingEnumeration<Binding> listBindings(Name name)
+				throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public NamingEnumeration<Binding> listBindings(String name)
+				throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public void destroySubcontext(Name name) throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void destroySubcontext(String name) throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public Context createSubcontext(Name name) throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public Context createSubcontext(String name) throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public Object lookupLink(Name name) throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public Object lookupLink(String name) throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public NameParser getNameParser(Name name) throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public NameParser getNameParser(String name) throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public Name composeName(Name name, Name prefix) throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public String composeName(String name, String prefix)
+				throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public Object addToEnvironment(String propName, Object propVal)
+				throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public Object removeFromEnvironment(String propName)
+				throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public Hashtable<?, ?> getEnvironment() throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public void close() throws NamingException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public String getNameInNamespace() throws NamingException {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
 	}
 }

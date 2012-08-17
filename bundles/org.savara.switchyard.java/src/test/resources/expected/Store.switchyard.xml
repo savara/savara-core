@@ -5,8 +5,9 @@
 			targetNamespace="http://www.savara.org/examples/Store"
 			name="Store" >
 		<service name="Store" promote="StoreComponent/Store">
+			<interface.wsdl interface="wsdl/PurchaseGoods_Store.wsdl#wsdl.porttype(Store)" />
 			<binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
-				<wsdl>wsdl/PurchaseGoods_Store.wsdl#wsdl.porttype(Store)</wsdl>
+				<wsdl>wsdl/PurchaseGoods_Store.wsdl</wsdl>
 				<socketAddr>:18001</socketAddr>
 			</binding.soap>
 		</service>

@@ -196,7 +196,7 @@ public class ScenarioSimulatorMain {
 			for (RoleDetails details : simulation.getRoles()) {
 				if (details.getScenarioRole().equals(role.getName())) {
 					
-					handler.roleStart(role);
+					//handler.roleStart(role);
 					
 					RoleSimulator rsim=roleSimulators.get(role);
 					
@@ -220,9 +220,10 @@ public class ScenarioSimulatorMain {
 								logger.fine("Adding context for role '"+role.getName()+"'");
 								ret.put(role, context);
 
-								handler.roleInitialized(role);
+								//handler.roleInitialized(role);
 							} else {
 								//logger.severe("Failed to load context for role '"+role.getName()+"'");
+								handler.roleStart(role);
 								
 								handler.roleFailed(role, "Failed to load context for role '"+role.getName()+"'");
 							}
@@ -232,9 +233,14 @@ public class ScenarioSimulatorMain {
 						} else {
 							//logger.severe("Failed to find model '"+details.getModel()+"'");
 							
+							handler.roleStart(role);
+							
 							handler.roleFailed(role, "Failed to find model '"+details.getModel()+"'");
 						}
 					} catch(Exception e) {
+						
+						handler.roleStart(role);
+
 						logger.log(Level.SEVERE, 
 								"Failed to load simulation model '"+details.getModel()+"'", e);
 						

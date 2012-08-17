@@ -28,11 +28,7 @@
 			<artifactId>switchyard-deploy</artifactId>
 			<version>${switchyard.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.switchyard</groupId>
-			<artifactId>switchyard-test</artifactId>
-			<version>${switchyard.version}</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.switchyard.components</groupId>
 			<artifactId>switchyard-component-bean</artifactId>
@@ -69,7 +65,6 @@
    </dependencies>
 
 	<build>
-<!--
 		<plugins>
 		  <plugin>
 		    <artifactId>maven-dependency-plugin</artifactId>
@@ -81,9 +76,7 @@
 		        <configuration>
 		          <outputDirectory>${project.build.outputDirectory}/lib</outputDirectory>
 		          <stripVersion>true</stripVersion>
--->
-		          <!-- >excludeTransitive>true</excludeTransitive -->
-<!--
+		          <!-- excludeTransitive>true</excludeTransitive -->
 		          <excludeArtifactIds>junit,org.osgi.core,org.osgi.compendium</excludeArtifactIds>
 		          <excludeGroupIds>org.savara.bundles,org.scribble.bundles</excludeGroupIds>
 		        </configuration>
@@ -91,7 +84,6 @@
 		    </executions>
 		  </plugin>
 		</plugins>
--->
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->

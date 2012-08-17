@@ -220,7 +220,11 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 				
 				String wsdlName=wsdlPath;
 				int ind=wsdlName.lastIndexOf('/');
+				
+				String wsdlLocation=wsdlName;
+				
 				if (ind != -1) {
+					wsdlLocation = wsdlName.substring(ind+1);
 					wsdlName = wsdlName.substring(ind+1)
 							+"#wsdl.porttype("+portType.getQName().getLocalPart()+")";
 				}
@@ -229,8 +233,10 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 						"\" promote=\""+portType.getQName().getLocalPart()+"Component/"
 						+portType.getQName().getLocalPart()+"\">\r\n");
 				
+				composite.append("\t\t\t<interface.wsdl interface=\"wsdl/"
+									+wsdlName+"\" />\r\n");
 				composite.append("\t\t\t<binding.soap xmlns=\"urn:switchyard-component-soap:config:1.0\">\r\n");
-				composite.append("\t\t\t\t<wsdl>wsdl/"+wsdlName+"</wsdl>\r\n");
+				composite.append("\t\t\t\t<wsdl>wsdl/"+wsdlLocation+"</wsdl>\r\n");
 				composite.append("\t\t\t\t<socketAddr>:18001</socketAddr>\r\n");
 				composite.append("\t\t\t</binding.soap>\r\n");
 								
@@ -262,8 +268,12 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 							PortType refPortType=refPortTypes.next();
 
 							String refWsdlName=refWsdlPath;
+							
+							wsdlLocation=refWsdlName;
+							
 							ind = refWsdlName.lastIndexOf('/');
 							if (ind != -1) {
+								wsdlLocation = refWsdlName.substring(ind+1);
 								refWsdlName = refWsdlName.substring(ind+1)
 										+"#wsdl.porttype("+refPortType.getQName().getLocalPart()+")";
 							}
@@ -271,8 +281,11 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 							composite.append("\t\t<reference name=\""+refPortType.getQName().getLocalPart()+
 									"\" promote=\""+portType.getQName().getLocalPart()+"Component/"
 									+refPortType.getQName().getLocalPart()+"\" multiplicity=\"1..1\" >\r\n");
+
+							composite.append("\t\t\t<interface.wsdl interface=\"wsdl/"
+												+refWsdlName+"\" />\r\n");
 							composite.append("\t\t\t<binding.soap xmlns=\"urn:switchyard-component-soap:config:1.0\">\r\n");
-							composite.append("\t\t\t\t<wsdl>wsdl/"+refWsdlName+"</wsdl>\r\n");
+							composite.append("\t\t\t\t<wsdl>wsdl/"+wsdlLocation+"</wsdl>\r\n");
 							composite.append("\t\t\t\t<socketAddr>:18001</socketAddr>\r\n");
 							composite.append("\t\t\t</binding.soap>\r\n");
 							composite.append("\t\t</reference>\r\n");

@@ -17,6 +17,9 @@
  */
 package org.savara.scenario.simulation;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.savara.common.logging.MessageFormatter;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.Role;
@@ -30,6 +33,8 @@ import org.savara.scenario.model.Scenario;
  */
 public class DefaultScenarioSimulator implements ScenarioSimulator {
 
+	private static final Logger LOG=Logger.getLogger(DefaultScenarioSimulator.class.getName());
+	
 	/**
 	 * This method simulates the scenario against the pre-configured
 	 * monitor. Results from the simulation are notified to the
@@ -46,9 +51,24 @@ public class DefaultScenarioSimulator implements ScenarioSimulator {
 		
 		// Initialize the simulation contexts against the appropriate simulators
 		for (Role role : contexts.keySet()) {
-			RoleSimulator rsim=roleSimulators.get(role);	
+			RoleSimulator rsim=roleSimulators.get(role);
+			
+			handler.roleStart(role);
+			
 			if (rsim != null) {
-				rsim.initialize(contexts.get(role));
+				
+				try {
+					rsim.initialize(contexts.get(role));
+					
+					handler.roleInitialized(role);
+					
+				} catch (Throwable t) {
+					LOG.log(Level.SEVERE, 
+							"Failed to initialize role '"+role.getName()+"'", t);
+					
+					handler.roleFailed(role,
+							"Failed to initialize role simulator");
+				}
 			}
 		}
 		

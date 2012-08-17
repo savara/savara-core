@@ -31,6 +31,8 @@ import org.savara.scenario.util.MessageUtil;
 
 public class MessageStore {
 
+	private static final int TIMEOUT = 2000;
+
 	private static final Logger LOG=Logger.getLogger(MessageStore.class.getName());
 	
 	private java.util.List<ReceiveEvent> _receiveEvents=new java.util.Vector<ReceiveEvent>();
@@ -149,11 +151,11 @@ public class MessageStore {
 	 */
 	public void handleSendEvent(SendEvent send) throws Exception {
 		synchronized(send) {
-			if (!_sendEvents.offer(send, 5000, TimeUnit.MILLISECONDS)) {
+			if (!_sendEvents.offer(send, TIMEOUT, TimeUnit.MILLISECONDS)) {
 				_handler.unexpected(send);
 			}
 			
-			send.wait(5000);
+			send.wait(TIMEOUT);
 		} 
 	}
 	
@@ -165,7 +167,7 @@ public class MessageStore {
 				_receiveEvents.notifyAll();
 			}
 			
-			receive.wait(5000);
+			receive.wait(TIMEOUT);
 		}
 	}
 	
@@ -176,7 +178,7 @@ public class MessageStore {
 		
 		synchronized(_receiveEvents) {
 			boolean f_found=false;
-			long endtime=System.currentTimeMillis()+5000;
+			long endtime=System.currentTimeMillis()+TIMEOUT;
 			
 			do {
 				for (ReceiveEvent receive : _receiveEvents) {
