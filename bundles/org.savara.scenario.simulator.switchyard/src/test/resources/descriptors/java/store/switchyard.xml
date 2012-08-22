@@ -55,10 +55,12 @@
             from="{http://www.jboss.org/examples/creditAgency}CreditRating" 
             to="java:org.jboss.examples.creditagency.CreditRatingType" 
             contextPath="org.jboss.examples.creditagency"/>
-        <xform:transform.jaxb 
-            from="{http://www.jboss.org/examples/creditAgency}CustomerUnknown" 
-            to="java:org.savara.examples.creditagency.CustomerUnknownFault" 
-            contextPath="org.jboss.examples.creditagency"/>
+		<xform:transform.java class="org.savara.scenario.simulator.switchyard.CustomUnknownTransformer"
+            from="{http://www.jboss.org/examples/creditAgency}CustomerUnknown"
+            to="java:org.savara.examples.creditagency.CustomerUnknownFault"/>
+		<xform:transform.java class="org.savara.scenario.simulator.switchyard.AccountNotFoundTransformer"
+            to="{http://www.jboss.org/examples/store}AccountNotFound"
+            from="java:org.savara.examples.store.AccountNotFoundFault"/>
         <xform:transform.jaxb 
             from="java:org.jboss.examples.logistics.DeliveryRequestType" 
             to="{http://www.jboss.org/examples/logistics}DeliveryRequest" 

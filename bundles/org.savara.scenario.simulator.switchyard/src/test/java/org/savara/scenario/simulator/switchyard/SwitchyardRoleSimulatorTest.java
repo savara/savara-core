@@ -338,7 +338,7 @@ public class SwitchyardRoleSimulatorTest {
 		}
 	}
 
-	//@Test
+	@Test
 	public void testCustomerUnknown() {
 		SwitchyardRoleSimulator sim=new SwitchyardRoleSimulator();
 		

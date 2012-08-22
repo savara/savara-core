@@ -63,9 +63,6 @@ public class SwitchyardRoleSimulator implements RoleSimulator {
     private static final String SWITCHYARD_SIMULATOR = "Switchyard simulator";
 	private static final String SWITCHYARD_DESCRIPTOR = "switchyard.xml";
 	
-    //private static final String INITIAL_CONTEXT_FACTORY_NAME = "org.jboss.as.naming.InitialContextFactory";
-    private static final String INITIAL_CONTEXT_FACTORY_NAME = "tyrex.naming.MemoryContextFactory";
-
     private SimulationContext _context=null;
 	
 	private SwitchYard _switchyard=null;
@@ -99,15 +96,9 @@ public class SwitchyardRoleSimulator implements RoleSimulator {
 			_switchyard = new SwitchYard(is);
 			
 			is.close();
-			
-			//CDIMixIn mix=new CDIMixIn();
-			//mix.initialize();
-	        // Deploy the weld container...
-        	
-	        
+
+			// Configure the JNDI factory
 	        System.getProperties().put(InitialContext.INITIAL_CONTEXT_FACTORY, JNDIFactory.class.getName());
-	        
-	        InitialContext ctx=new InitialContext();
 	        
 			_switchyard.start();
 			

@@ -37,6 +37,8 @@ import org.savara.scenario.simulator.switchyard.binding.soap.config.model.SOAPBi
 import org.savara.scenario.simulator.switchyard.binding.soap.util.WSDLUtil;
 import org.switchyard.deploy.BaseServiceHandler;
 import org.switchyard.exception.DeliveryException;
+import org.switchyard.metadata.java.JavaService;
+import org.switchyard.transform.Transformer;
 
 /**
  * Inbound handler for binding.
@@ -71,11 +73,6 @@ public class InboundHandler extends BaseServiceHandler {
         PortName portName = _config.getPort();
         
     	String wsdlLocation=_config.getWsdl();
-    	
-    	int index=wsdlLocation.indexOf('#');
-    	if (index != -1) {
-    		wsdlLocation = wsdlLocation.substring(0, index);
-    	}
     	
         try {
         	javax.wsdl.Service wsdlService = WSDLUtil.getService(wsdlLocation,
@@ -133,8 +130,10 @@ public class InboundHandler extends BaseServiceHandler {
             
             exchange.send(req);
             
-            if (!WSDLUtil.isOneWay(WSDLUtil.getOperationByName(_wsdlPort,
-            					operation))) {
+            javax.wsdl.Operation op=WSDLUtil.getOperationByName(_wsdlPort,
+					operation);
+            
+            if (!WSDLUtil.isOneWay(op)) {
 	            try {
 	                exchange = inOutHandler.waitForOut(12000);
 	            } catch (DeliveryException e) {
@@ -146,7 +145,37 @@ public class InboundHandler extends BaseServiceHandler {
 	            if (resp == null) {
 	                LOG.severe("No response received");
 	            } else {
-	            	return((String)resp.getContent(String.class));
+	            	if (resp.getContent() instanceof Exception) {
+	            		// Try converting into fault messages
+	            		for (Object obj : op.getFaults().values()) {
+	            			javax.wsdl.Fault fault=(javax.wsdl.Fault)obj;
+	            			QName qname=((javax.wsdl.Part)fault.getMessage().
+	            					getParts().values().iterator().next()).getElementName();
+	            			QName from=JavaService.toMessageType(resp.getContent().getClass());
+	            			try {
+	            				@SuppressWarnings({ "unchecked" })
+								Transformer<Object,Object> transformer=(Transformer<Object,Object>)
+	            						_domain.getTransformerRegistry().getTransformer(from, qname);
+	            				
+	            				if (transformer != null) {
+	            					Object result=transformer.transform(resp.getContent());
+	            					
+	            					if (result instanceof String) {
+	            						return ((String)result);
+	            					} else {
+	            						LOG.severe("Expecting a string, but got: "+result);
+	            					}
+	            				}
+	            			} catch(Exception e) {
+	            				// Ignore, as checking for transformations
+	            				// associated with defined fault types on operation
+	            			}
+	            		}
+	            		
+	            		throw (Exception)resp.getContent();
+	            	} else {
+	            		return((String)resp.getContent(String.class));
+	            	}
 	            }
             }
         } catch (Exception e) {
