@@ -10,6 +10,7 @@ Bundle-Vendor: Red Hat, Inc.
 Require-Bundle: org.savara.scenario
 Bundle-ClassPath: .,
  lib/cal10n-api.jar,
+ lib/camel-core.jar,
  lib/cdi-api.jar,
  lib/commons-lang.jar,
  lib/commons-logging.jar,
@@ -40,6 +41,7 @@ Bundle-ClassPath: .,
  lib/slf4j-api.jar,
  lib/slf4j-ext.jar,
  lib/switchyard-api.jar,
+ lib/switchyard-bus-camel.jar,
  lib/switchyard-common.jar,
  lib/switchyard-component-bean.jar,
  lib/switchyard-config.jar,
@@ -55,4 +57,5 @@ Bundle-ClassPath: .,
  lib/wsdl4j.jar,
  lib/xmlpull.jar,
  lib/xmlunit.jar,
- lib/xpp3_min.jar
+ lib/xpp3_min.jar,
+ lib/xstream.jar
