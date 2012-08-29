@@ -207,9 +207,10 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 						break;
 					}
 				}
-				
+
+				tilist.setLocation(location);
+
 				if (location != null && prefix != null) {
-					tilist.setLocation(location);
 					nslocation.put(prefix, location);
 				}
 				

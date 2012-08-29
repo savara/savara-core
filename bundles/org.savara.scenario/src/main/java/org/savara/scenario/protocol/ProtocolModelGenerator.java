@@ -18,6 +18,7 @@
 package org.savara.scenario.protocol;
 
 import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.resources.ResourceLocator;
 import org.scribble.protocol.model.ProtocolModel;
 
 /**
@@ -32,10 +33,11 @@ public interface ProtocolModelGenerator {
 	 * in the scenario.
 	 * 
 	 * @param scenario The scenario
+	 * @param locator The resource locator
 	 * @param handler The feedback handler
 	 * @return The set of local protocol models
 	 */
 	public java.util.Set<ProtocolModel> generate(org.savara.scenario.model.Scenario scenario,
-								FeedbackHandler handler);
+				ResourceLocator locator, FeedbackHandler handler);
 	
 }

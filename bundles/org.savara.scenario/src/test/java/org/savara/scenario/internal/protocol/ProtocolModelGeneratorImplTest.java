@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.savara.common.logging.DefaultFeedbackHandler;
 import org.savara.common.logging.FeedbackHandler;
+import org.savara.common.resources.DefaultResourceLocator;
 import org.savara.scenario.model.Scenario;
 import org.savara.scenario.protocol.ProtocolModelGenerator;
 import org.savara.scenario.util.ScenarioModelUtil;
@@ -69,15 +70,18 @@ public class ProtocolModelGeneratorImplTest {
 		try {
 			String scenarioPath="scenarios/"+scenarioName+".scn";
 			
-			java.io.InputStream is=ClassLoader.getSystemResourceAsStream(scenarioPath);
+			java.net.URL url=ClassLoader.getSystemResource(scenarioPath);
 			
-			Scenario scenario=ScenarioModelUtil.deserialize(is);
+			Scenario scenario=ScenarioModelUtil.deserialize(url.openStream());
 			
 			ProtocolModelGenerator pmg=new ProtocolModelGeneratorImpl();
 			
 			FeedbackHandler handler=new DefaultFeedbackHandler();
 			
-			java.util.Set<ProtocolModel> models=pmg.generate(scenario, handler);
+			DefaultResourceLocator locator=
+					new DefaultResourceLocator(new java.io.File(url.getFile()).getParentFile());
+			
+			java.util.Set<ProtocolModel> models=pmg.generate(scenario, locator, handler);
 			boolean fail=false;
 			
 			for (ProtocolModel model : models) {

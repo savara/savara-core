@@ -18,12 +18,17 @@
 package org.savara.scenario.internal.protocol;
 
 import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
 
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
+import org.savara.common.resources.ResourceLocator;
+import org.savara.common.util.XMLUtils;
 import org.savara.protocol.model.util.TypeSystem;
 import org.savara.scenario.model.Event;
 import org.savara.scenario.model.Group;
@@ -56,6 +61,8 @@ import org.scribble.protocol.util.TypesUtil;
  */
 public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 
+	private static final Logger LOG=Logger.getLogger(ProtocolModelGeneratorImpl.class.getName());
+	
 	private static final String NAMESPACE_PREFIX = "http://namespace/";
 	private static final String INTERFACE_SUFFIX = "Interface";
 
@@ -63,21 +70,21 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 	 * {@inheritDoc}
 	 */
 	public Set<ProtocolModel> generate(Scenario scenario,
-						FeedbackHandler handler) {
+			ResourceLocator locator, FeedbackHandler handler) {
 		java.util.Set<ProtocolModel> ret=new java.util.HashSet<ProtocolModel>();
 		
 		for (Event event : scenario.getEvent()) {
-			processEvent(event, ret, scenario, handler);
+			processEvent(event, ret, scenario, locator, handler);
 		}
 		
 		return(ret);
 	}
 
 	protected void processEvent(Event event, java.util.Set<ProtocolModel> models,
-							Scenario scenario, FeedbackHandler handler) {
+				Scenario scenario, ResourceLocator locator, FeedbackHandler handler) {
 		if (event instanceof Group) {
 			for (Event evt : ((Group)event).getEvent()) {
-				processEvent(evt, models, scenario, handler);
+				processEvent(evt, models, scenario, locator, handler);
 			}
 		} else if (event instanceof SendEvent) {
 			SendEvent se=(SendEvent)event;
@@ -105,7 +112,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 			}
 
 			for (Parameter p : se.getParameter()) {
-				TypeReference tref=getTypeReference(p.getType(), pm);
+				TypeReference tref=getTypeReference(p, pm, locator);
 				msig.getTypeReferences().add(tref);
 			}
 			
@@ -148,7 +155,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 			}
 
 			for (Parameter p : re.getParameter()) {
-				TypeReference tref=getTypeReference(p.getType(), pm);
+				TypeReference tref=getTypeReference(p, pm, locator);
 				msig.getTypeReferences().add(tref);
 			}
 			
@@ -172,9 +179,10 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 		}
 	}
 	
-	protected TypeReference getTypeReference(String type, ProtocolModel model) {
+	protected TypeReference getTypeReference(Parameter p,
+				ProtocolModel model, ResourceLocator locator) {
 		TypeReference ret=new TypeReference();
-		QName qname=QName.valueOf(type);
+		QName qname=QName.valueOf(p.getType());
 		
 		ret.setName(qname.getLocalPart());
 		
@@ -185,13 +193,19 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 			ti = new TypeImport();
 			ti.setName(qname.getLocalPart());
 			DataType dt=new DataType();
-			dt.setDetails(type);
+			dt.setDetails(p.getType());
 			ti.setDataType(dt);
 			
 			TypeImportList il=new TypeImportList();
 			il.setFormat(TypeSystem.XSD);
 			il.getTypeImports().add(ti);
 			model.getImports().add(il);
+			
+			// Obtain schema location for namespace
+			String location=obtainSchemaLocation(p.getValue(),
+					qname.getNamespaceURI(), locator);
+			
+			il.setLocation(location);
 			
 			// Create annotation to provide type details
 			if (AnnotationDefinitions.getAnnotationWithProperty(model.getProtocol().getAnnotations(),
@@ -205,12 +219,65 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 						new org.savara.common.model.annotation.Annotation(AnnotationDefinitions.TYPE);
 				protocolAnn.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY, qname.getNamespaceURI());
 				protocolAnn.getProperties().put(AnnotationDefinitions.PREFIX_PROPERTY, "ns"+nsCount);
+				
+				if (location != null) {
+					protocolAnn.getProperties().put(AnnotationDefinitions.LOCATION_PROPERTY, location);
+				}
 	
 				model.getProtocol().getAnnotations().add(protocolAnn);
 			}
 		}
 		
 		return(ret);
+	}
+	
+	protected String obtainSchemaLocation(String path, String ns,
+							ResourceLocator locator) {
+		String ret=null;
+		
+		try {
+			java.net.URI uri=locator.getResourceURI(path);
+			
+			java.io.File f=new java.io.File(uri.getPath());
+			
+			if (f.exists()) {
+				java.io.FileInputStream fis=new java.io.FileInputStream(f);
+				
+				byte[] b=new byte[fis.available()];
+				fis.read(b);
+				
+				fis.close();
+				
+				org.w3c.dom.Node node=XMLUtils.getNode(new String(b));
+				
+				if (node instanceof org.w3c.dom.Element) {
+					String location=((org.w3c.dom.Element)node).getAttributeNS(
+							"http://www.w3.org/2001/XMLSchema-instance",
+								"schemaLocation");
+					
+					if (location != null) {
+						StringTokenizer st=new StringTokenizer(location, " ");
+						
+						while (st.hasMoreTokens()) {
+							String stns=st.nextToken();
+							
+							if (st.hasMoreTokens()) {
+								String stval=st.nextToken();
+								
+								if (stns.equals(ns)) {
+									ret = stval;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch(Exception e) {
+			LOG.log(Level.SEVERE, "Failed to load message", e);
+		}
+		
+		return (ret);
 	}
 	
 	protected ProtocolModel getProtocolModel(MessageEvent event,
