@@ -56,7 +56,7 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ProtocolModel aggregateGlobalModel(String protocolName,
+	public ProtocolModel aggregateGlobalModel(String protocolName, String namespace,
 				java.util.Collection<ProtocolModel> locals,
 							FeedbackHandler handler) {
 		ProtocolModel ret=new ProtocolModel();
@@ -69,7 +69,8 @@ public class ProtocolAggregatorImpl implements ProtocolAggregator {
 		// Define protocol namespace
 		org.savara.common.model.annotation.Annotation protocolAnn=
 					new org.savara.common.model.annotation.Annotation(AnnotationDefinitions.PROTOCOL);
-		protocolAnn.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY, "http://namespace");
+		protocolAnn.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
+						(namespace == null ? "http://namespace" : namespace));
 		
 		protocol.getAnnotations().add(protocolAnn);
 		

@@ -734,7 +734,7 @@ public class ProtocolAggregatorImplTest {
 		
 		DefaultFeedbackHandler feedback=new DefaultFeedbackHandler();
 
-		ProtocolModel aggregated=aggregator.aggregateGlobalModel(globalName,
+		ProtocolModel aggregated=aggregator.aggregateGlobalModel(globalName, null,
 							locals, feedback);
 		
 		if (feedback.getIssues().size() > 0) {

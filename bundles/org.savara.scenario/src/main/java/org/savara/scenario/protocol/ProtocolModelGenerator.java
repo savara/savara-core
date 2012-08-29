@@ -35,9 +35,10 @@ public interface ProtocolModelGenerator {
 	 * @param scenario The scenario
 	 * @param locator The resource locator
 	 * @param handler The feedback handler
+	 * @param namespace The optional namespace
 	 * @return The set of local protocol models
 	 */
 	public java.util.Set<ProtocolModel> generate(org.savara.scenario.model.Scenario scenario,
-				ResourceLocator locator, FeedbackHandler handler);
+				ResourceLocator locator, FeedbackHandler handler, String namespace);
 	
 }

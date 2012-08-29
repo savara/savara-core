@@ -81,7 +81,7 @@ public class ProtocolModelGeneratorImplTest {
 			DefaultResourceLocator locator=
 					new DefaultResourceLocator(new java.io.File(url.getFile()).getParentFile());
 			
-			java.util.Set<ProtocolModel> models=pmg.generate(scenario, locator, handler);
+			java.util.Set<ProtocolModel> models=pmg.generate(scenario, locator, handler, null);
 			boolean fail=false;
 			
 			for (ProtocolModel model : models) {

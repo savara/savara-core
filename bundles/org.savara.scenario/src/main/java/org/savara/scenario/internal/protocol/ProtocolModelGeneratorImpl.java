@@ -70,26 +70,26 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 	 * {@inheritDoc}
 	 */
 	public Set<ProtocolModel> generate(Scenario scenario,
-			ResourceLocator locator, FeedbackHandler handler) {
+			ResourceLocator locator, FeedbackHandler handler, String namespace) {
 		java.util.Set<ProtocolModel> ret=new java.util.HashSet<ProtocolModel>();
 		
 		for (Event event : scenario.getEvent()) {
-			processEvent(event, ret, scenario, locator, handler);
+			processEvent(event, ret, scenario, locator, handler, namespace);
 		}
 		
 		return(ret);
 	}
 
 	protected void processEvent(Event event, java.util.Set<ProtocolModel> models,
-				Scenario scenario, ResourceLocator locator, FeedbackHandler handler) {
+				Scenario scenario, ResourceLocator locator, FeedbackHandler handler, String namespace) {
 		if (event instanceof Group) {
 			for (Event evt : ((Group)event).getEvent()) {
-				processEvent(evt, models, scenario, locator, handler);
+				processEvent(evt, models, scenario, locator, handler, namespace);
 			}
 		} else if (event instanceof SendEvent) {
 			SendEvent se=(SendEvent)event;
 			
-			ProtocolModel pm=getProtocolModel(se, models, scenario);
+			ProtocolModel pm=getProtocolModel(se, models, scenario, namespace);
 			
 			Interaction in=new Interaction();
 			MessageSignature msig=new MessageSignature();
@@ -132,7 +132,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 		} else if (event instanceof ReceiveEvent) {
 			ReceiveEvent re=(ReceiveEvent)event;
 			
-			ProtocolModel pm=getProtocolModel(re, models, scenario);
+			ProtocolModel pm=getProtocolModel(re, models, scenario, namespace);
 			
 			Interaction in=new Interaction();
 			MessageSignature msig=new MessageSignature();
@@ -281,7 +281,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 	}
 	
 	protected ProtocolModel getProtocolModel(MessageEvent event,
-								java.util.Set<ProtocolModel> models, Scenario scenario) {
+								java.util.Set<ProtocolModel> models, Scenario scenario, String namespace) {
 		ProtocolModel ret=null;
 		String role=((Role)event.getRole()).getName();
 		
@@ -299,7 +299,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 			ret.getProtocol().setLocatedRole(new org.scribble.protocol.model.Role(role));
 			ret.getProtocol().setBlock(new Block());
 			
-			createInterface(ret.getProtocol(), role);
+			createInterface(ret.getProtocol(), role, namespace);
 			
 			if (event instanceof ReceiveEvent) {
 				// Need to find send event's role
@@ -343,7 +343,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 						if (intro.getIntroducedRole(otherRole) == null) {
 							intro.getIntroducedRoles().add(new org.scribble.protocol.model.Role(otherRole));
 							
-							createInterface(ret.getProtocol(), otherRole);
+							createInterface(ret.getProtocol(), otherRole, namespace);
 						}
 					}
 					
@@ -361,11 +361,20 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 	 * 
 	 * @param p The protocol
 	 * @param role The role
+	 * @param namespace The optional
 	 */
-	protected void createInterface(Protocol p, String role) {
+	protected void createInterface(Protocol p, String role, String namespace) {
+		String ns=(namespace == null ? NAMESPACE_PREFIX : namespace);
+		
+		if (ns.endsWith("/")) {
+			ns += role;
+		} else {
+			ns += "/"+role;
+		}
+		
 		Annotation annotation=new Annotation(AnnotationDefinitions.INTERFACE);
 		annotation.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY,
-				NAMESPACE_PREFIX+role);
+				ns);
 		annotation.getProperties().put(AnnotationDefinitions.NAME_PROPERTY,
 				role+INTERFACE_SUFFIX);
 		annotation.getProperties().put(AnnotationDefinitions.ROLE_PROPERTY,
