@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions name="Store" targetNamespace="http://www.savara.org/examples/Store" xmlns:ns1="http://www.jboss.org/examples/store" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns3="http://www.savara.org/examples/Store" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
-    <types xmlns="http://schemas.xmlsoap.org/wsdl/">
-        <schema xmlns="http://www.w3.org/2001/XMLSchema">
-            <import namespace="http://www.jboss.org/examples/store" schemaLocation="store.xsd"/>
-        </schema>
-    </types>
+  <wsdl:import namespace="http://www.jboss.org/examples/store" location="store.xsd"/>
   <wsdl:message name="InsufficientCreditFault">
     <wsdl:part name="content" element="ns1:BuyFailed">
     </wsdl:part>

@@ -18,4 +18,24 @@
 			</service>
 		</component>
 	</composite>
+	<transforms xmlns:xform="urn:switchyard-config:transform:1.0">
+		<xform:transform.jaxb
+			from="{http://www.jboss.org/examples/store}BuyRequest"
+			to="java:org.jboss.examples.store.BuyRequestType"
+			contextPath="org.jboss.examples.store"/>
+		<xform:transform.jaxb
+			to="{http://www.jboss.org/examples/store}BuyConfirmed"
+			from="java:org.jboss.examples.store.BuyConfirmedType"
+			contextPath="org.jboss.examples.store"/>
+		<xform:transform.java class="className"
+			to="{http://www.jboss.org/examples/store}AccountNotFound"
+			from="java:org.savara.examples.store.AccountNotFoundFault"/>
+		<xform:transform.java class="className"
+			to="{http://www.jboss.org/examples/store}BuyFailed"
+			from="java:org.savara.examples.store.InsufficientCreditFault"/>
+		<xform:transform.jaxb
+			from="{http://www.jboss.org/examples/store}AckRequest"
+			to="java:org.jboss.examples.store.AckRequestType"
+			contextPath="org.jboss.examples.store"/>
+	</transforms>
 </switchyard>

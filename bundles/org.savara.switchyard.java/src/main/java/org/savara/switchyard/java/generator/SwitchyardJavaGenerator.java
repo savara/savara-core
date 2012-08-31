@@ -20,9 +20,12 @@ package org.savara.switchyard.java.generator;
 import java.util.logging.Logger;
 
 import javax.wsdl.PortType;
+import javax.xml.namespace.QName;
 
+import org.savara.common.resources.DefaultResourceLocator;
 import org.savara.common.resources.ResourceLocator;
 import org.savara.java.generator.JavaBehaviourGenerator;
+import org.savara.java.generator.util.JavaGeneratorUtil;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 
@@ -63,7 +66,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 		if (defn != null) {
 			
 			// Use the namespace to obtain a Java package
-			String pack=JavaBehaviourGenerator.getJavaPackage(defn.getTargetNamespace());
+			String pack=JavaGeneratorUtil.getJavaPackage(defn.getTargetNamespace());
 			
 			String folder=pack.replace('.', java.io.File.separatorChar);
 			
@@ -154,7 +157,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 				if (refDefn != null) {
 					
 					// Use the namespace to obtain a Java package
-					String refPack=JavaBehaviourGenerator.getJavaPackage(refDefn.getTargetNamespace());
+					String refPack=JavaGeneratorUtil.getJavaPackage(refDefn.getTargetNamespace());
 					
 					@SuppressWarnings("unchecked")
 					java.util.Iterator<PortType> refPortTypes=refDefn.getPortTypes().values().iterator();
@@ -192,7 +195,23 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 		javax.wsdl.Definition defn=getWSDLReader().readWSDL(wsdlPath);
 		
 		if (defn != null) {
+			
+			java.io.File wsdlFile=new java.io.File(wsdlPath);
+			
+			if (!wsdlFile.exists()) {
+				java.net.URL url=ClassLoader.getSystemResource(wsdlPath);
+				
+				wsdlFile = new java.io.File(url.getFile());
+				
+				if (!wsdlFile.exists()) {
+					logger.severe("Failed to find WSDL file '"+wsdlPath+"'");
+				}
+			}
+			
+			ResourceLocator locator=new DefaultResourceLocator(wsdlFile.getParentFile());
+			
 			StringBuffer composite=new StringBuffer();
+			StringBuffer transformers=new StringBuffer();
 			StringBuffer component=new StringBuffer();
 			
 			String targetNamespace=defn.getTargetNamespace();
@@ -218,6 +237,10 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 			while (portTypes.hasNext()) {
 				PortType portType=portTypes.next();
 				
+				// Define transformers
+				addPortTypeTransformers(portType, true, transformers,
+								defn, locator);
+
 				String wsdlName=wsdlPath;
 				int ind=wsdlName.lastIndexOf('/');
 				
@@ -243,7 +266,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 				composite.append("\t\t</service>\r\n");
 
 				
-				String pack=JavaBehaviourGenerator.getJavaPackage(defn.getTargetNamespace());
+				String pack=JavaGeneratorUtil.getJavaPackage(defn.getTargetNamespace());
 
 				component.append("\t\t<component name=\""+portType.getQName().getLocalPart()+"Component\">\r\n");
 				
@@ -259,6 +282,20 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 					String refWsdlPath=refWsdlPaths.get(i);
 					javax.wsdl.Definition refDefn=getWSDLReader().readWSDL(refWsdlPath);
 					
+					java.io.File refWsdlFile=new java.io.File(refWsdlPath);
+					
+					if (!refWsdlFile.exists()) {
+						java.net.URL url=ClassLoader.getSystemResource(refWsdlPath);
+						
+						refWsdlFile = new java.io.File(url.getFile());
+						
+						if (!refWsdlFile.exists()) {
+							logger.severe("Failed to find ref WSDL file '"+refWsdlPath+"'");
+						}
+					}
+					
+					ResourceLocator refLocator=new DefaultResourceLocator(refWsdlFile.getParentFile());
+					
 					if (refDefn != null) {
 						
 						@SuppressWarnings("unchecked")
@@ -266,6 +303,9 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 						
 						while (refPortTypes.hasNext()) {
 							PortType refPortType=refPortTypes.next();
+							
+							// Define transformers
+							addPortTypeTransformers(refPortType, false, transformers, refDefn, refLocator);
 
 							String refWsdlName=refWsdlPath;
 							
@@ -290,7 +330,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 							composite.append("\t\t\t</binding.soap>\r\n");
 							composite.append("\t\t</reference>\r\n");
 							
-							String refPack=JavaBehaviourGenerator.getJavaPackage(refDefn.getTargetNamespace());
+							String refPack=JavaGeneratorUtil.getJavaPackage(refDefn.getTargetNamespace());
 
 							component.append("\t\t\t<reference name=\""+refPortType.getQName().getLocalPart()+"\" >\r\n");
 							component.append("\t\t\t\t<interface.java interface=\""+refPack+"."
@@ -306,6 +346,13 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 			}
 
 			composite.append("\t</composite>\r\n");
+			
+			if (transformers.length() > 0) {
+				composite.append("\t<transforms xmlns:xform=\"urn:switchyard-config:transform:1.0\">\r\n");
+				composite.append(transformers.toString());
+				composite.append("\t</transforms>\r\n");				
+			}
+			
 			composite.append("</switchyard>\r\n");
 			
 			java.io.FileOutputStream fos=new java.io.FileOutputStream(resourceFolder+
@@ -315,6 +362,106 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 			
 			fos.close();
 		}		
+	}
+	
+	protected void addPortTypeTransformers(PortType portType, boolean provider, StringBuffer transformers,
+					javax.wsdl.Definition wsdl, ResourceLocator locator) {
+		String attr1=(provider ? "from" : "to");
+		String attr2=(provider ? "to" : "from");
+		
+		for (Object opobj : portType.getOperations()) {
+			if (opobj instanceof javax.wsdl.Operation) {
+				javax.wsdl.Operation op=(javax.wsdl.Operation)opobj;
+				
+				String qname="";
+				String javaType="";
+				String javaPackage="";
+				
+				javax.wsdl.Part p=(javax.wsdl.Part)op.getInput().getMessage().
+								getParts().values().iterator().next();
+				qname = p.getElementName().toString();
+				
+				javaType = getJavaType(wsdl, p.getElementName(), locator);
+				
+				if (javaType != null) {
+					int ind=javaType.lastIndexOf('.');
+					if (ind != -1) {
+						javaPackage = javaType.substring(0, ind);
+					}
+				}
+								
+				transformers.append("\t\t<xform:transform.jaxb\r\n");
+				transformers.append("\t\t\t"+attr1+"=\""+qname+"\"\r\n");
+				transformers.append("\t\t\t"+attr2+"=\"java:"+javaType+"\"\r\n");
+				transformers.append("\t\t\tcontextPath=\""+javaPackage+"\"/>\r\n");
+				
+				if (op.getOutput() != null) {
+					p = (javax.wsdl.Part)op.getOutput().getMessage().
+									getParts().values().iterator().next();
+					qname = p.getElementName().toString();
+					
+					javaType = getJavaType(wsdl, p.getElementName(), locator);
+					
+					if (javaType != null) {
+						int ind=javaType.lastIndexOf('.');
+						if (ind != -1) {
+							javaPackage = javaType.substring(0, ind);
+						}
+					}
+									
+					transformers.append("\t\t<xform:transform.jaxb\r\n");
+					transformers.append("\t\t\t"+attr2+"=\""+qname+"\"\r\n");
+					transformers.append("\t\t\t"+attr1+"=\"java:"+javaType+"\"\r\n");
+					transformers.append("\t\t\tcontextPath=\""+javaPackage+"\"/>\r\n");
+				}
+				
+				for (Object faultObj : op.getFaults().values()) {
+					if (faultObj instanceof javax.wsdl.Fault) {
+						javax.wsdl.Fault fault=(javax.wsdl.Fault)faultObj;
+						
+						String faultTransClass="className";
+						
+						p = (javax.wsdl.Part)fault.getMessage().
+								getParts().values().iterator().next();
+						qname = p.getElementName().toString();
+						
+						javaType = JavaGeneratorUtil.getJavaPackage(fault.getMessage().getQName().getNamespaceURI())+
+												"."+fault.getMessage().getQName().getLocalPart();
+
+						transformers.append("\t\t<xform:transform.java class=\""+faultTransClass+"\"\r\n");
+						transformers.append("\t\t\t"+attr2+"=\""+qname+"\"\r\n");
+						transformers.append("\t\t\t"+attr1+"=\"java:"+javaType+"\"/>\r\n");
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * This method scans the supplied wsdl to locate the element definition and return
+	 * the Java type associated with its type.
+	 * 
+	 * @param wsdl The WSDL
+	 * @param element The element
+	 * @param locator The locator
+	 * @return The Java type, or null if not found
+	 */
+	protected String getJavaType(javax.wsdl.Definition wsdl, QName element, ResourceLocator locator) {
+		// Find schema location
+		java.util.List<?> imps=wsdl.getImports(element.getNamespaceURI());
+		
+		for (Object obj : imps) {
+			if (obj instanceof javax.wsdl.Import) {
+				String javaType=JavaGeneratorUtil.getElementJavaType(element,
+						((javax.wsdl.Import)obj).getLocationURI(), locator);
+				
+				if (javaType != null) {
+					return (javaType);
+				}
+			}
+		}
+
+		return (null);
 	}
 	
 	protected void addServiceBehaviour(java.io.File implFile, Role role, java.util.List<Role> refRoles,

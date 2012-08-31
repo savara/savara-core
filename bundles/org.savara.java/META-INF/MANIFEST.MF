@@ -16,7 +16,8 @@ Require-Bundle: org.apache.commons.logging,
  org.scribble.protocol,
  org.scribble.protocol.projection,
  org.savara.protocol
-Export-Package: org.savara.java.generator
+Export-Package: org.savara.java.generator,
+ org.savara.java.generator.util
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/commons-collections.jar,

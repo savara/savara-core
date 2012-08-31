@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions name="Logistics" targetNamespace="http://www.savara.org/examples/Logistics" xmlns:ns2="http://www.jboss.org/examples/logistics" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns4="http://www.savara.org/examples/Logistics" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
-    <types xmlns="http://schemas.xmlsoap.org/wsdl/">
-        <schema xmlns="http://www.w3.org/2001/XMLSchema">
-            <import namespace="http://www.jboss.org/examples/logistics" schemaLocation="logistics.xsd"/>
-        </schema>
-    </types>
+  <wsdl:import namespace="http://www.jboss.org/examples/logistics" location="logistics.xsd"/>
   <wsdl:message name="deliveryResponse">
     <wsdl:part name="content" element="ns2:DeliveryConfirmed">
     </wsdl:part>

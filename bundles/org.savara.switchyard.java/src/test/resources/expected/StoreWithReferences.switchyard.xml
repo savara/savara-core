@@ -38,4 +38,47 @@
 			</reference>
 		</component>
 	</composite>
+	<transforms xmlns:xform="urn:switchyard-config:transform:1.0">
+		<xform:transform.jaxb
+			from="{http://www.jboss.org/examples/store}BuyRequest"
+			to="java:org.jboss.examples.store.BuyRequestType"
+			contextPath="org.jboss.examples.store"/>
+		<xform:transform.jaxb
+			to="{http://www.jboss.org/examples/store}BuyConfirmed"
+			from="java:org.jboss.examples.store.BuyConfirmedType"
+			contextPath="org.jboss.examples.store"/>
+		<xform:transform.java class="className"
+			to="{http://www.jboss.org/examples/store}AccountNotFound"
+			from="java:org.savara.examples.store.AccountNotFoundFault"/>
+		<xform:transform.java class="className"
+			to="{http://www.jboss.org/examples/store}BuyFailed"
+			from="java:org.savara.examples.store.InsufficientCreditFault"/>
+		<xform:transform.jaxb
+			from="{http://www.jboss.org/examples/store}AckRequest"
+			to="java:org.jboss.examples.store.AckRequestType"
+			contextPath="org.jboss.examples.store"/>
+		<xform:transform.jaxb
+			to="{http://www.jboss.org/examples/creditAgency}CreditCheckRequest"
+			from="java:org.jboss.examples.creditagency.CreditCheckType"
+			contextPath="org.jboss.examples.creditagency"/>
+		<xform:transform.jaxb
+			from="{http://www.jboss.org/examples/creditAgency}CreditRating"
+			to="java:org.jboss.examples.creditagency.CreditRatingType"
+			contextPath="org.jboss.examples.creditagency"/>
+		<xform:transform.java class="className"
+			from="{http://www.jboss.org/examples/creditAgency}CustomerUnknown"
+			to="java:org.savara.examples.creditagency.CustomerUnknownFault"/>
+		<xform:transform.jaxb
+			to="{http://www.jboss.org/examples/creditAgency}CreditAckRequest"
+			from="java:org.jboss.examples.creditagency.CreditAckType"
+			contextPath="org.jboss.examples.creditagency"/>
+		<xform:transform.jaxb
+			to="{http://www.jboss.org/examples/logistics}DeliveryRequest"
+			from="java:org.jboss.examples.logistics.DeliveryRequestType"
+			contextPath="org.jboss.examples.logistics"/>
+		<xform:transform.jaxb
+			from="{http://www.jboss.org/examples/logistics}DeliveryConfirmed"
+			to="java:org.jboss.examples.logistics.DeliveryConfirmedType"
+			contextPath="org.jboss.examples.logistics"/>
+	</transforms>
 </switchyard>

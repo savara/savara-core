@@ -21,12 +21,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.resources.ResourceLocator;
+import org.savara.java.generator.util.JavaGeneratorUtil;
 import org.savara.protocol.model.util.ChoiceUtil;
 import org.scribble.protocol.model.Activity;
 import org.scribble.protocol.model.Block;
@@ -106,41 +105,6 @@ public class JavaBehaviourGenerator {
 		return(getLocalJavaType(ret));
 	}
 	
-	public static String getJavaPackage(String namespace) {
-		String ret=null;
-		
-		try {
-			java.net.URI uri=new java.net.URI(namespace);
-			
-			String host=uri.getHost();
-			
-			// Removing preceding www
-			if (host.startsWith("www.")) {
-				host = host.substring(4);
-			}
-			
-			// Place the suffix at the beginning
-			int index=host.lastIndexOf('.');
-			
-			if (index != -1) {
-				ret = host.substring(index+1);
-				
-				ret += "."+host.substring(0, index);
-			} else {
-				ret = host;
-			}
-			
-			ret += uri.getPath().replace('/', '.');
-			
-			ret = ret.toLowerCase();
-			
-		} catch(Exception e) {
-			logger.log(Level.SEVERE, "Failed to get java package from namespace '"+namespace+"'", e);
-		}
-		
-		return(ret);
-	}
-	
 	protected static String getJavaType(Interaction interaction, ResourceLocator locator) {
 		String ret=null;
 		TypeReference tref=interaction.getMessageSignature().getTypeReferences().get(0);
@@ -149,7 +113,7 @@ public class JavaBehaviourGenerator {
 		if (ti != null && ti.getDataType() != null) {
 			QName type=QName.valueOf(ti.getDataType().getDetails());
 			
-			ret = getJavaPackage(type.getNamespaceURI());
+			ret = JavaGeneratorUtil.getJavaPackage(type.getNamespaceURI());
 			
 			if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
 				ret = org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction)+"Fault";
@@ -163,7 +127,7 @@ public class JavaBehaviourGenerator {
 					if (ann != null) {
 						String ns=(String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY);
 						
-						ret = getJavaPackage(ns)+"."+ret;
+						ret = JavaGeneratorUtil.getJavaPackage(ns)+"."+ret;
 					}
 				}
 			} else {
@@ -173,48 +137,8 @@ public class JavaBehaviourGenerator {
 				if (locator != null && ti.getParent() instanceof TypeImportList &&
 						((TypeImportList)ti.getParent()).getLocation() != null) {
 					String location=((TypeImportList)ti.getParent()).getLocation();
-					try {
-						java.net.URI uri=locator.getResourceURI(location);
-						
-						DocumentBuilderFactory fact=DocumentBuilderFactory.newInstance();
-						fact.setNamespaceAware(true);
-						
-						DocumentBuilder builder=fact.newDocumentBuilder();
-						
-						java.io.InputStream is=uri.toURL().openStream();
-						
-						org.w3c.dom.Document doc=builder.parse(is);
-						
-						is.close();
-						
-						org.w3c.dom.NodeList elemList=
-								doc.getDocumentElement().getElementsByTagNameNS(
-										"http://www.w3.org/2001/XMLSchema", "element");
-						
-						for (int i=0; i < elemList.getLength(); i++) {
-							org.w3c.dom.Element elem=(org.w3c.dom.Element)elemList.item(i);
-							
-							String name=elem.getAttribute("name");
-							String elemType=elem.getAttribute("type");
-							
-							if (name.equals(type.getLocalPart())) {
-								String prefix=org.savara.common.util.XMLUtils.getPrefix(elemType);
-								String ns=null;
-								
-								if (prefix != null && prefix.trim().length() > 0) {
-									ns = elem.lookupNamespaceURI(prefix);
-								} else {
-									ns = elem.getOwnerDocument().getDocumentElement().getAttribute("targetNamespace");
-								}
-								
-								ret = getJavaPackage(ns);
-								ret += "."+org.savara.common.util.XMLUtils.getLocalname(elemType);
-							}
-						}
-
-					} catch(Exception e) {
-						logger.log(Level.SEVERE, "Failed to obtain XSD schema '"+location+"'", e);
-					}
+					
+					ret = JavaGeneratorUtil.getElementJavaType(type, location, locator);
 				}
 			}
 		}
