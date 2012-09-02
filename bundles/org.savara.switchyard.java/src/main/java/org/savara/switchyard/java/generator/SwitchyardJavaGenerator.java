@@ -17,6 +17,7 @@
  */
 package org.savara.switchyard.java.generator;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.wsdl.PortType;
@@ -190,8 +191,8 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 	}
 	
 	public void createServiceComposite(Role role, java.util.List<Role> refRoles,
-							String wsdlPath, java.util.List<String> refWsdlPaths,
-								String resourceFolder) throws Exception {
+				String wsdlPath, java.util.List<String> refWsdlPaths,
+				String resourceFolder, String srcFolder) throws Exception {
 		javax.wsdl.Definition defn=getWSDLReader().readWSDL(wsdlPath);
 		
 		if (defn != null) {
@@ -239,7 +240,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 				
 				// Define transformers
 				addPortTypeTransformers(portType, true, transformers,
-								defn, locator);
+								defn, locator, srcFolder);
 
 				String wsdlName=wsdlPath;
 				int ind=wsdlName.lastIndexOf('/');
@@ -305,7 +306,9 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 							PortType refPortType=refPortTypes.next();
 							
 							// Define transformers
-							addPortTypeTransformers(refPortType, false, transformers, refDefn, refLocator);
+							addPortTypeTransformers(refPortType, false,
+									transformers, refDefn, refLocator,
+									srcFolder);
 
 							String refWsdlName=refWsdlPath;
 							
@@ -365,7 +368,8 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 	}
 	
 	protected void addPortTypeTransformers(PortType portType, boolean provider, StringBuffer transformers,
-					javax.wsdl.Definition wsdl, ResourceLocator locator) {
+					javax.wsdl.Definition wsdl, ResourceLocator locator,
+					String srcFolder) {
 		String attr1=(provider ? "from" : "to");
 		String attr2=(provider ? "to" : "from");
 		
@@ -419,22 +423,125 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 					if (faultObj instanceof javax.wsdl.Fault) {
 						javax.wsdl.Fault fault=(javax.wsdl.Fault)faultObj;
 						
-						String faultTransClass="className";
-						
 						p = (javax.wsdl.Part)fault.getMessage().
 								getParts().values().iterator().next();
 						qname = p.getElementName().toString();
 						
-						javaType = JavaGeneratorUtil.getJavaPackage(fault.getMessage().getQName().getNamespaceURI())+
-												"."+fault.getMessage().getQName().getLocalPart();
+						String javaFaultType = getJavaType(wsdl, p.getElementName(), locator);
+						
+						String pack=JavaGeneratorUtil.getJavaPackage(fault.getMessage().getQName().getNamespaceURI());
+						
+						javaType = pack+"."+fault.getMessage().getQName().getLocalPart();
 
+						String faultTransClass=javaType+"Transformer";
+						
 						transformers.append("\t\t<xform:transform.java class=\""+faultTransClass+"\"\r\n");
 						transformers.append("\t\t\t"+attr2+"=\""+qname+"\"\r\n");
 						transformers.append("\t\t\t"+attr1+"=\"java:"+javaType+"\"/>\r\n");
+						
+						// Create transformer class
+						String folder=pack.replace('.', java.io.File.separatorChar);
+						
+						String javaFile=folder+java.io.File.separator+fault.getMessage().getQName().getLocalPart()+"Transformer";
+						
+						java.io.File jFile=new java.io.File(srcFolder+java.io.File.separator+javaFile+".java");
+						
+						jFile.getParentFile().mkdirs();
+						
+						try {
+							java.io.FileOutputStream fos=new java.io.FileOutputStream(jFile);
+
+							generateFaultTransformer(qname, javaType, javaFaultType, provider, fos);
+							
+							fos.close();
+						} catch (Exception e) {
+							logger.log(Level.SEVERE, "Failed to create fault transformer", e);
+						}
 					}
 				}
 			}
 		}
+	}
+	
+	/**
+	 * This method generates the contents of a fault transformer.
+	 * 
+	 * @param qname The XML type's fully qualified name
+	 * @param javaFaultName The Java class for the fault name
+	 * @param javaFaultType The Java class for the fault type
+	 * @param os The output stream
+	 * @throws Exception Failed to generate fault transformer
+	 */
+	protected void generateFaultTransformer(String qname, String javaFaultName,
+						String javaFaultType, boolean provider,
+						java.io.OutputStream os) throws Exception {
+		int ind=javaFaultName.lastIndexOf('.');
+		String pack=javaFaultName.substring(0, ind);
+		String clsName=javaFaultName.substring(ind+1);
+				
+		ind = javaFaultType.lastIndexOf('.');
+		String faultTypePackage=javaFaultType.substring(0, ind);
+		
+		// Get template
+		String template=(provider ? "JavaTypeToQName" : "QNameToJavaType");
+		
+		java.io.InputStream is=SwitchyardJavaGenerator.class.getResourceAsStream("/templates/"
+							+template+"Transformer.java");
+
+		if (is == null) {
+			logger.severe("Failed to load template '"+template+"'");
+			return;
+		}
+		
+		byte[] b=new byte[is.available()];
+		is.read(b);
+		
+		is.close();
+		
+		String str=new String(b);
+		
+		str = str.replaceAll("%PACKAGE%", pack);
+		str = str.replaceAll("%CLASSNAME%", clsName);
+		str = str.replaceAll("%FAULTCLASS%", javaFaultName);
+		str = str.replaceAll("%FAULTTYPE%", javaFaultType);
+		str = str.replaceAll("%FAULTTYPEPACKAGE%", faultTypePackage);
+		str = str.replaceAll("%FAULTQNAME%", qname);
+		str = str.replaceAll("%FAULTMESSAGE%", clsName);
+		
+		os.write(str.getBytes());
+		
+		/*
+		os.write(("package "+pack+";\r\n\r\n").getBytes());
+		
+		os.write(("import javax.xml.namespace.QName;\r\n").getBytes());
+		os.write(("import javax.xml.transform.dom.DOMSource;\r\n").getBytes());
+		
+		os.write(("public class "+clsName+" extends org.switchyard.transform.BaseTransformer<DOMSource,"
+							+javaFaultName+"> {\r\n").getBytes());
+		
+		os.write(("\tpublic QName getFrom() {\r\n").getBytes());
+		os.write(("\t\treturn (QName.valueOf(\""+qname+"\"));\r\n").getBytes());
+		os.write(("\t}\r\n").getBytes());
+		
+		os.write(("\tpublic "+javaFaultName+" transform(DOMSource type) {\r\n").getBytes());
+		os.write(("\t\t"+javaFaultType+" faultType=new "+javaFaultType+"();\r\n").getBytes());
+		os.write(("\t\treturn new "+javaFaultName+"(\""+clsName+"\", faultType);\r\n").getBytes());
+		os.write(("\t}\r\n").getBytes());
+		
+		os.write(("}\r\n").getBytes());
+		*/
+	}
+	
+	/**
+	 * This method generates the contents of a fault transformer.
+	 * 
+	 * @param qname The XML type's fully qualified name
+	 * @param javaFaultName The Java class for the fault name
+	 * @param os The output stream
+	 * @throws Exception Failed to generate fault transformer
+	 */
+	protected void generateJavaFaultToQNameTransformer(String qname, String javaFaultName,
+						java.io.OutputStream os) throws Exception {
 	}
 	
 	/**

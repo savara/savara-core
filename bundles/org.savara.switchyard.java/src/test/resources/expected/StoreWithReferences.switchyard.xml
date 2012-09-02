@@ -47,10 +47,10 @@
 			to="{http://www.jboss.org/examples/store}BuyConfirmed"
 			from="java:org.jboss.examples.store.BuyConfirmedType"
 			contextPath="org.jboss.examples.store"/>
-		<xform:transform.java class="className"
+		<xform:transform.java class="org.savara.examples.store.AccountNotFoundFaultTransformer"
 			to="{http://www.jboss.org/examples/store}AccountNotFound"
 			from="java:org.savara.examples.store.AccountNotFoundFault"/>
-		<xform:transform.java class="className"
+		<xform:transform.java class="org.savara.examples.store.InsufficientCreditFaultTransformer"
 			to="{http://www.jboss.org/examples/store}BuyFailed"
 			from="java:org.savara.examples.store.InsufficientCreditFault"/>
 		<xform:transform.jaxb
@@ -65,7 +65,7 @@
 			from="{http://www.jboss.org/examples/creditAgency}CreditRating"
 			to="java:org.jboss.examples.creditagency.CreditRatingType"
 			contextPath="org.jboss.examples.creditagency"/>
-		<xform:transform.java class="className"
+		<xform:transform.java class="org.savara.examples.creditagency.CustomerUnknownFaultTransformer"
 			from="{http://www.jboss.org/examples/creditAgency}CustomerUnknown"
 			to="java:org.savara.examples.creditagency.CustomerUnknownFault"/>
 		<xform:transform.jaxb

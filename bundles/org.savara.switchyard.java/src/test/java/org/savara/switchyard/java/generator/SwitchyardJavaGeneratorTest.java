@@ -161,7 +161,7 @@ public class SwitchyardJavaGeneratorTest {
 			java.net.URL url=ClassLoader.getSystemClassLoader().getResource(STORE_WSDL_LOCATION);
 
 			gen.createServiceComposite(new Role("Store"), new java.util.Vector<Role>(),
-					url.getFile(), new java.util.Vector<String>(), SRC_PATH);
+					url.getFile(), new java.util.Vector<String>(), SRC_PATH, SRC_PATH);
 			
 			compare("expected/Store.switchyard.xml",
 					SRC_PATH+"/switchyard.xml");
@@ -187,7 +187,7 @@ public class SwitchyardJavaGeneratorTest {
 			refWsdlPaths.add(ClassLoader.getSystemClassLoader().getResource(LOGISTICS_WSDL_LOCATION).getFile());
 			
 			gen.createServiceComposite(new Role("Store"), refRoles,
-					url.getFile(), refWsdlPaths, SRC_PATH);
+					url.getFile(), refWsdlPaths, SRC_PATH, SRC_PATH);
 			
 			compare("expected/StoreWithReferences.switchyard.xml",
 					SRC_PATH+"/switchyard.xml");
