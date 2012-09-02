@@ -11,7 +11,7 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.switchyard.exception.SwitchYardException;
 
-public class %CLASSNAME%Transformer extends org.switchyard.transform.BaseTransformer<DOMSource,%FAULTCLASS%> {
+public class %CLASSNAME% extends org.switchyard.transform.BaseTransformer<DOMSource,%FAULTCLASS%> {
 
 	public QName getFrom() {
 		return (QName.valueOf("%FAULTQNAME%"));

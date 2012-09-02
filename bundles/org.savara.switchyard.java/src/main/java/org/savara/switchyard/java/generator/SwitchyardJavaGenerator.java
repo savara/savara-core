@@ -433,7 +433,9 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 						
 						javaType = pack+"."+fault.getMessage().getQName().getLocalPart();
 
-						String faultTransClass=javaType+"Transformer";
+						String transformerClassName=getFaultTransformerClassName(javaType, provider);
+						
+						String faultTransClass=pack+"."+transformerClassName;
 						
 						transformers.append("\t\t<xform:transform.java class=\""+faultTransClass+"\"\r\n");
 						transformers.append("\t\t\t"+attr2+"=\""+qname+"\"\r\n");
@@ -442,7 +444,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 						// Create transformer class
 						String folder=pack.replace('.', java.io.File.separatorChar);
 						
-						String javaFile=folder+java.io.File.separator+fault.getMessage().getQName().getLocalPart()+"Transformer";
+						String javaFile=folder+java.io.File.separator+transformerClassName;
 						
 						java.io.File jFile=new java.io.File(srcFolder+java.io.File.separator+javaFile+".java");
 						
@@ -464,6 +466,22 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 	}
 	
 	/**
+	 * This method returns the Java fault transformer class name.
+	 * 
+	 * @param javaFaultName The fault class name
+	 * @param provider Whether the fault is generated for the provider
+	 * @return The fault transformer class name
+	 */
+	protected String getFaultTransformerClassName(String javaFaultName, boolean provider) {
+		int ind=javaFaultName.lastIndexOf('.');
+		String clsName=javaFaultName.substring(ind+1);
+		
+		String ret = clsName + (provider ? "Provider" : "Consumer") + "Transformer";
+		
+		return (ret);
+	}
+	
+	/**
 	 * This method generates the contents of a fault transformer.
 	 * 
 	 * @param qname The XML type's fully qualified name
@@ -477,7 +495,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 						java.io.OutputStream os) throws Exception {
 		int ind=javaFaultName.lastIndexOf('.');
 		String pack=javaFaultName.substring(0, ind);
-		String clsName=javaFaultName.substring(ind+1);
+		String clsName=getFaultTransformerClassName(javaFaultName, provider);
 				
 		ind = javaFaultType.lastIndexOf('.');
 		String faultTypePackage=javaFaultType.substring(0, ind);
@@ -509,39 +527,6 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 		str = str.replaceAll("%FAULTMESSAGE%", clsName);
 		
 		os.write(str.getBytes());
-		
-		/*
-		os.write(("package "+pack+";\r\n\r\n").getBytes());
-		
-		os.write(("import javax.xml.namespace.QName;\r\n").getBytes());
-		os.write(("import javax.xml.transform.dom.DOMSource;\r\n").getBytes());
-		
-		os.write(("public class "+clsName+" extends org.switchyard.transform.BaseTransformer<DOMSource,"
-							+javaFaultName+"> {\r\n").getBytes());
-		
-		os.write(("\tpublic QName getFrom() {\r\n").getBytes());
-		os.write(("\t\treturn (QName.valueOf(\""+qname+"\"));\r\n").getBytes());
-		os.write(("\t}\r\n").getBytes());
-		
-		os.write(("\tpublic "+javaFaultName+" transform(DOMSource type) {\r\n").getBytes());
-		os.write(("\t\t"+javaFaultType+" faultType=new "+javaFaultType+"();\r\n").getBytes());
-		os.write(("\t\treturn new "+javaFaultName+"(\""+clsName+"\", faultType);\r\n").getBytes());
-		os.write(("\t}\r\n").getBytes());
-		
-		os.write(("}\r\n").getBytes());
-		*/
-	}
-	
-	/**
-	 * This method generates the contents of a fault transformer.
-	 * 
-	 * @param qname The XML type's fully qualified name
-	 * @param javaFaultName The Java class for the fault name
-	 * @param os The output stream
-	 * @throws Exception Failed to generate fault transformer
-	 */
-	protected void generateJavaFaultToQNameTransformer(String qname, String javaFaultName,
-						java.io.OutputStream os) throws Exception {
 	}
 	
 	/**
