@@ -174,7 +174,9 @@ public class MessageStore {
 	public ReceiveEvent waitForReceiveEvent(String operation) throws Exception {
 		ReceiveEvent ret=null;
 		
-		LOG.info("Wait for receive event: op="+operation);
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Wait for receive event: op="+operation);
+		}
 		
 		synchronized(_receiveEvents) {
 			boolean f_found=false;
@@ -215,6 +217,10 @@ public class MessageStore {
 				}
 				
 			} while (!f_found);
+		}
+		
+		if (LOG.isLoggable(Level.FINE)) {
+			LOG.fine("Returning receive event: op="+operation+" ret="+ret);
 		}
 		
 		return(ret);

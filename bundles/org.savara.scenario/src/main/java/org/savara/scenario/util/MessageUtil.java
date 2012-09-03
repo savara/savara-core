@@ -80,7 +80,17 @@ public class MessageUtil {
 			org.w3c.dom.Element paramElem=(org.w3c.dom.Element)paramValue;
 			org.w3c.dom.Element mesgElem=(org.w3c.dom.Element)mesgValue;
 			
-			ret = true;
+			// Check if element names are the same
+			if (mesgElem.getLocalName().equals("return")) {
+				// ISSUE: Workaround to overcome SCA(Tuscany) simulation
+				// message validation
+				ret = true;
+			} else if (paramElem.getLocalName().equals(mesgElem.getLocalName())) {
+				ret = true;
+			} else {
+				logger.info("isValid: element name mismatch, param="
+						+paramElem.getLocalName()+" mesg="+mesgElem.getLocalName());
+			}
 			
 			// Check if comment has been provided
 			String instructions="";

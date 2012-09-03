@@ -34,10 +34,10 @@ public class %CLASSNAME% extends org.switchyard.transform.BaseTransformer<DOMSou
 		}
 
 		try {
-			org.jboss.examples.creditagency.CustomerUnknownType fault=
-					(org.jboss.examples.creditagency.CustomerUnknownType)unmarshaller.unmarshal(type);
+			javax.xml.bind.JAXBElement<%FAULTTYPE%> jbe=
+					(javax.xml.bind.JAXBElement<%FAULTTYPE%>)unmarshaller.unmarshal(type);
 
-			return new %FAULTCLASS%("%FAULTMESSAGE%", fault);
+			return new %FAULTCLASS%("%FAULTMESSAGE%", jbe.getValue());
 		} catch (Exception e) {
 			throw new SwitchYardException("Failed to unmarshal fault", e);
 		}

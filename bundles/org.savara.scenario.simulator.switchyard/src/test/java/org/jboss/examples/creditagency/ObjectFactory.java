@@ -36,19 +36,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link CreditRatingType }
-     * 
-     */
-    public CreditRatingType createCreditRatingType() {
-        return new CreditRatingType();
-    }
-
-    /**
      * Create an instance of {@link CreditCheckType }
      * 
      */
     public CreditCheckType createCreditCheckType() {
         return new CreditCheckType();
+    }
+
+    /**
+     * Create an instance of {@link CreditRatingType }
+     * 
+     */
+    public CreditRatingType createCreditRatingType() {
+        return new CreditRatingType();
     }
 
     /**

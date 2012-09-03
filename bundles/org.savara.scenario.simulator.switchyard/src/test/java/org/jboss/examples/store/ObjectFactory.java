@@ -37,14 +37,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AccountNotFoundType }
-     * 
-     */
-    public AccountNotFoundType createAccountNotFoundType() {
-        return new AccountNotFoundType();
-    }
-
-    /**
      * Create an instance of {@link BuyConfirmedType }
      * 
      */
@@ -66,6 +58,14 @@ public class ObjectFactory {
      */
     public BuyRequestType createBuyRequestType() {
         return new BuyRequestType();
+    }
+
+    /**
+     * Create an instance of {@link AccountNotFoundType }
+     * 
+     */
+    public AccountNotFoundType createAccountNotFoundType() {
+        return new AccountNotFoundType();
     }
 
     /**

@@ -35,19 +35,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link DeliveryRequestType }
-     * 
-     */
-    public DeliveryRequestType createDeliveryRequestType() {
-        return new DeliveryRequestType();
-    }
-
-    /**
      * Create an instance of {@link DeliveryConfirmedType }
      * 
      */
     public DeliveryConfirmedType createDeliveryConfirmedType() {
         return new DeliveryConfirmedType();
+    }
+
+    /**
+     * Create an instance of {@link DeliveryRequestType }
+     * 
+     */
+    public DeliveryRequestType createDeliveryRequestType() {
+        return new DeliveryRequestType();
     }
 
     /**
