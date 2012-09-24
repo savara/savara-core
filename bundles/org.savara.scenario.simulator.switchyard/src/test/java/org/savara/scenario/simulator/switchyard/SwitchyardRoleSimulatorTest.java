@@ -19,6 +19,7 @@ package org.savara.scenario.simulator.switchyard;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.savara.scenario.model.Parameter;
 import org.savara.scenario.model.ReceiveEvent;
@@ -337,8 +338,9 @@ public class SwitchyardRoleSimulatorTest {
 			fail("Exception occurred: "+e);
 		}
 	}
-
+	
 	@Test
+	@Ignore // Until SAVARA-359 is resolved
 	public void testCustomerUnknown() {
 		SwitchyardRoleSimulator sim=new SwitchyardRoleSimulator();
 		

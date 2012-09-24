@@ -94,7 +94,7 @@ public class OutboundHandler extends BaseServiceHandler {
     	
     	String content=exchange.getMessage().getContent(String.class);
     	
-    	String op=exchange.getContract().getServiceOperation().getName();
+    	String op=exchange.getContract().getProviderOperation().getName();
     
     	if (LOG.isLoggable(Level.FINEST)) {
     		LOG.fine("Handle outbound message: "+content);
@@ -103,7 +103,7 @@ public class OutboundHandler extends BaseServiceHandler {
         try {
         	_messageStore.waitForSendEvent(op, content);
         	
-        	if (exchange.getContract().getServiceOperation().getExchangePattern()
+        	if (exchange.getContract().getProviderOperation().getExchangePattern()
         					== ExchangePattern.IN_OUT) {
 	        	ReceiveEvent respEvent = _messageStore.waitForReceiveEvent(op);
 	        	
