@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" targetNamespace="http://www.savara.org/examples/Store">
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" id="id-PurchaseGoods_Store-Store" targetNamespace="http://www.savara.org/examples/Store">
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_Store.wsdl" namespace="http://www.savara.org/examples/Store"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_CreditAgency.wsdl" namespace="http://www.savara.org/examples/CreditAgency"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_Logistics.wsdl" namespace="http://www.savara.org/examples/Logistics"/>

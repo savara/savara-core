@@ -142,20 +142,25 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			TDefinitions defns=new TDefinitions();
 			
+			// Set an id on the definition - not strictly required,
+			// although the BPMN2 modeler currently seems to want
+			// it
+			defns.setId("id-"+pm.getProtocol().getName()+"-"+pm.getProtocol().getLocatedRole());				
+						
+			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model=
+				new org.savara.bpmn2.internal.generation.BPMN2ModelFactory(defns);
+			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation=
+				new org.savara.bpmn2.internal.generation.BPMN2NotationFactory(model);
+			
+			model.setUseConsecutiveIds(_consecutiveIds);
+			notation.setUseConsecutiveIds(_consecutiveIds);
+			
 			// Find namespace for role
 			initNamespace(defns, pm);
 			
 			initImports(defns, pm);
 			
 			initMessages(defns, pm);
-			
-			org.savara.bpmn2.internal.generation.BPMN2ModelFactory model=
-				new org.savara.bpmn2.internal.generation.BPMN2ModelFactory(defns);
-			org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation=
-					new org.savara.bpmn2.internal.generation.BPMN2NotationFactory(model);
-			
-			model.setUseConsecutiveIds(_consecutiveIds);
-			notation.setUseConsecutiveIds(_consecutiveIds);
 			
 			BPMN2ModelVisitor visitor=
 				new BPMN2ModelVisitor(pm.getProtocol().getName(),

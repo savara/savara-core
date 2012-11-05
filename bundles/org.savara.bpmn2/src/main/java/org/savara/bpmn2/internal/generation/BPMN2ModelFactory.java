@@ -88,7 +88,7 @@ public class BPMN2ModelFactory {
 		if (m_consecutiveIds) {
 			return("MID"+(m_id++));
 		}
-		return(UUID.randomUUID().toString());
+		return("id-"+UUID.randomUUID().toString());
 	}
 
 	public Object createDiagram() {

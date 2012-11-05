@@ -137,21 +137,26 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 	protected String processProtocol(ProtocolModel pm, Protocol p, java.util.Map<String,Object> modelMap,
 						FeedbackHandler handler, ResourceLocator locator) {
 		TDefinitions defns=new TDefinitions();
+
+		// Set an id on the definition - not strictly required,
+		// although the BPMN2 modeler currently seems to want
+		// it
+		defns.setId("id-"+pm.getProtocol().getName());				
 		
+		org.savara.bpmn2.internal.generation.BPMN2ModelFactory model=
+				new org.savara.bpmn2.internal.generation.BPMN2ModelFactory(defns);
+		org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation=
+				new org.savara.bpmn2.internal.generation.BPMN2NotationFactory(model);
+			
+		model.setUseConsecutiveIds(_consecutiveIds);
+		notation.setUseConsecutiveIds(_consecutiveIds);
+			
 		// Find namespace for role
 		initNamespace(defns, pm, p);
 		
 		initImports(defns, pm);
 		
 		initMessages(defns, pm);
-		
-		org.savara.bpmn2.internal.generation.BPMN2ModelFactory model=
-			new org.savara.bpmn2.internal.generation.BPMN2ModelFactory(defns);
-		org.savara.bpmn2.internal.generation.BPMN2NotationFactory notation=
-				new org.savara.bpmn2.internal.generation.BPMN2NotationFactory(model);
-		
-		model.setUseConsecutiveIds(_consecutiveIds);
-		notation.setUseConsecutiveIds(_consecutiveIds);
 		
 		String modelName=getProtocolName(p);
 		

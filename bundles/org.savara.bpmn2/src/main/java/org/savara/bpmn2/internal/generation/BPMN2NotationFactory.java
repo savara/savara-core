@@ -63,7 +63,7 @@ public class BPMN2NotationFactory {
 		if (m_consecutiveIds) {
 			return("NID"+(m_id++));
 		}
-		return(UUID.randomUUID().toString());
+		return("id-"+UUID.randomUUID().toString());
 	}
 
 	public Object createDiagram(BPMN2ModelFactory factory,
