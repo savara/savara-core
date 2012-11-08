@@ -36,19 +36,26 @@ public class SwitchyardBPELGenerator {
 	}
 	
 	public org.w3c.dom.Element createSwitchyardDescriptor(String name,
-					org.w3c.dom.Element descriptor, java.util.Map<String,javax.wsdl.Definition> wsdls)
-										throws Exception {
+			org.w3c.dom.Element descriptor,
+			java.util.Map<String,javax.wsdl.Definition> wsdls)
+								throws Exception {
+		return (createSwitchyardDescriptor(name, descriptor, null, wsdls));
+	}
+	
+	public org.w3c.dom.Element createSwitchyardDescriptor(String name,
+			org.w3c.dom.Element descriptor, javax.wsdl.Definition serviceWsdl,
+			java.util.Map<String,javax.wsdl.Definition> wsdls)
+								throws Exception {
 		org.w3c.dom.Element ret=null;
+		String targetNamespace=null;
+		
+		if (serviceWsdl != null) {
+			targetNamespace = serviceWsdl.getTargetNamespace();
+		}
 		
 		StringBuffer composite=new StringBuffer();
 		
 		composite.append("<switchyard xmlns=\"urn:switchyard-config:switchyard:1.0\"\r\n");
-		composite.append("\t\txmlns:swyd=\"urn:switchyard-config:switchyard:1.0\"\r\n");
-		composite.append("\t\txmlns:trfm=\"urn:switchyard-config:transform:1.0\"\r\n");
-		composite.append("\t\txmlns:bean=\"urn:switchyard-component-bean:config:1.0\"\r\n");
-		composite.append("\t\txmlns:soap=\"urn:switchyard-component-soap:config:1.0\"\r\n");
-		composite.append("\t\txmlns:bpel=\"http://docs.oasis-open.org/ns/opencsa/sca/200903\"\r\n");
-		composite.append("\t\txmlns:sca=\"http://docs.oasis-open.org/ns/opencsa/sca/200912\"\r\n");
 		
 		NamedNodeMap attrs=descriptor.getAttributes();
 		
@@ -63,11 +70,20 @@ public class SwitchyardBPELGenerator {
 			}
 		}
 		
-		composite.append("\t\ttargetNamespace=\""+descriptor.getAttribute("xmlns")+"\"\r\n");
-		composite.append("\t\tname=\""+name+"\">\r\n");
+		if (targetNamespace != null) {
+			composite.append("\t\ttargetNamespace=\""+targetNamespace+"\"\r\n");
+		}
 		
-		composite.append("\t<sca:composite name=\""+name+
-				"\" targetNamespace=\""+descriptor.getAttribute("xmlns")+"\">\r\n");
+		composite.append("\t\tname=\""+name+"\" >\r\n");
+		
+		composite.append("\t<composite xmlns=\"http://docs.oasis-open.org/ns/opencsa/sca/200912\" name=\""+name+
+				"\"");
+		
+		if (targetNamespace != null) {
+			composite.append(" targetNamespace=\""+targetNamespace+"\"");
+		}
+		
+		composite.append(" >\r\n");
 		
 		NodeList nl=descriptor.getChildNodes();
 		
@@ -77,9 +93,11 @@ public class SwitchyardBPELGenerator {
 			if (n instanceof Element && XMLUtils.getLocalname(n.getNodeName()).equals("process")) {
 				Element process=(Element)n;
 				
-				composite.append(generateServices(process, wsdls, namespaces));
+				composite.append(generateServices(name, process, wsdls, namespaces));
 				
-				composite.append(generateComponent(process, wsdls, namespaces));
+				composite.append(generateReferences(name, process, wsdls, namespaces));
+				
+				composite.append(generateComponent(name, process, wsdls, namespaces));
 				
 				// TODO: Generate references for any 'invoke' entry that is not
 				// satisfied by a service (process) provided by this deployment
@@ -87,7 +105,7 @@ public class SwitchyardBPELGenerator {
 			}
 		}
 		
-		composite.append("\t</sca:composite>\r\n");
+		composite.append("\t</composite>\r\n");
 
 		composite.append("</switchyard>\r\n");
 
@@ -99,22 +117,18 @@ public class SwitchyardBPELGenerator {
 	/**
 	 * This method generates a service element.
 	 * 
+	 * @param compositeName The composite name
 	 * @param process The process details
 	 * @param wsdls The set of wsdls
 	 * @param namespaces The namespaces
 	 * @param port The port number
 	 * @return The service element
 	 */
-	protected String generateServices(Element process,
+	protected String generateServices(String compositeName, Element process,
 					java.util.Map<String,javax.wsdl.Definition> wsdls,
 					java.util.Map<String, String> namespaces) {
 		StringBuffer ret=new StringBuffer();
 		
-		String name=getComponentName(process);
-		
-		ret.append("\t\t<sca:service name=\""+name+"\" promote=\""+name+"\">\r\n");
-		ret.append("\t\t\t<soap:binding.soap>\r\n");
-
 		NodeList nl=process.getElementsByTagName("provide");
 		
 		java.util.List<String> wsdlPaths=new java.util.Vector<String>();
@@ -128,20 +142,86 @@ public class SwitchyardBPELGenerator {
 				if (services.getLength() == 1 && services.item(0) instanceof Element) {
 					Element service=(Element)services.item(0);
 					
+					String name=getComponentName(compositeName);
+					
+					String servName=getServiceName(service);
+					
+					ret.append("\t\t<service name=\""+servName+"\" promote=\""+name+"/"+servName+"\">\r\n");
+
+					String wsdlInterface=getInterfaceDetails(service, wsdls, namespaces);
+					
+					ret.append("\t\t\t<interface.wsdl interface=\""+wsdlInterface+"\"/>\r\n");
+
+					ret.append("\t\t\t<binding.soap xmlns=\"urn:switchyard-component-soap:config:1.0\" >\r\n");
+
 					String wsdlInterfacePath=getInterfacePath(service, wsdls, namespaces);
 					
 					if (!wsdlPaths.contains(wsdlInterfacePath)) {
-						ret.append("\t\t\t\t<soap:wsdl>"+wsdlInterfacePath+"</soap:wsdl>\r\n");
+						ret.append("\t\t\t\t<wsdl>"+wsdlInterfacePath+"</wsdl>\r\n");
 						wsdlPaths.add(wsdlInterfacePath);
 					}
+					
+					ret.append("\t\t\t\t<socketAddr>:18001</socketAddr>\r\n");
+					ret.append("\t\t\t</binding.soap>\r\n");
+					
+					ret.append("\t\t</service>\r\n");
 				}
 			}
 		}
 		
-		ret.append("\t\t\t\t<soap:socketAddr>:18001</soap:socketAddr>\r\n");
-		ret.append("\t\t\t</soap:binding.soap>\r\n");
+		return(ret.toString());
+	}
+	
+	/**
+	 * This method generates a reference element.
+	 * 
+	 * @param compositeName The composite name
+	 * @param process The process details
+	 * @param wsdls The set of wsdls
+	 * @param namespaces The namespaces
+	 * @param port The port number
+	 * @return The reference element
+	 */
+	protected String generateReferences(String compositeName, Element process,
+					java.util.Map<String,javax.wsdl.Definition> wsdls,
+					java.util.Map<String, String> namespaces) {
+		StringBuffer ret=new StringBuffer();
 		
-		ret.append("\t\t</sca:service>\r\n");
+		org.w3c.dom.NodeList nl = process.getElementsByTagName("invoke");
+		
+		for (int i=0; i < nl.getLength(); i++) {
+			Node n=nl.item(i);
+			
+			if (n instanceof Element) {
+				NodeList services=((Element)n).getElementsByTagName("service");
+				
+				if (services.getLength() == 1 && services.item(0) instanceof Element) {
+					Element service=(Element)services.item(0);
+					
+					// TODO: Need to access wsdl details for the service
+
+					String wsdlInterface=getInterfaceDetails(service, wsdls, namespaces);
+					
+					String name=getComponentName(compositeName);
+					
+					String servName=getServiceName(service);
+					
+					ret.append("\t\t<reference name=\""+servName+"\" promote=\""+
+										name+"/"+servName+"\" multiplicity=\"1..1\" >\r\n");
+					ret.append("\t\t\t<interface.wsdl interface=\""+wsdlInterface+"\"/>\r\n");
+
+					ret.append("\t\t\t<binding.soap xmlns=\"urn:switchyard-component-soap:config:1.0\" >\r\n");
+
+					String wsdlInterfacePath=getInterfacePath(service, wsdls, namespaces);
+					ret.append("\t\t\t\t<wsdl>"+wsdlInterfacePath+"</wsdl>\r\n");
+					
+					ret.append("\t\t\t\t<socketAddr>:18001</socketAddr>\r\n");
+					ret.append("\t\t\t</binding.soap>\r\n");
+
+					ret.append("\t\t</reference>\r\n");
+				}
+			}
+		}
 		
 		return(ret.toString());
 	}
@@ -149,19 +229,23 @@ public class SwitchyardBPELGenerator {
 	/**
 	 * This method generates the component element.
 	 * 
+	 * @param compositeName The composite name
 	 * @param process The process details
 	 * @param wsdls The wsdls
 	 * @param namespaces The namespaces
 	 * @return The component element
 	 */
-	protected String generateComponent(Element process,
+	protected String generateComponent(String compositeName, Element process,
 			java.util.Map<String,javax.wsdl.Definition> wsdls,
 			java.util.Map<String, String> namespaces) {
 		StringBuffer ret=new StringBuffer();
 		
-		ret.append("\t\t<sca:component name=\""+getComponentName(process)+"\">\r\n");
+		String name=getComponentName(compositeName);
 		
-		ret.append("\t\t\t<bpel:implementation.bpel process=\""+process.getAttribute("name")+"\" />\r\n");
+		ret.append("\t\t<component name=\""+name+"\">\r\n");
+		
+		ret.append("\t\t\t<implementation.bpel xmlns=\"http://docs.oasis-open.org/ns/opencsa/sca/200903\" process=\""+
+							process.getAttribute("name")+"\" />\r\n");
 		
 		NodeList nl=process.getElementsByTagName("provide");
 		
@@ -178,9 +262,9 @@ public class SwitchyardBPELGenerator {
 
 					String wsdlInterface=getInterfaceDetails(service, wsdls, namespaces);
 					
-					ret.append("\t\t\t<sca:service name=\""+getServiceName(service)+"\" >\r\n");
-					ret.append("\t\t\t\t<sca:interface.wsdl interface=\""+wsdlInterface+"\"/>\r\n");
-					ret.append("\t\t\t</sca:service>\r\n");
+					ret.append("\t\t\t<service name=\""+getServiceName(service)+"\" >\r\n");
+					ret.append("\t\t\t\t<interface.wsdl interface=\""+wsdlInterface+"\"/>\r\n");
+					ret.append("\t\t\t</service>\r\n");
 				}
 			}
 		}
@@ -200,14 +284,14 @@ public class SwitchyardBPELGenerator {
 
 					String wsdlInterface=getInterfaceDetails(service, wsdls, namespaces);
 					
-					ret.append("\t\t\t<sca:reference name=\""+getServiceName(service)+"\" >\r\n");
-					ret.append("\t\t\t\t<sca:interface.wsdl interface=\""+wsdlInterface+"\"/>\r\n");
-					ret.append("\t\t\t</sca:reference>\r\n");
+					ret.append("\t\t\t<reference name=\""+getServiceName(service)+"\" >\r\n");
+					ret.append("\t\t\t\t<interface.wsdl interface=\""+wsdlInterface+"\"/>\r\n");
+					ret.append("\t\t\t</reference>\r\n");
 				}
 			}
 		}
 		
-		ret.append("\t\t</sca:component>\r\n");
+		ret.append("\t\t</component>\r\n");
 		
 		return(ret.toString());
 	}
@@ -298,19 +382,13 @@ public class SwitchyardBPELGenerator {
 	
 	/**
 	 * This method returns the name of the component associated with the
-	 * BPEL process.
+	 * composite.
 	 * 
-	 * @param process The BPEL process
+	 * @param name The composite name
 	 * @return The component name
 	 */
-	protected String getComponentName(Element process) {
-		String ret=process.getAttribute("name");
-		int index=ret.indexOf(':');
-		
-		if (index != -1) {
-			ret = ret.substring(index+1);
-		}
-		return (ret);
+	protected String getComponentName(String name) {
+		return (name+"Component");
 	}
 	
 	/**

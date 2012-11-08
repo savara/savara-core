@@ -1,39 +1,52 @@
-<switchyard xmlns="urn:switchyard-config:switchyard:1.0" xmlns:bean="urn:switchyard-component-bean:config:1.0" xmlns:bpel="http://docs.oasis-open.org/ns/opencsa/sca/200903" xmlns:examples="http://www.jboss.org/bpel/examples" xmlns:ls="http://example.com/loan-approval/loanService/" xmlns:ra="http://example.com/loan-approval/riskAssessment/" xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912" xmlns:soap="urn:switchyard-component-soap:config:1.0" xmlns:swyd="urn:switchyard-config:switchyard:1.0" xmlns:trfm="urn:switchyard-config:transform:1.0" name="loanapproval" targetNamespace="http://www.apache.org/ode/schemas/dd/2007/03">
-    <sca:composite name="loanapproval" targetNamespace="http://www.apache.org/ode/schemas/dd/2007/03">
-        <sca:service name="loanApprovalProcess" promote="loanApprovalProcess">
-            <soap:binding.soap>
-                <soap:wsdl>
+<switchyard xmlns="urn:switchyard-config:switchyard:1.0" xmlns:examples="http://www.jboss.org/bpel/examples" xmlns:ls="http://example.com/loan-approval/loanService/" xmlns:ra="http://example.com/loan-approval/riskAssessment/" name="loanapproval">
+    <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912" name="loanapproval">
+        <service name="loanService" promote="loanapprovalComponent/loanService">
+            <interface.wsdl interface="loanServicePT.wsdl#wsdl.porttype(loanServicePT)"/>
+            <binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+                <wsdl>
                     loanServicePT.wsdl
-                </soap:wsdl>
-                <soap:socketAddr>
+                </wsdl>
+                <socketAddr>
                     :18001
-                </soap:socketAddr>
-            </soap:binding.soap>
-        </sca:service>
-        <sca:component name="loanApprovalProcess">
-            <bpel:implementation.bpel process="ls:loanApprovalProcess"/>
-            <sca:service name="loanService">
-                <sca:interface.wsdl interface="loanServicePT.wsdl#wsdl.porttype(loanServicePT)"/>
-            </sca:service>
-            <sca:reference name="riskAssessor">
-                <sca:interface.wsdl interface="riskAssessmentPT.wsdl#wsdl.porttype(riskAssessmentPT)"/>
-            </sca:reference>
-        </sca:component>
-        <sca:service name="riskAssessmentProcess" promote="riskAssessmentProcess">
-            <soap:binding.soap>
-                <soap:wsdl>
+                </socketAddr>
+            </binding.soap>
+        </service>
+        <reference multiplicity="1..1" name="riskAssessor" promote="loanapprovalComponent/riskAssessor">
+            <interface.wsdl interface="riskAssessmentPT.wsdl#wsdl.porttype(riskAssessmentPT)"/>
+            <binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+                <wsdl>
                     riskAssessmentPT.wsdl
-                </soap:wsdl>
-                <soap:socketAddr>
+                </wsdl>
+                <socketAddr>
                     :18001
-                </soap:socketAddr>
-            </soap:binding.soap>
-        </sca:service>
-        <sca:component name="riskAssessmentProcess">
-            <bpel:implementation.bpel process="ra:riskAssessmentProcess"/>
-            <sca:service name="riskAssessor">
-                <sca:interface.wsdl interface="riskAssessmentPT.wsdl#wsdl.porttype(riskAssessmentPT)"/>
-            </sca:service>
-        </sca:component>
-    </sca:composite>
+                </socketAddr>
+            </binding.soap>
+        </reference>
+        <component name="loanapprovalComponent">
+            <implementation.bpel xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" process="ls:loanApprovalProcess"/>
+            <service name="loanService">
+                <interface.wsdl interface="loanServicePT.wsdl#wsdl.porttype(loanServicePT)"/>
+            </service>
+            <reference name="riskAssessor">
+                <interface.wsdl interface="riskAssessmentPT.wsdl#wsdl.porttype(riskAssessmentPT)"/>
+            </reference>
+        </component>
+        <service name="riskAssessor" promote="loanapprovalComponent/riskAssessor">
+            <interface.wsdl interface="riskAssessmentPT.wsdl#wsdl.porttype(riskAssessmentPT)"/>
+            <binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+                <wsdl>
+                    riskAssessmentPT.wsdl
+                </wsdl>
+                <socketAddr>
+                    :18001
+                </socketAddr>
+            </binding.soap>
+        </service>
+        <component name="loanapprovalComponent">
+            <implementation.bpel xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200903" process="ra:riskAssessmentProcess"/>
+            <service name="riskAssessor">
+                <interface.wsdl interface="riskAssessmentPT.wsdl#wsdl.porttype(riskAssessmentPT)"/>
+            </service>
+        </component>
+    </composite>
 </switchyard>
