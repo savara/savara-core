@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA Scenario Simulator CDM
 Bundle-SymbolicName: org.savara.scenario.simulator.cdm
-Bundle-Version: 2.1.0.SNAPSHOT
+Bundle-Version: 2.1.0.20121108-M2
 Bundle-Activator: org.savara.scenario.simulator.cdm.osgi.Activator
 Bundle-Vendor: Red Hat, Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

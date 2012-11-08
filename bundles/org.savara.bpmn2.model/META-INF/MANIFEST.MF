@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SAVARA BPMN2 Model
 Bundle-SymbolicName: org.savara.bpmn2.model
-Bundle-Version: 2.1.0.SNAPSHOT
+Bundle-Version: 2.1.0.20121108-M2
 Bundle-Vendor: Red Hat, Inc.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.framework;version="1.3.0"
