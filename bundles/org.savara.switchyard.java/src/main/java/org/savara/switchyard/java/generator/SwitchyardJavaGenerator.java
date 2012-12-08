@@ -54,6 +54,16 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 	 * {@inheritDoc}
 	 */
 	@Override
+	public void createServiceInterfaceFromWSDL(String wsdlPath, String wsdlLocation, String srcFolder) throws Exception {
+		super.createServiceInterfaceFromWSDL(wsdlPath, wsdlLocation, srcFolder);
+		
+		removeWebServiceAndClientAnnotations(wsdlPath, srcFolder);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void createServiceImplementationFromWSDL(Role role, java.util.List<Role> refRoles,
 							ProtocolModel behaviour, String wsdlPath, String wsdlLocation,
 						java.util.List<String> refWsdlPaths, String srcFolder,
@@ -92,6 +102,8 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 				}
 			}
 			
+			removeWebServiceAndClientAnnotations(wsdlPath, srcFolder);
+
 		} else {
 			logger.severe("Failed to retrieve WSDL definition '"+wsdlPath+"'");
 		}

@@ -1,31 +1,17 @@
 package org.savara.examples.store;
 
-import javax.jws.Oneway;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebResult;
-import javax.jws.WebService;
-import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 
  
-@WebService(targetNamespace = "http://www.savara.org/examples/Store", name = "Store")
 @XmlSeeAlso({org.jboss.examples.store.ObjectFactory.class})
-@SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 public interface Store {
 
-    @WebResult(name = "BuyConfirmed", targetNamespace = "http://www.jboss.org/examples/store", partName = "content")
-    @WebMethod(action = "http://www.savara.org/examples/Store/buy")
     public org.jboss.examples.store.BuyConfirmedType buy(
-        @WebParam(partName = "content", name = "BuyRequest", targetNamespace = "http://www.jboss.org/examples/store")
         org.jboss.examples.store.BuyRequestType content
     ) throws InsufficientCreditFault, AccountNotFoundFault;
 
-    @Oneway
-    @WebMethod(action = "http://www.savara.org/examples/Store/ack")
     public void ack(
-        @WebParam(partName = "content", name = "AckRequest", targetNamespace = "http://www.jboss.org/examples/store")
         org.jboss.examples.store.AckRequestType content
     );
 }

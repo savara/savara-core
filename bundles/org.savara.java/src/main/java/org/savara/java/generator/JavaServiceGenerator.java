@@ -20,10 +20,12 @@ package org.savara.java.generator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.wsdl.PortType;
 import javax.wsdl.xml.WSDLReader;
 
 import org.apache.cxf.tools.common.ToolContext;
 import org.savara.common.resources.ResourceLocator;
+import org.savara.java.generator.util.JavaGeneratorUtil;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 
@@ -86,6 +88,99 @@ public class JavaServiceGenerator {
 			logger.log(Level.SEVERE, "Failed to generate Java interfaces", e);
 			throw e;
 		}
+	}
+	
+	/**
+	 * This method removes the JWS (java web service) annotations from a service interface
+	 * and the service client class.
+	 * 
+	 * @param wsdlPath The WSDL path
+	 * @param srcFolder The source folder where the interface has been generated
+	 * @throws Exception Failed to remove the annotations
+	 */
+	protected void removeWebServiceAndClientAnnotations(String wsdlPath, String srcFolder) throws Exception {
+		
+		// Process the service interface to remove web service annotations
+		javax.wsdl.Definition defn=getWSDLReader().readWSDL(wsdlPath);
+		
+		if (defn != null) {
+			
+			// Use the namespace to obtain a Java package
+			String pack=JavaGeneratorUtil.getJavaPackage(defn.getTargetNamespace());
+			
+			String folder=pack.replace('.', java.io.File.separatorChar);
+			
+			@SuppressWarnings("unchecked")
+			java.util.Iterator<PortType> portTypes=defn.getPortTypes().values().iterator();
+			
+			while (portTypes.hasNext()) {
+				PortType portType=portTypes.next();
+				
+				java.io.File f=new java.io.File(srcFolder+java.io.File.separatorChar+
+								folder+java.io.File.separatorChar+portType.getQName().getLocalPart()+".java");
+				
+				if (f.exists()) {
+					java.io.FileInputStream fis=new java.io.FileInputStream(f);
+					
+					byte[] b=new byte[fis.available()];
+					fis.read(b);
+					
+					StringBuffer text=new StringBuffer();
+					text.append(new String(b));
+					
+					fis.close();
+					
+					removeLines(text, "import javax.jws.");
+					removeLines(text, "        @Web");
+					removeLines(text, "    @Web");
+					removeLines(text, "@Web");
+					removeLines(text, "    @Oneway");
+					removeLines(text, "@SOAPBinding");
+
+					// Write file contents back
+					java.io.FileOutputStream fos=new java.io.FileOutputStream(f);
+					
+					fos.write(text.toString().getBytes());
+					
+					fos.close();
+					
+				} else {
+					logger.severe("Service file '"+f.getAbsolutePath()+"' does not exist");
+				}
+				
+				f = new java.io.File(srcFolder+java.io.File.separatorChar+
+						folder+java.io.File.separatorChar+portType.getQName().getLocalPart()+"Service.java");
+		
+				if (f.exists()) {
+					if (!f.delete()) {
+						logger.warning("Failed to delete service client: "+f);
+					}
+				}
+			}
+			
+		} else {
+			logger.severe("Failed to retrieve WSDL definition '"+wsdlPath+"'");
+		}
+	}
+	
+	/**
+	 * This method removes a line that begins with the supplied value.
+	 * 
+	 * @param text The text for the interface
+	 * @param startsWith The value to search for
+	 */
+	protected void removeLines(StringBuffer text, String startsWith) {
+		int startindex=-1;
+		int endindex=-1;
+		
+		do {
+			startindex=text.indexOf(startsWith);
+			endindex=text.indexOf("\n", startindex);
+			
+			if (startindex != -1 && endindex != -1) {
+				text.replace(startindex, endindex+1, "");
+			}
+		} while (startindex != -1);
 	}
 	
 	/**
