@@ -68,7 +68,7 @@
 		<xalan.version>2.7.1</xalan.version>
 		<tuscany.version>2.0-Beta2</tuscany.version>
 		<cxf.version>2.4.0</cxf.version>
-		<switchyard.version>0.6.0.Beta2</switchyard.version>
+		<switchyard.version>0.6.0.Final</switchyard.version>
 	</properties>
 
   	<profiles>
