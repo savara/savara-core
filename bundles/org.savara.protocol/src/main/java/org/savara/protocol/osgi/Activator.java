@@ -37,6 +37,7 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
 		
+		/*
         Properties props = new Properties();
 
         // Register extension rules
@@ -107,6 +108,7 @@ public class Activator implements BundleActivator {
 	        
 	        m_protocolProjectorTracker.open();
 		}
+		*/
 	}
 
 	/*
