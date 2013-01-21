@@ -64,24 +64,25 @@ public class ScenarioSimulatorMain {
 				
 				is.close();
 			}
-		} catch(Exception e) {
+		} catch(Throwable e) {
 			logger.log(Level.SEVERE, "Failed to load scenario simulation '"+args[0]+"'", e);
 		}
 		
 		if (simulation != null) {
 			ScenarioSimulatorMain simulator=new ScenarioSimulatorMain();
-			
-			int exitCode=simulator.simulate(simulation);
-			
-			// Flush stdout/err
-			System.out.flush();
-			System.err.flush();
+			int exitCode=-1;
 			
 			try {
+				exitCode = simulator.simulate(simulation);
+			
+				// Flush stdout/err
+				System.out.flush();
+				System.err.flush();
+			
 				synchronized(simulator) {
 					simulator.wait(1000);
 				}
-			} catch(Exception e) {
+			} catch(Throwable e) {
 				e.printStackTrace();
 			}
 			
@@ -135,7 +136,7 @@ public class ScenarioSimulatorMain {
 					if (((SimulationHandlerBase)handler).isFailed() == false) {
 						ret = 0;
 					}
-				} catch(Exception e) {
+				} catch(Throwable e) {
 					logger.log(Level.SEVERE, "Failed to simulate", e);
 				}
 			}
@@ -173,7 +174,7 @@ public class ScenarioSimulatorMain {
 									break;
 								}
 								
-							} catch(Exception e) {
+							} catch(Throwable e) {
 								logger.log(Level.SEVERE, "Failed to instantiate role simulator '"+
 												details.getSimulator()+"'", e);
 							}
@@ -237,7 +238,7 @@ public class ScenarioSimulatorMain {
 							
 							handler.roleFailed(role, "Failed to find model '"+details.getModel()+"'");
 						}
-					} catch(Exception e) {
+					} catch(Throwable e) {
 						
 						handler.roleStart(role);
 
@@ -274,7 +275,7 @@ public class ScenarioSimulatorMain {
 			} else {
 				logger.severe("Failed to find scenario '"+simulation.getScenario()+"'");
 			}
-		} catch(Exception e) {
+		} catch(Throwable e) {
 			logger.log(Level.SEVERE, "Failed to load scenario '"+simulation.getScenario()+"'", e);
 		}
 		
