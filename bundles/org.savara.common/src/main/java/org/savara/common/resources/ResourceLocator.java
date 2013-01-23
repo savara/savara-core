@@ -35,4 +35,14 @@ public interface ResourceLocator {
 	 */
 	public java.net.URI getResourceURI(String uri) throws Exception;
 
+	/**
+	 * This method determines the relative path of the supplied
+	 * resource against the resource associated with the locator.
+	 * 
+	 * @param path The resource of interest
+	 * @return The relative path to the resource associated with the locator
+	 * @throws Exception Failed to determine the relative path
+	 */
+	public String getRelativePath(String path) throws Exception;
+	
 }

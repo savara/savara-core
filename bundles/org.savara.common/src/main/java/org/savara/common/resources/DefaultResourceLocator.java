@@ -62,4 +62,48 @@ public class DefaultResourceLocator implements ResourceLocator {
         return (ret);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+	public String getRelativePath(String path) throws Exception {
+		java.util.List<java.io.File> p1=new java.util.Vector<java.io.File>();
+		java.util.List<java.io.File> p2=new java.util.Vector<java.io.File>();
+		
+		java.io.File f=new java.io.File(path);
+		
+		while (f != null) {
+			p1.add(0, f);
+			f = f.getParentFile();
+		}
+		
+		f = _baseDir;
+		
+		while (f != null) {
+			p2.add(0, f);
+			f = f.getParentFile();
+		}
+		
+		while (p1.size() > 0 && p2.size() > 0
+				&& p1.get(0).equals(p2.get(0))) {
+			p1.remove(0);
+			p2.remove(0);
+		}
+		
+		String ret="";
+		
+		for (int i=0; i < p2.size(); i++) {
+			ret += ".."+java.io.File.separator;
+		}
+		
+		for (int i=0; i < p1.size(); i++) {
+			ret += p1.get(i).getName();
+			
+			if (p1.get(i).isDirectory()) {
+				ret += java.io.File.separator;
+			}
+		}
+		
+		return (ret);
+	}
+
 }

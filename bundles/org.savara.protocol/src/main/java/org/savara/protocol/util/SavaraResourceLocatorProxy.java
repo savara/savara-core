@@ -37,4 +37,8 @@ public class SavaraResourceLocatorProxy implements ResourceLocator {
 	public URI getResourceURI(String uri) throws Exception {
 		return(m_locator.getResourceURI(uri));
 	}
+
+	public String getRelativePath(String path) throws Exception {
+		return (null);
+	}
 }

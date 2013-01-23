@@ -265,7 +265,11 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 								String stval=st.nextToken();
 								
 								if (stns.equals(ns)) {
-									ret = stval;
+									
+									java.io.File other=new java.io.File(
+											f.getParentFile(), stval);
+									
+									ret = locator.getRelativePath(other.getCanonicalPath());
 									break;
 								}
 							}

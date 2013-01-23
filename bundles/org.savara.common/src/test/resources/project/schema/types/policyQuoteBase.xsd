@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/policyQuote"
+	xmlns:pol="http://www.example.org/policyQuote" elementFormDefault="qualified">
+
+	
+	<xs:complexType name="PolicyQuoteType">
+		<xs:sequence>
+			<xs:element name="requestDate" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="PolicyQuoteInfoType">
+		<xs:sequence>
+			<xs:element name="policyType" type="xs:string"/>
+			<xs:element name="vehicleYear" type="xs:string"/>
+			<xs:element name="driverName" type="xs:string"/>
+ 			<xs:element name="ssn" type="xs:string"/>
+ 			<xs:element name="dlNumber" type="xs:string"/>
+ 			<xs:element name="age" type="xs:int"/>
+			<xs:element name="numberOfAccidents" type="xs:int"/>
+			<xs:element name="numberOfTickets" type="xs:int"/>
+			<xs:element name="creditScore" type="xs:int"/>
+			<xs:element name="price" type="xs:int"/>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:simpleType name="TaskType">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="receivePolicyQuote" />
+			<xs:enumeration value="createPolicyQuote" />
+			<xs:enumeration value="getPolicyQuote" />
+			<xs:enumeration value="deletePolicyQuote" />
+			<xs:enumeration value="calculatePolicyQuote" />
+		</xs:restriction>
+	</xs:simpleType>
+
+
+
+</xs:schema>
+
