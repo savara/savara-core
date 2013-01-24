@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ans0="http://dmv.com/drivingRecord" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns0="http://www.example.org/policyQuote" xmlns:ns2="http://creditagency.com/creditCheck" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" id="id-PQM" targetNamespace="http://www.savara.org/PQM">
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/policyQuote.xsd" namespace="http://www.example.org/policyQuote"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/drivingRecord.xsd" namespace="http://dmv.com/drivingRecord"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/creditCheck.xsd" namespace="http://creditagency.com/creditCheck"/>
+    <bpmn2:itemDefinition xmlns="http://www.example.org/policyQuote" id="ITEMpolicyQuote" structureRef="policyQuote"/>
+    <bpmn2:message xmlns="http://www.savara.org/PQM" id="IDpolicyQuote" itemRef="ITEMpolicyQuote" name="policyQuote"/>
+    <bpmn2:itemDefinition xmlns="http://www.example.org/policyQuote" id="ITEMpolicyQuoteReply" structureRef="policyQuoteReply"/>
+    <bpmn2:message xmlns="http://www.savara.org/PQM" id="IDpolicyQuoteReply" itemRef="ITEMpolicyQuoteReply" name="policyQuoteReply"/>
+    <bpmn2:itemDefinition xmlns="http://www.example.org/policyQuote" id="ITEMpolicyQuoteFault" structureRef="policyQuoteFault"/>
+    <bpmn2:message xmlns="http://www.savara.org/PQM" id="IDpolicyQuoteFault" itemRef="ITEMpolicyQuoteFault" name="policyQuoteFault"/>
+    <bpmn2:itemDefinition xmlns="http://dmv.com/drivingRecord" id="ITEMdrivingRecordRequest" structureRef="drivingRecordRequest"/>
+    <bpmn2:message xmlns="http://www.savara.org/PQM" id="IDdrivingRecordRequest" itemRef="ITEMdrivingRecordRequest" name="drivingRecordRequest"/>
+    <bpmn2:itemDefinition xmlns="http://dmv.com/drivingRecord" id="ITEMdrivingRecordResponse" structureRef="drivingRecordResponse"/>
+    <bpmn2:message xmlns="http://www.savara.org/PQM" id="IDdrivingRecordResponse" itemRef="ITEMdrivingRecordResponse" name="drivingRecordResponse"/>
+    <bpmn2:itemDefinition xmlns="http://creditagency.com/creditCheck" id="ITEMcreditCheckRequest" structureRef="creditCheckRequest"/>
+    <bpmn2:message xmlns="http://www.savara.org/PQM" id="IDcreditCheckRequest" itemRef="ITEMcreditCheckRequest" name="creditCheckRequest"/>
+    <bpmn2:itemDefinition xmlns="http://creditagency.com/creditCheck" id="ITEMcreditCheckResponse" structureRef="creditCheckResponse"/>
+    <bpmn2:message xmlns="http://www.savara.org/PQM" id="IDcreditCheckResponse" itemRef="ITEMcreditCheckResponse" name="creditCheckResponse"/>
+    <bpmn2:choreography id="id-ea9d991e-4d8d-41f4-ae59-278aaef549ab" name="PQM">
+        <bpmn2:participant id="id-3599e8fa-8e9c-4287-ac34-370204af4fa3" name="Driver"/>
+        <bpmn2:participant id="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" name="PolicyQuoteProcessService">
+            <bpmn2:interfaceRef xmlns="http://www.savara.org/PQM">PolicyQuoteProcessServiceInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:participant id="id-98b1dff7-b7e3-427d-af4a-e2214d7b7783" name="DrivingRecordService">
+            <bpmn2:interfaceRef xmlns="http://www.savara.org/PQM">DrivingRecordServiceInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:participant id="id-e946f4a8-434e-44cf-b485-656c4dd139ab" name="CreditCheckService">
+            <bpmn2:interfaceRef xmlns="http://www.savara.org/PQM">CreditCheckServiceInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:messageFlow xmlns="http://www.savara.org/PQM" id="id-25c2d52d-bbf7-44ad-a81d-d33e5233257e" messageRef="IDpolicyQuote" sourceRef="id-3599e8fa-8e9c-4287-ac34-370204af4fa3" targetRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40"/>
+        <bpmn2:messageFlow xmlns="http://www.savara.org/PQM" id="id-358a6fe3-38d7-4c1b-a2b4-dc356dfabeed" messageRef="IDdrivingRecordRequest" sourceRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" targetRef="id-98b1dff7-b7e3-427d-af4a-e2214d7b7783"/>
+        <bpmn2:messageFlow xmlns="http://www.savara.org/PQM" id="id-4fa50508-8e25-4a5e-bf87-2d08c8e25007" messageRef="IDdrivingRecordResponse" sourceRef="id-98b1dff7-b7e3-427d-af4a-e2214d7b7783" targetRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40"/>
+        <bpmn2:messageFlow xmlns="http://www.savara.org/PQM" id="id-f39ee8bf-3bea-4bc6-939d-14b879291cbd" messageRef="IDcreditCheckRequest" sourceRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" targetRef="id-e946f4a8-434e-44cf-b485-656c4dd139ab"/>
+        <bpmn2:messageFlow xmlns="http://www.savara.org/PQM" id="id-d0ad84b0-4f21-41c3-8c19-9385957d4796" messageRef="IDcreditCheckResponse" sourceRef="id-e946f4a8-434e-44cf-b485-656c4dd139ab" targetRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40"/>
+        <bpmn2:messageFlow xmlns="http://www.savara.org/PQM" id="id-19ef0883-afee-43ab-bf69-d09c252b868f" messageRef="IDpolicyQuoteReply" sourceRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" targetRef="id-3599e8fa-8e9c-4287-ac34-370204af4fa3"/>
+        <bpmn2:messageFlow xmlns="http://www.savara.org/PQM" id="id-5eebf5e5-d1d9-4909-877e-a045f01bbcf4" messageRef="IDpolicyQuoteFault" sourceRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" targetRef="id-3599e8fa-8e9c-4287-ac34-370204af4fa3"/>
+        <bpmn2:startEvent id="id-ff8e3200-3ab2-41e2-94a0-383f33f62775">
+            <bpmn2:outgoing xmlns="http://www.savara.org/PQM">id-c9b944e2-133e-4eb9-9317-9384b429eb88</bpmn2:outgoing>
+        </bpmn2:startEvent>
+        <bpmn2:endEvent id="id-ccc8174a-9c20-4cb8-afce-59ac00081003">
+            <bpmn2:incoming xmlns="http://www.savara.org/PQM">id-3661d814-7c53-48f6-a294-39d5088e51e2</bpmn2:incoming>
+        </bpmn2:endEvent>
+        <bpmn2:choreographyTask xmlns="http://www.savara.org/PQM" id="id-d1374a39-ea33-4a68-891a-fb98f86cedd8" initiatingParticipantRef="id-3599e8fa-8e9c-4287-ac34-370204af4fa3" name="receivePolicyQuote(policyQuote)">
+            <bpmn2:incoming>id-c9b944e2-133e-4eb9-9317-9384b429eb88</bpmn2:incoming>
+            <bpmn2:outgoing>id-6bfb00af-33c7-4604-98d8-b791ee127c74</bpmn2:outgoing>
+            <bpmn2:participantRef>id-3599e8fa-8e9c-4287-ac34-370204af4fa3</bpmn2:participantRef>
+            <bpmn2:participantRef>id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>id-25c2d52d-bbf7-44ad-a81d-d33e5233257e</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask xmlns="http://www.savara.org/PQM" id="id-94177961-e15c-42f9-8bcd-ee423592b01f" initiatingParticipantRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" name="checkDrivingRecord(drivingRecordRequest)">
+            <bpmn2:incoming>id-6bfb00af-33c7-4604-98d8-b791ee127c74</bpmn2:incoming>
+            <bpmn2:outgoing>id-f2dbd10b-ecbd-46ae-9b03-84c816f9833b</bpmn2:outgoing>
+            <bpmn2:participantRef>id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40</bpmn2:participantRef>
+            <bpmn2:participantRef>id-98b1dff7-b7e3-427d-af4a-e2214d7b7783</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>id-358a6fe3-38d7-4c1b-a2b4-dc356dfabeed</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask xmlns="http://www.savara.org/PQM" id="id-104be0b1-0efb-45da-b1a5-bd58a19c6597" initiatingParticipantRef="id-98b1dff7-b7e3-427d-af4a-e2214d7b7783" name="receiveDrivingRecord(drivingRecordResponse)">
+            <bpmn2:incoming>id-f2dbd10b-ecbd-46ae-9b03-84c816f9833b</bpmn2:incoming>
+            <bpmn2:outgoing>id-fa726265-97c1-4b69-a0cf-c7eb893fe181</bpmn2:outgoing>
+            <bpmn2:participantRef>id-98b1dff7-b7e3-427d-af4a-e2214d7b7783</bpmn2:participantRef>
+            <bpmn2:participantRef>id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>id-4fa50508-8e25-4a5e-bf87-2d08c8e25007</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:exclusiveGateway id="id-39d2015d-07ad-4bdf-b33c-2a971538bdc2">
+            <bpmn2:incoming xmlns="http://www.savara.org/PQM">id-fa726265-97c1-4b69-a0cf-c7eb893fe181</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/PQM">id-fce1541b-3373-475f-a7eb-6826f107ec6f</bpmn2:outgoing>
+            <bpmn2:outgoing xmlns="http://www.savara.org/PQM">id-7f6b8a15-31b4-43ef-8ccf-0b4177c9b11c</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:exclusiveGateway id="id-deac85eb-56d8-4f9e-9d17-34514eac42d1">
+            <bpmn2:incoming xmlns="http://www.savara.org/PQM">id-08c5a75c-cf81-465a-8bda-fd179312db00</bpmn2:incoming>
+            <bpmn2:incoming xmlns="http://www.savara.org/PQM">id-da6f11e7-ad70-4b98-8342-1885694c06f7</bpmn2:incoming>
+            <bpmn2:outgoing xmlns="http://www.savara.org/PQM">id-3661d814-7c53-48f6-a294-39d5088e51e2</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:choreographyTask xmlns="http://www.savara.org/PQM" id="id-793ac596-e04a-482a-b1c8-adfb02224269" initiatingParticipantRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" name="checkCredit(creditCheckRequest)">
+            <bpmn2:incoming>id-fce1541b-3373-475f-a7eb-6826f107ec6f</bpmn2:incoming>
+            <bpmn2:outgoing>id-397bf5c2-8406-43b4-88c2-edd6bba84548</bpmn2:outgoing>
+            <bpmn2:participantRef>id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40</bpmn2:participantRef>
+            <bpmn2:participantRef>id-e946f4a8-434e-44cf-b485-656c4dd139ab</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>id-f39ee8bf-3bea-4bc6-939d-14b879291cbd</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask xmlns="http://www.savara.org/PQM" id="id-f465b0b0-0fe7-4e74-bfc5-95d5fd1aacc7" initiatingParticipantRef="id-e946f4a8-434e-44cf-b485-656c4dd139ab" name="checkCredit(creditCheckResponse)">
+            <bpmn2:incoming>id-397bf5c2-8406-43b4-88c2-edd6bba84548</bpmn2:incoming>
+            <bpmn2:outgoing>id-3148f8ad-e7d9-4e3c-89b7-a864d6d4ef5d</bpmn2:outgoing>
+            <bpmn2:participantRef>id-e946f4a8-434e-44cf-b485-656c4dd139ab</bpmn2:participantRef>
+            <bpmn2:participantRef>id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>id-d0ad84b0-4f21-41c3-8c19-9385957d4796</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask xmlns="http://www.savara.org/PQM" id="id-f282b482-abf3-4627-85e3-fcdbe7b682ab" initiatingParticipantRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" name="receivePolicyQuote(policyQuoteReply)">
+            <bpmn2:incoming>id-3148f8ad-e7d9-4e3c-89b7-a864d6d4ef5d</bpmn2:incoming>
+            <bpmn2:outgoing>id-08c5a75c-cf81-465a-8bda-fd179312db00</bpmn2:outgoing>
+            <bpmn2:participantRef>id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40</bpmn2:participantRef>
+            <bpmn2:participantRef>id-3599e8fa-8e9c-4287-ac34-370204af4fa3</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>id-19ef0883-afee-43ab-bf69-d09c252b868f</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask xmlns="http://www.savara.org/PQM" id="id-a245d4b9-f172-4c98-9650-8742466c48bb" initiatingParticipantRef="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" name="receivePolicyQuote(policyQuoteFault)">
+            <bpmn2:incoming>id-7f6b8a15-31b4-43ef-8ccf-0b4177c9b11c</bpmn2:incoming>
+            <bpmn2:outgoing>id-da6f11e7-ad70-4b98-8342-1885694c06f7</bpmn2:outgoing>
+            <bpmn2:participantRef>id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40</bpmn2:participantRef>
+            <bpmn2:participantRef>id-3599e8fa-8e9c-4287-ac34-370204af4fa3</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>id-5eebf5e5-d1d9-4909-877e-a045f01bbcf4</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:sequenceFlow id="id-6bfb00af-33c7-4604-98d8-b791ee127c74" sourceRef="id-d1374a39-ea33-4a68-891a-fb98f86cedd8" targetRef="id-94177961-e15c-42f9-8bcd-ee423592b01f"/>
+        <bpmn2:sequenceFlow id="id-f2dbd10b-ecbd-46ae-9b03-84c816f9833b" sourceRef="id-94177961-e15c-42f9-8bcd-ee423592b01f" targetRef="id-104be0b1-0efb-45da-b1a5-bd58a19c6597"/>
+        <bpmn2:sequenceFlow id="id-397bf5c2-8406-43b4-88c2-edd6bba84548" sourceRef="id-793ac596-e04a-482a-b1c8-adfb02224269" targetRef="id-f465b0b0-0fe7-4e74-bfc5-95d5fd1aacc7"/>
+        <bpmn2:sequenceFlow id="id-3148f8ad-e7d9-4e3c-89b7-a864d6d4ef5d" sourceRef="id-f465b0b0-0fe7-4e74-bfc5-95d5fd1aacc7" targetRef="id-f282b482-abf3-4627-85e3-fcdbe7b682ab"/>
+        <bpmn2:sequenceFlow id="id-fce1541b-3373-475f-a7eb-6826f107ec6f" sourceRef="id-39d2015d-07ad-4bdf-b33c-2a971538bdc2" targetRef="id-793ac596-e04a-482a-b1c8-adfb02224269"/>
+        <bpmn2:sequenceFlow id="id-08c5a75c-cf81-465a-8bda-fd179312db00" sourceRef="id-f282b482-abf3-4627-85e3-fcdbe7b682ab" targetRef="id-deac85eb-56d8-4f9e-9d17-34514eac42d1"/>
+        <bpmn2:sequenceFlow id="id-7f6b8a15-31b4-43ef-8ccf-0b4177c9b11c" sourceRef="id-39d2015d-07ad-4bdf-b33c-2a971538bdc2" targetRef="id-a245d4b9-f172-4c98-9650-8742466c48bb"/>
+        <bpmn2:sequenceFlow id="id-da6f11e7-ad70-4b98-8342-1885694c06f7" sourceRef="id-a245d4b9-f172-4c98-9650-8742466c48bb" targetRef="id-deac85eb-56d8-4f9e-9d17-34514eac42d1"/>
+        <bpmn2:sequenceFlow id="id-fa726265-97c1-4b69-a0cf-c7eb893fe181" sourceRef="id-104be0b1-0efb-45da-b1a5-bd58a19c6597" targetRef="id-39d2015d-07ad-4bdf-b33c-2a971538bdc2"/>
+        <bpmn2:sequenceFlow id="id-c9b944e2-133e-4eb9-9317-9384b429eb88" sourceRef="id-ff8e3200-3ab2-41e2-94a0-383f33f62775" targetRef="id-d1374a39-ea33-4a68-891a-fb98f86cedd8"/>
+        <bpmn2:sequenceFlow id="id-3661d814-7c53-48f6-a294-39d5088e51e2" sourceRef="id-deac85eb-56d8-4f9e-9d17-34514eac42d1" targetRef="id-ccc8174a-9c20-4cb8-afce-59ac00081003"/>
+    </bpmn2:choreography>
+    <bpmn2:error xmlns="http://www.savara.org/PQM" errorCode="policyQuoteFault" id="ERRpolicyQuoteFault" name="policyQuoteFault" structureRef="ITEMpolicyQuoteFault"/>
+    <bpmn2:interface xmlns="http://www.savara.org/PQM/CreditCheckService" id="CreditCheckServiceInterface" implementationRef="CreditCheckService" name="CreditCheckService">
+        <bpmn2:operation id="creditCheck" name="creditCheck">
+            <bpmn2:inMessageRef xmlns:ns6="http://www.savara.org/PQM">ns6:IDcreditCheckRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns:ns6="http://www.savara.org/PQM">ns6:IDcreditCheckResponse</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:interface xmlns="http://www.savara.org/PQM/DrivingRecordService" id="DrivingRecordServiceInterface" implementationRef="DrivingRecordService" name="DrivingRecordService">
+        <bpmn2:operation id="drivingRecord" name="drivingRecord">
+            <bpmn2:inMessageRef xmlns:ns6="http://www.savara.org/PQM">ns6:IDdrivingRecordRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns:ns6="http://www.savara.org/PQM">ns6:IDdrivingRecordResponse</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:interface xmlns="http://www.savara.org/PQM/PolicyQuoteProcessService" id="PolicyQuoteProcessServiceInterface" implementationRef="PolicyQuoteProcessService" name="PolicyQuoteProcessService">
+        <bpmn2:operation id="policyQuote" name="policyQuote">
+            <bpmn2:inMessageRef xmlns:ns6="http://www.savara.org/PQM">ns6:IDpolicyQuote</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef xmlns:ns6="http://www.savara.org/PQM">ns6:IDpolicyQuoteReply</bpmn2:outMessageRef>
+            <bpmn2:errorRef xmlns:ns6="http://www.savara.org/PQM">ns6:ERRpolicyQuoteFault</bpmn2:errorRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmndi:BPMNDiagram id="id-5c86930a-26b2-4649-962e-9ef86d84656f">
+        <bpmndi:BPMNPlane>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-ff8e3200-3ab2-41e2-94a0-383f33f62775" id="id-8592061a-0672-41bc-9bce-5c470714dcd9">
+                <dc:Bounds height="30.0" width="30.0" x="50.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-d1374a39-ea33-4a68-891a-fb98f86cedd8" id="id-ea78c497-9aaa-498c-8b4f-602c7073e939">
+                <dc:Bounds height="100.0" width="110.0" x="130.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-3599e8fa-8e9c-4287-ac34-370204af4fa3" choreographyActivityShape="id-ea78c497-9aaa-498c-8b4f-602c7073e939" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="130.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" choreographyActivityShape="id-ea78c497-9aaa-498c-8b4f-602c7073e939" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="130.0" y="255.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-94177961-e15c-42f9-8bcd-ee423592b01f" id="id-e2fc4bad-4095-40e8-ab3a-b3bb335753dc">
+                <dc:Bounds height="100.0" width="110.0" x="290.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" choreographyActivityShape="id-e2fc4bad-4095-40e8-ab3a-b3bb335753dc" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="290.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-98b1dff7-b7e3-427d-af4a-e2214d7b7783" choreographyActivityShape="id-e2fc4bad-4095-40e8-ab3a-b3bb335753dc" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="290.0" y="255.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-6bfb00af-33c7-4604-98d8-b791ee127c74" id="id-e4a9969c-69b1-4ad9-9abe-fba0fcf9fa1f" sourceElement="id-ea78c497-9aaa-498c-8b4f-602c7073e939" targetElement="id-e2fc4bad-4095-40e8-ab3a-b3bb335753dc">
+                <ns4:waypoint x="240.0" y="220.0"/>
+                <ns4:waypoint x="290.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-104be0b1-0efb-45da-b1a5-bd58a19c6597" id="id-fde59af1-76bb-4f7e-9848-a00f0da70644">
+                <dc:Bounds height="100.0" width="110.0" x="450.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-98b1dff7-b7e3-427d-af4a-e2214d7b7783" choreographyActivityShape="id-fde59af1-76bb-4f7e-9848-a00f0da70644" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="450.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" choreographyActivityShape="id-fde59af1-76bb-4f7e-9848-a00f0da70644" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="450.0" y="255.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-f2dbd10b-ecbd-46ae-9b03-84c816f9833b" id="id-24dfb1d4-85f6-49a3-a292-bad8b1cd4fca" sourceElement="id-e2fc4bad-4095-40e8-ab3a-b3bb335753dc" targetElement="id-fde59af1-76bb-4f7e-9848-a00f0da70644">
+                <ns4:waypoint x="400.0" y="220.0"/>
+                <ns4:waypoint x="450.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-39d2015d-07ad-4bdf-b33c-2a971538bdc2" id="id-c3484b92-d153-4d86-919c-c426776cdd2d">
+                <dc:Bounds height="30.0" width="30.0" x="610.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-793ac596-e04a-482a-b1c8-adfb02224269" id="id-9d2c423c-5dd9-489b-9624-3b249c0e78c9">
+                <dc:Bounds height="100.0" width="110.0" x="690.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" choreographyActivityShape="id-9d2c423c-5dd9-489b-9624-3b249c0e78c9" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="690.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-e946f4a8-434e-44cf-b485-656c4dd139ab" choreographyActivityShape="id-9d2c423c-5dd9-489b-9624-3b249c0e78c9" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="690.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-f465b0b0-0fe7-4e74-bfc5-95d5fd1aacc7" id="id-c6c5179a-70e1-4a65-8a49-98b33596fd80">
+                <dc:Bounds height="100.0" width="110.0" x="850.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-e946f4a8-434e-44cf-b485-656c4dd139ab" choreographyActivityShape="id-c6c5179a-70e1-4a65-8a49-98b33596fd80" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="850.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" choreographyActivityShape="id-c6c5179a-70e1-4a65-8a49-98b33596fd80" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="850.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-397bf5c2-8406-43b4-88c2-edd6bba84548" id="id-6ff74c46-11bd-4bfc-a138-f39175866960" sourceElement="id-9d2c423c-5dd9-489b-9624-3b249c0e78c9" targetElement="id-c6c5179a-70e1-4a65-8a49-98b33596fd80">
+                <ns4:waypoint x="800.0" y="120.0"/>
+                <ns4:waypoint x="850.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-f282b482-abf3-4627-85e3-fcdbe7b682ab" id="id-71c00507-294b-4513-bc76-0c30b7129f16">
+                <dc:Bounds height="100.0" width="110.0" x="1010.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" choreographyActivityShape="id-71c00507-294b-4513-bc76-0c30b7129f16" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="1010.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-3599e8fa-8e9c-4287-ac34-370204af4fa3" choreographyActivityShape="id-71c00507-294b-4513-bc76-0c30b7129f16" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="1010.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-3148f8ad-e7d9-4e3c-89b7-a864d6d4ef5d" id="id-f36852f9-1535-4442-aea4-25b3ad1e4281" sourceElement="id-c6c5179a-70e1-4a65-8a49-98b33596fd80" targetElement="id-71c00507-294b-4513-bc76-0c30b7129f16">
+                <ns4:waypoint x="960.0" y="120.0"/>
+                <ns4:waypoint x="1010.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-a245d4b9-f172-4c98-9650-8742466c48bb" id="id-17c294e5-b685-47f9-a3b7-a0ff7c89433c">
+                <dc:Bounds height="100.0" width="430.0" x="690.0" y="270.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-f9aeaf88-a62a-41fe-8351-1ebc8a902f40" choreographyActivityShape="id-17c294e5-b685-47f9-a3b7-a0ff7c89433c" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="430.0" x="690.0" y="270.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-3599e8fa-8e9c-4287-ac34-370204af4fa3" choreographyActivityShape="id-17c294e5-b685-47f9-a3b7-a0ff7c89433c" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="430.0" x="690.0" y="355.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-deac85eb-56d8-4f9e-9d17-34514eac42d1" id="id-97979396-3418-48e7-ac11-b4dd1504ecec">
+                <dc:Bounds height="30.0" width="30.0" x="1170.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-fce1541b-3373-475f-a7eb-6826f107ec6f" id="id-6d46ba82-cd39-4b9b-8a69-3211cf129c79" sourceElement="id-c3484b92-d153-4d86-919c-c426776cdd2d" targetElement="id-9d2c423c-5dd9-489b-9624-3b249c0e78c9">
+                <ns4:waypoint x="660.0" y="220.0"/>
+                <ns4:waypoint x="675.0" y="220.0"/>
+                <ns4:waypoint x="675.0" y="120.0"/>
+                <ns4:waypoint x="690.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-08c5a75c-cf81-465a-8bda-fd179312db00" id="id-4fe54e5c-9d24-4df1-a92f-b782c2388960" sourceElement="id-71c00507-294b-4513-bc76-0c30b7129f16" targetElement="id-97979396-3418-48e7-ac11-b4dd1504ecec">
+                <ns4:waypoint x="1120.0" y="120.0"/>
+                <ns4:waypoint x="1145.0" y="120.0"/>
+                <ns4:waypoint x="1145.0" y="220.0"/>
+                <ns4:waypoint x="1170.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-7f6b8a15-31b4-43ef-8ccf-0b4177c9b11c" id="id-6ea265be-a93f-448b-b7b7-0652b949a7c7" sourceElement="id-c3484b92-d153-4d86-919c-c426776cdd2d" targetElement="id-17c294e5-b685-47f9-a3b7-a0ff7c89433c">
+                <ns4:waypoint x="660.0" y="220.0"/>
+                <ns4:waypoint x="675.0" y="220.0"/>
+                <ns4:waypoint x="675.0" y="320.0"/>
+                <ns4:waypoint x="690.0" y="320.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-da6f11e7-ad70-4b98-8342-1885694c06f7" id="id-2a208bf7-bf98-4de5-b889-bf98c213868d" sourceElement="id-17c294e5-b685-47f9-a3b7-a0ff7c89433c" targetElement="id-97979396-3418-48e7-ac11-b4dd1504ecec">
+                <ns4:waypoint x="1120.0" y="320.0"/>
+                <ns4:waypoint x="1145.0" y="320.0"/>
+                <ns4:waypoint x="1145.0" y="220.0"/>
+                <ns4:waypoint x="1170.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-fa726265-97c1-4b69-a0cf-c7eb893fe181" id="id-76fd9056-949d-4eda-a968-bd1ff7c521dd" sourceElement="id-fde59af1-76bb-4f7e-9848-a00f0da70644" targetElement="id-c3484b92-d153-4d86-919c-c426776cdd2d">
+                <ns4:waypoint x="560.0" y="220.0"/>
+                <ns4:waypoint x="610.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-c9b944e2-133e-4eb9-9317-9384b429eb88" id="id-62ab0db9-9a45-491d-9f6e-118488315c54" sourceElement="id-8592061a-0672-41bc-9bce-5c470714dcd9" targetElement="id-ea78c497-9aaa-498c-8b4f-602c7073e939">
+                <ns4:waypoint x="80.0" y="220.0"/>
+                <ns4:waypoint x="130.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape xmlns="http://www.savara.org/PQM" bpmnElement="id-ccc8174a-9c20-4cb8-afce-59ac00081003" id="id-4b7ca7c6-268d-49f9-bea2-c0e69bf8e9f8">
+                <dc:Bounds height="30.0" width="30.0" x="1250.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge xmlns="http://www.savara.org/PQM" bpmnElement="id-3661d814-7c53-48f6-a294-39d5088e51e2" id="id-1a7df690-5caf-40d9-a0a5-9c7755634d51" sourceElement="id-97979396-3418-48e7-ac11-b4dd1504ecec" targetElement="id-4b7ca7c6-268d-49f9-bea2-c0e69bf8e9f8">
+                <ns4:waypoint x="1220.0" y="220.0"/>
+                <ns4:waypoint x="1250.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

@@ -70,6 +70,15 @@ public class JavaGeneratorUtil {
 				String name=elem.getAttribute("name");
 				String elemType=elem.getAttribute("type");
 				
+				if (!elem.hasAttribute("type")) {
+					// Assume element has an inline type definition, so use element name
+					elemType = name;
+					
+					if (elemType.length() > 0) {
+						elemType = Character.toUpperCase(elemType.charAt(0))+elemType.substring(1);
+					}
+				}
+				
 				if (name.equals(element.getLocalPart())) {
 					String prefix=org.savara.common.util.XMLUtils.getPrefix(elemType);
 					String ns=null;
@@ -82,6 +91,26 @@ public class JavaGeneratorUtil {
 					
 					ret = getJavaPackage(ns);
 					ret += "."+org.savara.common.util.XMLUtils.getLocalname(elemType);
+				}
+			}
+			
+			if (ret == null) {
+				org.w3c.dom.NodeList includeList=
+						doc.getDocumentElement().getElementsByTagNameNS(
+								"http://www.w3.org/2001/XMLSchema", "include");
+				
+				for (int i=0; ret == null && i < includeList.getLength(); i++) {
+					org.w3c.dom.Element elem=(org.w3c.dom.Element)includeList.item(i);
+					
+					String schemaLocation=elem.getAttribute("schemaLocation");
+					
+					java.io.File f=new java.io.File(location);
+					
+					if (f.getParentFile() != null) {
+						schemaLocation = f.getParentFile().getPath()+java.io.File.separator+schemaLocation;
+					}
+					
+					ret = getElementJavaType(element, schemaLocation, locator);
 				}
 			}
 

@@ -215,10 +215,10 @@ public final class XMLUtils {
 	 * qualified name.
 	 * 
 	 * @param qname The qualified name
-	 * @return The prefix
+	 * @return The prefix, or null if none defined
 	 */
 	public static String getPrefix(String qname) {
-		String ret=qname;
+		String ret=null;
 		int pos=0;
 		
 		if (qname != null && ((pos=qname.indexOf(':')) != -1)) {
