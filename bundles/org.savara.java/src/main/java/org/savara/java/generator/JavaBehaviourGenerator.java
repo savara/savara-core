@@ -116,7 +116,8 @@ public class JavaBehaviourGenerator {
 			ret = JavaGeneratorUtil.getJavaPackage(type.getNamespaceURI());
 			
 			if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
-				ret = org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction)+"Fault";
+				ret = JavaGeneratorUtil.getJavaClassName(
+						org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction))+"Fault";
 				
 				if (!org.savara.protocol.model.util.InteractionUtil.isSend(interaction)) {
 					Annotation ann=AnnotationDefinitions.getAnnotationWithProperty(
@@ -131,7 +132,7 @@ public class JavaBehaviourGenerator {
 					}
 				}
 			} else {
-				ret += "."+type.getLocalPart();
+				ret += "."+JavaGeneratorUtil.getJavaClassName(type.getLocalPart());
 				
 				// Check if XSD element - and if so find the XSD type
 				if (locator != null && ti.getParent() instanceof TypeImportList &&

@@ -90,7 +90,8 @@ public class JavaGeneratorUtil {
 					}
 					
 					ret = getJavaPackage(ns);
-					ret += "."+org.savara.common.util.XMLUtils.getLocalname(elemType);
+					ret += "."+JavaGeneratorUtil.getJavaClassName(
+							org.savara.common.util.XMLUtils.getLocalname(elemType));
 				}
 			}
 			
@@ -162,4 +163,20 @@ public class JavaGeneratorUtil {
 		return(ret);
 	}
 	
+	/**
+	 * This method ensures the Java class name, based on the
+	 * supplied name, conforms to usual conventions.
+	 * 
+	 * @param name The potential class name
+	 * @return The Java class name
+	 */
+	public static String getJavaClassName(String name) {
+		String ret=name;
+		
+		if (name.length() > 0) {
+			ret = Character.toUpperCase(name.charAt(0))+name.substring(1);
+		}
+		
+		return (ret);
+	}
 }

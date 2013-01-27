@@ -443,7 +443,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 						
 						String pack=JavaGeneratorUtil.getJavaPackage(fault.getMessage().getQName().getNamespaceURI());
 						
-						javaType = pack+"."+fault.getMessage().getQName().getLocalPart();
+						javaType = pack+"."+JavaGeneratorUtil.getJavaClassName(fault.getMessage().getQName().getLocalPart());
 
 						String transformerClassName=getFaultTransformerClassName(javaType, provider);
 						
