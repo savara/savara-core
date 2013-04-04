@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ans0="http://www.example.org/policyQuote" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns0="http://dmv.com/drivingRecord" xmlns:ns2="http://creditagency.com/creditCheck" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:pns1="http://www.savara.org/PolicyQuote/Driver" xmlns:pns2="http://www.savara.org/PolicyQuote/PolicyQuoteProcessService" xmlns:pns3="http://www.savara.org/PolicyQuote/DrivingRecordService" xmlns:pns4="http://www.savara.org/PolicyQuote/CreditCheckService" xmlns:tns="http://www.savara.org/PolicyQuote/PolicyQuoteProcessService" id="id-PolicyQuote-PolicyQuoteProcessService" targetNamespace="http://www.savara.org/PolicyQuote/PolicyQuoteProcessService">
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/creditCheck.xsd" namespace="http://creditagency.com/creditCheck"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/drivingRecord.xsd" namespace="http://dmv.com/drivingRecord"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/policyQuote.xsd" namespace="http://www.example.org/policyQuote"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/Driver"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/PolicyQuoteProcessService"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/DrivingRecordService"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/CreditCheckService"/>
+    <bpmn2:itemDefinition id="ITEMdrivingRecordRequest" structureRef="ns0:drivingRecordRequest"/>
+    <bpmn2:message id="IDdrivingRecordRequest" itemRef="tns:ITEMdrivingRecordRequest" name="drivingRecordRequest"/>
+    <bpmn2:itemDefinition id="ITEMdrivingRecordResponse" structureRef="ns0:drivingRecordResponse"/>
+    <bpmn2:message id="IDdrivingRecordResponse" itemRef="tns:ITEMdrivingRecordResponse" name="drivingRecordResponse"/>
+    <bpmn2:itemDefinition id="ITEMpolicyQuote" structureRef="ans0:policyQuote"/>
+    <bpmn2:message id="IDpolicyQuote" itemRef="tns:ITEMpolicyQuote" name="policyQuote"/>
+    <bpmn2:itemDefinition id="ITEMpolicyQuoteReply" structureRef="ans0:policyQuoteReply"/>
+    <bpmn2:message id="IDpolicyQuoteReply" itemRef="tns:ITEMpolicyQuoteReply" name="policyQuoteReply"/>
+    <bpmn2:itemDefinition id="ITEMpolicyQuoteFault" structureRef="ans0:policyQuoteFault"/>
+    <bpmn2:message id="IDpolicyQuoteFault" itemRef="tns:ITEMpolicyQuoteFault" name="policyQuoteFault"/>
+    <bpmn2:itemDefinition id="ITEMcreditCheckRequest" structureRef="ns2:creditCheckRequest"/>
+    <bpmn2:message id="IDcreditCheckRequest" itemRef="tns:ITEMcreditCheckRequest" name="creditCheckRequest"/>
+    <bpmn2:itemDefinition id="ITEMcreditCheckResponse" structureRef="ns2:creditCheckResponse"/>
+    <bpmn2:message id="IDcreditCheckResponse" itemRef="tns:ITEMcreditCheckResponse" name="creditCheckResponse"/>
+    <bpmn2:collaboration id="MID1">
+        <bpmn2:participant id="MID3" name="PolicyQuoteProcessService" processRef="tns:MID2"/>
+    </bpmn2:collaboration>
+    <bpmn2:process id="MID2" name="PolicyQuoteProcessService">
+        <bpmn2:startEvent id="MID4">
+            <bpmn2:outgoing>tns:MID24</bpmn2:outgoing>
+        </bpmn2:startEvent>
+        <bpmn2:endEvent id="MID5">
+            <bpmn2:incoming>tns:MID25</bpmn2:incoming>
+        </bpmn2:endEvent>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="tns:IDpolicyQuote" name="Receive: policyQuote(policyQuote) from Driver" operationRef="tns:OP_PolicyQuoteProcessService_policyQuote" xsi:type="bpmn2:tReceiveTask">
+            <bpmn2:incoming>tns:MID24</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID15</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" messageRef="tns:IDdrivingRecordRequest" name="Send: drivingRecord(drivingRecordRequest) to DrivingRecordService" operationRef="tns:OP_DrivingRecordService_drivingRecord" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming>tns:MID15</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID16</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID8" messageRef="tns:IDdrivingRecordResponse" name="Receive: drivingRecord(drivingRecordResponse) from DrivingRecordService" operationRef="tns:OP_DrivingRecordService_drivingRecord" xsi:type="bpmn2:tReceiveTask">
+            <bpmn2:incoming>tns:MID16</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID23</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:exclusiveGateway id="MID9">
+            <bpmn2:incoming>tns:MID23</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID19</bpmn2:outgoing>
+            <bpmn2:outgoing>tns:MID21</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:exclusiveGateway id="MID10">
+            <bpmn2:incoming>tns:MID20</bpmn2:incoming>
+            <bpmn2:incoming>tns:MID22</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID25</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID11" messageRef="tns:IDcreditCheckRequest" name="Send: creditCheck(creditCheckRequest) to CreditCheckService" operationRef="tns:OP_CreditCheckService_creditCheck" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming>tns:MID19</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID17</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID12" messageRef="tns:IDcreditCheckResponse" name="Receive: creditCheck(creditCheckResponse) from CreditCheckService" operationRef="tns:OP_CreditCheckService_creditCheck" xsi:type="bpmn2:tReceiveTask">
+            <bpmn2:incoming>tns:MID17</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID18</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID13" messageRef="tns:IDpolicyQuoteReply" name="Send: policyQuote(policyQuoteReply) to Driver" operationRef="tns:OP_PolicyQuoteProcessService_policyQuote" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming>tns:MID18</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID20</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID14" messageRef="tns:IDpolicyQuoteFault" name="Send: policyQuote(policyQuoteFault) to Driver" operationRef="tns:OP_PolicyQuoteProcessService_policyQuote" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming>tns:MID21</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID22</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:sequenceFlow id="MID15" sourceRef="MID6" targetRef="MID7"/>
+        <bpmn2:sequenceFlow id="MID16" sourceRef="MID7" targetRef="MID8"/>
+        <bpmn2:sequenceFlow id="MID17" sourceRef="MID11" targetRef="MID12"/>
+        <bpmn2:sequenceFlow id="MID18" sourceRef="MID12" targetRef="MID13"/>
+        <bpmn2:sequenceFlow id="MID19" sourceRef="MID9" targetRef="MID11"/>
+        <bpmn2:sequenceFlow id="MID20" sourceRef="MID13" targetRef="MID10"/>
+        <bpmn2:sequenceFlow id="MID21" sourceRef="MID9" targetRef="MID14"/>
+        <bpmn2:sequenceFlow id="MID22" sourceRef="MID14" targetRef="MID10"/>
+        <bpmn2:sequenceFlow id="MID23" sourceRef="MID8" targetRef="MID9"/>
+        <bpmn2:sequenceFlow id="MID24" sourceRef="MID4" targetRef="MID6"/>
+        <bpmn2:sequenceFlow id="MID25" sourceRef="MID10" targetRef="MID5"/>
+    </bpmn2:process>
+    <bpmn2:interface id="PolicyQuoteProcessServiceInterface" name="PolicyQuoteProcessService">
+        <bpmn2:operation id="OP_PolicyQuoteProcessService_policyQuote" name="policyQuote">
+            <bpmn2:inMessageRef>tns:IDpolicyQuote</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDpolicyQuoteReply</bpmn2:outMessageRef>
+            <bpmn2:errorRef>tns:ERRpolicyQuoteFault</bpmn2:errorRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:interface id="DrivingRecordServiceInterface" name="DrivingRecordService">
+        <bpmn2:operation id="OP_DrivingRecordService_drivingRecord" name="drivingRecord">
+            <bpmn2:inMessageRef>tns:IDdrivingRecordRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDdrivingRecordResponse</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:interface id="CreditCheckServiceInterface" name="CreditCheckService">
+        <bpmn2:operation id="OP_CreditCheckService_creditCheck" name="creditCheck">
+            <bpmn2:inMessageRef>tns:IDcreditCheckRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDcreditCheckResponse</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:error errorCode="policyQuoteFault" id="ERRpolicyQuoteFault" name="policyQuoteFault" structureRef="tns:ITEMpolicyQuoteFault"/>
+    <bpmndi:BPMNDiagram id="NID1">
+        <bpmndi:BPMNPlane>
+            <bpmndi:BPMNShape bpmnElement="tns:MID3" id="NID2">
+                <dc:Bounds height="240.0" width="1330.0" x="0.0" y="0.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:MID4" id="NID3">
+                <dc:Bounds height="30.0" width="30.0" x="50.0" y="105.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:MID6" id="NID4">
+                <dc:Bounds height="60.0" width="110.0" x="130.0" y="90.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:MID7" id="NID5">
+                <dc:Bounds height="60.0" width="110.0" x="290.0" y="90.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID15" id="NID6" sourceElement="tns:NID4" targetElement="tns:NID5">
+                <ns4:waypoint x="240.0" y="120.0"/>
+                <ns4:waypoint x="290.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:MID8" id="NID7">
+                <dc:Bounds height="60.0" width="110.0" x="450.0" y="90.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID16" id="NID8" sourceElement="tns:NID5" targetElement="tns:NID7">
+                <ns4:waypoint x="400.0" y="120.0"/>
+                <ns4:waypoint x="450.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:MID9" id="NID9">
+                <dc:Bounds height="30.0" width="30.0" x="610.0" y="105.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:MID11" id="NID10">
+                <dc:Bounds height="60.0" width="110.0" x="690.0" y="40.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:MID12" id="NID11">
+                <dc:Bounds height="60.0" width="110.0" x="850.0" y="40.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID17" id="NID12" sourceElement="tns:NID10" targetElement="tns:NID11">
+                <ns4:waypoint x="800.0" y="70.0"/>
+                <ns4:waypoint x="850.0" y="70.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:MID13" id="NID13">
+                <dc:Bounds height="60.0" width="110.0" x="1010.0" y="40.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID18" id="NID14" sourceElement="tns:NID11" targetElement="tns:NID13">
+                <ns4:waypoint x="960.0" y="70.0"/>
+                <ns4:waypoint x="1010.0" y="70.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:MID14" id="NID15">
+                <dc:Bounds height="60.0" width="430.0" x="690.0" y="140.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:MID10" id="NID16">
+                <dc:Bounds height="30.0" width="30.0" x="1170.0" y="105.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID19" id="NID17" sourceElement="tns:NID9" targetElement="tns:NID10">
+                <ns4:waypoint x="660.0" y="120.0"/>
+                <ns4:waypoint x="675.0" y="120.0"/>
+                <ns4:waypoint x="675.0" y="70.0"/>
+                <ns4:waypoint x="690.0" y="70.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID20" id="NID18" sourceElement="tns:NID13" targetElement="tns:NID16">
+                <ns4:waypoint x="1120.0" y="70.0"/>
+                <ns4:waypoint x="1145.0" y="70.0"/>
+                <ns4:waypoint x="1145.0" y="120.0"/>
+                <ns4:waypoint x="1170.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID21" id="NID19" sourceElement="tns:NID9" targetElement="tns:NID15">
+                <ns4:waypoint x="660.0" y="120.0"/>
+                <ns4:waypoint x="675.0" y="120.0"/>
+                <ns4:waypoint x="675.0" y="170.0"/>
+                <ns4:waypoint x="690.0" y="170.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID22" id="NID20" sourceElement="tns:NID15" targetElement="tns:NID16">
+                <ns4:waypoint x="1120.0" y="170.0"/>
+                <ns4:waypoint x="1145.0" y="170.0"/>
+                <ns4:waypoint x="1145.0" y="120.0"/>
+                <ns4:waypoint x="1170.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID23" id="NID21" sourceElement="tns:NID7" targetElement="tns:NID9">
+                <ns4:waypoint x="560.0" y="120.0"/>
+                <ns4:waypoint x="610.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID24" id="NID22" sourceElement="tns:NID3" targetElement="tns:NID4">
+                <ns4:waypoint x="80.0" y="120.0"/>
+                <ns4:waypoint x="130.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:MID5" id="NID23">
+                <dc:Bounds height="30.0" width="30.0" x="1250.0" y="105.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:MID25" id="NID24" sourceElement="tns:NID16" targetElement="tns:NID23">
+                <ns4:waypoint x="1220.0" y="120.0"/>
+                <ns4:waypoint x="1250.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

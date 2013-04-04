@@ -1,42 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:ca="http://www.jboss.org/examples/creditAgency" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:lg="http://www.jboss.org/examples/logistics" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/examples/creditAgency" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="id-PurchaseGoods3-CreditAgency" targetNamespace="http://www.jboss.org/examples/creditAgency">
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.jboss.org/savara/examples"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.w3.org/2001/XMLSchema"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="store.xsd" namespace="http://www.jboss.org/examples/store"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="logistics.xsd" namespace="http://www.jboss.org/examples/logistics"/>
-    <bpmn2:itemDefinition id="ITEMAccountNotFound" structureRef="sto:AccountNotFound"/>
-    <bpmn2:message id="IDAccountNotFound" itemRef="tns:ITEMAccountNotFound" name="AccountNotFound"/>
-    <bpmn2:itemDefinition id="ITEMBuyConfirmed" structureRef="sto:BuyConfirmed"/>
-    <bpmn2:message id="IDBuyConfirmed" itemRef="tns:ITEMBuyConfirmed" name="BuyConfirmed"/>
-    <bpmn2:itemDefinition id="ITEMBuyFailed" structureRef="sto:BuyFailed"/>
-    <bpmn2:message id="IDBuyFailed" itemRef="tns:ITEMBuyFailed" name="BuyFailed"/>
-    <bpmn2:itemDefinition id="ITEMBuyRequest" structureRef="sto:BuyRequest"/>
-    <bpmn2:message id="IDBuyRequest" itemRef="tns:ITEMBuyRequest" name="BuyRequest"/>
-    <bpmn2:itemDefinition id="ITEMCreditCheckRequest" structureRef="ca:CreditCheckRequest"/>
-    <bpmn2:message id="IDCreditCheckRequest" itemRef="tns:ITEMCreditCheckRequest" name="CreditCheckRequest"/>
-    <bpmn2:itemDefinition id="ITEMCreditRating" structureRef="ca:CreditRating"/>
-    <bpmn2:message id="IDCreditRating" itemRef="tns:ITEMCreditRating" name="CreditRating"/>
-    <bpmn2:itemDefinition id="ITEMCustomerUnknown" structureRef="ca:CustomerUnknown"/>
-    <bpmn2:message id="IDCustomerUnknown" itemRef="tns:ITEMCustomerUnknown" name="CustomerUnknown"/>
-    <bpmn2:itemDefinition id="ITEMDeliveryConfirmed" structureRef="lg:DeliveryConfirmed"/>
-    <bpmn2:message id="IDDeliveryConfirmed" itemRef="tns:ITEMDeliveryConfirmed" name="DeliveryConfirmed"/>
-    <bpmn2:itemDefinition id="ITEMDeliveryRequest" structureRef="lg:DeliveryRequest"/>
-    <bpmn2:message id="IDDeliveryRequest" itemRef="tns:ITEMDeliveryRequest" name="DeliveryRequest"/>
-    <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMIDType" structureRef="xs:string"/>
-    <bpmn2:message id="IDIDType" itemRef="tns:ITEMIDType" name="IDType"/>
-    <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMURITokenType" structureRef="xs:anyURI"/>
-    <bpmn2:message id="IDURITokenType" itemRef="tns:ITEMURITokenType" name="URITokenType"/>
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ans0="http://www.example.org/policyQuote" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns0="http://dmv.com/drivingRecord" xmlns:ns2="http://creditagency.com/creditCheck" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:pns1="http://www.savara.org/PolicyQuote/Driver" xmlns:pns2="http://www.savara.org/PolicyQuote/PolicyQuoteProcessService" xmlns:pns3="http://www.savara.org/PolicyQuote/DrivingRecordService" xmlns:pns4="http://www.savara.org/PolicyQuote/CreditCheckService" xmlns:tns="http://www.savara.org/PolicyQuote/Driver" id="id-PolicyQuote-Driver" targetNamespace="http://www.savara.org/PolicyQuote/Driver">
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/creditCheck.xsd" namespace="http://creditagency.com/creditCheck"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/drivingRecord.xsd" namespace="http://dmv.com/drivingRecord"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/policyQuote.xsd" namespace="http://www.example.org/policyQuote"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/Driver"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/PolicyQuoteProcessService"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/DrivingRecordService"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/CreditCheckService"/>
+    <bpmn2:itemDefinition id="ITEMdrivingRecordRequest" structureRef="ns0:drivingRecordRequest"/>
+    <bpmn2:message id="IDdrivingRecordRequest" itemRef="tns:ITEMdrivingRecordRequest" name="drivingRecordRequest"/>
+    <bpmn2:itemDefinition id="ITEMdrivingRecordResponse" structureRef="ns0:drivingRecordResponse"/>
+    <bpmn2:message id="IDdrivingRecordResponse" itemRef="tns:ITEMdrivingRecordResponse" name="drivingRecordResponse"/>
+    <bpmn2:itemDefinition id="ITEMpolicyQuote" structureRef="ans0:policyQuote"/>
+    <bpmn2:message id="IDpolicyQuote" itemRef="tns:ITEMpolicyQuote" name="policyQuote"/>
+    <bpmn2:itemDefinition id="ITEMpolicyQuoteReply" structureRef="ans0:policyQuoteReply"/>
+    <bpmn2:message id="IDpolicyQuoteReply" itemRef="tns:ITEMpolicyQuoteReply" name="policyQuoteReply"/>
+    <bpmn2:itemDefinition id="ITEMpolicyQuoteFault" structureRef="ans0:policyQuoteFault"/>
+    <bpmn2:message id="IDpolicyQuoteFault" itemRef="tns:ITEMpolicyQuoteFault" name="policyQuoteFault"/>
+    <bpmn2:itemDefinition id="ITEMcreditCheckRequest" structureRef="ns2:creditCheckRequest"/>
+    <bpmn2:message id="IDcreditCheckRequest" itemRef="tns:ITEMcreditCheckRequest" name="creditCheckRequest"/>
+    <bpmn2:itemDefinition id="ITEMcreditCheckResponse" structureRef="ns2:creditCheckResponse"/>
+    <bpmn2:message id="IDcreditCheckResponse" itemRef="tns:ITEMcreditCheckResponse" name="creditCheckResponse"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID3" name="CreditAgency" processRef="tns:MID2"/>
+        <bpmn2:participant id="MID3" name="Driver" processRef="tns:MID2"/>
     </bpmn2:collaboration>
-    <bpmn2:process id="MID2" name="CreditAgency">
+    <bpmn2:process id="MID2" name="Driver">
         <bpmn2:startEvent id="MID4">
             <bpmn2:outgoing>tns:MID16</bpmn2:outgoing>
         </bpmn2:startEvent>
         <bpmn2:endEvent id="MID5">
             <bpmn2:incoming>tns:MID17</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="tns:IDCreditCheckRequest" name="Receive: checkCredit(CreditCheckRequest) from Store" operationRef="tns:OP_CreditAgency_checkCredit" xsi:type="bpmn2:tReceiveTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="tns:IDpolicyQuote" name="Send: policyQuote(policyQuote) to PolicyQuoteProcessService" operationRef="tns:OP_PolicyQuoteProcessService_policyQuote" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>tns:MID16</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID15</bpmn2:outgoing>
         </bpmn2:task>
@@ -50,11 +44,11 @@
             <bpmn2:incoming>tns:MID14</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID17</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" messageRef="tns:IDCreditRating" name="Send: checkCredit(CreditRating) to Store" operationRef="tns:OP_CreditAgency_checkCredit" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID9" messageRef="tns:IDpolicyQuoteReply" name="Receive: policyQuote(policyQuoteReply) from PolicyQuoteProcessService" operationRef="tns:OP_PolicyQuoteProcessService_policyQuote" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>tns:MID11</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID12</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" messageRef="tns:IDCustomerUnknown" name="Send: checkCredit(CustomerUnknown) to Store" operationRef="tns:OP_CreditAgency_checkCredit" xsi:type="bpmn2:tSendTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" messageRef="tns:IDpolicyQuoteFault" name="Receive: policyQuote(policyQuoteFault) from PolicyQuoteProcessService" operationRef="tns:OP_PolicyQuoteProcessService_policyQuote" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>tns:MID13</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID14</bpmn2:outgoing>
         </bpmn2:task>
@@ -66,14 +60,14 @@
         <bpmn2:sequenceFlow id="MID16" sourceRef="MID4" targetRef="MID6"/>
         <bpmn2:sequenceFlow id="MID17" sourceRef="MID8" targetRef="MID5"/>
     </bpmn2:process>
-    <bpmn2:interface id="CreditAgencyInterface" name="CreditAgency">
-        <bpmn2:operation id="OP_CreditAgency_checkCredit" name="checkCredit">
-            <bpmn2:inMessageRef>tns:IDCreditCheckRequest</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef>tns:IDCreditRating</bpmn2:outMessageRef>
-            <bpmn2:errorRef>tns:ERRCustomerUnknown</bpmn2:errorRef>
+    <bpmn2:interface id="PolicyQuoteProcessServiceInterface" name="PolicyQuoteProcessService">
+        <bpmn2:operation id="OP_PolicyQuoteProcessService_policyQuote" name="policyQuote">
+            <bpmn2:inMessageRef>tns:IDpolicyQuote</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDpolicyQuoteReply</bpmn2:outMessageRef>
+            <bpmn2:errorRef>tns:ERRpolicyQuoteFault</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:error errorCode="CustomerUnknown" id="ERRCustomerUnknown" name="CustomerUnknown" structureRef="tns:ITEMCustomerUnknown"/>
+    <bpmn2:error errorCode="policyQuoteFault" id="ERRpolicyQuoteFault" name="policyQuoteFault" structureRef="tns:ITEMpolicyQuoteFault"/>
     <bpmndi:BPMNDiagram id="NID1">
         <bpmndi:BPMNPlane>
             <bpmndi:BPMNShape bpmnElement="tns:MID3" id="NID2">

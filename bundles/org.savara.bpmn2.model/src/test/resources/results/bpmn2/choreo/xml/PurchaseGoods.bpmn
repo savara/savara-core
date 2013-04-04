@@ -1,107 +1,106 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ns2="http://www.omg.org/spec/DD/20100524/DI" xmlns:ns3="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/BPMN/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.savara.org/examples" name="PurchaseGoods" id="Definitions_1">
+<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ns2="http://www.omg.org/spec/DD/20100524/DI" xmlns:ns3="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/BPMN/20100524/DI" expressionLanguage="http://www.w3.org/1999/XPath" id="Definitions_1" name="PurchaseGoods" targetNamespace="http://www.savara.org/examples" typeLanguage="http://www.w3.org/2001/XMLSchema">
     <import importType="http://www.w3.org/2001/XMLSchema" location="store.xsd" namespace="http://www.jboss.org/examples/store"/>
     <import importType="http://www.w3.org/2001/XMLSchema" location="logistics.xsd" namespace="http://www.jboss.org/examples/logistics"/>
     <import importType="http://www.w3.org/2001/XMLSchema" location="creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
-    <choreography isClosed="false" name="PurchaseGoods" id="Choreography_1">
-        <participant xmlns:ns5="http://www.savara.org/examples" processRef="ns5:Process_1" name="Buyer" id="Participant_1"/>
-        <participant xmlns:ns5="http://www.savara.org/examples" processRef="ns5:Process_2" name="Store" id="Participant_2">
+    <choreography id="Choreography_1" isClosed="false" name="PurchaseGoods">
+        <participant xmlns:ns5="http://www.savara.org/examples" id="Participant_1" name="Buyer" processRef="ns5:Process_1"/>
+        <participant xmlns:ns5="http://www.savara.org/examples" id="Participant_2" name="Store" processRef="ns5:Process_2">
             <interfaceRef>ns5:StoreInterface</interfaceRef>
         </participant>
-        <participant name="CreditAgency" id="Participant_3">
+        <participant id="Participant_3" name="CreditAgency">
             <interfaceRef xmlns:ns5="http://www.savara.org/examples">ns5:CreditAgencyInterface</interfaceRef>
         </participant>
-        <participant name="Logistics" id="Participant_4">
+        <participant id="Participant_4" name="Logistics">
             <interfaceRef xmlns:ns5="http://www.savara.org/examples">ns5:LogisticsInterface</interfaceRef>
         </participant>
-        <messageFlow xmlns:ns5="http://www.savara.org/examples" messageRef="ns5:Message_1" targetRef="ns5:Participant_2" sourceRef="ns5:Participant_1" name="BuyRequest" id="MessageFlow_1"/>
-        <messageFlow xmlns:ns5="http://www.savara.org/examples" messageRef="ns5:Message_2" targetRef="ns5:Participant_3" sourceRef="ns5:Participant_2" name="CreditCheck" id="MessageFlow_2"/>
-        <messageFlow xmlns:ns5="http://www.savara.org/examples" messageRef="ns5:Message_3" targetRef="ns5:Participant_2" sourceRef="ns5:Participant_3" name="CustomerUnknown" id="MessageFlow_3"/>
-        <messageFlow xmlns:ns5="http://www.savara.org/examples" messageRef="ns5:Message_5" targetRef="ns5:Participant_1" sourceRef="ns5:Participant_2" name="AccountNotFound" id="MessageFlow_4"/>
-        <messageFlow xmlns:ns5="http://www.savara.org/examples" messageRef="ns5:Message_4" targetRef="ns5:Participant_2" sourceRef="ns5:Participant_3" name="CreditRating" id="MessageFlow_5"/>
-        <messageFlow xmlns:ns5="http://www.savara.org/examples" messageRef="ns5:Message_6" targetRef="ns5:Participant_1" sourceRef="ns5:Participant_2" name="InsufficientCredit" id="MessageFlow_6"/>
-        <messageFlow xmlns:ns5="http://www.savara.org/examples" messageRef="ns5:Message_7" targetRef="ns5:Participant_4" sourceRef="ns5:Participant_2" name="DeliveryRequest" id="MessageFlow_7"/>
-        <messageFlow xmlns:ns5="http://www.savara.org/examples" messageRef="ns5:Message_8" targetRef="ns5:Participant_2" sourceRef="ns5:Participant_4" name="DeliveryConfirmed" id="MessageFlow_8"/>
-        <messageFlow xmlns:ns5="http://www.savara.org/examples" messageRef="ns5:Message_9" targetRef="ns5:Participant_1" sourceRef="ns5:Participant_2" name="BuyConfirmed" id="MessageFlow_9"/>
-        <choreographyTask xmlns:ns5="http://www.savara.org/examples" loopType="None" initiatingParticipantRef="ns5:Participant_1" name="Buy Request" id="ChoreographyTask_1">
+        <messageFlow xmlns:ns5="http://www.savara.org/examples" id="MessageFlow_1" messageRef="ns5:Message_1" name="BuyRequest" sourceRef="ns5:Participant_1" targetRef="ns5:Participant_2"/>
+        <messageFlow xmlns:ns5="http://www.savara.org/examples" id="MessageFlow_2" messageRef="ns5:Message_2" name="CreditCheck" sourceRef="ns5:Participant_2" targetRef="ns5:Participant_3"/>
+        <messageFlow xmlns:ns5="http://www.savara.org/examples" id="MessageFlow_3" messageRef="ns5:Message_3" name="CustomerUnknown" sourceRef="ns5:Participant_3" targetRef="ns5:Participant_2"/>
+        <messageFlow xmlns:ns5="http://www.savara.org/examples" id="MessageFlow_4" messageRef="ns5:Message_5" name="AccountNotFound" sourceRef="ns5:Participant_2" targetRef="ns5:Participant_1"/>
+        <messageFlow xmlns:ns5="http://www.savara.org/examples" id="MessageFlow_5" messageRef="ns5:Message_4" name="CreditRating" sourceRef="ns5:Participant_3" targetRef="ns5:Participant_2"/>
+        <messageFlow xmlns:ns5="http://www.savara.org/examples" id="MessageFlow_6" messageRef="ns5:Message_6" name="InsufficientCredit" sourceRef="ns5:Participant_2" targetRef="ns5:Participant_1"/>
+        <messageFlow xmlns:ns5="http://www.savara.org/examples" id="MessageFlow_7" messageRef="ns5:Message_7" name="DeliveryRequest" sourceRef="ns5:Participant_2" targetRef="ns5:Participant_4"/>
+        <messageFlow xmlns:ns5="http://www.savara.org/examples" id="MessageFlow_8" messageRef="ns5:Message_8" name="DeliveryConfirmed" sourceRef="ns5:Participant_4" targetRef="ns5:Participant_2"/>
+        <messageFlow xmlns:ns5="http://www.savara.org/examples" id="MessageFlow_9" messageRef="ns5:Message_9" name="BuyConfirmed" sourceRef="ns5:Participant_2" targetRef="ns5:Participant_1"/>
+        <choreographyTask xmlns:ns5="http://www.savara.org/examples" id="ChoreographyTask_1" initiatingParticipantRef="ns5:Participant_1" loopType="None" name="Buy Request">
             <incoming>ns5:SequenceFlow_1</incoming>
             <outgoing>ns5:SequenceFlow_2</outgoing>
             <participantRef>ns5:Participant_1</participantRef>
             <participantRef>ns5:Participant_2</participantRef>
             <messageFlowRef>ns5:MessageFlow_1</messageFlowRef>
         </choreographyTask>
-        <sequenceFlow targetRef="ChoreographyTask_2" sourceRef="ChoreographyTask_1" name="" id="SequenceFlow_2"/>
-        <startEvent isInterrupting="true" parallelMultiple="false" name="Start" id="StartEvent_1">
+        <sequenceFlow id="SequenceFlow_2" name="" sourceRef="ChoreographyTask_1" targetRef="ChoreographyTask_2"/>
+        <startEvent id="StartEvent_1" isInterrupting="true" name="Start" parallelMultiple="false">
             <outgoing xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_1</outgoing>
         </startEvent>
-        <sequenceFlow targetRef="ChoreographyTask_1" sourceRef="StartEvent_1" name="" id="SequenceFlow_1"/>
-        <choreographyTask xmlns:ns5="http://www.savara.org/examples" loopType="None" initiatingParticipantRef="ns5:Participant_2" name="Check Credit" id="ChoreographyTask_2">
+        <sequenceFlow id="SequenceFlow_1" name="" sourceRef="StartEvent_1" targetRef="ChoreographyTask_1"/>
+        <choreographyTask xmlns:ns5="http://www.savara.org/examples" id="ChoreographyTask_2" initiatingParticipantRef="ns5:Participant_2" loopType="None" name="Check Credit">
             <incoming>ns5:SequenceFlow_2</incoming>
             <outgoing>ns5:SequenceFlow_3</outgoing>
             <participantRef>ns5:Participant_2</participantRef>
             <participantRef>ns5:Participant_3</participantRef>
             <messageFlowRef>ns5:MessageFlow_2</messageFlowRef>
         </choreographyTask>
-        <exclusiveGateway gatewayDirection="Unspecified" name="Check Customer Known" id="ExclusiveGateway_1">
+        <exclusiveGateway gatewayDirection="Unspecified" id="ExclusiveGateway_1" name="Check Customer Known">
             <incoming xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_3</incoming>
             <outgoing xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_4</outgoing>
             <outgoing xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_5</outgoing>
         </exclusiveGateway>
-        <choreographyTask xmlns:ns5="http://www.savara.org/examples" loopType="None" initiatingParticipantRef="ns5:Participant_3" name="Customer Not Known" id="ChoreographyTask_3">
+        <choreographyTask xmlns:ns5="http://www.savara.org/examples" id="ChoreographyTask_3" initiatingParticipantRef="ns5:Participant_3" loopType="None" name="Customer Not Known">
             <incoming>ns5:SequenceFlow_4</incoming>
             <outgoing>ns5:SequenceFlow_9</outgoing>
             <participantRef>ns5:Participant_2</participantRef>
             <participantRef>ns5:Participant_3</participantRef>
             <messageFlowRef>ns5:MessageFlow_3</messageFlowRef>
         </choreographyTask>
-        <sequenceFlow targetRef="ExclusiveGateway_1" sourceRef="ChoreographyTask_2" name="" id="SequenceFlow_3"/>
-        <sequenceFlow targetRef="ChoreographyTask_3" sourceRef="ExclusiveGateway_1" name="Customer Unknown" id="SequenceFlow_4"/>
-        <sequenceFlow targetRef="ChoreographyTask_4" sourceRef="ExclusiveGateway_1" name="Customer Known" id="SequenceFlow_5"/>
-        <choreographyTask xmlns:ns5="http://www.savara.org/examples" loopType="None" initiatingParticipantRef="ns5:Participant_2" name="Account Not Found" id="ChoreographyTask_5">
+        <sequenceFlow id="SequenceFlow_3" name="" sourceRef="ChoreographyTask_2" targetRef="ExclusiveGateway_1"/>
+        <sequenceFlow id="SequenceFlow_4" name="Customer Unknown" sourceRef="ExclusiveGateway_1" targetRef="ChoreographyTask_3"/>
+        <sequenceFlow id="SequenceFlow_5" name="Customer Known" sourceRef="ExclusiveGateway_1" targetRef="ChoreographyTask_4"/>
+        <choreographyTask xmlns:ns5="http://www.savara.org/examples" id="ChoreographyTask_5" initiatingParticipantRef="ns5:Participant_2" loopType="None" name="Account Not Found">
             <incoming>ns5:SequenceFlow_9</incoming>
             <outgoing>ns5:SequenceFlow_11</outgoing>
             <participantRef>ns5:Participant_1</participantRef>
             <participantRef>ns5:Participant_2</participantRef>
             <messageFlowRef>ns5:MessageFlow_4</messageFlowRef>
         </choreographyTask>
-        <choreographyTask xmlns:ns5="http://www.savara.org/examples" loopType="None" initiatingParticipantRef="ns5:Participant_3" name="Credit Rating" id="ChoreographyTask_4">
+        <choreographyTask xmlns:ns5="http://www.savara.org/examples" id="ChoreographyTask_4" initiatingParticipantRef="ns5:Participant_3" loopType="None" name="Credit Rating">
             <incoming>ns5:SequenceFlow_5</incoming>
             <outgoing>ns5:SequenceFlow_6</outgoing>
             <participantRef>ns5:Participant_2</participantRef>
             <participantRef>ns5:Participant_3</participantRef>
             <messageFlowRef>ns5:MessageFlow_5</messageFlowRef>
         </choreographyTask>
-        <sequenceFlow targetRef="ExclusiveGateway_2" sourceRef="ChoreographyTask_4" name="" id="SequenceFlow_6"/>
-        <exclusiveGateway gatewayDirection="Unspecified" name="Evaluate Credit Rating" id="ExclusiveGateway_2">
+        <sequenceFlow id="SequenceFlow_6" name="" sourceRef="ChoreographyTask_4" targetRef="ExclusiveGateway_2"/>
+        <exclusiveGateway gatewayDirection="Unspecified" id="ExclusiveGateway_2" name="Evaluate Credit Rating">
             <incoming xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_6</incoming>
             <outgoing xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_7</outgoing>
             <outgoing xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_8</outgoing>
         </exclusiveGateway>
-        <choreographyTask xmlns:ns5="http://www.savara.org/examples" loopType="None" initiatingParticipantRef="ns5:Participant_2" name="Insufficient Credit" id="ChoreographyTask_6">
+        <choreographyTask xmlns:ns5="http://www.savara.org/examples" id="ChoreographyTask_6" initiatingParticipantRef="ns5:Participant_2" loopType="None" name="Insufficient Credit">
             <incoming>ns5:SequenceFlow_7</incoming>
             <outgoing>ns5:SequenceFlow_13</outgoing>
             <participantRef>ns5:Participant_1</participantRef>
             <participantRef>ns5:Participant_2</participantRef>
             <messageFlowRef>ns5:MessageFlow_6</messageFlowRef>
         </choreographyTask>
-        <choreographyTask xmlns:ns5="http://www.savara.org/examples" loopType="None" initiatingParticipantRef="ns5:Participant_2" name="Deliver Goods" id="ChoreographyTask_7">
+        <choreographyTask xmlns:ns5="http://www.savara.org/examples" id="ChoreographyTask_7" initiatingParticipantRef="ns5:Participant_2" loopType="None" name="Deliver Goods">
             <incoming>ns5:SequenceFlow_8</incoming>
             <outgoing>ns5:SequenceFlow_14</outgoing>
             <participantRef>ns5:Participant_2</participantRef>
             <participantRef>ns5:Participant_4</participantRef>
             <messageFlowRef>ns5:MessageFlow_7</messageFlowRef>
         </choreographyTask>
-        <sequenceFlow targetRef="ChoreographyTask_6" sourceRef="ExclusiveGateway_2" name="Poor Rating" id="SequenceFlow_7"/>
-        <sequenceFlow targetRef="ChoreographyTask_7" sourceRef="ExclusiveGateway_2" name="Good Rating" id="SequenceFlow_8"/>
-        <sequenceFlow targetRef="ChoreographyTask_5" sourceRef="ChoreographyTask_3" name="" id="SequenceFlow_9"/>
-        <choreographyTask xmlns:ns5="http://www.savara.org/examples" loopType="None" initiatingParticipantRef="ns5:Participant_4" name="Acknowledge Delivery Details" id="ChoreographyTask_8">
+        <sequenceFlow id="SequenceFlow_7" name="Poor Rating" sourceRef="ExclusiveGateway_2" targetRef="ChoreographyTask_6"/>
+        <sequenceFlow id="SequenceFlow_8" name="Good Rating" sourceRef="ExclusiveGateway_2" targetRef="ChoreographyTask_7"/>
+        <sequenceFlow id="SequenceFlow_9" name="" sourceRef="ChoreographyTask_3" targetRef="ChoreographyTask_5"/>
+        <choreographyTask xmlns:ns5="http://www.savara.org/examples" id="ChoreographyTask_8" initiatingParticipantRef="ns5:Participant_4" loopType="None" name="Acknowledge Delivery Details">
             <incoming>ns5:SequenceFlow_14</incoming>
             <outgoing>ns5:SequenceFlow_15</outgoing>
             <participantRef>ns5:Participant_2</participantRef>
             <participantRef>ns5:Participant_4</participantRef>
             <messageFlowRef>ns5:MessageFlow_8</messageFlowRef>
         </choreographyTask>
-        <choreographyTask xmlns:ns5="http://www.savara.org/examples" loopType="None" initiatingParticipantRef="ns5:Participant_2" name="Buy Confirmed" id="ChoreographyTask_9">
+        <choreographyTask xmlns:ns5="http://www.savara.org/examples" id="ChoreographyTask_9" initiatingParticipantRef="ns5:Participant_2" loopType="None" name="Buy Confirmed">
             <incoming>ns5:SequenceFlow_15</incoming>
             <outgoing>ns5:SequenceFlow_12</outgoing>
             <participantRef>ns5:Participant_1</participantRef>
@@ -118,55 +117,55 @@
             <incoming xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_11</incoming>
             <outgoing xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_16</outgoing>
         </exclusiveGateway>
-        <sequenceFlow targetRef="ExclusiveGateway_4" sourceRef="ExclusiveGateway_3" name="" id="SequenceFlow_10"/>
-        <sequenceFlow targetRef="ExclusiveGateway_4" sourceRef="ChoreographyTask_5" name="" id="SequenceFlow_11"/>
-        <sequenceFlow targetRef="ExclusiveGateway_3" sourceRef="ChoreographyTask_9" name="" id="SequenceFlow_12"/>
-        <sequenceFlow targetRef="ExclusiveGateway_3" sourceRef="ChoreographyTask_6" name="" id="SequenceFlow_13"/>
-        <sequenceFlow targetRef="ChoreographyTask_8" sourceRef="ChoreographyTask_7" name="" id="SequenceFlow_14"/>
-        <sequenceFlow targetRef="ChoreographyTask_9" sourceRef="ChoreographyTask_8" name="" id="SequenceFlow_15"/>
-        <sequenceFlow targetRef="EndEvent_1" sourceRef="ExclusiveGateway_4" name="" id="SequenceFlow_16"/>
-        <endEvent name="End" id="EndEvent_1">
+        <sequenceFlow id="SequenceFlow_10" name="" sourceRef="ExclusiveGateway_3" targetRef="ExclusiveGateway_4"/>
+        <sequenceFlow id="SequenceFlow_11" name="" sourceRef="ChoreographyTask_5" targetRef="ExclusiveGateway_4"/>
+        <sequenceFlow id="SequenceFlow_12" name="" sourceRef="ChoreographyTask_9" targetRef="ExclusiveGateway_3"/>
+        <sequenceFlow id="SequenceFlow_13" name="" sourceRef="ChoreographyTask_6" targetRef="ExclusiveGateway_3"/>
+        <sequenceFlow id="SequenceFlow_14" name="" sourceRef="ChoreographyTask_7" targetRef="ChoreographyTask_8"/>
+        <sequenceFlow id="SequenceFlow_15" name="" sourceRef="ChoreographyTask_8" targetRef="ChoreographyTask_9"/>
+        <sequenceFlow id="SequenceFlow_16" name="" sourceRef="ExclusiveGateway_4" targetRef="EndEvent_1"/>
+        <endEvent id="EndEvent_1" name="End">
             <incoming xmlns:ns5="http://www.savara.org/examples">ns5:SequenceFlow_16</incoming>
         </endEvent>
     </choreography>
-    <process isClosed="false" processType="None" name="Default Initiating Process" id="Process_1"/>
-    <process isClosed="false" processType="None" name="Default Non-initiating Process" id="Process_2"/>
-    <message xmlns:ns5="http://www.savara.org/examples" itemRef="ns5:ItemDefinition_1" name="BuyRequest" id="Message_1"/>
-    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/store" itemKind="Information" isCollection="false" structureRef="ns5:BuyRequest" id="ItemDefinition_1"/>
-    <message xmlns:ns5="http://www.savara.org/examples" itemRef="ns5:ItemDefinition_2" name="CreditCheck" id="Message_2"/>
-    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/creditAgency" itemKind="Information" isCollection="false" structureRef="ns5:CreditCheckRequest" id="ItemDefinition_2"/>
-    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/creditAgency" itemKind="Information" isCollection="false" structureRef="ns5:CustomerUnknown" id="ItemDefinition_3"/>
-    <message xmlns:ns5="http://www.savara.org/examples" itemRef="ns5:ItemDefinition_3" name="CustomerUnknown" id="Message_3"/>
-    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/creditAgency" itemKind="Information" isCollection="false" structureRef="ns5:CreditRating" id="ItemDefinition_4"/>
-    <message xmlns:ns5="http://www.savara.org/examples" itemRef="ns5:ItemDefinition_4" name="CreditRating" id="Message_4"/>
-    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/store" itemKind="Information" isCollection="false" structureRef="ns5:AccountNotFound" id="ItemDefinition_5"/>
-    <message xmlns:ns5="http://www.savara.org/examples" itemRef="ns5:ItemDefinition_5" name="AccountNotFound" id="Message_5"/>
-    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/store" itemKind="Information" isCollection="false" structureRef="ns5:BuyFailed" id="ItemDefinition_6"/>
-    <message xmlns:ns5="http://www.savara.org/examples" itemRef="ns5:ItemDefinition_6" name="BuyFailed" id="Message_6"/>
-    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/logistics" itemKind="Information" isCollection="false" structureRef="ns5:DeliveryRequest" id="ItemDefinition_7"/>
-    <message xmlns:ns5="http://www.savara.org/examples" itemRef="ns5:ItemDefinition_7" name="DeliveryRequest" id="Message_7"/>
-    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/logistics" itemKind="Information" isCollection="false" structureRef="ns5:DeliveryConfirmed" id="ItemDefinition_8"/>
-    <message xmlns:ns5="http://www.savara.org/examples" itemRef="ns5:ItemDefinition_8" name="DeliveryConfirmed" id="Message_8"/>
-    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/store" itemKind="Information" isCollection="false" structureRef="ns5:BuyConfirmed" id="ItemDefinition_9"/>
-    <message xmlns:ns5="http://www.savara.org/examples" itemRef="ns5:ItemDefinition_9" name="BuyConfirmed" id="Message_9"/>
-    <error xmlns:ns5="http://www.savara.org/examples" structureRef="ns5:ItemDefinition_3" errorCode="CustomerUnknown" name="CustomerUnknown" id="Error_1"/>
-    <error xmlns:ns5="http://www.savara.org/examples" structureRef="ns5:ItemDefinition_5" errorCode="AccountNotFound" name="AccountNotFound" id="Error_2"/>
-    <error xmlns:ns5="http://www.savara.org/examples" structureRef="ns5:ItemDefinition_6" errorCode="InsufficientCredit" name="InsufficientCredit" id="Error_3"/>
-    <interface xmlns:ns5="http://www.savara.org/examples/CreditAgency" implementationRef="ns5:CreditAgencyInterface" name="CreditAgencyInterface" id="CreditAgencyInterface">
-        <operation name="creditCheck" id="creditCheck">
+    <process id="Process_1" isClosed="false" name="Default Initiating Process" processType="None"/>
+    <process id="Process_2" isClosed="false" name="Default Non-initiating Process" processType="None"/>
+    <message xmlns:ns5="http://www.savara.org/examples" id="Message_1" itemRef="ns5:ItemDefinition_1" name="BuyRequest"/>
+    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/store" id="ItemDefinition_1" isCollection="false" itemKind="Information" structureRef="ns5:BuyRequest"/>
+    <message xmlns:ns5="http://www.savara.org/examples" id="Message_2" itemRef="ns5:ItemDefinition_2" name="CreditCheck"/>
+    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/creditAgency" id="ItemDefinition_2" isCollection="false" itemKind="Information" structureRef="ns5:CreditCheckRequest"/>
+    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/creditAgency" id="ItemDefinition_3" isCollection="false" itemKind="Information" structureRef="ns5:CustomerUnknown"/>
+    <message xmlns:ns5="http://www.savara.org/examples" id="Message_3" itemRef="ns5:ItemDefinition_3" name="CustomerUnknown"/>
+    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/creditAgency" id="ItemDefinition_4" isCollection="false" itemKind="Information" structureRef="ns5:CreditRating"/>
+    <message xmlns:ns5="http://www.savara.org/examples" id="Message_4" itemRef="ns5:ItemDefinition_4" name="CreditRating"/>
+    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/store" id="ItemDefinition_5" isCollection="false" itemKind="Information" structureRef="ns5:AccountNotFound"/>
+    <message xmlns:ns5="http://www.savara.org/examples" id="Message_5" itemRef="ns5:ItemDefinition_5" name="AccountNotFound"/>
+    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/store" id="ItemDefinition_6" isCollection="false" itemKind="Information" structureRef="ns5:BuyFailed"/>
+    <message xmlns:ns5="http://www.savara.org/examples" id="Message_6" itemRef="ns5:ItemDefinition_6" name="BuyFailed"/>
+    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/logistics" id="ItemDefinition_7" isCollection="false" itemKind="Information" structureRef="ns5:DeliveryRequest"/>
+    <message xmlns:ns5="http://www.savara.org/examples" id="Message_7" itemRef="ns5:ItemDefinition_7" name="DeliveryRequest"/>
+    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/logistics" id="ItemDefinition_8" isCollection="false" itemKind="Information" structureRef="ns5:DeliveryConfirmed"/>
+    <message xmlns:ns5="http://www.savara.org/examples" id="Message_8" itemRef="ns5:ItemDefinition_8" name="DeliveryConfirmed"/>
+    <itemDefinition xmlns:ns5="http://www.jboss.org/examples/store" id="ItemDefinition_9" isCollection="false" itemKind="Information" structureRef="ns5:BuyConfirmed"/>
+    <message xmlns:ns5="http://www.savara.org/examples" id="Message_9" itemRef="ns5:ItemDefinition_9" name="BuyConfirmed"/>
+    <error xmlns:ns5="http://www.savara.org/examples" errorCode="CustomerUnknown" id="Error_1" name="CustomerUnknown" structureRef="ns5:ItemDefinition_3"/>
+    <error xmlns:ns5="http://www.savara.org/examples" errorCode="AccountNotFound" id="Error_2" name="AccountNotFound" structureRef="ns5:ItemDefinition_5"/>
+    <error xmlns:ns5="http://www.savara.org/examples" errorCode="InsufficientCredit" id="Error_3" name="InsufficientCredit" structureRef="ns5:ItemDefinition_6"/>
+    <interface xmlns:ns5="http://www.savara.org/examples/CreditAgency" id="CreditAgencyInterface" implementationRef="ns5:CreditAgencyInterface" name="CreditAgencyInterface">
+        <operation id="creditCheck" name="creditCheck">
             <inMessageRef xmlns:ns6="http://www.savara.org/examples">ns6:Message_2</inMessageRef>
             <outMessageRef xmlns:ns6="http://www.savara.org/examples">ns6:Message_4</outMessageRef>
             <errorRef xmlns:ns6="http://www.savara.org/examples">ns6:Error_1</errorRef>
         </operation>
     </interface>
-    <interface xmlns:ns5="http://www.savara.org/examples/Logistics" implementationRef="ns5:LogisticsInterface" name="LogisticsInterface" id="LogisticsInterface">
-        <operation name="delivery" id="delivery">
+    <interface xmlns:ns5="http://www.savara.org/examples/Logistics" id="LogisticsInterface" implementationRef="ns5:LogisticsInterface" name="LogisticsInterface">
+        <operation id="delivery" name="delivery">
             <inMessageRef xmlns:ns6="http://www.savara.org/examples">ns6:Message_7</inMessageRef>
             <outMessageRef xmlns:ns6="http://www.savara.org/examples">ns6:Message_8</outMessageRef>
         </operation>
     </interface>
-    <interface xmlns:ns5="http://www.savara.org/examples/Store" implementationRef="ns5:StoreInterface" name="StoreInterface" id="StoreInterface">
-        <operation name="buy" id="buy">
+    <interface xmlns:ns5="http://www.savara.org/examples/Store" id="StoreInterface" implementationRef="ns5:StoreInterface" name="StoreInterface">
+        <operation id="buy" name="buy">
             <inMessageRef xmlns:ns6="http://www.savara.org/examples">ns6:Message_1</inMessageRef>
             <outMessageRef xmlns:ns6="http://www.savara.org/examples">ns6:Message_9</outMessageRef>
             <errorRef xmlns:ns6="http://www.savara.org/examples">ns6:Error_2</errorRef>
@@ -176,175 +175,175 @@
     <ns4:BPMNDiagram id="BPMNDiagram_1">
         <ns4:BPMNPlane xmlns:ns5="http://www.savara.org/examples" bpmnElement="ns5:Choreography_1" id="BPMNPlane_1">
             <ns4:BPMNShape bpmnElement="ns5:ChoreographyTask_1" id="BPMNShape_1">
-                <ns3:Bounds height="150.0" width="150.0" y="240.0" x="140.0"/>
+                <ns3:Bounds height="150.0" width="150.0" x="140.0" y="240.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_1" isMessageVisible="true" bpmnElement="ns5:Participant_1" id="BPMNShape_2">
-                <ns3:Bounds height="20.0" width="150.0" y="240.0" x="140.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_1" choreographyActivityShape="ns5:BPMNShape_1" id="BPMNShape_2" isMessageVisible="true">
+                <ns3:Bounds height="20.0" width="150.0" x="140.0" y="240.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_1" participantBandKind="bottom_non_initiating" bpmnElement="ns5:Participant_2" id="BPMNShape_3">
-                <ns3:Bounds height="20.0" width="150.0" y="370.0" x="140.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_2" choreographyActivityShape="ns5:BPMNShape_1" id="BPMNShape_3" participantBandKind="bottom_non_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="140.0" y="370.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ChoreographyTask_2" id="BPMNShape_ChoreographyTask_1">
-                <ns3:Bounds height="150.0" width="150.0" y="240.0" x="390.0"/>
+                <ns3:Bounds height="150.0" width="150.0" x="390.0" y="240.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_1" isMessageVisible="true" bpmnElement="ns5:Participant_2" id="BPMNShape_Participant_1">
-                <ns3:Bounds height="20.0" width="150.0" y="240.0" x="390.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_2" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_1" id="BPMNShape_Participant_1" isMessageVisible="true">
+                <ns3:Bounds height="20.0" width="150.0" x="390.0" y="240.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_1" participantBandKind="bottom_non_initiating" bpmnElement="ns5:Participant_3" id="BPMNShape_Participant_2">
-                <ns3:Bounds height="20.0" width="150.0" y="370.0" x="390.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_3" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_1" id="BPMNShape_Participant_2" participantBandKind="bottom_non_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="390.0" y="370.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:StartEvent_1" id="BPMNShape_StartEvent_1">
-                <ns3:Bounds height="51.0" width="36.0" y="298.0" x="50.0"/>
+                <ns3:Bounds height="51.0" width="36.0" x="50.0" y="298.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ExclusiveGateway_1" id="BPMNShape_ExclusiveGateway_1">
-                <ns3:Bounds height="65.0" width="50.0" y="290.0" x="600.0"/>
+                <ns3:Bounds height="65.0" width="50.0" x="600.0" y="290.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ChoreographyTask_3" id="BPMNShape_ChoreographyTask_2">
-                <ns3:Bounds height="150.0" width="150.0" y="100.0" x="740.0"/>
+                <ns3:Bounds height="150.0" width="150.0" x="740.0" y="100.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ChoreographyTask_4" id="BPMNShape_ChoreographyTask_3">
-                <ns3:Bounds height="150.0" width="150.0" y="453.0" x="740.0"/>
+                <ns3:Bounds height="150.0" width="150.0" x="740.0" y="453.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ChoreographyTask_5" id="BPMNShape_ChoreographyTask_4">
-                <ns3:Bounds height="150.0" width="150.0" y="100.0" x="990.0"/>
+                <ns3:Bounds height="150.0" width="150.0" x="990.0" y="100.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ExclusiveGateway_2" id="BPMNShape_ExclusiveGateway_2">
-                <ns3:Bounds height="65.0" width="50.0" y="503.0" x="970.0"/>
+                <ns3:Bounds height="65.0" width="50.0" x="970.0" y="503.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ChoreographyTask_6" id="BPMNShape_ChoreographyTask_5">
-                <ns3:Bounds height="150.0" width="150.0" y="320.0" x="1120.0"/>
+                <ns3:Bounds height="150.0" width="150.0" x="1120.0" y="320.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ChoreographyTask_7" id="BPMNShape_ChoreographyTask_6">
-                <ns3:Bounds height="150.0" width="150.0" y="590.0" x="1120.0"/>
+                <ns3:Bounds height="150.0" width="150.0" x="1120.0" y="590.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ChoreographyTask_8" id="BPMNShape_ChoreographyTask_7">
-                <ns3:Bounds height="150.0" width="150.0" y="590.0" x="1350.0"/>
+                <ns3:Bounds height="150.0" width="150.0" x="1350.0" y="590.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ChoreographyTask_9" id="BPMNShape_ChoreographyTask_8">
-                <ns3:Bounds height="150.0" width="150.0" y="590.0" x="1580.0"/>
+                <ns3:Bounds height="150.0" width="150.0" x="1580.0" y="590.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ExclusiveGateway_3" id="BPMNShape_ExclusiveGateway_3">
-                <ns3:Bounds height="65.0" width="50.0" y="496.0" x="1790.0"/>
+                <ns3:Bounds height="65.0" width="50.0" x="1790.0" y="496.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:ExclusiveGateway_4" id="BPMNShape_ExclusiveGateway_4">
-                <ns3:Bounds height="65.0" width="50.0" y="330.0" x="1860.0"/>
+                <ns3:Bounds height="65.0" width="50.0" x="1860.0" y="330.0"/>
             </ns4:BPMNShape>
             <ns4:BPMNShape bpmnElement="ns5:EndEvent_1" id="BPMNShape_EndEvent_1">
-                <ns3:Bounds height="51.0" width="36.0" y="336.0" x="1990.0"/>
+                <ns3:Bounds height="51.0" width="36.0" x="1990.0" y="336.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_2" participantBandKind="top_non_initiating" bpmnElement="ns5:Participant_2" id="BPMNShape_Participant_3">
-                <ns3:Bounds height="20.0" width="150.0" y="100.0" x="740.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_2" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_2" id="BPMNShape_Participant_3" participantBandKind="top_non_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="740.0" y="100.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_2" participantBandKind="bottom_initiating" isMessageVisible="true" bpmnElement="ns5:Participant_3" id="BPMNShape_Participant_4">
-                <ns3:Bounds height="20.0" width="150.0" y="230.0" x="740.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_3" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_2" id="BPMNShape_Participant_4" isMessageVisible="true" participantBandKind="bottom_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="740.0" y="230.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_4" participantBandKind="top_non_initiating" bpmnElement="ns5:Participant_1" id="BPMNShape_Participant_5">
-                <ns3:Bounds height="20.0" width="150.0" y="100.0" x="990.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_1" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_4" id="BPMNShape_Participant_5" participantBandKind="top_non_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="990.0" y="100.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_4" participantBandKind="bottom_initiating" isMessageVisible="true" bpmnElement="ns5:Participant_2" id="BPMNShape_Participant_6">
-                <ns3:Bounds height="20.0" width="150.0" y="230.0" x="990.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_2" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_4" id="BPMNShape_Participant_6" isMessageVisible="true" participantBandKind="bottom_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="990.0" y="230.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_3" participantBandKind="top_non_initiating" bpmnElement="ns5:Participant_2" id="BPMNShape_Participant_7">
-                <ns3:Bounds height="20.0" width="150.0" y="453.0" x="740.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_2" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_3" id="BPMNShape_Participant_7" participantBandKind="top_non_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="740.0" y="453.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_3" participantBandKind="bottom_initiating" isMessageVisible="true" bpmnElement="ns5:Participant_3" id="BPMNShape_Participant_8">
-                <ns3:Bounds height="20.0" width="150.0" y="583.0" x="740.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_3" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_3" id="BPMNShape_Participant_8" isMessageVisible="true" participantBandKind="bottom_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="740.0" y="583.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_5" participantBandKind="top_non_initiating" bpmnElement="ns5:Participant_1" id="BPMNShape_Participant_9">
-                <ns3:Bounds height="20.0" width="150.0" y="320.0" x="1120.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_1" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_5" id="BPMNShape_Participant_9" participantBandKind="top_non_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="1120.0" y="320.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_5" participantBandKind="bottom_initiating" isMessageVisible="true" bpmnElement="ns5:Participant_2" id="BPMNShape_Participant_10">
-                <ns3:Bounds height="20.0" width="150.0" y="450.0" x="1120.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_2" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_5" id="BPMNShape_Participant_10" isMessageVisible="true" participantBandKind="bottom_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="1120.0" y="450.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_6" isMessageVisible="true" bpmnElement="ns5:Participant_2" id="BPMNShape_Participant_11">
-                <ns3:Bounds height="20.0" width="150.0" y="590.0" x="1120.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_2" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_6" id="BPMNShape_Participant_11" isMessageVisible="true">
+                <ns3:Bounds height="20.0" width="150.0" x="1120.0" y="590.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_6" participantBandKind="bottom_non_initiating" bpmnElement="ns5:Participant_4" id="BPMNShape_Participant_12">
-                <ns3:Bounds height="20.0" width="150.0" y="720.0" x="1120.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_4" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_6" id="BPMNShape_Participant_12" participantBandKind="bottom_non_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="1120.0" y="720.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_7" participantBandKind="top_non_initiating" bpmnElement="ns5:Participant_2" id="BPMNShape_Participant_13">
-                <ns3:Bounds height="20.0" width="150.0" y="590.0" x="1350.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_2" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_7" id="BPMNShape_Participant_13" participantBandKind="top_non_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="1350.0" y="590.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_7" participantBandKind="bottom_initiating" isMessageVisible="true" bpmnElement="ns5:Participant_4" id="BPMNShape_Participant_14">
-                <ns3:Bounds height="20.0" width="150.0" y="720.0" x="1350.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_4" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_7" id="BPMNShape_Participant_14" isMessageVisible="true" participantBandKind="bottom_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="1350.0" y="720.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_8" participantBandKind="top_non_initiating" bpmnElement="ns5:Participant_1" id="BPMNShape_Participant_15">
-                <ns3:Bounds height="20.0" width="150.0" y="590.0" x="1580.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_1" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_8" id="BPMNShape_Participant_15" participantBandKind="top_non_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="1580.0" y="590.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNShape choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_8" participantBandKind="bottom_initiating" isMessageVisible="true" bpmnElement="ns5:Participant_2" id="BPMNShape_Participant_16">
-                <ns3:Bounds height="20.0" width="150.0" y="720.0" x="1580.0"/>
+            <ns4:BPMNShape bpmnElement="ns5:Participant_2" choreographyActivityShape="ns5:BPMNShape_ChoreographyTask_8" id="BPMNShape_Participant_16" isMessageVisible="true" participantBandKind="bottom_initiating">
+                <ns3:Bounds height="20.0" width="150.0" x="1580.0" y="720.0"/>
             </ns4:BPMNShape>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_1" sourceElement="ns5:BPMNShape_StartEvent_1" bpmnElement="ns5:SequenceFlow_1" id="BPMNEdge_SequenceFlow_1">
-                <ns2:waypoint y="316.0" x="86.0"/>
-                <ns2:waypoint y="315.0" x="140.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_1" id="BPMNEdge_SequenceFlow_1" sourceElement="ns5:BPMNShape_StartEvent_1" targetElement="ns5:BPMNShape_1">
+                <ns2:waypoint x="86.0" y="316.0"/>
+                <ns2:waypoint x="140.0" y="315.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ChoreographyTask_1" sourceElement="ns5:BPMNShape_1" bpmnElement="ns5:SequenceFlow_2" id="BPMNEdge_SequenceFlow_2">
-                <ns2:waypoint y="315.0" x="290.0"/>
-                <ns2:waypoint y="315.0" x="390.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_2" id="BPMNEdge_SequenceFlow_2" sourceElement="ns5:BPMNShape_1" targetElement="ns5:BPMNShape_ChoreographyTask_1">
+                <ns2:waypoint x="290.0" y="315.0"/>
+                <ns2:waypoint x="390.0" y="315.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ExclusiveGateway_1" sourceElement="ns5:BPMNShape_ChoreographyTask_1" bpmnElement="ns5:SequenceFlow_3" id="BPMNEdge_SequenceFlow_3">
-                <ns2:waypoint y="315.0" x="540.0"/>
-                <ns2:waypoint y="315.0" x="600.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_3" id="BPMNEdge_SequenceFlow_3" sourceElement="ns5:BPMNShape_ChoreographyTask_1" targetElement="ns5:BPMNShape_ExclusiveGateway_1">
+                <ns2:waypoint x="540.0" y="315.0"/>
+                <ns2:waypoint x="600.0" y="315.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ChoreographyTask_2" sourceElement="ns5:BPMNShape_ExclusiveGateway_1" bpmnElement="ns5:SequenceFlow_4" id="BPMNEdge_SequenceFlow_4">
-                <ns2:waypoint y="290.0" x="625.0"/>
-                <ns2:waypoint y="174.0" x="625.0"/>
-                <ns2:waypoint y="175.0" x="740.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_4" id="BPMNEdge_SequenceFlow_4" sourceElement="ns5:BPMNShape_ExclusiveGateway_1" targetElement="ns5:BPMNShape_ChoreographyTask_2">
+                <ns2:waypoint x="625.0" y="290.0"/>
+                <ns2:waypoint x="625.0" y="174.0"/>
+                <ns2:waypoint x="740.0" y="175.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ChoreographyTask_3" sourceElement="ns5:BPMNShape_ExclusiveGateway_1" bpmnElement="ns5:SequenceFlow_5" id="BPMNEdge_SequenceFlow_5">
-                <ns2:waypoint y="341.0" x="625.0"/>
-                <ns2:waypoint y="527.0" x="625.0"/>
-                <ns2:waypoint y="528.0" x="740.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_5" id="BPMNEdge_SequenceFlow_5" sourceElement="ns5:BPMNShape_ExclusiveGateway_1" targetElement="ns5:BPMNShape_ChoreographyTask_3">
+                <ns2:waypoint x="625.0" y="341.0"/>
+                <ns2:waypoint x="625.0" y="527.0"/>
+                <ns2:waypoint x="740.0" y="528.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ExclusiveGateway_2" sourceElement="ns5:BPMNShape_ChoreographyTask_3" bpmnElement="ns5:SequenceFlow_6" id="BPMNEdge_SequenceFlow_6">
-                <ns2:waypoint y="528.0" x="890.0"/>
-                <ns2:waypoint y="528.0" x="970.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_6" id="BPMNEdge_SequenceFlow_6" sourceElement="ns5:BPMNShape_ChoreographyTask_3" targetElement="ns5:BPMNShape_ExclusiveGateway_2">
+                <ns2:waypoint x="890.0" y="528.0"/>
+                <ns2:waypoint x="970.0" y="528.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ChoreographyTask_5" sourceElement="ns5:BPMNShape_ExclusiveGateway_2" bpmnElement="ns5:SequenceFlow_7" id="BPMNEdge_SequenceFlow_7">
-                <ns2:waypoint y="503.0" x="995.0"/>
-                <ns2:waypoint y="395.0" x="995.0"/>
-                <ns2:waypoint y="395.0" x="1120.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_7" id="BPMNEdge_SequenceFlow_7" sourceElement="ns5:BPMNShape_ExclusiveGateway_2" targetElement="ns5:BPMNShape_ChoreographyTask_5">
+                <ns2:waypoint x="995.0" y="503.0"/>
+                <ns2:waypoint x="995.0" y="395.0"/>
+                <ns2:waypoint x="1120.0" y="395.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ChoreographyTask_6" sourceElement="ns5:BPMNShape_ExclusiveGateway_2" bpmnElement="ns5:SequenceFlow_8" id="BPMNEdge_SequenceFlow_8">
-                <ns2:waypoint y="554.0" x="995.0"/>
-                <ns2:waypoint y="664.0" x="995.0"/>
-                <ns2:waypoint y="665.0" x="1120.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_8" id="BPMNEdge_SequenceFlow_8" sourceElement="ns5:BPMNShape_ExclusiveGateway_2" targetElement="ns5:BPMNShape_ChoreographyTask_6">
+                <ns2:waypoint x="995.0" y="554.0"/>
+                <ns2:waypoint x="995.0" y="664.0"/>
+                <ns2:waypoint x="1120.0" y="665.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ChoreographyTask_4" sourceElement="ns5:BPMNShape_ChoreographyTask_2" bpmnElement="ns5:SequenceFlow_9" id="BPMNEdge_SequenceFlow_9">
-                <ns2:waypoint y="175.0" x="890.0"/>
-                <ns2:waypoint y="175.0" x="990.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_9" id="BPMNEdge_SequenceFlow_9" sourceElement="ns5:BPMNShape_ChoreographyTask_2" targetElement="ns5:BPMNShape_ChoreographyTask_4">
+                <ns2:waypoint x="890.0" y="175.0"/>
+                <ns2:waypoint x="990.0" y="175.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ExclusiveGateway_4" sourceElement="ns5:BPMNShape_ExclusiveGateway_3" bpmnElement="ns5:SequenceFlow_10" id="BPMNEdge_SequenceFlow_10">
-                <ns2:waypoint y="521.0" x="1841.0"/>
-                <ns2:waypoint y="523.0" x="1884.0"/>
-                <ns2:waypoint y="381.0" x="1885.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_10" id="BPMNEdge_SequenceFlow_10" sourceElement="ns5:BPMNShape_ExclusiveGateway_3" targetElement="ns5:BPMNShape_ExclusiveGateway_4">
+                <ns2:waypoint x="1841.0" y="521.0"/>
+                <ns2:waypoint x="1884.0" y="523.0"/>
+                <ns2:waypoint x="1885.0" y="381.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ExclusiveGateway_4" sourceElement="ns5:BPMNShape_ChoreographyTask_4" bpmnElement="ns5:SequenceFlow_11" id="BPMNEdge_SequenceFlow_11">
-                <ns2:waypoint y="175.0" x="1140.0"/>
-                <ns2:waypoint y="175.0" x="1885.0"/>
-                <ns2:waypoint y="330.0" x="1885.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_11" id="BPMNEdge_SequenceFlow_11" sourceElement="ns5:BPMNShape_ChoreographyTask_4" targetElement="ns5:BPMNShape_ExclusiveGateway_4">
+                <ns2:waypoint x="1140.0" y="175.0"/>
+                <ns2:waypoint x="1885.0" y="175.0"/>
+                <ns2:waypoint x="1885.0" y="330.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ExclusiveGateway_3" sourceElement="ns5:BPMNShape_ChoreographyTask_8" bpmnElement="ns5:SequenceFlow_12" id="BPMNEdge_SequenceFlow_12">
-                <ns2:waypoint y="665.0" x="1730.0"/>
-                <ns2:waypoint y="664.0" x="1815.0"/>
-                <ns2:waypoint y="547.0" x="1815.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_12" id="BPMNEdge_SequenceFlow_12" sourceElement="ns5:BPMNShape_ChoreographyTask_8" targetElement="ns5:BPMNShape_ExclusiveGateway_3">
+                <ns2:waypoint x="1730.0" y="665.0"/>
+                <ns2:waypoint x="1815.0" y="664.0"/>
+                <ns2:waypoint x="1815.0" y="547.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ExclusiveGateway_3" sourceElement="ns5:BPMNShape_ChoreographyTask_5" bpmnElement="ns5:SequenceFlow_13" id="BPMNEdge_SequenceFlow_13">
-                <ns2:waypoint y="395.0" x="1270.0"/>
-                <ns2:waypoint y="395.0" x="1815.0"/>
-                <ns2:waypoint y="496.0" x="1815.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_13" id="BPMNEdge_SequenceFlow_13" sourceElement="ns5:BPMNShape_ChoreographyTask_5" targetElement="ns5:BPMNShape_ExclusiveGateway_3">
+                <ns2:waypoint x="1270.0" y="395.0"/>
+                <ns2:waypoint x="1815.0" y="395.0"/>
+                <ns2:waypoint x="1815.0" y="496.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ChoreographyTask_7" sourceElement="ns5:BPMNShape_ChoreographyTask_6" bpmnElement="ns5:SequenceFlow_14" id="BPMNEdge_SequenceFlow_14">
-                <ns2:waypoint y="665.0" x="1270.0"/>
-                <ns2:waypoint y="665.0" x="1350.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_14" id="BPMNEdge_SequenceFlow_14" sourceElement="ns5:BPMNShape_ChoreographyTask_6" targetElement="ns5:BPMNShape_ChoreographyTask_7">
+                <ns2:waypoint x="1270.0" y="665.0"/>
+                <ns2:waypoint x="1350.0" y="665.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_ChoreographyTask_8" sourceElement="ns5:BPMNShape_ChoreographyTask_7" bpmnElement="ns5:SequenceFlow_15" id="BPMNEdge_SequenceFlow_15">
-                <ns2:waypoint y="665.0" x="1500.0"/>
-                <ns2:waypoint y="665.0" x="1580.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_15" id="BPMNEdge_SequenceFlow_15" sourceElement="ns5:BPMNShape_ChoreographyTask_7" targetElement="ns5:BPMNShape_ChoreographyTask_8">
+                <ns2:waypoint x="1500.0" y="665.0"/>
+                <ns2:waypoint x="1580.0" y="665.0"/>
             </ns4:BPMNEdge>
-            <ns4:BPMNEdge targetElement="ns5:BPMNShape_EndEvent_1" sourceElement="ns5:BPMNShape_ExclusiveGateway_4" bpmnElement="ns5:SequenceFlow_16" id="BPMNEdge_SequenceFlow_16">
-                <ns2:waypoint y="355.0" x="1911.0"/>
-                <ns2:waypoint y="354.0" x="1990.0"/>
+            <ns4:BPMNEdge bpmnElement="ns5:SequenceFlow_16" id="BPMNEdge_SequenceFlow_16" sourceElement="ns5:BPMNShape_ExclusiveGateway_4" targetElement="ns5:BPMNShape_EndEvent_1">
+                <ns2:waypoint x="1911.0" y="355.0"/>
+                <ns2:waypoint x="1990.0" y="354.0"/>
             </ns4:BPMNEdge>
         </ns4:BPMNPlane>
     </ns4:BPMNDiagram>

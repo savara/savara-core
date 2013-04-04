@@ -107,7 +107,23 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		if (source instanceof ProtocolModel) {
 			ProtocolModel pm=(ProtocolModel)source;
 			
-			processProtocol(pm, pm.getProtocol(), ret, handler, locator);
+			// Obtain any namespace prefix map
+			java.util.Map<String, String> prefixes=
+					new java.util.HashMap<String, String>();
+			
+			java.util.List<Annotation> list=
+				AnnotationDefinitions.getAnnotations(pm.getProtocol().getAnnotations(),
+						AnnotationDefinitions.TYPE);
+			
+			for (Annotation annotation : list) {
+				if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
+						annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
+					prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
+							(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
+				}
+			}
+
+			processProtocol(pm, pm.getProtocol(), ret, handler, locator, prefixes);
 		}
 		
 		return(ret);
@@ -132,11 +148,19 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 	 * @param modelMap The model map
 	 * @param handler The handler
 	 * @param locator The resource locator
+	 * @param prefixes The prefix map
 	 * @return The model file
 	 */
 	protected String processProtocol(ProtocolModel pm, Protocol p, java.util.Map<String,Object> modelMap,
-						FeedbackHandler handler, ResourceLocator locator) {
+						FeedbackHandler handler, ResourceLocator locator, java.util.Map<String,String> prefixes) {
 		TDefinitions defns=new TDefinitions();
+		
+		// Setup prefixes
+		for (String ns : prefixes.keySet()) {
+			String prefix=prefixes.get(ns);
+			
+			defns.getOtherAttributes().put(new QName(null,"xmlns:"+prefix), ns);
+		}
 
 		// Set an id on the definition - not strictly required,
 		// although the BPMN2 modeler currently seems to want
@@ -156,7 +180,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		
 		initImports(defns, pm);
 		
-		initMessages(defns, pm);
+		initMessages(defns, pm, prefixes);
 		
 		String modelName=getProtocolName(p);
 		
@@ -184,7 +208,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		// Check if nested protocols have been defined
 		for (Protocol nested : p.getNestedProtocols()) {
 			
-			String nestedModelFile=processProtocol(pm, nested, modelMap, handler, locator);
+			String nestedModelFile=processProtocol(pm, nested, modelMap, handler, locator, prefixes);
 			
 			TDefinitions nestedDefn=(TDefinitions)modelMap.get(nestedModelFile);
 			
@@ -207,6 +231,9 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		
 		if (ann != null) {
 			defns.setTargetNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY));
+			
+			// Make sure a namespace prefix is defined for the target namespace
+			defns.getOtherAttributes().put(new QName(null, "xmlns:tns"), defns.getTargetNamespace());
 		}
 	}
 	
@@ -230,7 +257,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		}
 	}
 	
-	protected void initMessages(TDefinitions defns, ProtocolModel pm) {
+	protected void initMessages(TDefinitions defns, ProtocolModel pm, java.util.Map<String,String> prefixes) {
 
 		for (ImportList il : pm.getImports()) {
 
@@ -240,19 +267,32 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 				for (TypeImport ti : til.getTypeImports()) {
 					TItemDefinition itemDef=new TItemDefinition();
 					itemDef.setId("ITEM"+ti.getName());
-					itemDef.setStructureRef(QName.valueOf(ti.getDataType().getDetails()));
+					
+					itemDef.setStructureRef(createQName(ti.getDataType().getDetails(), prefixes));
 					defns.getRootElement().add(_objectFactory.createItemDefinition(itemDef));
 					
 					TMessage mesg=new TMessage();
 					mesg.setId("ID"+ti.getName());
 					mesg.setName(ti.getName());
-					mesg.setItemRef(new QName(defns.getTargetNamespace(),itemDef.getId()));
+					mesg.setItemRef(new QName(defns.getTargetNamespace(),itemDef.getId(), "tns"));
 					defns.getRootElement().add(_objectFactory.createMessage(mesg));
 				}
 			}
 		}
 	}
 	
+	protected QName createQName(String qname, java.util.Map<String,String> prefixes) {
+		QName ret=QName.valueOf(qname);
+		
+		String prefix=prefixes.get(ret.getNamespaceURI());
+		
+		if (prefix != null) {
+			ret = new QName(ret.getNamespaceURI(), ret.getLocalPart(), prefix);
+		}
+		
+		return (ret);
+	}
+
 	protected TInterface getInterface(TDefinitions defns, Role role) {
 		TInterface ret=null;
 		String intfName=role.getName();
@@ -283,6 +323,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 	
 	public class BPMN2ModelVisitor extends DefaultVisitor {
 		
+		private static final String TARGET_NAMESPACE_PREFIX = "tns";
 		private BPMN2ModelFactory _modelFactory=null;
 		private BPMN2NotationFactory _notationFactory=null;
 		private String _choreoName=null;
@@ -710,7 +751,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 				intf.getOperation().add(op);
 			}
 			
-			ret = new QName(_modelFactory.getDefinitions().getTargetNamespace(), op.getId());
+			ret = new QName(_modelFactory.getDefinitions().getTargetNamespace(), op.getId(), TARGET_NAMESPACE_PREFIX);
 			
 			if (InteractionUtil.isRequest(interaction)) {
 				if (op.getInMessageRef() == null) {
@@ -738,7 +779,8 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 				}
 				
 				if (error != null) {
-					QName qname=new QName(_modelFactory.getDefinitions().getTargetNamespace(), error.getId());
+					QName qname=new QName(_modelFactory.getDefinitions().getTargetNamespace(),
+							error.getId(), TARGET_NAMESPACE_PREFIX);
 					
 					if (!op.getErrorRef().contains(qname)) {
 						op.getErrorRef().add(qname);

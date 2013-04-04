@@ -83,7 +83,7 @@ public class BPMN2ServiceUtil {
 				}
 				
 				if (startEvent != null) {
-					processNode(startEvent, ret, new java.util.Vector<InteractionInfo>(),
+					processNode(defns, startEvent, ret, new java.util.Vector<InteractionInfo>(),
 								new ModelInfo(choreo.getParticipant(),
 									choreo.getMessageFlow(), choreo.getFlowElement(),
 									defns.getRootElement(), defns.getTargetNamespace()),
@@ -95,7 +95,7 @@ public class BPMN2ServiceUtil {
 		return (ret);
 	}
 	
-	protected static void processNode(TFlowNode node, java.util.Map<TParticipant,TInterface> intfs,
+	protected static void processNode(TDefinitions defns, TFlowNode node, java.util.Map<TParticipant,TInterface> intfs,
 			java.util.List<InteractionInfo> ii, ModelInfo modelInfo,
 				java.util.List<TFlowNode> processedNodes) {
 		
@@ -104,7 +104,7 @@ public class BPMN2ServiceUtil {
 			
 			// Check if node is an interaction
 			if (node instanceof TChoreographyTask) {
-				processChoreographyTask((TChoreographyTask)node, intfs, ii, modelInfo);
+				processChoreographyTask(defns, (TChoreographyTask)node, intfs, ii, modelInfo);
 			}
 			
 			for (QName outgoing : node.getOutgoing()) {
@@ -113,7 +113,7 @@ public class BPMN2ServiceUtil {
 				if (sf != null) {
 					
 					if (sf.getTargetRef() != null) {
-						processNode((TFlowNode)sf.getTargetRef(), intfs,
+						processNode(defns, (TFlowNode)sf.getTargetRef(), intfs,
 								new java.util.Vector<InteractionInfo>(ii), modelInfo, processedNodes);
 					} else if (LOG.isLoggable(Level.FINE)) {
 						LOG.fine("Node's outgoing flow has no target ref: "+node);
@@ -123,7 +123,7 @@ public class BPMN2ServiceUtil {
 		}
 	}
 	
-	protected static void processChoreographyTask(TChoreographyTask node,
+	protected static void processChoreographyTask(TDefinitions defns, TChoreographyTask node,
 					java.util.Map<TParticipant,TInterface> intfs,
 					java.util.List<InteractionInfo> ii, ModelInfo modelInfo) {
 		InteractionInfo initiatingii=null;
@@ -150,7 +150,7 @@ public class BPMN2ServiceUtil {
 		// Check if both initiating and responding interactions set
 		if (initiatingii != null && respondingii != null) {
 			// Assume matched pair
-			storeMEP(initiatingii, respondingii, intfs, modelInfo);
+			storeMEP(defns, initiatingii, respondingii, intfs, modelInfo);
 			
 		} else if (initiatingii != null) {
 			// Attempt to match with previous interaction
@@ -165,7 +165,7 @@ public class BPMN2ServiceUtil {
 			}
 			
 			if (match != null) {
-				storeMEP(match, initiatingii, intfs, modelInfo);
+				storeMEP(defns, match, initiatingii, intfs, modelInfo);
 				
 				ii.remove(match);
 			} else {
@@ -182,7 +182,7 @@ public class BPMN2ServiceUtil {
 				// If previous interaction found with same from/to, then
 				// record previous as one-way op
 				if (match != null) {
-					storeMEP(match, null, intfs, modelInfo);
+					storeMEP(defns, match, null, intfs, modelInfo);
 					
 					ii.remove(match);
 				}
@@ -199,7 +199,7 @@ public class BPMN2ServiceUtil {
 		}
 	}
 	
-	protected static void storeMEP(InteractionInfo req, InteractionInfo resp,
+	protected static void storeMEP(TDefinitions defns, InteractionInfo req, InteractionInfo resp,
 					java.util.Map<TParticipant,TInterface> intfs, ModelInfo modelInfo) {
 		TParticipant participant=req.getTo();
 		TInterface intf=intfs.get(participant);
@@ -212,8 +212,10 @@ public class BPMN2ServiceUtil {
 			intf.setId(intfName+INTERFACE_ID_SUFFIX);
 			intf.setName(intfName);
 			
-			QName impl=new QName(modelInfo.getTargetNamespace()+"/"+participant.getName(),
-										participant.getName());
+			String ns=modelInfo.getTargetNamespace()+"/"+participant.getName();
+			String prefix=findNamespacePrefix(defns, ns);
+			
+			QName impl=new QName(ns, participant.getName(), prefix);
 			intf.setImplementationRef(impl);
 			
 			intfs.put(participant, intf);
@@ -237,7 +239,7 @@ public class BPMN2ServiceUtil {
 			operation.setId(opname);
 			operation.setName(opname);
 			
-			operation.setInMessageRef(new QName(modelInfo.getTargetNamespace(), req.getMessage().getId()));
+			operation.setInMessageRef(new QName(modelInfo.getTargetNamespace(), req.getMessage().getId(), "tns"));
 			
 			intf.getOperation().add(operation);
 		}
@@ -247,7 +249,7 @@ public class BPMN2ServiceUtil {
 			TError err=modelInfo.getErrorForItemDefinition(resp.getMessage().getItemRef());
 			
 			if (err != null) {
-				QName errQName=new QName(modelInfo.getTargetNamespace(), err.getId());
+				QName errQName=new QName(modelInfo.getTargetNamespace(), err.getId(), "tns");
 				if (!operation.getErrorRef().contains(errQName)) {
 					operation.getErrorRef().add(errQName);
 				}
@@ -257,7 +259,7 @@ public class BPMN2ServiceUtil {
 				// Check if response message already exists on operation
 				if (operation.getOutMessageRef() == null) {
 					operation.setOutMessageRef(new QName(modelInfo.getTargetNamespace(),
-								resp.getMessage().getId()));
+								resp.getMessage().getId(), "tns"));
 					
 				/* NOTE: Currently don't handle adding error objects, as this would
 				 * modify the model. User has to ensure fault message types have an appropriate
@@ -284,6 +286,37 @@ public class BPMN2ServiceUtil {
 				}
 			}
 		}
+	}
+	
+	protected static String findNamespacePrefix(TDefinitions defns, String namespace) {
+		String ret=null;
+		
+		for (QName qname : defns.getOtherAttributes().keySet()) {
+			String value=defns.getOtherAttributes().get(qname);
+			
+			if (value.equals(namespace) && qname.getLocalPart().startsWith("xmlns:")) {
+				ret = qname.getLocalPart().substring(6);
+			}
+		}
+		
+		if (ret == null) {
+			int i=1;
+			
+			while (ret == null) {
+				ret = "intf"+(i++);
+				
+				QName qname=new QName(null, "xmlns:"+ret);
+				
+				if (defns.getOtherAttributes().containsKey(qname)) {
+					ret = null;
+				}
+			}
+			
+			// Add namespace prefix declaration
+			defns.getOtherAttributes().put(new QName(null, "xmlns:"+ret), namespace);
+		}
+		
+		return (ret);
 	}
 	
 	/**
@@ -348,7 +381,7 @@ public class BPMN2ServiceUtil {
 				defns.getRootElement().add(factory.createInterface(intf));
 				
 				participant.getInterfaceRef().add(
-						new QName(modelInfo.getTargetNamespace(), intf.getId()));
+						new QName(modelInfo.getTargetNamespace(), intf.getId(), "tns"));
 			} else {				
 				for (TOperation op : intf.getOperation()) {
 					// Find operation

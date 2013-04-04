@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="id-ESBBrokerProcess">
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:intf1="null/SupplierQuoteEngine" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="id-ESBBrokerProcess">
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.pi4soa.org/ESBBroker"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.pi4soa.org/ESBBroker/Broker"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.pi4soa.org/ESBBroker/Buyer"/>
@@ -59,10 +59,10 @@
         <bpmn2:sequenceFlow id="MID11" sourceRef="MID2" targetRef="MID4"/>
         <bpmn2:sequenceFlow id="MID12" sourceRef="MID8" targetRef="MID3"/>
     </bpmn2:choreography>
-    <bpmn2:interface xmlns="null/SupplierQuoteEngine" id="SupplierQuoteEngineInterface" implementationRef="SupplierQuoteEngine" name="SupplierQuoteEngine">
+    <bpmn2:interface id="SupplierQuoteEngineInterface" implementationRef="intf1:SupplierQuoteEngine" name="SupplierQuoteEngine">
         <bpmn2:operation id="requestForQuote" name="requestForQuote">
-            <bpmn2:inMessageRef xmlns="" xmlns:ns6="null/SupplierQuoteEngine">IDRequestForQuote</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="" xmlns:ns6="null/SupplierQuoteEngine">IDQuote</bpmn2:outMessageRef>
+            <bpmn2:inMessageRef>IDRequestForQuote</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDQuote</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
     <bpmndi:BPMNDiagram id="NID1">

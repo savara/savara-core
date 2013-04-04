@@ -48,6 +48,7 @@ public interface ModelGenerator {
 	 * @param locator The resource locator
 	 * @return The target models, returned as a map of model name to model
 	 */
-	public java.util.Map<String,Object> generate(Object source, FeedbackHandler handler, ResourceLocator locator);
+	public java.util.Map<String,Object> generate(Object source, FeedbackHandler handler,
+							ResourceLocator locator);
 	
 }

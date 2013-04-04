@@ -69,6 +69,7 @@ import org.scribble.protocol.util.InteractionUtil;
 
 public class BPMN2ModelFactory {
 	
+	private static final String TARGET_NAMESPACE_PREFIX = "tns";
 	private TDefinitions m_definitions=null;
 	private TCollaboration m_collaboration=null;
 	private TChoreography _choreography=null;
@@ -128,7 +129,7 @@ public class BPMN2ModelFactory {
 		participant.setName(name);
 		
 		participant.setProcessRef(new QName(m_definitions.getTargetNamespace(),
-							process.getId()));
+							process.getId(), TARGET_NAMESPACE_PREFIX));
 		
 		m_collaboration.getParticipant().add(participant);
 
@@ -367,7 +368,7 @@ public class BPMN2ModelFactory {
 				if (mesg.getName().equals(interaction.getMessageSignature().
 								getTypeReferences().get(0).getName())) {
 					ret = new QName(getDefinitions().getTargetNamespace(),
-										mesg.getId());
+										mesg.getId(), TARGET_NAMESPACE_PREFIX);
 					
 					// Check if fault, and if so, that an error has been defined
 					if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
@@ -417,20 +418,20 @@ public class BPMN2ModelFactory {
 		TParticipant toParticipant=getParticipant(toRole.getName());
 		
 		task.getParticipantRef().add(new QName(m_definitions.getTargetNamespace(),
-								fromParticipant.getId()));
+								fromParticipant.getId(), TARGET_NAMESPACE_PREFIX));
 		task.getParticipantRef().add(new QName(m_definitions.getTargetNamespace(),
-								toParticipant.getId()));
+								toParticipant.getId(), TARGET_NAMESPACE_PREFIX));
 		task.setInitiatingParticipantRef(new QName(m_definitions.getTargetNamespace(),
-								fromParticipant.getId()));
+								fromParticipant.getId(), TARGET_NAMESPACE_PREFIX));
 		
 		// Create message flow
 		TMessageFlow mf=new TMessageFlow();
 		mf.setId(createId());
 		
 		mf.setSourceRef(new QName(m_definitions.getTargetNamespace(),
-							fromParticipant.getId()));
+							fromParticipant.getId(), TARGET_NAMESPACE_PREFIX));
 		mf.setTargetRef(new QName(m_definitions.getTargetNamespace(),
-				toParticipant.getId()));
+				toParticipant.getId(), TARGET_NAMESPACE_PREFIX));
 		
 		QName mesg=getMessageReference(interaction);
 		if (mesg != null) {
@@ -440,7 +441,7 @@ public class BPMN2ModelFactory {
 		_choreography.getMessageFlow().add(mf);
 		
 		task.getMessageFlowRef().add(new QName(m_definitions.getTargetNamespace(),
-								mf.getId()));
+								mf.getId(), TARGET_NAMESPACE_PREFIX));
 		
 		if (container instanceof TChoreography) {
 			((TChoreography)container).getFlowElement().add(m_factory.createChoreographyTask(task));
@@ -604,12 +605,12 @@ public class BPMN2ModelFactory {
 		
 		if (fromNode instanceof TFlowNode) {
 			((TFlowNode)fromNode).getOutgoing().add(new QName(getDefinitions().getTargetNamespace(),
-								link.getId()));
+								link.getId(), TARGET_NAMESPACE_PREFIX));
 		}
 		
 		if (toNode instanceof TFlowNode) {
 			((TFlowNode)toNode).getIncoming().add(new QName(getDefinitions().getTargetNamespace(),
-								link.getId()));
+								link.getId(), TARGET_NAMESPACE_PREFIX));
 		}
 		
 		if (container instanceof TProcess) {
@@ -633,12 +634,12 @@ public class BPMN2ModelFactory {
 		
 		if (fromNode instanceof TBaseElement) {
 			link.setSourceRef(new QName(getDefinitions().getTargetNamespace(),
-								((TBaseElement)fromNode).getId()));
+								((TBaseElement)fromNode).getId(), TARGET_NAMESPACE_PREFIX));
 		}
 		
 		if (toNode instanceof TBaseElement) {
 			link.setTargetRef(new QName(getDefinitions().getTargetNamespace(),
-								((TBaseElement)toNode).getId()));
+								((TBaseElement)toNode).getId(), TARGET_NAMESPACE_PREFIX));
 		}
 		
 		// TODO: Define message and message ref
@@ -797,7 +798,7 @@ public class BPMN2ModelFactory {
 		java.util.List<Object> ret=new java.util.Vector<Object>();
 		
 		if (node instanceof TBaseElement) {
-			QName id=new QName(getDefinitions().getTargetNamespace(),((TBaseElement)node).getId());
+			QName id=new QName(getDefinitions().getTargetNamespace(),((TBaseElement)node).getId(), TARGET_NAMESPACE_PREFIX);
 			
 			for (TMessageFlow mf : m_collaboration.getMessageFlow()) {
 				if (mf.getTargetRef() != null &&
@@ -815,7 +816,7 @@ public class BPMN2ModelFactory {
 		java.util.List<Object> ret=new java.util.Vector<Object>();
 		
 		if (node instanceof TBaseElement) {
-			QName id=new QName(getDefinitions().getTargetNamespace(),((TBaseElement)node).getId());
+			QName id=new QName(getDefinitions().getTargetNamespace(),((TBaseElement)node).getId(), TARGET_NAMESPACE_PREFIX);
 			
 			for (TMessageFlow mf : m_collaboration.getMessageFlow()) {
 				if (mf.getSourceRef() != null &&

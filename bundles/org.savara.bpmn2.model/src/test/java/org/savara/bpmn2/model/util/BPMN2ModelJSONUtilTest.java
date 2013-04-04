@@ -53,54 +53,33 @@ public class BPMN2ModelJSONUtilTest {
 			
 			bais.close();
 						
-			// Create namespace prefix mapping
-			/*
-			java.util.Map<String, String> prefixes=new java.util.HashMap<String, String>();
-			prefixes.put(defns.getTargetNamespace(), "tns");
-			int index=1;
-			for (TImport imp : defns.getImport()) {
-				prefixes.put( imp.getNamespace(), "ns"+(index++));
-			}
-			*/
-			
 			java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
 			
-			BPMN2ModelUtil.serialize(defns2, os, null);
+			BPMN2ModelUtil.serialize(defns2, os);
 			
 			String xml=new String(os.toByteArray());
 			
-			os.close();
-			
+			os.close();			
 
 			// Check result against stored version
 			java.io.InputStream is2=
 					ClassLoader.getSystemResourceAsStream("results/bpmn2/choreo/xml/PurchaseGoods.bpmn");
 
-			byte[] b=new byte[is2.available()];
-			is2.read(b);
+			org.savara.bpmn2.model.TDefinitions defns3=BPMN2ModelUtil.deserialize(is2);
 			
-			is2.close();
+			// Serialize model, to ensure consistent serialization with previous model
+			java.io.ByteArrayOutputStream os2=new java.io.ByteArrayOutputStream();
 			
-			String xml2=new String(b);
+			BPMN2ModelUtil.serialize(defns3, os2);
 			
-			if (!xml.equals(xml2)) {
+			String xml2=new String(os.toByteArray());
+			
+			os2.close();
+			
+			if (!xml.equals(xml2)) {				
+				System.out.println("GENERATED=\r\n"+xml+"\r\nEXPECTED=\r\n"+xml2);
 				
-				java.io.InputStream is3=
-						ClassLoader.getSystemResourceAsStream("results/bpmn2/choreo/xml/PurchaseGoods-v2.bpmn");
-
-				b=new byte[is3.available()];
-				is3.read(b);
-				
-				is3.close();
-				
-				String xml3=new String(b);
-				
-				if (!xml.equals(xml3)) {
-					System.out.println("GENERATED=\r\n"+xml+"\r\nEXPECTED=\r\n"+xml2
-							+"\r\nOR ALTERNATIVELY=\r\n"+xml3);
-					
-					fail("XML serialization of BPMN2 model does not match stored");
-				}
+				fail("XML serialization of BPMN2 model does not match stored");
 			}
 
 		} catch(Exception e) {

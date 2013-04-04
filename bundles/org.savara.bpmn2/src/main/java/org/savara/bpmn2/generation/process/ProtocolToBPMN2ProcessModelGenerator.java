@@ -142,6 +142,29 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			TDefinitions defns=new TDefinitions();
 			
+			// Setup prefixes
+			// Obtain any namespace prefix map
+			java.util.Map<String, String> prefixes=
+					new java.util.HashMap<String, String>();
+			
+			java.util.List<Annotation> list=
+				AnnotationDefinitions.getAnnotations(pm.getProtocol().getAnnotations(),
+						AnnotationDefinitions.TYPE);
+			
+			for (Annotation annotation : list) {
+				if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
+						annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
+					prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
+							(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
+				}
+			}
+
+			for (String ns : prefixes.keySet()) {
+				String prefix=prefixes.get(ns);
+				
+				defns.getOtherAttributes().put(new QName(null,"xmlns:"+prefix), ns);
+			}
+
 			// Set an id on the definition - not strictly required,
 			// although the BPMN2 modeler currently seems to want
 			// it
@@ -160,7 +183,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			
 			initImports(defns, pm);
 			
-			initMessages(defns, pm);
+			initMessages(defns, pm, prefixes);
 			
 			BPMN2ModelVisitor visitor=
 				new BPMN2ModelVisitor(pm.getProtocol().getName(),
@@ -186,6 +209,9 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		
 		if (ann != null) {
 			defns.setTargetNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY));
+			
+			// Make sure a namespace prefix is defined for the target namespace
+			defns.getOtherAttributes().put(new QName(null, "xmlns:tns"), defns.getTargetNamespace());
 		}
 	}
 	
@@ -204,7 +230,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		}
 	}
 	
-	protected void initMessages(TDefinitions defns, ProtocolModel pm) {
+	protected void initMessages(TDefinitions defns, ProtocolModel pm, java.util.Map<String,String> prefixes) {
 
 		for (ImportList il : pm.getImports()) {
 
@@ -214,19 +240,32 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				for (TypeImport ti : til.getTypeImports()) {
 					TItemDefinition itemDef=new TItemDefinition();
 					itemDef.setId("ITEM"+ti.getName());
-					itemDef.setStructureRef(QName.valueOf(ti.getDataType().getDetails()));
+					
+					itemDef.setStructureRef(createQName(ti.getDataType().getDetails(), prefixes));
 					defns.getRootElement().add(_objectFactory.createItemDefinition(itemDef));
 					
 					TMessage mesg=new TMessage();
 					mesg.setId("ID"+ti.getName());
 					mesg.setName(ti.getName());
-					mesg.setItemRef(new QName(defns.getTargetNamespace(),itemDef.getId()));
+					mesg.setItemRef(new QName(defns.getTargetNamespace(),itemDef.getId(), "tns"));
 					defns.getRootElement().add(_objectFactory.createMessage(mesg));
 				}
 			}
 		}
 	}
 	
+	protected QName createQName(String qname, java.util.Map<String,String> prefixes) {
+		QName ret=QName.valueOf(qname);
+		
+		String prefix=prefixes.get(ret.getNamespaceURI());
+		
+		if (prefix != null) {
+			ret = new QName(ret.getNamespaceURI(), ret.getLocalPart(), prefix);
+		}
+		
+		return (ret);
+	}
+
 	protected TInterface getInterface(TDefinitions defns, Role role) {
 		TInterface ret=null;
 		String intfName=role.getName();
@@ -302,7 +341,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						for (RunActivity ra : list) {
 							ra.setCalledActivityId(new QName(
 									m_modelFactory.getDefinitions().getTargetNamespace(),
-									pool.getProcess().getId()));
+									pool.getProcess().getId(), "tns"));
 						}
 					}
 				}
@@ -424,7 +463,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 					if (proc != null) {
 						ra.setCalledActivityId(new QName(
 								m_modelFactory.getDefinitions().getTargetNamespace(),
-								proc.getId()));
+								proc.getId(), "tns"));
 					} else {
 						java.util.List<RunActivity> list=_pendingCalledActivityId.get(called);
 						
@@ -604,7 +643,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						
 						event.setAttachedToRef(new QName(
 								m_modelFactory.getDefinitions().getTargetNamespace(),
-											act.getServiceTask().getId()));
+											act.getServiceTask().getId(), "tns"));
 
 						BoundaryEvent be=new BoundaryEvent(event, act.getStartState(),
 										m_modelFactory, m_notationFactory);
@@ -818,7 +857,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 					if (mesg.getName().equals(interaction.getMessageSignature().
 									getTypeReferences().get(0).getName())) {
 						ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-											mesg.getId());
+											mesg.getId(), "tns");
 						
 						// Check if fault, and if so, that an error has been defined
 						if (InteractionUtil.isFaultResponse(interaction)) {
@@ -910,7 +949,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						}
 						
 						ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-								error.getId());
+								error.getId(), "tns");
 
 						break;
 					}
@@ -990,7 +1029,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				intf.getOperation().add(op);
 			}
 			
-			ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(), op.getId());
+			ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(), op.getId(), "tns");
 			
 			if (InteractionUtil.isRequest(interaction)) {
 				if (op.getInMessageRef() == null) {
@@ -1018,7 +1057,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				}
 				
 				if (error != null) {
-					QName qname=new QName(m_modelFactory.getDefinitions().getTargetNamespace(), error.getId());
+					QName qname=new QName(m_modelFactory.getDefinitions().getTargetNamespace(), error.getId(), "tns");
 					
 					if (!op.getErrorRef().contains(qname)) {
 						op.getErrorRef().add(qname);

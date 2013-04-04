@@ -27,6 +27,7 @@ import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TOperation;
 import org.savara.bpmn2.model.TParticipant;
+import org.savara.bpmn2.model.util.BPMN2ModelUtil;
 import org.savara.bpmn2.util.BPMN2ServiceUtil.ModelInfo;
 
 public class BPMN2ServiceUtilTest {
@@ -165,7 +166,7 @@ public class BPMN2ServiceUtilTest {
 			
 			java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
 			
-			BPMN2ModelUtil.serialize(defns, baos, null);
+			BPMN2ModelUtil.serialize(defns, baos);
 			
 			baos.close();
 			
@@ -205,7 +206,7 @@ public class BPMN2ServiceUtilTest {
 			
 			java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
 			
-			BPMN2ModelUtil.serialize(defns, baos, null);
+			BPMN2ModelUtil.serialize(defns, baos);
 			
 			baos.close();
 			

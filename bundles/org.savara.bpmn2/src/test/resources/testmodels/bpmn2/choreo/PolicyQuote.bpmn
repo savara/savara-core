@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:ans0="http://www.example.org/policyQuote" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:intf1="http://www.savara.org/PolicyQuote/DrivingRecordService" xmlns:intf2="http://www.savara.org/PolicyQuote/CreditCheckService" xmlns:intf3="http://www.savara.org/PolicyQuote/PolicyQuoteProcessService" xmlns:ns0="http://dmv.com/drivingRecord" xmlns:ns2="http://creditagency.com/creditCheck" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.savara.org/PolicyQuote" id="id-PolicyQuote" targetNamespace="http://www.savara.org/PolicyQuote">
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/drivingRecord.xsd" namespace="http://dmv.com/drivingRecord"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/policyQuote.xsd" namespace="http://www.example.org/policyQuote"/>
+    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/creditCheck.xsd" namespace="http://creditagency.com/creditCheck"/>
+    <bpmn2:itemDefinition id="ITEMdrivingRecordRequest" structureRef="ns0:drivingRecordRequest"/>
+    <bpmn2:message id="IDdrivingRecordRequest" itemRef="tns:ITEMdrivingRecordRequest" name="drivingRecordRequest"/>
+    <bpmn2:itemDefinition id="ITEMdrivingRecordResponse" structureRef="ns0:drivingRecordResponse"/>
+    <bpmn2:message id="IDdrivingRecordResponse" itemRef="tns:ITEMdrivingRecordResponse" name="drivingRecordResponse"/>
+    <bpmn2:itemDefinition id="ITEMpolicyQuote" structureRef="ans0:policyQuote"/>
+    <bpmn2:message id="IDpolicyQuote" itemRef="tns:ITEMpolicyQuote" name="policyQuote"/>
+    <bpmn2:itemDefinition id="ITEMpolicyQuoteReply" structureRef="ans0:policyQuoteReply"/>
+    <bpmn2:message id="IDpolicyQuoteReply" itemRef="tns:ITEMpolicyQuoteReply" name="policyQuoteReply"/>
+    <bpmn2:itemDefinition id="ITEMpolicyQuoteFault" structureRef="ans0:policyQuoteFault"/>
+    <bpmn2:message id="IDpolicyQuoteFault" itemRef="tns:ITEMpolicyQuoteFault" name="policyQuoteFault"/>
+    <bpmn2:itemDefinition id="ITEMcreditCheckRequest" structureRef="ns2:creditCheckRequest"/>
+    <bpmn2:message id="IDcreditCheckRequest" itemRef="tns:ITEMcreditCheckRequest" name="creditCheckRequest"/>
+    <bpmn2:itemDefinition id="ITEMcreditCheckResponse" structureRef="ns2:creditCheckResponse"/>
+    <bpmn2:message id="IDcreditCheckResponse" itemRef="tns:ITEMcreditCheckResponse" name="creditCheckResponse"/>
+    <bpmn2:choreography id="id-e69569dd-b595-4f3b-ba93-d327df29208f" name="PolicyQuote">
+        <bpmn2:participant id="id-b5880ace-9922-4dfa-97de-cef0101fca6e" name="Driver"/>
+        <bpmn2:participant id="id-e15c23cd-55ff-43c1-bead-c902f30433a8" name="PolicyQuoteProcessService">
+            <bpmn2:interfaceRef>tns:PolicyQuoteProcessServiceInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:participant id="id-b656080d-e8e2-4618-a32b-a5f21ac6e199" name="DrivingRecordService">
+            <bpmn2:interfaceRef>tns:DrivingRecordServiceInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:participant id="id-08205ca9-d95e-4dde-a806-c10c87ded1df" name="CreditCheckService">
+            <bpmn2:interfaceRef>tns:CreditCheckServiceInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:messageFlow id="id-d6e5fb9e-ebed-4d60-804d-4356d4e789a3" messageRef="tns:IDpolicyQuote" sourceRef="tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e" targetRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8"/>
+        <bpmn2:messageFlow id="id-11a54772-d75a-4a48-9f36-f2a6146e77f4" messageRef="tns:IDdrivingRecordRequest" sourceRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" targetRef="tns:id-b656080d-e8e2-4618-a32b-a5f21ac6e199"/>
+        <bpmn2:messageFlow id="id-a92374c9-1a1c-46e0-a7f9-1aa3caeff6bb" messageRef="tns:IDdrivingRecordResponse" sourceRef="tns:id-b656080d-e8e2-4618-a32b-a5f21ac6e199" targetRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8"/>
+        <bpmn2:messageFlow id="id-cc54c845-0092-4a9e-92e5-d2849dfd0966" messageRef="tns:IDcreditCheckRequest" sourceRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" targetRef="tns:id-08205ca9-d95e-4dde-a806-c10c87ded1df"/>
+        <bpmn2:messageFlow id="id-f77780e0-1399-47a2-9f7a-b031164002b3" messageRef="tns:IDcreditCheckResponse" sourceRef="tns:id-08205ca9-d95e-4dde-a806-c10c87ded1df" targetRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8"/>
+        <bpmn2:messageFlow id="id-ee8be493-0192-4a50-af18-ac93f9de0b39" messageRef="tns:IDpolicyQuoteReply" sourceRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" targetRef="tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e"/>
+        <bpmn2:messageFlow id="id-7ddc5b5a-cb70-4066-b5e4-a5a7638ceeee" messageRef="tns:IDpolicyQuoteFault" sourceRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" targetRef="tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e"/>
+        <bpmn2:startEvent id="id-4cbbfbc0-1f22-40ab-a3f6-bc80b03ced81">
+            <bpmn2:outgoing>tns:id-5575bcd9-bd35-4e58-85b3-2b092bfc8704</bpmn2:outgoing>
+        </bpmn2:startEvent>
+        <bpmn2:endEvent id="id-11ff9dec-9794-4ae2-851d-94686bc19fb1">
+            <bpmn2:incoming>tns:id-3fe877d7-cf26-49f1-a1dc-1c24605afb91</bpmn2:incoming>
+        </bpmn2:endEvent>
+        <bpmn2:choreographyTask id="id-ee4cf9e2-f58f-46fc-99a1-da713ae458d0" initiatingParticipantRef="tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e" name="receivePolicyQuote(policyQuote)">
+            <bpmn2:incoming>tns:id-5575bcd9-bd35-4e58-85b3-2b092bfc8704</bpmn2:incoming>
+            <bpmn2:outgoing>tns:id-492e3079-b7fc-4e59-ae8f-faa62ca4ad64</bpmn2:outgoing>
+            <bpmn2:participantRef>tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e</bpmn2:participantRef>
+            <bpmn2:participantRef>tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>tns:id-d6e5fb9e-ebed-4d60-804d-4356d4e789a3</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="id-b04fb35a-c670-46b6-8672-dc37c31b7e88" initiatingParticipantRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" name="checkDrivingRecord(drivingRecordRequest)">
+            <bpmn2:incoming>tns:id-492e3079-b7fc-4e59-ae8f-faa62ca4ad64</bpmn2:incoming>
+            <bpmn2:outgoing>tns:id-9dcd461e-3abf-4467-b0e6-2b4e30638c6f</bpmn2:outgoing>
+            <bpmn2:participantRef>tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8</bpmn2:participantRef>
+            <bpmn2:participantRef>tns:id-b656080d-e8e2-4618-a32b-a5f21ac6e199</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>tns:id-11a54772-d75a-4a48-9f36-f2a6146e77f4</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="id-82177095-38d1-45c6-8f7f-b4db2888740e" initiatingParticipantRef="tns:id-b656080d-e8e2-4618-a32b-a5f21ac6e199" name="receiveDrivingRecord(drivingRecordResponse)">
+            <bpmn2:incoming>tns:id-9dcd461e-3abf-4467-b0e6-2b4e30638c6f</bpmn2:incoming>
+            <bpmn2:outgoing>tns:id-6076aade-d336-4595-b700-62c65762ae83</bpmn2:outgoing>
+            <bpmn2:participantRef>tns:id-b656080d-e8e2-4618-a32b-a5f21ac6e199</bpmn2:participantRef>
+            <bpmn2:participantRef>tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>tns:id-a92374c9-1a1c-46e0-a7f9-1aa3caeff6bb</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:exclusiveGateway id="id-ee834029-ad10-4460-9b10-2f1804470887">
+            <bpmn2:incoming>tns:id-6076aade-d336-4595-b700-62c65762ae83</bpmn2:incoming>
+            <bpmn2:outgoing>tns:id-218ae299-cd16-4777-b520-285da365ce7e</bpmn2:outgoing>
+            <bpmn2:outgoing>tns:id-08d62f79-f08d-40ce-8d8a-dd724347f7f8</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:exclusiveGateway id="id-156fe25f-9330-412c-86d8-e940a0b3afee">
+            <bpmn2:incoming>tns:id-64a63bb2-0740-4647-a1af-44f7194342c1</bpmn2:incoming>
+            <bpmn2:incoming>tns:id-de1700d7-ff3e-4586-8fca-3c70f6fe8818</bpmn2:incoming>
+            <bpmn2:outgoing>tns:id-3fe877d7-cf26-49f1-a1dc-1c24605afb91</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:choreographyTask id="id-424b730a-5a6c-4f06-942d-be67cb171214" initiatingParticipantRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" name="checkCredit(creditCheckRequest)">
+            <bpmn2:incoming>tns:id-218ae299-cd16-4777-b520-285da365ce7e</bpmn2:incoming>
+            <bpmn2:outgoing>tns:id-d71cbcd0-c304-4e16-aeed-2ca93ba09bae</bpmn2:outgoing>
+            <bpmn2:participantRef>tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8</bpmn2:participantRef>
+            <bpmn2:participantRef>tns:id-08205ca9-d95e-4dde-a806-c10c87ded1df</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>tns:id-cc54c845-0092-4a9e-92e5-d2849dfd0966</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="id-0992ce4b-9247-42d6-92bd-59777779379c" initiatingParticipantRef="tns:id-08205ca9-d95e-4dde-a806-c10c87ded1df" name="checkCredit(creditCheckResponse)">
+            <bpmn2:incoming>tns:id-d71cbcd0-c304-4e16-aeed-2ca93ba09bae</bpmn2:incoming>
+            <bpmn2:outgoing>tns:id-d9c0f346-3718-4c91-8b22-e005d0db4271</bpmn2:outgoing>
+            <bpmn2:participantRef>tns:id-08205ca9-d95e-4dde-a806-c10c87ded1df</bpmn2:participantRef>
+            <bpmn2:participantRef>tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>tns:id-f77780e0-1399-47a2-9f7a-b031164002b3</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="id-e737793b-c63c-4e6a-80bc-93b79a342cf4" initiatingParticipantRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" name="receivePolicyQuote(policyQuoteReply)">
+            <bpmn2:incoming>tns:id-d9c0f346-3718-4c91-8b22-e005d0db4271</bpmn2:incoming>
+            <bpmn2:outgoing>tns:id-64a63bb2-0740-4647-a1af-44f7194342c1</bpmn2:outgoing>
+            <bpmn2:participantRef>tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8</bpmn2:participantRef>
+            <bpmn2:participantRef>tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>tns:id-ee8be493-0192-4a50-af18-ac93f9de0b39</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:choreographyTask id="id-3e8f5633-f527-49e0-9d23-6372a86d9be0" initiatingParticipantRef="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" name="receivePolicyQuote(policyQuoteFault)">
+            <bpmn2:incoming>tns:id-08d62f79-f08d-40ce-8d8a-dd724347f7f8</bpmn2:incoming>
+            <bpmn2:outgoing>tns:id-de1700d7-ff3e-4586-8fca-3c70f6fe8818</bpmn2:outgoing>
+            <bpmn2:participantRef>tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8</bpmn2:participantRef>
+            <bpmn2:participantRef>tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e</bpmn2:participantRef>
+            <bpmn2:messageFlowRef>tns:id-7ddc5b5a-cb70-4066-b5e4-a5a7638ceeee</bpmn2:messageFlowRef>
+        </bpmn2:choreographyTask>
+        <bpmn2:sequenceFlow id="id-492e3079-b7fc-4e59-ae8f-faa62ca4ad64" sourceRef="id-ee4cf9e2-f58f-46fc-99a1-da713ae458d0" targetRef="id-b04fb35a-c670-46b6-8672-dc37c31b7e88"/>
+        <bpmn2:sequenceFlow id="id-9dcd461e-3abf-4467-b0e6-2b4e30638c6f" sourceRef="id-b04fb35a-c670-46b6-8672-dc37c31b7e88" targetRef="id-82177095-38d1-45c6-8f7f-b4db2888740e"/>
+        <bpmn2:sequenceFlow id="id-d71cbcd0-c304-4e16-aeed-2ca93ba09bae" sourceRef="id-424b730a-5a6c-4f06-942d-be67cb171214" targetRef="id-0992ce4b-9247-42d6-92bd-59777779379c"/>
+        <bpmn2:sequenceFlow id="id-d9c0f346-3718-4c91-8b22-e005d0db4271" sourceRef="id-0992ce4b-9247-42d6-92bd-59777779379c" targetRef="id-e737793b-c63c-4e6a-80bc-93b79a342cf4"/>
+        <bpmn2:sequenceFlow id="id-218ae299-cd16-4777-b520-285da365ce7e" sourceRef="id-ee834029-ad10-4460-9b10-2f1804470887" targetRef="id-424b730a-5a6c-4f06-942d-be67cb171214"/>
+        <bpmn2:sequenceFlow id="id-64a63bb2-0740-4647-a1af-44f7194342c1" sourceRef="id-e737793b-c63c-4e6a-80bc-93b79a342cf4" targetRef="id-156fe25f-9330-412c-86d8-e940a0b3afee"/>
+        <bpmn2:sequenceFlow id="id-08d62f79-f08d-40ce-8d8a-dd724347f7f8" sourceRef="id-ee834029-ad10-4460-9b10-2f1804470887" targetRef="id-3e8f5633-f527-49e0-9d23-6372a86d9be0"/>
+        <bpmn2:sequenceFlow id="id-de1700d7-ff3e-4586-8fca-3c70f6fe8818" sourceRef="id-3e8f5633-f527-49e0-9d23-6372a86d9be0" targetRef="id-156fe25f-9330-412c-86d8-e940a0b3afee"/>
+        <bpmn2:sequenceFlow id="id-6076aade-d336-4595-b700-62c65762ae83" sourceRef="id-82177095-38d1-45c6-8f7f-b4db2888740e" targetRef="id-ee834029-ad10-4460-9b10-2f1804470887"/>
+        <bpmn2:sequenceFlow id="id-5575bcd9-bd35-4e58-85b3-2b092bfc8704" sourceRef="id-4cbbfbc0-1f22-40ab-a3f6-bc80b03ced81" targetRef="id-ee4cf9e2-f58f-46fc-99a1-da713ae458d0"/>
+        <bpmn2:sequenceFlow id="id-3fe877d7-cf26-49f1-a1dc-1c24605afb91" sourceRef="id-156fe25f-9330-412c-86d8-e940a0b3afee" targetRef="id-11ff9dec-9794-4ae2-851d-94686bc19fb1"/>
+    </bpmn2:choreography>
+    <bpmn2:error errorCode="policyQuoteFault" id="ERRpolicyQuoteFault" name="policyQuoteFault" structureRef="tns:ITEMpolicyQuoteFault"/>
+    <bpmn2:interface id="CreditCheckServiceInterface" implementationRef="intf2:CreditCheckService" name="CreditCheckService">
+        <bpmn2:operation id="creditCheck" name="creditCheck">
+            <bpmn2:inMessageRef>tns:IDcreditCheckRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDcreditCheckResponse</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:interface id="DrivingRecordServiceInterface" implementationRef="intf1:DrivingRecordService" name="DrivingRecordService">
+        <bpmn2:operation id="drivingRecord" name="drivingRecord">
+            <bpmn2:inMessageRef>tns:IDdrivingRecordRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDdrivingRecordResponse</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:interface id="PolicyQuoteProcessServiceInterface" implementationRef="intf3:PolicyQuoteProcessService" name="PolicyQuoteProcessService">
+        <bpmn2:operation id="policyQuote" name="policyQuote">
+            <bpmn2:inMessageRef>tns:IDpolicyQuote</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDpolicyQuoteReply</bpmn2:outMessageRef>
+            <bpmn2:errorRef>tns:ERRpolicyQuoteFault</bpmn2:errorRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmndi:BPMNDiagram id="id-0966139f-d242-43f6-ab12-76cf9777c3e6">
+        <bpmndi:BPMNPlane>
+            <bpmndi:BPMNShape bpmnElement="tns:id-4cbbfbc0-1f22-40ab-a3f6-bc80b03ced81" id="id-42dd236b-c665-4d17-a061-2a965ab52aa1">
+                <dc:Bounds height="30.0" width="30.0" x="50.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-ee4cf9e2-f58f-46fc-99a1-da713ae458d0" id="id-ea4695bc-7d67-4622-86f6-0aaa2e7ffa9b">
+                <dc:Bounds height="100.0" width="110.0" x="130.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e" choreographyActivityShape="tns:id-ea4695bc-7d67-4622-86f6-0aaa2e7ffa9b" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="130.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" choreographyActivityShape="tns:id-ea4695bc-7d67-4622-86f6-0aaa2e7ffa9b" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="130.0" y="255.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-b04fb35a-c670-46b6-8672-dc37c31b7e88" id="id-6e3e3bda-3da0-4cb7-a850-4c32c16aaa69">
+                <dc:Bounds height="100.0" width="110.0" x="290.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" choreographyActivityShape="tns:id-6e3e3bda-3da0-4cb7-a850-4c32c16aaa69" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="290.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-b656080d-e8e2-4618-a32b-a5f21ac6e199" choreographyActivityShape="tns:id-6e3e3bda-3da0-4cb7-a850-4c32c16aaa69" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="290.0" y="255.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-492e3079-b7fc-4e59-ae8f-faa62ca4ad64" id="id-c4cc965f-0fa7-468d-ad1c-e82fe7cf7c97" sourceElement="tns:id-ea4695bc-7d67-4622-86f6-0aaa2e7ffa9b" targetElement="tns:id-6e3e3bda-3da0-4cb7-a850-4c32c16aaa69">
+                <ns4:waypoint x="240.0" y="220.0"/>
+                <ns4:waypoint x="290.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:id-82177095-38d1-45c6-8f7f-b4db2888740e" id="id-5c1bbead-771d-4865-b53c-0d3c7899e238">
+                <dc:Bounds height="100.0" width="110.0" x="450.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-b656080d-e8e2-4618-a32b-a5f21ac6e199" choreographyActivityShape="tns:id-5c1bbead-771d-4865-b53c-0d3c7899e238" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="450.0" y="170.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" choreographyActivityShape="tns:id-5c1bbead-771d-4865-b53c-0d3c7899e238" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="450.0" y="255.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-9dcd461e-3abf-4467-b0e6-2b4e30638c6f" id="id-545184e8-d2e6-4140-b877-fb6bc8ca6542" sourceElement="tns:id-6e3e3bda-3da0-4cb7-a850-4c32c16aaa69" targetElement="tns:id-5c1bbead-771d-4865-b53c-0d3c7899e238">
+                <ns4:waypoint x="400.0" y="220.0"/>
+                <ns4:waypoint x="450.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:id-ee834029-ad10-4460-9b10-2f1804470887" id="id-0822bc01-b950-43f2-83d0-1eb7d245f2c8">
+                <dc:Bounds height="30.0" width="30.0" x="610.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-424b730a-5a6c-4f06-942d-be67cb171214" id="id-6af26950-c916-4c28-91cc-456f7c9c424d">
+                <dc:Bounds height="100.0" width="110.0" x="690.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" choreographyActivityShape="tns:id-6af26950-c916-4c28-91cc-456f7c9c424d" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="690.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-08205ca9-d95e-4dde-a806-c10c87ded1df" choreographyActivityShape="tns:id-6af26950-c916-4c28-91cc-456f7c9c424d" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="690.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-0992ce4b-9247-42d6-92bd-59777779379c" id="id-2f15629c-b455-441f-bc8e-59c143bd40cd">
+                <dc:Bounds height="100.0" width="110.0" x="850.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-08205ca9-d95e-4dde-a806-c10c87ded1df" choreographyActivityShape="tns:id-2f15629c-b455-441f-bc8e-59c143bd40cd" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="850.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" choreographyActivityShape="tns:id-2f15629c-b455-441f-bc8e-59c143bd40cd" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="850.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-d71cbcd0-c304-4e16-aeed-2ca93ba09bae" id="id-c287668f-7574-4eda-92dc-b047037465f9" sourceElement="tns:id-6af26950-c916-4c28-91cc-456f7c9c424d" targetElement="tns:id-2f15629c-b455-441f-bc8e-59c143bd40cd">
+                <ns4:waypoint x="800.0" y="120.0"/>
+                <ns4:waypoint x="850.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:id-e737793b-c63c-4e6a-80bc-93b79a342cf4" id="id-ead48a16-adcc-451a-918d-256ebb6d7530">
+                <dc:Bounds height="100.0" width="110.0" x="1010.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" choreographyActivityShape="tns:id-ead48a16-adcc-451a-918d-256ebb6d7530" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="1010.0" y="70.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e" choreographyActivityShape="tns:id-ead48a16-adcc-451a-918d-256ebb6d7530" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="110.0" x="1010.0" y="155.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-d9c0f346-3718-4c91-8b22-e005d0db4271" id="id-656e77bb-1ad8-4113-8f04-6204c0abf138" sourceElement="tns:id-2f15629c-b455-441f-bc8e-59c143bd40cd" targetElement="tns:id-ead48a16-adcc-451a-918d-256ebb6d7530">
+                <ns4:waypoint x="960.0" y="120.0"/>
+                <ns4:waypoint x="1010.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:id-3e8f5633-f527-49e0-9d23-6372a86d9be0" id="id-ca669adf-ea59-4042-8e3d-35cc8ddbfab3">
+                <dc:Bounds height="100.0" width="430.0" x="690.0" y="270.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-e15c23cd-55ff-43c1-bead-c902f30433a8" choreographyActivityShape="tns:id-ca669adf-ea59-4042-8e3d-35cc8ddbfab3" isMessageVisible="true" participantBandKind="top_initiating">
+                <dc:Bounds height="15.0" width="430.0" x="690.0" y="270.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-b5880ace-9922-4dfa-97de-cef0101fca6e" choreographyActivityShape="tns:id-ca669adf-ea59-4042-8e3d-35cc8ddbfab3" participantBandKind="bottom_non_initiating">
+                <dc:Bounds height="15.0" width="430.0" x="690.0" y="355.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:id-156fe25f-9330-412c-86d8-e940a0b3afee" id="id-d21b488b-b59f-495f-9442-456da8e98a93">
+                <dc:Bounds height="30.0" width="30.0" x="1170.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-218ae299-cd16-4777-b520-285da365ce7e" id="id-f282ab33-0c9b-494c-920a-f3bf4b8e0852" sourceElement="tns:id-0822bc01-b950-43f2-83d0-1eb7d245f2c8" targetElement="tns:id-6af26950-c916-4c28-91cc-456f7c9c424d">
+                <ns4:waypoint x="660.0" y="220.0"/>
+                <ns4:waypoint x="675.0" y="220.0"/>
+                <ns4:waypoint x="675.0" y="120.0"/>
+                <ns4:waypoint x="690.0" y="120.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-64a63bb2-0740-4647-a1af-44f7194342c1" id="id-5cd7938b-d2e6-4244-b539-57eb03e2b232" sourceElement="tns:id-ead48a16-adcc-451a-918d-256ebb6d7530" targetElement="tns:id-d21b488b-b59f-495f-9442-456da8e98a93">
+                <ns4:waypoint x="1120.0" y="120.0"/>
+                <ns4:waypoint x="1145.0" y="120.0"/>
+                <ns4:waypoint x="1145.0" y="220.0"/>
+                <ns4:waypoint x="1170.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-08d62f79-f08d-40ce-8d8a-dd724347f7f8" id="id-bc9f8f9f-4fef-4553-b077-60df1f91cf79" sourceElement="tns:id-0822bc01-b950-43f2-83d0-1eb7d245f2c8" targetElement="tns:id-ca669adf-ea59-4042-8e3d-35cc8ddbfab3">
+                <ns4:waypoint x="660.0" y="220.0"/>
+                <ns4:waypoint x="675.0" y="220.0"/>
+                <ns4:waypoint x="675.0" y="320.0"/>
+                <ns4:waypoint x="690.0" y="320.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-de1700d7-ff3e-4586-8fca-3c70f6fe8818" id="id-d7a74c76-2dec-48a6-8607-d674c6ac56c8" sourceElement="tns:id-ca669adf-ea59-4042-8e3d-35cc8ddbfab3" targetElement="tns:id-d21b488b-b59f-495f-9442-456da8e98a93">
+                <ns4:waypoint x="1120.0" y="320.0"/>
+                <ns4:waypoint x="1145.0" y="320.0"/>
+                <ns4:waypoint x="1145.0" y="220.0"/>
+                <ns4:waypoint x="1170.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-6076aade-d336-4595-b700-62c65762ae83" id="id-647f5167-ee43-48cf-81b9-114c61738b09" sourceElement="tns:id-5c1bbead-771d-4865-b53c-0d3c7899e238" targetElement="tns:id-0822bc01-b950-43f2-83d0-1eb7d245f2c8">
+                <ns4:waypoint x="560.0" y="220.0"/>
+                <ns4:waypoint x="610.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-5575bcd9-bd35-4e58-85b3-2b092bfc8704" id="id-a08da8d5-14c2-4705-91e2-ebd7a85c5cee" sourceElement="tns:id-42dd236b-c665-4d17-a061-2a965ab52aa1" targetElement="tns:id-ea4695bc-7d67-4622-86f6-0aaa2e7ffa9b">
+                <ns4:waypoint x="80.0" y="220.0"/>
+                <ns4:waypoint x="130.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:id-11ff9dec-9794-4ae2-851d-94686bc19fb1" id="id-8fbe6698-1d7e-45cb-9001-157629882f8c">
+                <dc:Bounds height="30.0" width="30.0" x="1250.0" y="205.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:id-3fe877d7-cf26-49f1-a1dc-1c24605afb91" id="id-4d723c83-f862-476d-86b1-85a800365ef9" sourceElement="tns:id-d21b488b-b59f-495f-9442-456da8e98a93" targetElement="tns:id-8fbe6698-1d7e-45cb-9001-157629882f8c">
+                <ns4:waypoint x="1220.0" y="220.0"/>
+                <ns4:waypoint x="1250.0" y="220.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

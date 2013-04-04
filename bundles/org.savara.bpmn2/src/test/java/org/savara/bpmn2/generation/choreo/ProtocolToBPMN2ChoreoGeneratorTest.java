@@ -23,10 +23,8 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.savara.bpmn2.model.TDefinitions;
-import org.savara.bpmn2.util.BPMN2ModelUtil;
+import org.savara.bpmn2.model.util.BPMN2ModelUtil;
 import org.savara.common.logging.DefaultFeedbackHandler;
-import org.savara.common.model.annotation.Annotation;
-import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.util.JournalProxy;
 import org.scribble.common.logging.Journal;
 import org.scribble.common.resource.Content;
@@ -114,26 +112,10 @@ public class ProtocolToBPMN2ChoreoGeneratorTest {
 	    				
 	    				if (target instanceof TDefinitions) {
 	    					
-							// Obtain any namespace prefix map
-							java.util.Map<String, String> prefixes=
-									new java.util.HashMap<String, String>();
-							
-							java.util.List<Annotation> list=
-								AnnotationDefinitions.getAnnotations(model.getProtocol().getAnnotations(),
-										AnnotationDefinitions.TYPE);
-							
-							for (Annotation annotation : list) {
-								if (annotation.getProperties().containsKey(AnnotationDefinitions.NAMESPACE_PROPERTY) &&
-										annotation.getProperties().containsKey(AnnotationDefinitions.PREFIX_PROPERTY)) {
-									prefixes.put((String)annotation.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY),
-											(String)annotation.getProperties().get(AnnotationDefinitions.PREFIX_PROPERTY));
-								}
-							}
-	
 							try {
 								java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
 								
-								BPMN2ModelUtil.serialize((TDefinitions)target, baos, prefixes,
+								BPMN2ModelUtil.serialize((TDefinitions)target, baos,
 											ProtocolToBPMN2ChoreoModelGenerator.class.getClassLoader());
 								
 								baos.close();

@@ -104,7 +104,7 @@ public class BPMN2NotationFactory {
 			
 			if (participant != null) {
 				shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-									participant.getId()));
+									participant.getId(), "tns"));
 			}
 		}
 		
@@ -135,7 +135,7 @@ public class BPMN2NotationFactory {
 			TBaseElement base=(TBaseElement)taskModel;
 			
 			shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-										base.getId()));
+										base.getId(), "tns"));
 		}
 		
 		Bounds b=new Bounds();
@@ -173,7 +173,7 @@ public class BPMN2NotationFactory {
 		
 		BPMNShape initParticipant=new BPMNShape();
 		initParticipant.setChoreographyActivityShape(
-				new QName(m_modelFactory.getDefinitions().getTargetNamespace(), shape.getId()));
+				new QName(m_modelFactory.getDefinitions().getTargetNamespace(), shape.getId(), "tns"));
 		initParticipant.setParticipantBandKind(ParticipantBandKind.TOP_INITIATING);
 		initParticipant.setBpmnElement(ct.getInitiatingParticipantRef());
 		
@@ -181,7 +181,7 @@ public class BPMN2NotationFactory {
 		
 		BPMNShape targetParticipant=new BPMNShape();
 		targetParticipant.setChoreographyActivityShape(
-				new QName(m_modelFactory.getDefinitions().getTargetNamespace(), shape.getId()));
+				new QName(m_modelFactory.getDefinitions().getTargetNamespace(), shape.getId(), "tns"));
 		targetParticipant.setParticipantBandKind(ParticipantBandKind.BOTTOM_NON_INITIATING);
 		targetParticipant.setBpmnElement(otherParticipantRef);
 		
@@ -189,7 +189,7 @@ public class BPMN2NotationFactory {
 			TBaseElement base=(TBaseElement)taskModel;
 			
 			shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-										base.getId()));
+										base.getId(), "tns"));
 		}
 		
 		Bounds b=new Bounds();
@@ -237,7 +237,7 @@ public class BPMN2NotationFactory {
 			TBaseElement base=(TBaseElement)eventModel;
 			
 			shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-									base.getId()));
+									base.getId(), "tns"));
 		}
 
 		Bounds b=new Bounds();
@@ -267,7 +267,7 @@ public class BPMN2NotationFactory {
 			TBaseElement base=(TBaseElement)junctionModel;
 			
 			shape.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-									base.getId()));
+									base.getId(), "tns"));
 		}
 		
 		Bounds b=new Bounds();
@@ -299,7 +299,7 @@ public class BPMN2NotationFactory {
 			TSequenceFlow seqflow=(TSequenceFlow)linkModel;
 			
 			edge.setBpmnElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-									seqflow.getId()));
+									seqflow.getId(), "tns"));
 			
 			// Find source and target diagram shapes
 			if (diagramNotation instanceof BPMNPlane &&
@@ -331,9 +331,9 @@ public class BPMN2NotationFactory {
 			BPMNPlane plane=(BPMNPlane)diagramNotation;
 			
 			edge.setSourceElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-										source.getId()));
+										source.getId(), "tns"));
 			edge.setTargetElement(new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-										target.getId()));
+										target.getId(), "tns"));
 			
 			Point sourcep=new Point();
 			sourcep.setX(source.getBounds().getX()+source.getBounds().getWidth()+extrax);

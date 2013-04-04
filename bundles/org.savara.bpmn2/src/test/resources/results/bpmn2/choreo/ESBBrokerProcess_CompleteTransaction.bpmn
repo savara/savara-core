@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="id-ESBBrokerProcess">
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:brk="http://www.pi4soa.org/ESBBroker/Broker" xmlns:byr="http://www.pi4soa.org/ESBBroker/Buyer" xmlns:cay="http://www.pi4soa.org/ESBBroker/CreditAgency" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:intf1="null/CreditAgency" xmlns:intf2="null/SupplierTxnProcessor" xmlns:intf3="null/Broker" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:spr="http://www.pi4soa.org/ESBBroker/Supplier" xmlns:tns="http://www.pi4soa.org/ESBBroker" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="id-ESBBrokerProcess">
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.pi4soa.org/ESBBroker"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.pi4soa.org/ESBBroker/Broker"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.pi4soa.org/ESBBroker/Buyer"/>
@@ -134,24 +134,24 @@
     </bpmn2:choreography>
     <bpmn2:error errorCode="invalidCredit" id="ERRinvalidCredit" name="invalidCredit" structureRef="ITEMCreditInvalid"/>
     <bpmn2:error errorCode="rejected" id="ERRrejected" name="rejected" structureRef="ITEMOrderRejected"/>
-    <bpmn2:interface xmlns="null/Broker" id="BrokerInterface" implementationRef="Broker" name="Broker">
+    <bpmn2:interface id="BrokerInterface" implementationRef="intf3:Broker" name="Broker">
         <bpmn2:operation id="buy" name="buy">
-            <bpmn2:inMessageRef xmlns="" xmlns:ns6="null/Broker">IDBuy</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="" xmlns:ns6="null/Broker">IDBookingReference</bpmn2:outMessageRef>
-            <bpmn2:errorRef xmlns="" xmlns:ns6="null/Broker">ERRrejected</bpmn2:errorRef>
+            <bpmn2:inMessageRef>IDBuy</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDBookingReference</bpmn2:outMessageRef>
+            <bpmn2:errorRef>ERRrejected</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface xmlns="null/CreditAgency" id="CreditAgencyInterface" implementationRef="CreditAgency" name="CreditAgency">
+    <bpmn2:interface id="CreditAgencyInterface" implementationRef="intf1:CreditAgency" name="CreditAgency">
         <bpmn2:operation id="creditInformation" name="creditInformation">
-            <bpmn2:inMessageRef xmlns="" xmlns:ns6="null/CreditAgency">IDCreditInformation</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="" xmlns:ns6="null/CreditAgency">IDCreditValid</bpmn2:outMessageRef>
-            <bpmn2:errorRef xmlns="" xmlns:ns6="null/CreditAgency">ERRinvalidCredit</bpmn2:errorRef>
+            <bpmn2:inMessageRef>IDCreditInformation</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDCreditValid</bpmn2:outMessageRef>
+            <bpmn2:errorRef>ERRinvalidCredit</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:interface xmlns="null/SupplierTxnProcessor" id="SupplierTxnProcessorInterface" implementationRef="SupplierTxnProcessor" name="SupplierTxnProcessor">
+    <bpmn2:interface id="SupplierTxnProcessorInterface" implementationRef="intf2:SupplierTxnProcessor" name="SupplierTxnProcessor">
         <bpmn2:operation id="orderConfirmed" name="orderConfirmed">
-            <bpmn2:inMessageRef xmlns="" xmlns:ns6="null/SupplierTxnProcessor">IDOrderConfirmed</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="" xmlns:ns6="null/SupplierTxnProcessor">IDBookingReference</bpmn2:outMessageRef>
+            <bpmn2:inMessageRef>IDOrderConfirmed</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>IDBookingReference</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
     <bpmndi:BPMNDiagram id="NID1">

@@ -62,12 +62,10 @@ public class BPMN2ModelUtil {
 	 * 
 	 * @param defns The BPMN2 model
 	 * @param os The output stream
-	 * @param prefixes The optional map of prefixes against namespaces
 	 * @throws IOException Failed to serialize
 	 */
-	public static void serialize(TDefinitions defns, java.io.OutputStream os,
-			java.util.Map<String, String> prefixes) throws IOException {
-		serialize(defns, os, prefixes, BPMN2ModelUtil.class.getClassLoader());
+	public static void serialize(TDefinitions defns, java.io.OutputStream os) throws IOException {
+		serialize(defns, os, BPMN2ModelUtil.class.getClassLoader());
 	}
 
 	/**
@@ -75,61 +73,45 @@ public class BPMN2ModelUtil {
 	 * 
 	 * @param defns The BPMN2 model
 	 * @param os The output stream
-	 * @param prefixes The optional map of prefixes against namespaces
 	 * @param classLoader The classloader to be used
 	 * @throws IOException Failed to serialize
 	 */
 	public static void serialize(TDefinitions defns, java.io.OutputStream os,
-					java.util.Map<String, String> prefixes,
 					java.lang.ClassLoader classLoader) throws IOException {
 		
 		try {
 			org.savara.bpmn2.model.ObjectFactory factory=
 						new org.savara.bpmn2.model.ObjectFactory();
 			
-			//JAXBContext context = JAXBContext.newInstance(TDefinitions.class);
 			JAXBContext context = JAXBContext.newInstance("org.savara.bpmn2.model",
 					classLoader);
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 
-			// SAVARA-175 - it seems that to get jaxb to generate the namespace prefix
-			// mapping at the top of the document, it is necessary to (1) have the TProcess
-			// created with the original namespace prefix mappings, which on initial
-			// marshalling will be moved on to the elements that have the prefix, and
-			// then (2) reapply the prefixes by building the DOM, adding the prefix
-			// namespace info, and then transforming back to text.
-			if (prefixes != null) {
-				java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+			// SAVARA-175/378 - jaxb serialization places the prefix/namespace declaration
+			// on the same element as it is used. Therefore we need to reparse/serialize
+			// the XML document to promote the namespaces to the top of the document
+			java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+			
+			marshaller.marshal(factory.createDefinitions(defns), baos);
+			
+			// Convert to DOM
+			javax.xml.parsers.DocumentBuilderFactory dbfactory=
+							javax.xml.parsers.DocumentBuilderFactory.newInstance();
+			dbfactory.setNamespaceAware(false);
+			
+			org.w3c.dom.Document doc=
+				dbfactory.newDocumentBuilder().parse(new java.io.ByteArrayInputStream(baos.toByteArray()));
+			
+			doc.normalizeDocument();
+			
+			javax.xml.transform.dom.DOMSource source=new javax.xml.transform.dom.DOMSource(doc);
+			javax.xml.transform.stream.StreamResult result=new javax.xml.transform.stream.StreamResult(os);
+			
+			javax.xml.transform.Transformer transformer=
+					javax.xml.transform.TransformerFactory.newInstance().newTransformer();
+			transformer.transform(source, result);
 				
-				marshaller.marshal(factory.createDefinitions(defns), baos);
-				
-				// Convert to DOM
-				javax.xml.parsers.DocumentBuilderFactory dbfactory=
-								javax.xml.parsers.DocumentBuilderFactory.newInstance();
-				dbfactory.setNamespaceAware(false);
-				
-				org.w3c.dom.Document doc=
-					dbfactory.newDocumentBuilder().parse(new java.io.ByteArrayInputStream(baos.toByteArray()));
-				
-				for (String ns : prefixes.keySet()) {
-					String prefix=prefixes.get(ns);
-					
-					doc.getDocumentElement().setAttribute("xmlns:"+prefix, ns); 
-				}
-				
-				doc.normalizeDocument();
-				
-				javax.xml.transform.dom.DOMSource source=new javax.xml.transform.dom.DOMSource(doc);
-				javax.xml.transform.stream.StreamResult result=new javax.xml.transform.stream.StreamResult(os);
-				
-				javax.xml.transform.Transformer transformer=
-						javax.xml.transform.TransformerFactory.newInstance().newTransformer();
-				transformer.transform(source, result);
-				
-			} else {
-				marshaller.marshal(factory.createDefinitions(defns), os);
-			}
 		} catch(Exception e) {
 			throw new IOException("Failed to serialize BPMN2 definitions", e);
 		}
