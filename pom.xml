@@ -71,23 +71,9 @@
 		<switchyard.version>0.7.0.Final</switchyard.version>
 	</properties>
 
-  	<profiles>
-		<profile>
-			<id>docs</id>
-		    	<modules>
-				<module>docs</module>
-		    	</modules>
-		</profile>
-		<profile>
-			<id>qa</id>
-		    	<modules>
-				<module>qa</module>
-		    	</modules>
-		</profile>
-  	</profiles>
-
 	<modules>
 		<module>bundles</module>
+		<module>qa</module>
 	</modules>
 
 	<build>

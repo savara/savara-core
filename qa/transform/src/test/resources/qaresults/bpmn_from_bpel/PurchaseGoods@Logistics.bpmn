@@ -1,27 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" id="id-PurchaseGoods_Logistics-Logistics" targetNamespace="http://www.savara.org/examples/Logistics">
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.savara.org/examples/Logistics" id="id-PurchaseGoods_Logistics-Logistics" targetNamespace="http://www.savara.org/examples/Logistics">
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_Logistics.wsdl" namespace="http://www.savara.org/examples/Logistics"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="PurchaseGoods_LogisticsArtifacts.wsdl" namespace="http://www.savara.org/examples/Logistics"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryRequest" structureRef="DeliveryRequest"/>
-    <bpmn2:message xmlns="http://www.savara.org/examples/Logistics" id="IDDeliveryRequest" itemRef="ITEMDeliveryRequest" name="DeliveryRequest"/>
+    <bpmn2:message id="IDDeliveryRequest" itemRef="tns:ITEMDeliveryRequest" name="DeliveryRequest"/>
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/logistics" id="ITEMDeliveryConfirmed" structureRef="DeliveryConfirmed"/>
-    <bpmn2:message xmlns="http://www.savara.org/examples/Logistics" id="IDDeliveryConfirmed" itemRef="ITEMDeliveryConfirmed" name="DeliveryConfirmed"/>
+    <bpmn2:message id="IDDeliveryConfirmed" itemRef="tns:ITEMDeliveryConfirmed" name="DeliveryConfirmed"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant xmlns="http://www.savara.org/examples/Logistics" id="MID3" name="Logistics" processRef="MID2"/>
+        <bpmn2:participant id="MID3" name="Logistics" processRef="tns:MID2"/>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="Logistics">
         <bpmn2:startEvent id="MID4">
-            <bpmn2:outgoing xmlns="http://www.savara.org/examples/Logistics">MID9</bpmn2:outgoing>
+            <bpmn2:outgoing>tns:MID9</bpmn2:outgoing>
         </bpmn2:startEvent>
         <bpmn2:endEvent id="MID5">
-            <bpmn2:incoming xmlns="http://www.savara.org/examples/Logistics">MID10</bpmn2:incoming>
+            <bpmn2:incoming>tns:MID10</bpmn2:incoming>
         </bpmn2:endEvent>
-        <bpmn2:task xmlns="http://www.savara.org/examples/Logistics" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="IDDeliveryRequest" name="Receive: delivery(DeliveryRequest) from Store" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tReceiveTask">
-            <bpmn2:incoming>MID9</bpmn2:incoming>
-            <bpmn2:outgoing>MID8</bpmn2:outgoing>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="tns:IDDeliveryRequest" name="Receive: delivery(DeliveryRequest) from Store" operationRef="tns:OP_Logistics_delivery" xsi:type="bpmn2:tReceiveTask">
+            <bpmn2:incoming>tns:MID9</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID8</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns="http://www.savara.org/examples/Logistics" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" messageRef="IDDeliveryConfirmed" name="Send: delivery(DeliveryConfirmed) to Store" operationRef="OP_Logistics_delivery" xsi:type="bpmn2:tSendTask">
-            <bpmn2:incoming>MID8</bpmn2:incoming>
-            <bpmn2:outgoing>MID10</bpmn2:outgoing>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" messageRef="tns:IDDeliveryConfirmed" name="Send: delivery(DeliveryConfirmed) to Store" operationRef="tns:OP_Logistics_delivery" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming>tns:MID8</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID10</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:sequenceFlow id="MID8" sourceRef="MID6" targetRef="MID7"/>
         <bpmn2:sequenceFlow id="MID9" sourceRef="MID4" targetRef="MID6"/>
@@ -29,36 +29,36 @@
     </bpmn2:process>
     <bpmn2:interface id="LogisticsInterface" name="Logistics">
         <bpmn2:operation id="OP_Logistics_delivery" name="delivery">
-            <bpmn2:inMessageRef xmlns="http://www.savara.org/examples/Logistics">IDDeliveryRequest</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef xmlns="http://www.savara.org/examples/Logistics">IDDeliveryConfirmed</bpmn2:outMessageRef>
+            <bpmn2:inMessageRef>tns:IDDeliveryRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDDeliveryConfirmed</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
     <bpmndi:BPMNDiagram id="NID1">
         <bpmndi:BPMNPlane>
-            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Logistics" bpmnElement="MID3" id="NID2">
+            <bpmndi:BPMNShape bpmnElement="tns:MID3" id="NID2">
                 <dc:Bounds height="140.0" width="530.0" x="0.0" y="0.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Logistics" bpmnElement="MID4" id="NID3">
+            <bpmndi:BPMNShape bpmnElement="tns:MID4" id="NID3">
                 <dc:Bounds height="30.0" width="30.0" x="50.0" y="55.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Logistics" bpmnElement="MID6" id="NID4">
+            <bpmndi:BPMNShape bpmnElement="tns:MID6" id="NID4">
                 <dc:Bounds height="60.0" width="110.0" x="130.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Logistics" bpmnElement="MID7" id="NID5">
+            <bpmndi:BPMNShape bpmnElement="tns:MID7" id="NID5">
                 <dc:Bounds height="60.0" width="110.0" x="290.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Logistics" bpmnElement="MID8" id="NID6" sourceElement="NID4" targetElement="NID5">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID8" id="NID6" sourceElement="tns:NID4" targetElement="tns:NID5">
                 <ns4:waypoint x="240.0" y="70.0"/>
                 <ns4:waypoint x="290.0" y="70.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Logistics" bpmnElement="MID9" id="NID7" sourceElement="NID3" targetElement="NID4">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID9" id="NID7" sourceElement="tns:NID3" targetElement="tns:NID4">
                 <ns4:waypoint x="80.0" y="70.0"/>
                 <ns4:waypoint x="130.0" y="70.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape xmlns="http://www.savara.org/examples/Logistics" bpmnElement="MID5" id="NID8">
+            <bpmndi:BPMNShape bpmnElement="tns:MID5" id="NID8">
                 <dc:Bounds height="30.0" width="30.0" x="450.0" y="55.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge xmlns="http://www.savara.org/examples/Logistics" bpmnElement="MID10" id="NID9" sourceElement="NID5" targetElement="NID8">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID10" id="NID9" sourceElement="tns:NID5" targetElement="tns:NID8">
                 <ns4:waypoint x="400.0" y="70.0"/>
                 <ns4:waypoint x="450.0" y="70.0"/>
             </bpmndi:BPMNEdge>
