@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.wsdl.PortType;
+import javax.wsdl.extensions.schema.SchemaImport;
 import javax.xml.namespace.QName;
 
 import org.savara.common.resources.DefaultResourceLocator;
@@ -551,20 +552,39 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 	 * @return The Java type, or null if not found
 	 */
 	protected String getJavaType(javax.wsdl.Definition wsdl, QName element, ResourceLocator locator) {
-		// Find schema location
-		java.util.List<?> imps=wsdl.getImports(element.getNamespaceURI());
+		java.util.List<?> elems=wsdl.getTypes().getExtensibilityElements();
 		
-		for (Object obj : imps) {
-			if (obj instanceof javax.wsdl.Import) {
-				String javaType=JavaGeneratorUtil.getElementJavaType(element,
-						((javax.wsdl.Import)obj).getLocationURI(), locator);
+		if (elems != null) {
+			for (Object obj : elems) {
 				
-				if (javaType != null) {
-					return (javaType);
+				if (obj instanceof javax.wsdl.extensions.schema.Schema) {
+					javax.wsdl.extensions.schema.Schema schema=(javax.wsdl.extensions.schema.Schema)obj;
+					
+					for (Object value : schema.getImports().values()) {
+						if (value instanceof java.util.List<?>) {
+							for (Object si : (java.util.List<?>)value) {
+								if (si instanceof SchemaImport) {
+									String javaType=JavaGeneratorUtil.getElementJavaType(element,
+											((SchemaImport)si).getSchemaLocationURI(), locator);
+									
+									if (javaType != null) {
+										return (javaType);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
+			
+			logger.warning("Failed to find java type for element '"+element+
+					"' in wsdl: "+wsdl);
+			
+		} else {
+			logger.warning("Getting java type for element '"+element+
+					"' failed as unable to find extensibility elements in wsdl: "+wsdl);
 		}
-
+		
 		return (null);
 	}
 	

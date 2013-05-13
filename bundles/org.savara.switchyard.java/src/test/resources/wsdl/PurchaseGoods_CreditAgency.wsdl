@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions name="CreditAgency" targetNamespace="http://www.savara.org/examples/CreditAgency" xmlns:ns3="http://www.jboss.org/examples/creditAgency" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns2="http://www.savara.org/examples/CreditAgency" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
-  <wsdl:import namespace="http://www.jboss.org/examples/creditAgency" location="creditAgency.xsd"/>
+  <types xmlns="http://schemas.xmlsoap.org/wsdl/">
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+       <import namespace="http://www.jboss.org/examples/creditAgency" schemaLocation="creditAgency.xsd"/>
+    </schema>
+  </types>
   <wsdl:message name="CustomerUnknownFault">
     <wsdl:part name="content" element="ns3:CustomerUnknown">
     </wsdl:part>
