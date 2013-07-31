@@ -66,6 +66,58 @@ public class JavaServiceGenerator {
 	}
 	
 	/**
+	 * This method returns the path to the XJC binding file.
+	 * 
+	 * @return The file path
+	 * @throws Exception Failed to return the file path
+	 */
+	protected String getXJCBindingFilePath() throws Exception {
+		java.io.InputStream is=ClassLoader.getSystemResourceAsStream("config/bindings.xjc");
+		String filePath=null;
+		String errmsg=null;
+		
+		if (is == null) {
+			is = JavaServiceGenerator.class.getResourceAsStream("/config/bindings.xjc");
+		}
+		
+		if (is == null) {
+			errmsg="Failed to find XJC binding config file";
+		} else {
+			try {
+				byte[] b=new byte[is.available()];
+				is.read(b);
+				
+				is.close();
+				
+				if (logger.isLoggable(Level.FINE)) {
+					logger.fine("Bindings config="+new String(b));
+				}
+				
+				java.io.File tmp=java.io.File.createTempFile("savara", "xjc");
+				
+				java.io.FileOutputStream fos=new java.io.FileOutputStream(tmp);
+				
+				fos.write(b);
+				
+				fos.flush();
+				fos.close();
+				
+				filePath = tmp.getAbsolutePath();
+				
+			} catch (Exception e) {
+				logger.log(Level.SEVERE, "Failed to load XJC binding file", e);
+				errmsg = "Failed to load XJC binding file: "+e;
+			}
+		}
+
+		if (errmsg != null) {
+			throw new Exception("Unable to generate service interface. "+errmsg);
+		}
+
+		return (filePath);
+	}
+	
+	/**
 	 * This method creates a Java service interface from a WSDL file.
 	 * 
 	 * @param wsdlPath The WSDL file path
@@ -74,9 +126,12 @@ public class JavaServiceGenerator {
 	 * @throws Exception Failed to generate the service interfaces
 	 */
 	public void createServiceInterfaceFromWSDL(String wsdlPath, String wsdlLocation, String srcFolder) throws Exception {
+		String filePath=getXJCBindingFilePath();
+		
 		String[] cxfargs=new String[]{
 				"-d", srcFolder,
 				"-wsdlLocation", wsdlLocation,
+				"-b", filePath,
 				wsdlPath
 			};
 		
@@ -200,10 +255,13 @@ public class JavaServiceGenerator {
 							ProtocolModel behaviour, String wsdlPath, String wsdlLocation,
 						java.util.List<String> refWsdlPaths, String srcFolder,
 						ResourceLocator locator) throws Exception {
+		String filePath=getXJCBindingFilePath();
+		
 		String[] cxfargs=new String[]{
 				"-impl",
 				"-d", srcFolder,
 				"-wsdlLocation", wsdlLocation,
+				"-b", filePath,
 				wsdlPath
 			};
 		

@@ -1,8 +1,5 @@
 
-/**
- * Please modify this class to meet your needs
- * This class is not complete
- */
+
 
 package org.jboss.examples.store;
 
@@ -34,11 +31,11 @@ public class StoreInterfaceImpl implements StoreInterface {
     private static final Logger LOG = Logger.getLogger(StoreInterfaceImpl.class.getName());
 
     
-    public org.jboss.examples.store.BuyConfirmedType buy(BuyRequestType content) throws AccountNotFoundFault , BuyFailedFault    { 
+    public org.jboss.examples.store.BuyConfirmed buy(BuyRequest content) throws AccountNotFoundFault , BuyFailedFault    { 
         LOG.info("Executing operation buy");
         System.out.println(content);
         try {
-            org.jboss.examples.store.BuyConfirmedType _return = null;
+            org.jboss.examples.store.BuyConfirmed _return = null;
             return _return;
         } catch (java.lang.Exception ex) {
             ex.printStackTrace();

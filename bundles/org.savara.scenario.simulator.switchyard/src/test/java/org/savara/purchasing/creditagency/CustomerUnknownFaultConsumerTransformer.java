@@ -3,16 +3,19 @@
  */
 package org.savara.purchasing.creditagency;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.transform.dom.DOMSource;
 
-import org.switchyard.exception.SwitchYardException;
-
 public class CustomerUnknownFaultConsumerTransformer extends org.switchyard.transform.BaseTransformer<DOMSource,org.savara.purchasing.creditagency.CustomerUnknownFault> {
 
+	private static final Logger LOG=Logger.getLogger(CustomerUnknownFaultConsumerTransformer.class.getName());
+	
 	public QName getFrom() {
 		return (QName.valueOf("{http://www.jboss.org/examples/creditAgency}CustomerUnknown"));
 	}
@@ -24,13 +27,15 @@ public class CustomerUnknownFaultConsumerTransformer extends org.switchyard.tran
 		try {
 			_jaxbContext = JAXBContext.newInstance("org.jboss.examples.creditagency");
 		} catch (JAXBException e) {
-			throw new SwitchYardException("Failed to create JAXBContext for '" + getFrom() + "'.", e);
+			LOG.log(Level.SEVERE, "Failed to create JAXBContext for '" + getFrom() + "'.", e);
+			return (null);
 		}
 
 		try {
 			unmarshaller = _jaxbContext.createUnmarshaller();
 		} catch (JAXBException e) {
-			throw new SwitchYardException("Failed to create Unmarshaller for type '" + getFrom() + "'.", e);
+			LOG.log(Level.SEVERE, "Failed to create Unmarshaller for type '" + getFrom() + "'.", e);
+			return (null);
 		}
 
 		try {
@@ -39,7 +44,8 @@ public class CustomerUnknownFaultConsumerTransformer extends org.switchyard.tran
 			
 			return new org.savara.purchasing.creditagency.CustomerUnknownFault("CustomerUnknownFaultConsumerTransformer", jbe.getValue());
 		} catch (Exception e) {
-			throw new SwitchYardException("Failed to unmarshal fault", e);
+			LOG.log(Level.SEVERE, "Failed to unmarshal fault", e);
+			return (null);
 		}
 	}
 }

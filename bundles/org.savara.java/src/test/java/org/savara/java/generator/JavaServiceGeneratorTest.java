@@ -25,7 +25,7 @@ import org.scribble.protocol.model.Role;
 
 public class JavaServiceGeneratorTest {
 
-	private static final String SRC_PATH = System.getProperty("java.io.tmpdir")+"/savara/sca";
+	private static final String SRC_PATH = System.getProperty("java.io.tmpdir")+"/savara/java";
 	private static final String STORE_WSDL_LOCATION = "wsdl/PurchaseGoodsProcess_Store.wsdl";
 	private static final String LOGISTICS_WSDL_LOCATION = "wsdl/PurchaseGoodsProcess_Logistics.wsdl";
 	private static final String CREDITAGENCY_WSDL_LOCATION = "wsdl/PurchaseGoodsProcess_CreditAgency.wsdl";
@@ -79,6 +79,27 @@ public class JavaServiceGeneratorTest {
 			System.out.println(">> generated=");
 			System.out.println(generatedContent);
 			System.out.println(">> end");
+			
+			if (expectedContent.length() != generatedContent.length()) {
+				System.out.println("LENGTHS are different: expected="+expectedContent.length()+
+						" generated="+generatedContent.length());
+			}
+			for (int i=0; i < expectedContent.length() && i < generatedContent.length(); i++) {
+				if (expectedContent.charAt(i) != generatedContent.charAt(i)) {
+					System.out.println("MISMATCH at character "+i);
+					int end=i+10;
+					if (end >= generatedContent.length()) {
+						end = generatedContent.length()-1;
+					}
+					System.out.println(" GENERATED starting \""+generatedContent.substring(i, end)+"\"");
+					end = i+10;
+					if (end >= expectedContent.length()) {
+						end = expectedContent.length()-1;
+					}
+					System.out.println(" EXPECTED starting \""+expectedContent.substring(i, end)+"\"");
+					break;
+				}
+			}
 			fail("Content does not match");
 		}
 	}

@@ -9,8 +9,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.transform.dom.DOMSource;
 
-import org.switchyard.exception.SwitchYardException;
-
 public class %CLASSNAME% extends org.switchyard.transform.BaseTransformer<DOMSource,%FAULTCLASS%> {
 
 	public QName getFrom() {
@@ -24,22 +22,20 @@ public class %CLASSNAME% extends org.switchyard.transform.BaseTransformer<DOMSou
 		try {
 			_jaxbContext = JAXBContext.newInstance("%FAULTTYPEPACKAGE%");
 		} catch (JAXBException e) {
-			throw new SwitchYardException("Failed to create JAXBContext for '" + getFrom() + "'.", e);
+			throw new RuntimeException("Failed to create JAXBContext for '" + getFrom() + "'.", e);
 		}
 
 		try {
 			unmarshaller = _jaxbContext.createUnmarshaller();
 		} catch (JAXBException e) {
-			throw new SwitchYardException("Failed to create Unmarshaller for type '" + getFrom() + "'.", e);
+			throw new RuntimeException("Failed to create Unmarshaller for type '" + getFrom() + "'.", e);
 		}
 
 		try {
-			javax.xml.bind.JAXBElement<%FAULTTYPE%> jbe=
-					(javax.xml.bind.JAXBElement<%FAULTTYPE%>)unmarshaller.unmarshal(type);
-
-			return new %FAULTCLASS%("%FAULTMESSAGE%", jbe.getValue());
+			return new %FAULTCLASS%("%FAULTMESSAGE%", 
+					(%FAULTTYPE%)unmarshaller.unmarshal(type));
 		} catch (Exception e) {
-			throw new SwitchYardException("Failed to unmarshal fault", e);
+			throw new RuntimeException("Failed to unmarshal fault", e);
 		}
 	}
 }

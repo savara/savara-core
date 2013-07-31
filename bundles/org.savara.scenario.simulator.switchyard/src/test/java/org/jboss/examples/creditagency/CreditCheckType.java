@@ -1,6 +1,7 @@
 
 package org.jboss.examples.creditagency;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -25,6 +26,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
+@XmlRootElement(name="CreditCheckRequest")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CreditCheckType")
 public class CreditCheckType {

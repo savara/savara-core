@@ -6,12 +6,12 @@
 
 package org.savara.examples.store;
 
-import org.jboss.examples.store.BuyRequestType;
-import org.jboss.examples.store.BuyConfirmedType;
-import org.jboss.examples.creditagency.CreditCheckType;
-import org.jboss.examples.creditagency.CreditRatingType;
-import org.jboss.examples.logistics.DeliveryRequestType;
-import org.jboss.examples.logistics.DeliveryConfirmedType;
+import org.jboss.examples.store.BuyRequest;
+import org.jboss.examples.store.BuyConfirmed;
+import org.jboss.examples.creditagency.CreditCheckRequest;
+import org.jboss.examples.creditagency.CreditRating;
+import org.jboss.examples.logistics.DeliveryRequest;
+import org.jboss.examples.logistics.DeliveryConfirmed;
 import org.savara.examples.creditagency.CustomerUnknownFault;
 
 import java.util.logging.Logger;
@@ -28,26 +28,26 @@ public class StoreImpl implements Store {
     private static final Logger LOG = Logger.getLogger(StoreImpl.class.getName());
 
     /* (non-Javadoc)
-     * @see org.savara.examples.store.Store#buy(org.jboss.examples.store.BuyRequestType  content )*
+     * @see org.savara.examples.store.Store#buy(org.jboss.examples.store.BuyRequest  content )*
      */
-    public org.jboss.examples.store.BuyConfirmedType buy(org.jboss.examples.store.BuyRequestType content) throws InsufficientCreditFault , AccountNotFoundFault    {
-        BuyConfirmedType ret=null;
+    public org.jboss.examples.store.BuyConfirmed buy(org.jboss.examples.store.BuyRequest content) throws InsufficientCreditFault , AccountNotFoundFault    {
+        BuyConfirmed ret=null;
 
         // TODO: Add code here to handle request (in variable 'content')
 
         try {
             // TODO: Add code here to initialize request
-            CreditCheckType creditCheckReq=null;
+            CreditCheckRequest creditCheckReq=null;
 
-            CreditRatingType creditCheckResult = _creditAgency.creditCheck(creditCheckReq);
+            CreditRating creditCheckResult = _creditAgency.creditCheck(creditCheckReq);
 
             if (false) { // TODO: Set expression
                 throw new InsufficientCreditFault();
             } else {
                 // TODO: Add code here to initialize request
-                DeliveryRequestType deliveryReq=null;
+                DeliveryRequest deliveryReq=null;
 
-                DeliveryConfirmedType deliveryResult = _logistics.delivery(deliveryReq);
+                DeliveryConfirmed deliveryResult = _logistics.delivery(deliveryReq);
 
                 // TODO: Add code here to return response
                 // ret = ....;

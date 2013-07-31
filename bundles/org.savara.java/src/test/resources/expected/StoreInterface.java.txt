@@ -8,7 +8,6 @@ import javax.jws.soap.SOAPBinding;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 
- 
 @WebService(targetNamespace = "http://www.jboss.org/examples/store", name = "StoreInterface")
 @XmlSeeAlso({ObjectFactory.class, org.jboss.examples.logistics.ObjectFactory.class, org.jboss.examples.creditagency.ObjectFactory.class})
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
@@ -16,8 +15,8 @@ public interface StoreInterface {
 
     @WebResult(name = "BuyConfirmed", targetNamespace = "http://www.jboss.org/examples/store", partName = "content")
     @WebMethod(action = "http://www.jboss.org/examples/store/buy")
-    public BuyConfirmedType buy(
+    public BuyConfirmed buy(
         @WebParam(partName = "content", name = "BuyRequest", targetNamespace = "http://www.jboss.org/examples/store")
-        BuyRequestType content
+        BuyRequest content
     ) throws AccountNotFoundFault, BuyFailedFault;
 }

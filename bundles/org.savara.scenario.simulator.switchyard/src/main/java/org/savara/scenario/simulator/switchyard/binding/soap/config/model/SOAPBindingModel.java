@@ -62,7 +62,8 @@ public class SOAPBindingModel extends V1BindingModel {
     private String _contextPath;
     private Boolean _publishAsWS = false;
     
-    private Configuration _environment = Configurations.emptyConfig();
+    private Configuration _environment = Configurations.newConfiguration();
+    
     /**
      * Constructor.
      */

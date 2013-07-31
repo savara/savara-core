@@ -260,6 +260,27 @@ public class SwitchyardJavaGeneratorTest {
 			System.out.println(">> generated=");
 			System.out.println(generatedContent);
 			System.out.println(">> end");
+
+			if (expectedContent.length() != generatedContent.length()) {
+				System.out.println("LENGTHS are different: expected="+expectedContent.length()+
+						" generated="+generatedContent.length());
+			}
+			for (int i=0; i < expectedContent.length() && i < generatedContent.length(); i++) {
+				if (expectedContent.charAt(i) != generatedContent.charAt(i)) {
+					System.out.println("MISMATCH at character "+i);
+					int end=i+10;
+					if (end >= generatedContent.length()) {
+						end = generatedContent.length()-1;
+					}
+					System.out.println(" GENERATED starting \""+generatedContent.substring(i, end)+"\"");
+					end = i+10;
+					if (end >= expectedContent.length()) {
+						end = expectedContent.length()-1;
+					}
+					System.out.println(" EXPECTED starting \""+expectedContent.substring(i, end)+"\"");
+					break;
+				}
+			}
 			fail("Content does not match");
 		}
 	}

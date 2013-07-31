@@ -73,6 +73,7 @@ public class BPMNChoreographyToSwitchYardJavaTest {
     	 */
     	public void run(TestResult result) {
    		
+try {
     		// Run test
     		result.startTest(this);
     		
@@ -197,6 +198,9 @@ public class BPMNChoreographyToSwitchYardJavaTest {
     		}
     		
     		result.endTest(this);
+} catch(Throwable t) {
+	t.printStackTrace();
+}
     	}
     	
     	/**

@@ -36,7 +36,6 @@ import org.scribble.protocol.model.ModelObject;
 import org.scribble.protocol.model.ProtocolModel;
 import org.scribble.protocol.model.Role;
 import org.scribble.protocol.model.TypeImport;
-import org.scribble.protocol.model.TypeImportList;
 import org.scribble.protocol.model.TypeReference;
 import org.scribble.protocol.util.InteractionUtil;
 import org.scribble.protocol.util.TypesUtil;
@@ -134,6 +133,9 @@ public class JavaBehaviourGenerator {
 			} else {
 				ret += "."+JavaGeneratorUtil.getJavaClassName(type.getLocalPart());
 				
+				/* Since providing binding file to XJC, it now uses Element java classes
+				 * (related to SAVARA-379)
+				 *
 				// Check if XSD element - and if so find the XSD type
 				if (locator != null && ti.getParent() instanceof TypeImportList &&
 						((TypeImportList)ti.getParent()).getLocation() != null) {
@@ -141,6 +143,7 @@ public class JavaBehaviourGenerator {
 					
 					ret = JavaGeneratorUtil.getElementJavaType(type, location, locator);
 				}
+				*/
 			}
 		}
 

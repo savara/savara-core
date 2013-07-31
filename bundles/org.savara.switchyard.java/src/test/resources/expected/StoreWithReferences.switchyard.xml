@@ -41,11 +41,11 @@
 	<transforms xmlns:xform="urn:switchyard-config:transform:1.0">
 		<xform:transform.jaxb
 			from="{http://www.jboss.org/examples/store}BuyRequest"
-			to="java:org.jboss.examples.store.BuyRequestType"
+			to="java:org.jboss.examples.store.BuyRequest"
 			contextPath="org.jboss.examples.store"/>
 		<xform:transform.jaxb
 			to="{http://www.jboss.org/examples/store}BuyConfirmed"
-			from="java:org.jboss.examples.store.BuyConfirmedType"
+			from="java:org.jboss.examples.store.BuyConfirmed"
 			contextPath="org.jboss.examples.store"/>
 		<xform:transform.java class="org.savara.examples.store.AccountNotFoundFaultProviderTransformer"
 			to="{http://www.jboss.org/examples/store}AccountNotFound"
@@ -55,30 +55,30 @@
 			from="java:org.savara.examples.store.InsufficientCreditFault"/>
 		<xform:transform.jaxb
 			from="{http://www.jboss.org/examples/store}AckRequest"
-			to="java:org.jboss.examples.store.AckRequestType"
+			to="java:org.jboss.examples.store.AckRequest"
 			contextPath="org.jboss.examples.store"/>
 		<xform:transform.jaxb
 			to="{http://www.jboss.org/examples/creditAgency}CreditCheckRequest"
-			from="java:org.jboss.examples.creditagency.CreditCheckType"
+			from="java:org.jboss.examples.creditagency.CreditCheckRequest"
 			contextPath="org.jboss.examples.creditagency"/>
 		<xform:transform.jaxb
 			from="{http://www.jboss.org/examples/creditAgency}CreditRating"
-			to="java:org.jboss.examples.creditagency.CreditRatingType"
+			to="java:org.jboss.examples.creditagency.CreditRating"
 			contextPath="org.jboss.examples.creditagency"/>
 		<xform:transform.java class="org.savara.examples.creditagency.CustomerUnknownFaultConsumerTransformer"
 			from="{http://www.jboss.org/examples/creditAgency}CustomerUnknown"
 			to="java:org.savara.examples.creditagency.CustomerUnknownFault"/>
 		<xform:transform.jaxb
 			to="{http://www.jboss.org/examples/creditAgency}CreditAckRequest"
-			from="java:org.jboss.examples.creditagency.CreditAckType"
+			from="java:org.jboss.examples.creditagency.CreditAckRequest"
 			contextPath="org.jboss.examples.creditagency"/>
 		<xform:transform.jaxb
 			to="{http://www.jboss.org/examples/logistics}DeliveryRequest"
-			from="java:org.jboss.examples.logistics.DeliveryRequestType"
+			from="java:org.jboss.examples.logistics.DeliveryRequest"
 			contextPath="org.jboss.examples.logistics"/>
 		<xform:transform.jaxb
 			from="{http://www.jboss.org/examples/logistics}DeliveryConfirmed"
-			to="java:org.jboss.examples.logistics.DeliveryConfirmedType"
+			to="java:org.jboss.examples.logistics.DeliveryConfirmed"
 			contextPath="org.jboss.examples.logistics"/>
 	</transforms>
 </switchyard>

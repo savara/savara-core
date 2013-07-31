@@ -21,8 +21,8 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
     @WebResult(name = "DeliveryConfirmed", targetNamespace = "http://www.jboss.org/examples/logistics", partName = "content")
     @WebMethod(action = "http://www.jboss.org/examples/logistics/deliver")
-    public DeliveryConfirmedType deliver(
+    public DeliveryConfirmed deliver(
         @WebParam(partName = "content", name = "DeliveryRequest", targetNamespace = "http://www.jboss.org/examples/logistics")
-        DeliveryRequestType content
+        DeliveryRequest content
     );
 }

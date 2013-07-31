@@ -3,15 +3,14 @@ package org.savara.examples.store;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 
- 
 @XmlSeeAlso({org.jboss.examples.store.ObjectFactory.class})
 public interface Store {
 
-    public org.jboss.examples.store.BuyConfirmedType buy(
-        org.jboss.examples.store.BuyRequestType content
-    ) throws InsufficientCreditFault, AccountNotFoundFault;
-
     public void ack(
-        org.jboss.examples.store.AckRequestType content
+        org.jboss.examples.store.AckRequest content
     );
+
+    public org.jboss.examples.store.BuyConfirmed buy(
+        org.jboss.examples.store.BuyRequest content
+    ) throws InsufficientCreditFault, AccountNotFoundFault;
 }

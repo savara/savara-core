@@ -31,13 +31,12 @@ import org.switchyard.HandlerException;
 import org.switchyard.Message;
 import org.switchyard.ServiceDomain;
 import org.switchyard.ServiceReference;
-import org.switchyard.SynchronousInOutHandler;
 import org.savara.common.util.XMLUtils;
 import org.savara.scenario.simulator.switchyard.binding.soap.config.model.SOAPBindingModel;
 import org.savara.scenario.simulator.switchyard.binding.soap.util.WSDLUtil;
+import org.switchyard.component.common.DeliveryException;
 import org.switchyard.deploy.BaseServiceHandler;
-import org.switchyard.exception.DeliveryException;
-import org.switchyard.metadata.java.JavaService;
+import org.switchyard.extensions.java.JavaService;
 import org.switchyard.transform.Transformer;
 
 /**
@@ -118,7 +117,8 @@ public class InboundHandler extends BaseServiceHandler {
     public String invoke(String operation, String mesg, QName type) {
     	
         try {
-            SynchronousInOutHandler inOutHandler = new SynchronousInOutHandler();
+            org.switchyard.component.common.SynchronousInOutHandler inOutHandler =
+            			new org.switchyard.component.common.SynchronousInOutHandler();
             Exchange exchange = _service.createExchange(operation,
             						inOutHandler);
             
@@ -151,7 +151,10 @@ public class InboundHandler extends BaseServiceHandler {
 	            			javax.wsdl.Fault fault=(javax.wsdl.Fault)obj;
 	            			QName qname=((javax.wsdl.Part)fault.getMessage().
 	            					getParts().values().iterator().next()).getElementName();
-	            			QName from=JavaService.toMessageType(resp.getContent().getClass());
+	            			
+	            			// TODO: JavaService - see if better way to derive QName for Java type
+	            			QName from=new QName(JavaService.TYPE+":"+resp.getContent().getClass().getName());
+	            			
 	            			try {
 	            				@SuppressWarnings({ "unchecked" })
 								Transformer<Object,Object> transformer=(Transformer<Object,Object>)

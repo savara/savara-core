@@ -47,9 +47,8 @@ import org.savara.scenario.simulation.SimulationModel;
 import org.savara.scenario.simulator.switchyard.binding.soap.OutboundHandler;
 import org.savara.scenario.simulator.switchyard.binding.soap.deploy.SOAPActivator;
 import org.savara.scenario.simulator.switchyard.internal.MessageStore;
-import org.switchyard.SwitchYard;
 import org.switchyard.deploy.Activator;
-//import org.switchyard.test.mixins.CDIMixIn;
+import org.switchyard.standalone.SwitchYard;
 
 /**
  * The Switchyard based implementation of the RoleSimulator.

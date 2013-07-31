@@ -21,11 +21,11 @@
 	<transforms xmlns:xform="urn:switchyard-config:transform:1.0">
 		<xform:transform.jaxb
 			from="{http://www.jboss.org/examples/store}BuyRequest"
-			to="java:org.jboss.examples.store.BuyRequestType"
+			to="java:org.jboss.examples.store.BuyRequest"
 			contextPath="org.jboss.examples.store"/>
 		<xform:transform.jaxb
 			to="{http://www.jboss.org/examples/store}BuyConfirmed"
-			from="java:org.jboss.examples.store.BuyConfirmedType"
+			from="java:org.jboss.examples.store.BuyConfirmed"
 			contextPath="org.jboss.examples.store"/>
 		<xform:transform.java class="org.savara.examples.store.AccountNotFoundFaultProviderTransformer"
 			to="{http://www.jboss.org/examples/store}AccountNotFound"
@@ -35,7 +35,7 @@
 			from="java:org.savara.examples.store.InsufficientCreditFault"/>
 		<xform:transform.jaxb
 			from="{http://www.jboss.org/examples/store}AckRequest"
-			to="java:org.jboss.examples.store.AckRequestType"
+			to="java:org.jboss.examples.store.AckRequest"
 			contextPath="org.jboss.examples.store"/>
 	</transforms>
 </switchyard>

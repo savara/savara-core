@@ -21,8 +21,8 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 
     @WebResult(name = "CreditRating", targetNamespace = "http://www.jboss.org/examples/creditAgency", partName = "content")
     @WebMethod(action = "http://www.jboss.org/examples/creditAgency/checkCredit")
-    public CreditRatingType checkCredit(
+    public CreditRating checkCredit(
         @WebParam(partName = "content", name = "CreditCheckRequest", targetNamespace = "http://www.jboss.org/examples/creditAgency")
-        CreditCheckType content
+        CreditCheckRequest content
     ) throws CustomerUnknownFault;
 }

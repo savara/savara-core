@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.wsdl.PortType;
-import javax.wsdl.extensions.schema.SchemaImport;
 import javax.xml.namespace.QName;
 
 import org.savara.common.resources.DefaultResourceLocator;
@@ -552,6 +551,11 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 	 * @return The Java type, or null if not found
 	 */
 	protected String getJavaType(javax.wsdl.Definition wsdl, QName element, ResourceLocator locator) {
+		return (JavaGeneratorUtil.getJavaPackage(element.getNamespaceURI())+"."+
+					JavaGeneratorUtil.getJavaClassName(element.getLocalPart()));
+		
+		/* Return the Element as the Java type (SAVARA-379)
+		 * 
 		java.util.List<?> elems=wsdl.getTypes().getExtensibilityElements();
 		
 		if (elems != null) {
@@ -563,9 +567,9 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 					for (Object value : schema.getImports().values()) {
 						if (value instanceof java.util.List<?>) {
 							for (Object si : (java.util.List<?>)value) {
-								if (si instanceof SchemaImport) {
+								if (si instanceof javax.wsdl.extensions.schema.SchemaImport) {
 									String javaType=JavaGeneratorUtil.getElementJavaType(element,
-											((SchemaImport)si).getSchemaLocationURI(), locator);
+											((javax.wsdl.extensions.schema.SchemaImport)si).getSchemaLocationURI(), locator);
 									
 									if (javaType != null) {
 										return (javaType);
@@ -586,6 +590,7 @@ public class SwitchyardJavaGenerator extends org.savara.java.generator.JavaServi
 		}
 		
 		return (null);
+		*/
 	}
 	
 	protected void addServiceBehaviour(java.io.File implFile, Role role, java.util.List<Role> refRoles,

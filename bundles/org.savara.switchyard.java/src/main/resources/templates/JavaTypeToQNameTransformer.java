@@ -12,7 +12,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 
 import org.switchyard.common.xml.QNameUtil;
-import org.switchyard.exception.SwitchYardException;
 import org.switchyard.transform.Transformer;
 
 public class %CLASSNAME% extends org.switchyard.transform.BaseTransformer<%FAULTCLASS%,String>
@@ -29,26 +28,25 @@ public class %CLASSNAME% extends org.switchyard.transform.BaseTransformer<%FAULT
 		try {
 			_jaxbContext = JAXBContext.newInstance("%FAULTTYPEPACKAGE%");
 		} catch (JAXBException e) {
-			throw new SwitchYardException("Failed to create JAXBContext for '" + getFrom() + "'.", e);
+			throw new RuntimeException("Failed to create JAXBContext for '" + getFrom() + "'.", e);
 		}
 
 		try {
 			marshaller = _jaxbContext.createMarshaller();
 		} catch (JAXBException e) {
-			throw new SwitchYardException("Failed to create Marshaller for type '" + getFrom() + "'.", e);
+			throw new RuntimeException("Failed to create Marshaller for type '" + getFrom() + "'.", e);
 		}
 
 		try {
 			StringWriter resultWriter = new StringWriter();
 			Object javaObject = type.getFaultInfo();
-			JAXBElement jaxbElement = new JAXBElement(getTo(), QNameUtil.toJavaMessageType(getFrom()), javaObject);
 
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-			marshaller.marshal(jaxbElement, resultWriter);
+			marshaller.marshal(javaObject, resultWriter);
 
 			return (resultWriter.toString());
 		} catch (JAXBException e) {
-			throw new SwitchYardException("Failed to unmarshall for type '" + getFrom() + "'.", e);
+			throw new RuntimeException("Failed to unmarshall for type '" + getFrom() + "'.", e);
 		}
 	}
 }

@@ -3,11 +3,10 @@ package org.savara.examples.logistics;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 
- 
 @XmlSeeAlso({org.jboss.examples.logistics.ObjectFactory.class})
 public interface Logistics {
 
-    public org.jboss.examples.logistics.DeliveryConfirmedType delivery(
-        org.jboss.examples.logistics.DeliveryRequestType content
+    public org.jboss.examples.logistics.DeliveryConfirmed delivery(
+        org.jboss.examples.logistics.DeliveryRequest content
     );
 }

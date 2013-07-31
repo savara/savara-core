@@ -3,15 +3,14 @@ package org.savara.examples.creditagency;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
 
- 
 @XmlSeeAlso({org.jboss.examples.creditagency.ObjectFactory.class})
 public interface CreditAgency {
 
-    public org.jboss.examples.creditagency.CreditRatingType creditCheck(
-        org.jboss.examples.creditagency.CreditCheckType content
+    public org.jboss.examples.creditagency.CreditRating creditCheck(
+        org.jboss.examples.creditagency.CreditCheckRequest content
     ) throws CustomerUnknownFault;
 
     public void creditAck(
-        org.jboss.examples.creditagency.CreditAckType content
+        org.jboss.examples.creditagency.CreditAckRequest content
     );
 }
