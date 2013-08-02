@@ -94,6 +94,7 @@ public class JavaServiceGenerator {
 				}
 				
 				java.io.File tmp=java.io.File.createTempFile("savara", "xjc");
+				tmp.deleteOnExit();
 				
 				java.io.FileOutputStream fos=new java.io.FileOutputStream(tmp);
 				
