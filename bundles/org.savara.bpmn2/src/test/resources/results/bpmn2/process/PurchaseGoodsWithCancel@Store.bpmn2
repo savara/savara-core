@@ -49,7 +49,7 @@
                 <bpmn2:outgoing>MID17</bpmn2:outgoing>
                 <bpmn2:outgoing>MID19</bpmn2:outgoing>
             </bpmn2:task>
-            <bpmn2:exclusiveGateway id="MID11">
+            <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID11">
                 <bpmn2:incoming>MID18</bpmn2:incoming>
                 <bpmn2:incoming>MID20</bpmn2:incoming>
                 <bpmn2:outgoing>MID22</bpmn2:outgoing>

@@ -39,14 +39,14 @@
             <bpmn2:incoming>MID17</bpmn2:incoming>
             <bpmn2:outgoing>MID22</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:parallelGateway id="MID8">
+        <bpmn2:parallelGateway gatewayDirection="Diverging" id="MID8">
             <bpmn2:incoming>MID22</bpmn2:incoming>
             <bpmn2:outgoing>MID12</bpmn2:outgoing>
             <bpmn2:outgoing>MID14</bpmn2:outgoing>
             <bpmn2:outgoing>MID18</bpmn2:outgoing>
             <bpmn2:outgoing>MID20</bpmn2:outgoing>
         </bpmn2:parallelGateway>
-        <bpmn2:parallelGateway id="MID9">
+        <bpmn2:parallelGateway gatewayDirection="Converging" id="MID9">
             <bpmn2:incoming>MID13</bpmn2:incoming>
             <bpmn2:incoming>MID15</bpmn2:incoming>
             <bpmn2:incoming>MID19</bpmn2:incoming>

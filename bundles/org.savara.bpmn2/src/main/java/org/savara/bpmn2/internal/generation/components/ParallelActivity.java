@@ -63,7 +63,7 @@ public class ParallelActivity extends AbstractBPMNActivity {
 				UMLPackage.eINSTANCE.getForkNode());
 		parallelState.getInPartitions().add(getActivityPartition());
 		*/
-		Object parallelState=getModelFactory().createANDGateway(getContainer());
+		Object parallelState=getModelFactory().createANDGateway(getContainer(), true);
 		
 		m_forkState = new JunctionActivity(parallelState, this,
 				getModelFactory(), getNotationFactory());
@@ -75,7 +75,7 @@ public class ParallelActivity extends AbstractBPMNActivity {
 		joinState.getInPartitions().add(getActivityPartition());
 		*/
 		
-		Object joinState=getModelFactory().createANDGateway(getContainer());
+		Object joinState=getModelFactory().createANDGateway(getContainer(), false);
 		
 		m_joinState = new JunctionActivity(joinState, this,
 				getModelFactory(), getNotationFactory());

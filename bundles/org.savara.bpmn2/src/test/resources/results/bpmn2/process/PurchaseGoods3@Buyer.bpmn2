@@ -40,7 +40,7 @@
             <bpmn2:incoming>tns:MID15</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID12</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:exclusiveGateway id="MID7">
+        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID7">
             <bpmn2:incoming>tns:MID12</bpmn2:incoming>
             <bpmn2:incoming>tns:MID13</bpmn2:incoming>
             <bpmn2:incoming>tns:MID14</bpmn2:incoming>

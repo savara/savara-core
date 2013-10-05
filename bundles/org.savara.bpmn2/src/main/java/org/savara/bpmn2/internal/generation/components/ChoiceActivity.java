@@ -59,13 +59,13 @@ public class ChoiceActivity extends AbstractBPMNActivity {
 	protected void initialize(Choice elem) throws BPMN2GenerationException {
 		
 		// Create choice state
-		Object choiceState=getModelFactory().createEventBasedXORGateway(getContainer());
+		Object choiceState=getModelFactory().createEventBasedXORGateway(getContainer(), true);
 		
 		m_choiceState = new JunctionActivity(choiceState, this,
 				getModelFactory(), getNotationFactory());
 		
 		// Create junction state
-		Object junctionState=getModelFactory().createEventBasedXORGateway(getContainer());
+		Object junctionState=getModelFactory().createEventBasedXORGateway(getContainer(), false);
 
 		m_junctionState = new JunctionActivity(junctionState, this,
 				getModelFactory(), getNotationFactory());

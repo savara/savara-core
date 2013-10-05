@@ -48,12 +48,12 @@
                 <bpmn2:incoming>MID27</bpmn2:incoming>
                 <bpmn2:outgoing>MID26</bpmn2:outgoing>
             </bpmn2:task>
-            <bpmn2:exclusiveGateway id="MID11">
+            <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID11">
                 <bpmn2:incoming>MID26</bpmn2:incoming>
                 <bpmn2:outgoing>MID22</bpmn2:outgoing>
                 <bpmn2:outgoing>MID24</bpmn2:outgoing>
             </bpmn2:exclusiveGateway>
-            <bpmn2:exclusiveGateway id="MID12">
+            <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID12">
                 <bpmn2:incoming>MID23</bpmn2:incoming>
                 <bpmn2:incoming>MID25</bpmn2:incoming>
                 <bpmn2:outgoing>MID28</bpmn2:outgoing>

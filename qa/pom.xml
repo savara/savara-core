@@ -5,13 +5,13 @@
 	<groupId>org.savara</groupId>
 	<artifactId>qa</artifactId>
 	<packaging>pom</packaging>
-	<version>2.2.1.Final</version>
+	<version>2.2.2.Final</version>
 	<name>Savara::QA</name>
 
 	<parent>
 		<groupId>org.savara</groupId>
 		<artifactId>parent</artifactId>
-		<version>2.2.1.Final</version>
+		<version>2.2.2.Final</version>
 	</parent>
 
 	<modules>

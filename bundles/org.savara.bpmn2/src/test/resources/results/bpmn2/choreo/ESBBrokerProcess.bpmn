@@ -51,7 +51,7 @@
             <bpmn2:participantRef>MID6</bpmn2:participantRef>
             <bpmn2:messageFlowRef>MID7</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
-        <bpmn2:inclusiveGateway id="MID8">
+        <bpmn2:inclusiveGateway gatewayDirection="Mixed" id="MID8">
             <bpmn2:incoming>MID18</bpmn2:incoming>
             <bpmn2:incoming>MID19</bpmn2:incoming>
             <bpmn2:outgoing>MID17</bpmn2:outgoing>
@@ -68,12 +68,12 @@
             <bpmn2:participantRef>MID5</bpmn2:participantRef>
             <bpmn2:messageFlowRef>MID11</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
-        <bpmn2:exclusiveGateway id="MID12">
+        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID12">
             <bpmn2:incoming>MID25</bpmn2:incoming>
             <bpmn2:outgoing>MID21</bpmn2:outgoing>
             <bpmn2:outgoing>MID23</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway id="MID13">
+        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID13">
             <bpmn2:incoming>MID22</bpmn2:incoming>
             <bpmn2:incoming>MID24</bpmn2:incoming>
             <bpmn2:outgoing>MID27</bpmn2:outgoing>

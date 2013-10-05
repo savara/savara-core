@@ -35,14 +35,14 @@
             <bpmn2:incoming>tns:MID57</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID56</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:parallelGateway id="MID7">
+        <bpmn2:parallelGateway gatewayDirection="Diverging" id="MID7">
             <bpmn2:incoming>tns:MID56</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID28</bpmn2:outgoing>
             <bpmn2:outgoing>tns:MID30</bpmn2:outgoing>
             <bpmn2:outgoing>tns:MID52</bpmn2:outgoing>
             <bpmn2:outgoing>tns:MID54</bpmn2:outgoing>
         </bpmn2:parallelGateway>
-        <bpmn2:parallelGateway id="MID8">
+        <bpmn2:parallelGateway gatewayDirection="Converging" id="MID8">
             <bpmn2:incoming>tns:MID29</bpmn2:incoming>
             <bpmn2:incoming>tns:MID31</bpmn2:incoming>
             <bpmn2:incoming>tns:MID53</bpmn2:incoming>
@@ -54,12 +54,12 @@
             <bpmn2:incoming>tns:MID52</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID46</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:exclusiveGateway id="MID10">
+        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID10">
             <bpmn2:incoming>tns:MID46</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID42</bpmn2:outgoing>
             <bpmn2:outgoing>tns:MID44</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway id="MID11">
+        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID11">
             <bpmn2:incoming>tns:MID43</bpmn2:incoming>
             <bpmn2:incoming>tns:MID45</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID29</bpmn2:outgoing>
@@ -69,12 +69,12 @@
             <bpmn2:incoming>tns:MID42</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID39</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:exclusiveGateway id="MID13">
+        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID13">
             <bpmn2:incoming>tns:MID39</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID35</bpmn2:outgoing>
             <bpmn2:outgoing>tns:MID37</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway id="MID14">
+        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID14">
             <bpmn2:incoming>tns:MID36</bpmn2:incoming>
             <bpmn2:incoming>tns:MID38</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID43</bpmn2:outgoing>
@@ -113,7 +113,7 @@
             <bpmn2:outgoing>tns:MID45</bpmn2:outgoing>
             <bpmn2:linkEventDefinition name="L11"/>
         </bpmn2:event>
-        <bpmn2:exclusiveGateway id="MID23">
+        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID23">
             <bpmn2:incoming>tns:MID30</bpmn2:incoming>
             <bpmn2:incoming>tns:MID54</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID47</bpmn2:outgoing>
@@ -129,7 +129,7 @@
             <bpmn2:outgoing>tns:MID50</bpmn2:outgoing>
             <bpmn2:linkEventDefinition name="L13"/>
         </bpmn2:intermediateCatchEvent>
-        <bpmn2:exclusiveGateway id="MID26">
+        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID26">
             <bpmn2:incoming>tns:MID48</bpmn2:incoming>
             <bpmn2:incoming>tns:MID50</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID51</bpmn2:outgoing>

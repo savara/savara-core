@@ -44,17 +44,17 @@
             <bpmn2:incoming>tns:MID26</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID22</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:exclusiveGateway id="MID8">
+        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID8">
             <bpmn2:incoming>tns:MID23</bpmn2:incoming>
             <bpmn2:incoming>tns:MID25</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID28</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway id="MID9">
+        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID9">
             <bpmn2:incoming>tns:MID22</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID18</bpmn2:outgoing>
             <bpmn2:outgoing>tns:MID20</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway id="MID10">
+        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID10">
             <bpmn2:incoming>tns:MID19</bpmn2:incoming>
             <bpmn2:incoming>tns:MID21</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID23</bpmn2:outgoing>

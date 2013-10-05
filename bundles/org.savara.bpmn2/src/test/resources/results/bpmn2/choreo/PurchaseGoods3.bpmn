@@ -65,12 +65,12 @@
             <bpmn2:participantRef>tns:MID9</bpmn2:participantRef>
             <bpmn2:messageFlowRef>tns:MID10</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
-        <bpmn2:exclusiveGateway id="MID11">
+        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID11">
             <bpmn2:incoming>tns:MID43</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID39</bpmn2:outgoing>
             <bpmn2:outgoing>tns:MID41</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway id="MID12">
+        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID12">
             <bpmn2:incoming>tns:MID40</bpmn2:incoming>
             <bpmn2:incoming>tns:MID42</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID45</bpmn2:outgoing>
@@ -82,12 +82,12 @@
             <bpmn2:participantRef>tns:MID6</bpmn2:participantRef>
             <bpmn2:messageFlowRef>tns:MID14</bpmn2:messageFlowRef>
         </bpmn2:choreographyTask>
-        <bpmn2:exclusiveGateway id="MID15">
+        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID15">
             <bpmn2:incoming>tns:MID37</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID33</bpmn2:outgoing>
             <bpmn2:outgoing>tns:MID35</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway id="MID16">
+        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID16">
             <bpmn2:incoming>tns:MID34</bpmn2:incoming>
             <bpmn2:incoming>tns:MID36</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID40</bpmn2:outgoing>

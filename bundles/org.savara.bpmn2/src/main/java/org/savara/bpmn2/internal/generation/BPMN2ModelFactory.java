@@ -39,6 +39,7 @@ import org.savara.bpmn2.model.TExclusiveGateway;
 import org.savara.bpmn2.model.TFlowElement;
 import org.savara.bpmn2.model.TFlowNode;
 import org.savara.bpmn2.model.TGateway;
+import org.savara.bpmn2.model.TGatewayDirection;
 import org.savara.bpmn2.model.TInclusiveGateway;
 import org.savara.bpmn2.model.TIntermediateCatchEvent;
 import org.savara.bpmn2.model.TIntermediateThrowEvent;
@@ -292,6 +293,7 @@ public class BPMN2ModelFactory {
 		}
 		
 		gw.setId(createId());
+		gw.setGatewayDirection(TGatewayDirection.CONVERGING);
 		
 		return(gw);
 	}
@@ -507,7 +509,7 @@ public class BPMN2ModelFactory {
 		return(task);
 	}
 	
-	public Object createEventBasedXORGateway(Object container) {
+	public Object createEventBasedXORGateway(Object container, boolean diverge) {
 		TExclusiveGateway gateway=new TExclusiveGateway();
 		gateway.setId(createId());
 		
@@ -520,11 +522,13 @@ public class BPMN2ModelFactory {
 		} else if (container instanceof TSubChoreography) {
 			((TSubChoreography)container).getFlowElement().add(m_factory.createExclusiveGateway(gateway));
 		}
+		
+		gateway.setGatewayDirection(diverge ? TGatewayDirection.DIVERGING : TGatewayDirection.CONVERGING);
 
 		return(gateway);
 	}
 	
-	public Object createANDGateway(Object container) {
+	public Object createANDGateway(Object container, boolean diverge) {
 		TParallelGateway gateway=new TParallelGateway();
 		gateway.setId(createId());
 		
@@ -537,6 +541,8 @@ public class BPMN2ModelFactory {
 		} else if (container instanceof TSubChoreography) {
 			((TSubChoreography)container).getFlowElement().add(m_factory.createParallelGateway(gateway));
 		}
+		
+		gateway.setGatewayDirection(diverge ? TGatewayDirection.DIVERGING : TGatewayDirection.CONVERGING);
 
 		return(gateway);
 	}
@@ -554,6 +560,10 @@ public class BPMN2ModelFactory {
 		} else if (container instanceof TSubChoreography) {
 			((TSubChoreography)container).getFlowElement().add(m_factory.createInclusiveGateway(gateway));
 		}
+		
+		// Decision point, so assume just mixed - diverging because two paths (inner and exit from
+		// loop) plus two inbound, initial source and repeat back.
+		gateway.setGatewayDirection(TGatewayDirection.MIXED);
 
 		return(gateway);
 	}

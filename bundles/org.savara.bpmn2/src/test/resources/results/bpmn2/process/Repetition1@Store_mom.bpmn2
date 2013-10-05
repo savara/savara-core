@@ -40,7 +40,7 @@
             <bpmn2:incoming>tns:MID16</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID14</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:inclusiveGateway id="MID7">
+        <bpmn2:inclusiveGateway gatewayDirection="Mixed" id="MID7">
             <bpmn2:incoming>tns:MID13</bpmn2:incoming>
             <bpmn2:incoming>tns:MID14</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID12</bpmn2:outgoing>

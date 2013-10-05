@@ -72,7 +72,7 @@ public class ServiceInvocationActivity extends AbstractBPMNActivity {
 		// following the initial send
 		if (_junctionState == null && child instanceof SequenceActivity) {
 			// Create junction state
-			Object junctionState=getModelFactory().createEventBasedXORGateway(getContainer());
+			Object junctionState=getModelFactory().createEventBasedXORGateway(getContainer(), true);
 
 			_junctionState = new JunctionActivity(junctionState, this,
 					getModelFactory(), getNotationFactory());
