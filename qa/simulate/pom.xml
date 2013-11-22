@@ -36,11 +36,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.savara.bundles</groupId>
-			<artifactId>org.savara.pi4soa.cdm</artifactId>
-			<version>${savara.core.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.savara.bundles</groupId>
 			<artifactId>org.savara.scenario</artifactId>
 			<version>${savara.core.version}</version>
 		</dependency>
