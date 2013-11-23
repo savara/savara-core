@@ -18,6 +18,8 @@
 package org.savara.bpmn2.model.util;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -27,6 +29,8 @@ import javax.xml.bind.Unmarshaller;
 import org.savara.bpmn2.model.TDefinitions;
 
 public class BPMN2ModelUtil {
+	
+	private static final Logger LOG=Logger.getLogger(BPMN2ModelUtil.class.getName());
 
 	/**
 	 * This method deserializes the XML representation of the BPMN2 model.
@@ -99,6 +103,10 @@ public class BPMN2ModelUtil {
 			javax.xml.parsers.DocumentBuilderFactory dbfactory=
 							javax.xml.parsers.DocumentBuilderFactory.newInstance();
 			dbfactory.setNamespaceAware(false);
+			
+			if (LOG.isLoggable(Level.FINEST)) {
+				LOG.finest("Before reparsing BPMN2 model: "+new String(baos.toByteArray()));
+			}		
 			
 			org.w3c.dom.Document doc=
 				dbfactory.newDocumentBuilder().parse(new java.io.ByteArrayInputStream(baos.toByteArray()));

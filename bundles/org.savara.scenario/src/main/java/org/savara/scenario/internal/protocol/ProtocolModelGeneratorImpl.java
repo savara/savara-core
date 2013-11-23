@@ -63,6 +63,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 
 	private static final Logger LOG=Logger.getLogger(ProtocolModelGeneratorImpl.class.getName());
 	
+	private static final String PREFIX = "savns";
 	private static final String NAMESPACE_PREFIX = "http://namespace/";
 	private static final String INTERFACE_SUFFIX = "Interface";
 
@@ -218,7 +219,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 				org.savara.common.model.annotation.Annotation protocolAnn=
 						new org.savara.common.model.annotation.Annotation(AnnotationDefinitions.TYPE);
 				protocolAnn.getProperties().put(AnnotationDefinitions.NAMESPACE_PROPERTY, qname.getNamespaceURI());
-				protocolAnn.getProperties().put(AnnotationDefinitions.PREFIX_PROPERTY, "ns"+nsCount);
+				protocolAnn.getProperties().put(AnnotationDefinitions.PREFIX_PROPERTY, PREFIX+nsCount);
 				
 				if (location != null) {
 					protocolAnn.getProperties().put(AnnotationDefinitions.LOCATION_PROPERTY, location);

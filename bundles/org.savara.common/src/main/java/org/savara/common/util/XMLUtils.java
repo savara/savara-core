@@ -34,7 +34,7 @@ import org.w3c.dom.Node;
  */
 public final class XMLUtils {
 	
-	private static final String NS_LABEL = "ns";
+	private static final String NS_LABEL = "savns";
 
 	/**
 	 * This class converts a DOM representation node to text.

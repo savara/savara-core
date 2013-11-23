@@ -5,11 +5,11 @@ import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as Deliver
 import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
 import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
 [[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
-[[ Type(prefix=ns0,namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(prefix=savns0,namespace=http://www.jboss.org/examples/store) ]]
 [[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://namespace/CreditAgency) ]]
-[[ Type(prefix=ns1,namespace=http://www.jboss.org/examples/creditAgency) ]]
+[[ Type(prefix=savns1,namespace=http://www.jboss.org/examples/creditAgency) ]]
 [[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://namespace/Logistics) ]]
-[[ Type(prefix=ns2,namespace=http://www.jboss.org/examples/logistics) ]]
+[[ Type(prefix=savns2,namespace=http://www.jboss.org/examples/logistics) ]]
 protocol SuccessfulPurchase at Store(role Buyer) {
 	Store introduces CreditAgency, Logistics;
 	[[ Correlation(request=buy) ]]

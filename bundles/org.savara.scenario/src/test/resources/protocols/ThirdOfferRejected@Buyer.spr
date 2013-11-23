@@ -7,7 +7,7 @@ import xsd "{http://www.savara.org/examples/barter}Decision" as Decision;
 import xsd "{http://www.savara.org/examples/barter}Quit" as Quit;
 [[ Interface(name=BuyerInterface,role=Buyer,namespace=http://namespace/Buyer) ]]
 [[ Interface(name=SellerInterface,role=Seller,namespace=http://namespace/Seller) ]]
-[[ Type(prefix=ns0,namespace=http://www.savara.org/examples/barter) ]]
+[[ Type(prefix=savns0,namespace=http://www.savara.org/examples/barter) ]]
 protocol ThirdOfferRejected at Buyer {
 	Buyer introduces Seller;
 	[[ Correlation(request=offer) ]]

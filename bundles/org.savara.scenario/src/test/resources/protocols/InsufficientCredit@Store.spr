@@ -3,9 +3,9 @@ import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as C
 import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
 import xsd "{http://www.jboss.org/examples/store}BuyFailed" as BuyFailed;
 [[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
-[[ Type(prefix=ns0,namespace=http://www.jboss.org/examples/store) ]]
+[[ Type(prefix=savns0,namespace=http://www.jboss.org/examples/store) ]]
 [[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://namespace/CreditAgency) ]]
-[[ Type(prefix=ns1,namespace=http://www.jboss.org/examples/creditAgency) ]]
+[[ Type(prefix=savns1,namespace=http://www.jboss.org/examples/creditAgency) ]]
 protocol InsufficientCredit at Store(role Buyer) {
 	Store introduces CreditAgency;
 	[[ Correlation(request=buy) ]]
