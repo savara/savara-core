@@ -220,13 +220,16 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						AnnotationDefinitions.TYPE);
 
 		for (Annotation ann : anns) {
-			// Add import
-			TImport imp=new TImport();
-			imp.setImportType("http://www.w3.org/2001/XMLSchema"); // Assume xsd for now
-			imp.setLocation((String)ann.getProperties().get(AnnotationDefinitions.LOCATION_PROPERTY));
-			imp.setNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY));
 			
-			defns.getImport().add(imp);
+			if (ann.getProperties().containsKey(AnnotationDefinitions.LOCATION_PROPERTY)) {
+				// Add import
+				TImport imp=new TImport();
+				imp.setImportType("http://www.w3.org/2001/XMLSchema"); // Assume xsd for now
+				imp.setLocation((String)ann.getProperties().get(AnnotationDefinitions.LOCATION_PROPERTY));
+				imp.setNamespace((String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY));
+				
+				defns.getImport().add(imp);
+			}
 		}
 	}
 	

@@ -2,10 +2,6 @@
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="logistics.xsd" namespace="http://www.jboss.org/examples/logistics"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="store.xsd" namespace="http://www.jboss.org/examples/store"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/examples/Buyer"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/examples/Store"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/examples/CreditAgency"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/examples/Logistics"/>
     <bpmn2:itemDefinition id="ITEMBuyRequest" structureRef="ns1:BuyRequest"/>
     <bpmn2:message id="IDBuyRequest" itemRef="tns:ITEMBuyRequest" name="BuyRequest"/>
     <bpmn2:itemDefinition id="ITEMCreditCheck" structureRef="ns3:CreditCheckRequest"/>

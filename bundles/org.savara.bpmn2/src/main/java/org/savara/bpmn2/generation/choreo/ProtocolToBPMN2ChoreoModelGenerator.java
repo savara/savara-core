@@ -245,7 +245,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 			String ns=(String)ann.getProperties().get(AnnotationDefinitions.NAMESPACE_PROPERTY);
 			String loc=(String)ann.getProperties().get(AnnotationDefinitions.LOCATION_PROPERTY);
 			
-			if (!ns.equals(XSD_NAMESPACE)) {
+			if (!ns.equals(XSD_NAMESPACE) && loc != null) {
 				// Add import
 				TImport imp=new TImport();
 				imp.setImportType(XSD_NAMESPACE); // Assume xsd for now

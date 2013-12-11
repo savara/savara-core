@@ -2,10 +2,6 @@
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/creditCheck.xsd" namespace="http://creditagency.com/creditCheck"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/drivingRecord.xsd" namespace="http://dmv.com/drivingRecord"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="../schema/policyQuote.xsd" namespace="http://www.example.org/policyQuote"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/Driver"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/PolicyQuoteProcessService"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/DrivingRecordService"/>
-    <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.savara.org/PolicyQuote/CreditCheckService"/>
     <bpmn2:itemDefinition id="ITEMdrivingRecordRequest" structureRef="ns0:drivingRecordRequest"/>
     <bpmn2:message id="IDdrivingRecordRequest" itemRef="tns:ITEMdrivingRecordRequest" name="drivingRecordRequest"/>
     <bpmn2:itemDefinition id="ITEMdrivingRecordResponse" structureRef="ns0:drivingRecordResponse"/>
