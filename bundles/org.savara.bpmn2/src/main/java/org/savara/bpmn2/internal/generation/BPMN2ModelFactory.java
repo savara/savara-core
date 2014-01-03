@@ -49,6 +49,7 @@ import org.savara.bpmn2.model.TMessageFlow;
 import org.savara.bpmn2.model.TParallelGateway;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TProcess;
+import org.savara.bpmn2.model.TProcessType;
 import org.savara.bpmn2.model.TReceiveTask;
 import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.model.TSendTask;
@@ -119,6 +120,7 @@ public class BPMN2ModelFactory {
 		// Create process
 		TProcess process=new TProcess();
 		process.setId(createId());
+		process.setProcessType(TProcessType.PUBLIC);
 		
 		process.setName(name);
 		

@@ -24,7 +24,7 @@
     <bpmn2:collaboration id="MID1">
         <bpmn2:participant id="MID3" name="Store" processRef="tns:MID2"/>
     </bpmn2:collaboration>
-    <bpmn2:process id="MID2" name="Store">
+    <bpmn2:process id="MID2" name="Store" processType="Public">
         <bpmn2:startEvent id="MID4">
             <bpmn2:outgoing>tns:MID27</bpmn2:outgoing>
         </bpmn2:startEvent>

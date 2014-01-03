@@ -24,7 +24,7 @@
     <bpmn2:collaboration id="MID1">
         <bpmn2:participant id="MID3" name="CreditAgency" processRef="MID2"/>
     </bpmn2:collaboration>
-    <bpmn2:process id="MID2" name="CreditAgency">
+    <bpmn2:process id="MID2" name="CreditAgency" processType="Public">
         <bpmn2:startEvent id="MID4">
             <bpmn2:outgoing>MID9</bpmn2:outgoing>
         </bpmn2:startEvent>

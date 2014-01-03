@@ -25,7 +25,7 @@
         <bpmn2:participant id="MID3" name="Store" processRef="MID2"/>
         <bpmn2:participant id="MID10" name="CheckCredit_Store" processRef="MID9"/>
     </bpmn2:collaboration>
-    <bpmn2:process id="MID2" name="Store">
+    <bpmn2:process id="MID2" name="Store" processType="Public">
         <bpmn2:startEvent id="MID4">
             <bpmn2:outgoing>MID17</bpmn2:outgoing>
         </bpmn2:startEvent>
@@ -55,7 +55,7 @@
             <bpmn2:outMessageRef>IDBuyConfirmed</bpmn2:outMessageRef>
         </bpmn2:operation>
     </bpmn2:interface>
-    <bpmn2:process id="MID9" name="CheckCredit_Store">
+    <bpmn2:process id="MID9" name="CheckCredit_Store" processType="Public">
         <bpmn2:startEvent id="MID11">
             <bpmn2:outgoing>MID20</bpmn2:outgoing>
         </bpmn2:startEvent>
