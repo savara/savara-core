@@ -167,6 +167,11 @@ public class BPMN2ChoreographyProtocolParser implements ProtocolParser {
 					continue;
 				}
 				
+				if (itemdefn.getStructureRef() == null) {
+					logger.severe("Item definition has no structure ref for message '"+message.getName()+"'");
+					continue;
+				}
+				
 				// Store namespace - and if prefix is not set, use a default, but ensure
 				// only one default prefix is used per namespace uri
 				String prefix=itemdefn.getStructureRef().getPrefix();
