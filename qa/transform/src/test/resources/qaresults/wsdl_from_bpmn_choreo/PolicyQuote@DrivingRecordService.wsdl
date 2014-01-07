@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="DrivingRecordService" targetNamespace="http://www.savara.org/P/DrivingRecordService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns2="http://www.savara.org/P/DrivingRecordService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:savns0="http://dmv.com/drivingRecord">
+<wsdl:definitions name="DrivingRecordService" targetNamespace="http://www.savara.org/P/DrivingRecordService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns2="http://www.savara.org/P/DrivingRecordService" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:savns1="http://dmv.com/drivingRecord">
   <wsdl:message name="checkDrivingRecordRequest">
-    <wsdl:part name="content" element="savns0:drivingRecordRequest">
+    <wsdl:part name="content" element="savns1:drivingRecordRequest">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="DrivingRecordService">
