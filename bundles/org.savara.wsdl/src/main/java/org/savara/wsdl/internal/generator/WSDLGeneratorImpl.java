@@ -350,6 +350,8 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 				javax.wsdl.Input input=defn.createInput();
 				input.setMessage(mesg);
 				ret.setInput(input);
+			} else {
+				// TODO: Maybe report missing request message type here?
 			}
 			
 			// Check if a request/response MEP
@@ -520,35 +522,35 @@ public class WSDLGeneratorImpl implements WSDLGenerator {
 								WSDLBinding wsdlBinding, FeedbackHandler handler) {
 		javax.wsdl.Message ret=null;
 		
-		if (types == null || types.size() == 0) {
-			throw new UnsupportedOperationException("Expecting single type reference");
-		} else if (types.size() > 1) {
-			throw new UnsupportedOperationException("Currently only supports single type reference");			
-		} else {
-			Type ref=types.get(0);
-			
-			TypeDefinition td=contract.getTypeDefinition(ref.getName());
+		if (types != null && types.size() > 0) {
+			if (types.size() > 1) {
+				handler.error("Currently only supports single type reference", null);			
+			} else {
+				Type ref=types.get(0);
 				
-			if (td != null && TypeSystem.XSD.equals(td.getTypeSystem())) {
-				javax.xml.namespace.QName qname=
-					javax.xml.namespace.QName.valueOf(td.getDataType());
-				javax.wsdl.Definition defn=
-					getDefinition(wsdls, contract, msgname.getNamespaceURI(),
-							wsdlBinding, handler);
+				TypeDefinition td=contract.getTypeDefinition(ref.getName());
+					
+				if (td != null && TypeSystem.XSD.equals(td.getTypeSystem())) {
+					javax.xml.namespace.QName qname=
+						javax.xml.namespace.QName.valueOf(td.getDataType());
+					javax.wsdl.Definition defn=
+						getDefinition(wsdls, contract, msgname.getNamespaceURI(),
+								wsdlBinding, handler);
+							
+					if (defn != null && qname != null &&
+							(ret = defn.getMessage(msgname)) == null) {
+						ret = defn.createMessage();
+						ret.setUndefined(false);
 						
-				if (defn != null && qname != null &&
-						(ret = defn.getMessage(msgname)) == null) {
-					ret = defn.createMessage();
-					ret.setUndefined(false);
-					
-					ret.setQName(msgname);
-					
-					Part part=createPart(defn, td, qname,
-							wsdlBinding, handler);
-					
-					ret.addPart(part);
-					
-					defn.addMessage(ret);
+						ret.setQName(msgname);
+						
+						Part part=createPart(defn, td, qname,
+								wsdlBinding, handler);
+						
+						ret.addPart(part);
+						
+						defn.addMessage(ret);
+					}
 				}
 			}
 		}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="PolicyQuoteProcess" targetNamespace="http://www.savara.org/P/PolicyQuoteProcess" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:pns4="http://www.savara.org/P/PolicyQuoteProcess" xmlns:ans0="http://www.example.org/policyQuote" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:savns0="http://dmv.com/drivingRecord">
+  <wsdl:message name="receivePolicyQuoteRequest">
+    <wsdl:part name="content" element="ans0:policyQuote">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="recordDrivingRecordRequest">
+    <wsdl:part name="content" element="savns0:drivingRecordResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="TooManyAccidentsFault">
+    <wsdl:part name="content" element="ans0:policyQuoteFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="receivePolicyQuoteResponse">
+    <wsdl:part name="content" element="ans0:policyQuoteReply">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="PolicyQuoteProcess">
+    <wsdl:operation name="receivePolicyQuote">
+      <wsdl:input message="pns4:receivePolicyQuoteRequest">
+    </wsdl:input>
+      <wsdl:output message="pns4:receivePolicyQuoteResponse">
+    </wsdl:output>
+      <wsdl:fault name="TooManyAccidents" message="pns4:TooManyAccidentsFault">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="recordDrivingRecord">
+      <wsdl:input message="pns4:recordDrivingRecordRequest">
+    </wsdl:input>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PolicyQuoteProcessBinding" type="pns4:PolicyQuoteProcess">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="receivePolicyQuote">
+      <soap:operation soapAction="http://www.savara.org/P/PolicyQuoteProcess/receivePolicyQuote"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="TooManyAccidents">
+        <soap:fault name="TooManyAccidents" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="recordDrivingRecord">
+      <soap:operation soapAction="http://www.savara.org/P/PolicyQuoteProcess/recordDrivingRecord"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PolicyQuoteProcessService">
+    <wsdl:port name="PolicyQuoteProcessPort" binding="pns4:PolicyQuoteProcessBinding">
+      <soap:address location="http://localhost:8080/PolicyQuoteProcessService/PolicyQuoteProcessPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
