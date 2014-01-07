@@ -1,0 +1,10 @@
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryRequest" as DeliveryRequest;
+import xsd "{http://www.jboss.org/examples/logistics}DeliveryConfirmed" as DeliveryConfirmed;
+[[ Interface(name=LogisticsInterface,role=Logistics,namespace=http://namespace/Logistics) ]]
+[[ Type(prefix=savns0,namespace=http://www.jboss.org/examples/logistics) ]]
+protocol SuccessfulPurchaseAsync at Logistics(role Store) {
+	[[ Correlation(request=deliver) ]]
+	deliver(DeliveryRequest) from Store;
+	[[ Correlation(replyTo=deliver) ]]
+	deliver(DeliveryConfirmed) to Store;
+}

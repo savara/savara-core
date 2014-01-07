@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:ca="http://www.jboss.org/examples/creditAgency" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:intf1="http://www.jboss.org/savara/examples/CreditAgency" xmlns:intf2="http://www.jboss.org/savara/examples/Logistics" xmlns:intf3="http://www.jboss.org/savara/examples/Store" xmlns:lg="http://www.jboss.org/examples/logistics" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="id-PurchaseGoods3" targetNamespace="http://www.jboss.org/savara/examples">
+<?xml version="1.0" encoding="UTF-8"?><bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:ca="http://www.jboss.org/examples/creditAgency" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:lg="http://www.jboss.org/examples/logistics" xmlns:ns4="http://www.omg.org/spec/DD/20100524/DI" xmlns:sto="http://www.jboss.org/examples/store" xmlns:tns="http://www.jboss.org/savara/examples" xmlns:xsd="http://www.w3.org/2001/XMLSchema" id="id-PurchaseGoods3" targetNamespace="http://www.jboss.org/savara/examples">
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="store.xsd" namespace="http://www.jboss.org/examples/store"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="creditAgency.xsd" namespace="http://www.jboss.org/examples/creditAgency"/>
     <bpmn2:import importType="http://www.w3.org/2001/XMLSchema" location="logistics.xsd" namespace="http://www.jboss.org/examples/logistics"/>
@@ -150,30 +150,30 @@
         <bpmn2:sequenceFlow id="MID44" sourceRef="MID2" targetRef="MID4"/>
         <bpmn2:sequenceFlow id="MID45" sourceRef="MID12" targetRef="MID3"/>
     </bpmn2:choreography>
-    <bpmn2:error errorCode="BuyFailed" id="ERRBuyFailed" name="BuyFailed" structureRef="tns:ITEMBuyFailed"/>
-    <bpmn2:error errorCode="CustomerUnknown" id="ERRCustomerUnknown" name="CustomerUnknown" structureRef="tns:ITEMCustomerUnknown"/>
-    <bpmn2:error errorCode="AccountNotFound" id="ERRAccountNotFound" name="AccountNotFound" structureRef="tns:ITEMAccountNotFound"/>
-    <bpmn2:interface id="CreditAgencyInterface" implementationRef="intf1:CreditAgency" name="CreditAgency">
-        <bpmn2:operation id="creditCheck" name="creditCheck">
-            <bpmn2:inMessageRef>tns:IDCreditCheckRequest</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef>tns:IDCreditRating</bpmn2:outMessageRef>
-            <bpmn2:errorRef>tns:ERRCustomerUnknown</bpmn2:errorRef>
-        </bpmn2:operation>
-    </bpmn2:interface>
-    <bpmn2:interface id="LogisticsInterface" implementationRef="intf2:Logistics" name="Logistics">
-        <bpmn2:operation id="delivery" name="delivery">
-            <bpmn2:inMessageRef>tns:IDDeliveryRequest</bpmn2:inMessageRef>
-            <bpmn2:outMessageRef>tns:IDDeliveryConfirmed</bpmn2:outMessageRef>
-        </bpmn2:operation>
-    </bpmn2:interface>
-    <bpmn2:interface id="StoreInterface" implementationRef="intf3:Store" name="Store">
-        <bpmn2:operation id="buy" name="buy">
+    <bpmn2:interface id="StoreInterface" name="Store">
+        <bpmn2:operation id="OP_Store_buy" name="buy">
             <bpmn2:inMessageRef>tns:IDBuyRequest</bpmn2:inMessageRef>
             <bpmn2:outMessageRef>tns:IDBuyConfirmed</bpmn2:outMessageRef>
             <bpmn2:errorRef>tns:ERRBuyFailed</bpmn2:errorRef>
             <bpmn2:errorRef>tns:ERRAccountNotFound</bpmn2:errorRef>
         </bpmn2:operation>
     </bpmn2:interface>
+    <bpmn2:interface id="CreditAgencyInterface" name="CreditAgency">
+        <bpmn2:operation id="OP_CreditAgency_checkCredit" name="checkCredit">
+            <bpmn2:inMessageRef>tns:IDCreditCheckRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDCreditRating</bpmn2:outMessageRef>
+            <bpmn2:errorRef>tns:ERRCustomerUnknown</bpmn2:errorRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:interface id="LogisticsInterface" name="Logistics">
+        <bpmn2:operation id="OP_Logistics_deliver" name="deliver">
+            <bpmn2:inMessageRef>tns:IDDeliveryRequest</bpmn2:inMessageRef>
+            <bpmn2:outMessageRef>tns:IDDeliveryConfirmed</bpmn2:outMessageRef>
+        </bpmn2:operation>
+    </bpmn2:interface>
+    <bpmn2:error errorCode="BuyFailed" id="ERRBuyFailed" name="BuyFailed" structureRef="tns:ITEMBuyFailed"/>
+    <bpmn2:error errorCode="CustomerUnknown" id="ERRCustomerUnknown" name="CustomerUnknown" structureRef="tns:ITEMCustomerUnknown"/>
+    <bpmn2:error errorCode="AccountNotFound" id="ERRAccountNotFound" name="AccountNotFound" structureRef="tns:ITEMAccountNotFound"/>
     <bpmndi:BPMNDiagram id="NID1">
         <bpmndi:BPMNPlane>
             <bpmndi:BPMNShape bpmnElement="tns:MID2" id="NID2">

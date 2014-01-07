@@ -1,0 +1,12 @@
+import xsd "{http://www.jboss.org/examples/store}BuyRequest" as BuyRequest;
+import xsd "{http://www.jboss.org/examples/store}BuyConfirmed" as BuyConfirmed;
+[[ Interface(name=BuyerInterface,role=Buyer,namespace=http://namespace/Buyer) ]]
+[[ Interface(name=StoreInterface,role=Store,namespace=http://namespace/Store) ]]
+[[ Type(prefix=savns0,namespace=http://www.jboss.org/examples/store) ]]
+protocol SuccessfulPurchaseAsync at Buyer {
+	Buyer introduces Store;
+	[[ Correlation(request=buy) ]]
+	buy(BuyRequest) to Store;
+	[[ Correlation(replyTo=buy) ]]
+	buy(BuyConfirmed) from Store;
+}

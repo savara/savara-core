@@ -22,7 +22,9 @@
     <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMURITokenType" structureRef="xs:anyURI"/>
     <bpmn2:message id="IDURITokenType" itemRef="ITEMURITokenType" name="URITokenType"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID3" name="CreditAgency" processRef="MID2"/>
+        <bpmn2:participant id="MID3" name="CreditAgency" processRef="MID2">
+            <bpmn2:interfaceRef>CreditAgencyInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="CreditAgency" processType="Public">
         <bpmn2:startEvent id="MID4">

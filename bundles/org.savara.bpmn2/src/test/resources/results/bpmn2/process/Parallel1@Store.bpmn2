@@ -22,66 +22,71 @@
     <bpmn2:itemDefinition xmlns:xs="http://www.w3.org/2001/XMLSchema" id="ITEMURITokenType" structureRef="xs:anyURI"/>
     <bpmn2:message id="IDURITokenType" itemRef="ITEMURITokenType" name="URITokenType"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID3" name="Store" processRef="MID2"/>
+        <bpmn2:participant id="MID3" name="Store" processRef="MID2">
+            <bpmn2:interfaceRef>StoreInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:participant id="MID8" name="CreditAgency">
+            <bpmn2:interfaceRef>CreditAgencyInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="Store" processType="Public">
         <bpmn2:startEvent id="MID4">
-            <bpmn2:outgoing>MID24</bpmn2:outgoing>
+            <bpmn2:outgoing>MID25</bpmn2:outgoing>
         </bpmn2:startEvent>
         <bpmn2:endEvent id="MID5">
-            <bpmn2:incoming>MID25</bpmn2:incoming>
+            <bpmn2:incoming>MID26</bpmn2:incoming>
         </bpmn2:endEvent>
         <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="IDBuyRequest" name="Receive: buy(BuyRequest) from Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tReceiveTask">
-            <bpmn2:incoming>MID24</bpmn2:incoming>
-            <bpmn2:outgoing>MID17</bpmn2:outgoing>
+            <bpmn2:incoming>MID25</bpmn2:incoming>
+            <bpmn2:outgoing>MID18</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Service: checkCredit(CreditCheckRequest) to CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tServiceTask">
-            <bpmn2:incoming>MID17</bpmn2:incoming>
+            <bpmn2:incoming>MID18</bpmn2:incoming>
+            <bpmn2:outgoing>MID23</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:parallelGateway gatewayDirection="Diverging" id="MID9">
+            <bpmn2:incoming>MID23</bpmn2:incoming>
+            <bpmn2:outgoing>MID13</bpmn2:outgoing>
+            <bpmn2:outgoing>MID15</bpmn2:outgoing>
+            <bpmn2:outgoing>MID19</bpmn2:outgoing>
+            <bpmn2:outgoing>MID21</bpmn2:outgoing>
+        </bpmn2:parallelGateway>
+        <bpmn2:parallelGateway gatewayDirection="Converging" id="MID10">
+            <bpmn2:incoming>MID14</bpmn2:incoming>
+            <bpmn2:incoming>MID16</bpmn2:incoming>
+            <bpmn2:incoming>MID20</bpmn2:incoming>
+            <bpmn2:incoming>MID22</bpmn2:incoming>
+            <bpmn2:outgoing>MID24</bpmn2:outgoing>
+        </bpmn2:parallelGateway>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID11" messageRef="IDCreditRating" name="Receive: checkCredit(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tReceiveTask">
+            <bpmn2:incoming>MID13</bpmn2:incoming>
+            <bpmn2:incoming>MID19</bpmn2:incoming>
+            <bpmn2:outgoing>MID14</bpmn2:outgoing>
+            <bpmn2:outgoing>MID20</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID12" messageRef="IDCreditRating" name="Receive: checkCredit(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tReceiveTask">
+            <bpmn2:incoming>MID15</bpmn2:incoming>
+            <bpmn2:incoming>MID21</bpmn2:incoming>
+            <bpmn2:outgoing>MID16</bpmn2:outgoing>
             <bpmn2:outgoing>MID22</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:parallelGateway gatewayDirection="Diverging" id="MID8">
-            <bpmn2:incoming>MID22</bpmn2:incoming>
-            <bpmn2:outgoing>MID12</bpmn2:outgoing>
-            <bpmn2:outgoing>MID14</bpmn2:outgoing>
-            <bpmn2:outgoing>MID18</bpmn2:outgoing>
-            <bpmn2:outgoing>MID20</bpmn2:outgoing>
-        </bpmn2:parallelGateway>
-        <bpmn2:parallelGateway gatewayDirection="Converging" id="MID9">
-            <bpmn2:incoming>MID13</bpmn2:incoming>
-            <bpmn2:incoming>MID15</bpmn2:incoming>
-            <bpmn2:incoming>MID19</bpmn2:incoming>
-            <bpmn2:incoming>MID21</bpmn2:incoming>
-            <bpmn2:outgoing>MID23</bpmn2:outgoing>
-        </bpmn2:parallelGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID10" messageRef="IDCreditRating" name="Receive: checkCredit(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tReceiveTask">
-            <bpmn2:incoming>MID12</bpmn2:incoming>
-            <bpmn2:incoming>MID18</bpmn2:incoming>
-            <bpmn2:outgoing>MID13</bpmn2:outgoing>
-            <bpmn2:outgoing>MID19</bpmn2:outgoing>
+        <bpmn2:sequenceFlow id="MID13" sourceRef="MID9" targetRef="MID11"/>
+        <bpmn2:sequenceFlow id="MID14" sourceRef="MID11" targetRef="MID10"/>
+        <bpmn2:sequenceFlow id="MID15" sourceRef="MID9" targetRef="MID12"/>
+        <bpmn2:sequenceFlow id="MID16" sourceRef="MID12" targetRef="MID10"/>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID17" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming>MID24</bpmn2:incoming>
+            <bpmn2:outgoing>MID26</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID11" messageRef="IDCreditRating" name="Receive: checkCredit(CreditRating) from CreditAgency" operationRef="OP_CreditAgency_checkCredit" xsi:type="bpmn2:tReceiveTask">
-            <bpmn2:incoming>MID14</bpmn2:incoming>
-            <bpmn2:incoming>MID20</bpmn2:incoming>
-            <bpmn2:outgoing>MID15</bpmn2:outgoing>
-            <bpmn2:outgoing>MID21</bpmn2:outgoing>
-        </bpmn2:task>
-        <bpmn2:sequenceFlow id="MID12" sourceRef="MID8" targetRef="MID10"/>
-        <bpmn2:sequenceFlow id="MID13" sourceRef="MID10" targetRef="MID9"/>
-        <bpmn2:sequenceFlow id="MID14" sourceRef="MID8" targetRef="MID11"/>
-        <bpmn2:sequenceFlow id="MID15" sourceRef="MID11" targetRef="MID9"/>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" messageRef="IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
-            <bpmn2:incoming>MID23</bpmn2:incoming>
-            <bpmn2:outgoing>MID25</bpmn2:outgoing>
-        </bpmn2:task>
-        <bpmn2:sequenceFlow id="MID17" sourceRef="MID6" targetRef="MID7"/>
-        <bpmn2:sequenceFlow id="MID18" sourceRef="MID8" targetRef="MID10"/>
-        <bpmn2:sequenceFlow id="MID19" sourceRef="MID10" targetRef="MID9"/>
-        <bpmn2:sequenceFlow id="MID20" sourceRef="MID8" targetRef="MID11"/>
-        <bpmn2:sequenceFlow id="MID21" sourceRef="MID11" targetRef="MID9"/>
-        <bpmn2:sequenceFlow id="MID22" sourceRef="MID7" targetRef="MID8"/>
-        <bpmn2:sequenceFlow id="MID23" sourceRef="MID9" targetRef="MID16"/>
-        <bpmn2:sequenceFlow id="MID24" sourceRef="MID4" targetRef="MID6"/>
-        <bpmn2:sequenceFlow id="MID25" sourceRef="MID16" targetRef="MID5"/>
+        <bpmn2:sequenceFlow id="MID18" sourceRef="MID6" targetRef="MID7"/>
+        <bpmn2:sequenceFlow id="MID19" sourceRef="MID9" targetRef="MID11"/>
+        <bpmn2:sequenceFlow id="MID20" sourceRef="MID11" targetRef="MID10"/>
+        <bpmn2:sequenceFlow id="MID21" sourceRef="MID9" targetRef="MID12"/>
+        <bpmn2:sequenceFlow id="MID22" sourceRef="MID12" targetRef="MID10"/>
+        <bpmn2:sequenceFlow id="MID23" sourceRef="MID7" targetRef="MID9"/>
+        <bpmn2:sequenceFlow id="MID24" sourceRef="MID10" targetRef="MID17"/>
+        <bpmn2:sequenceFlow id="MID25" sourceRef="MID4" targetRef="MID6"/>
+        <bpmn2:sequenceFlow id="MID26" sourceRef="MID17" targetRef="MID5"/>
     </bpmn2:process>
     <bpmn2:interface id="StoreInterface" name="Store">
         <bpmn2:operation id="OP_Store_buy" name="buy">
@@ -109,65 +114,65 @@
             <bpmndi:BPMNShape bpmnElement="MID7" id="NID5">
                 <dc:Bounds height="60.0" width="110.0" x="290.0" y="85.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID17" id="NID6" sourceElement="NID4" targetElement="NID5">
+            <bpmndi:BPMNEdge bpmnElement="MID18" id="NID6" sourceElement="NID4" targetElement="NID5">
                 <ns4:waypoint x="240.0" y="115.0"/>
                 <ns4:waypoint x="290.0" y="115.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID8" id="NID7">
+            <bpmndi:BPMNShape bpmnElement="MID9" id="NID7">
                 <dc:Bounds height="30.0" width="30.0" x="450.0" y="100.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID10" id="NID8">
+            <bpmndi:BPMNShape bpmnElement="MID11" id="NID8">
                 <dc:Bounds height="60.0" width="110.0" x="530.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID11" id="NID9">
+            <bpmndi:BPMNShape bpmnElement="MID12" id="NID9">
                 <dc:Bounds height="60.0" width="110.0" x="530.0" y="140.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID9" id="NID10">
+            <bpmndi:BPMNShape bpmnElement="MID10" id="NID10">
                 <dc:Bounds height="30.0" width="30.0" x="690.0" y="100.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID18" id="NID11" sourceElement="NID7" targetElement="NID8">
+            <bpmndi:BPMNEdge bpmnElement="MID19" id="NID11" sourceElement="NID7" targetElement="NID8">
                 <ns4:waypoint x="500.0" y="115.0"/>
                 <ns4:waypoint x="515.0" y="115.0"/>
                 <ns4:waypoint x="515.0" y="70.0"/>
                 <ns4:waypoint x="530.0" y="70.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID19" id="NID12" sourceElement="NID8" targetElement="NID10">
+            <bpmndi:BPMNEdge bpmnElement="MID20" id="NID12" sourceElement="NID8" targetElement="NID10">
                 <ns4:waypoint x="640.0" y="70.0"/>
                 <ns4:waypoint x="665.0" y="70.0"/>
                 <ns4:waypoint x="665.0" y="115.0"/>
                 <ns4:waypoint x="690.0" y="115.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID20" id="NID13" sourceElement="NID7" targetElement="NID9">
+            <bpmndi:BPMNEdge bpmnElement="MID21" id="NID13" sourceElement="NID7" targetElement="NID9">
                 <ns4:waypoint x="500.0" y="115.0"/>
                 <ns4:waypoint x="515.0" y="115.0"/>
                 <ns4:waypoint x="515.0" y="170.0"/>
                 <ns4:waypoint x="530.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID21" id="NID14" sourceElement="NID9" targetElement="NID10">
+            <bpmndi:BPMNEdge bpmnElement="MID22" id="NID14" sourceElement="NID9" targetElement="NID10">
                 <ns4:waypoint x="640.0" y="170.0"/>
                 <ns4:waypoint x="665.0" y="170.0"/>
                 <ns4:waypoint x="665.0" y="115.0"/>
                 <ns4:waypoint x="690.0" y="115.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID22" id="NID15" sourceElement="NID5" targetElement="NID7">
+            <bpmndi:BPMNEdge bpmnElement="MID23" id="NID15" sourceElement="NID5" targetElement="NID7">
                 <ns4:waypoint x="400.0" y="115.0"/>
                 <ns4:waypoint x="450.0" y="115.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="MID16" id="NID16">
+            <bpmndi:BPMNShape bpmnElement="MID17" id="NID16">
                 <dc:Bounds height="60.0" width="110.0" x="770.0" y="85.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID23" id="NID17" sourceElement="NID10" targetElement="NID16">
+            <bpmndi:BPMNEdge bpmnElement="MID24" id="NID17" sourceElement="NID10" targetElement="NID16">
                 <ns4:waypoint x="740.0" y="115.0"/>
                 <ns4:waypoint x="770.0" y="115.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID24" id="NID18" sourceElement="NID3" targetElement="NID4">
+            <bpmndi:BPMNEdge bpmnElement="MID25" id="NID18" sourceElement="NID3" targetElement="NID4">
                 <ns4:waypoint x="80.0" y="115.0"/>
                 <ns4:waypoint x="130.0" y="115.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID5" id="NID19">
                 <dc:Bounds height="30.0" width="30.0" x="930.0" y="100.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID25" id="NID20" sourceElement="NID16" targetElement="NID19">
+            <bpmndi:BPMNEdge bpmnElement="MID26" id="NID20" sourceElement="NID16" targetElement="NID19">
                 <ns4:waypoint x="880.0" y="115.0"/>
                 <ns4:waypoint x="930.0" y="115.0"/>
             </bpmndi:BPMNEdge>

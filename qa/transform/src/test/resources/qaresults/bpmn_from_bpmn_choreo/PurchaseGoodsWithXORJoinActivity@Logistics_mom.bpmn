@@ -21,7 +21,9 @@
     <bpmn2:itemDefinition id="ITEMBuyConfirmed" structureRef="ns1:BuyConfirmed"/>
     <bpmn2:message id="IDBuyConfirmed" itemRef="tns:ITEMBuyConfirmed" name="BuyConfirmed"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID3" name="Logistics" processRef="tns:MID2"/>
+        <bpmn2:participant id="MID3" name="Logistics" processRef="tns:MID2">
+            <bpmn2:interfaceRef>tns:LogisticsInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="Logistics" processType="Public">
         <bpmn2:startEvent id="MID4">

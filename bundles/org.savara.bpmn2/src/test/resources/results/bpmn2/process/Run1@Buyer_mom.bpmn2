@@ -23,25 +23,28 @@
     <bpmn2:message id="IDURITokenType" itemRef="ITEMURITokenType" name="URITokenType"/>
     <bpmn2:collaboration id="MID1">
         <bpmn2:participant id="MID3" name="Buyer" processRef="MID2"/>
+        <bpmn2:participant id="MID7" name="Store">
+            <bpmn2:interfaceRef>StoreInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="Buyer" processType="Public">
         <bpmn2:startEvent id="MID4">
-            <bpmn2:outgoing>MID9</bpmn2:outgoing>
+            <bpmn2:outgoing>MID10</bpmn2:outgoing>
         </bpmn2:startEvent>
         <bpmn2:endEvent id="MID5">
-            <bpmn2:incoming>MID10</bpmn2:incoming>
+            <bpmn2:incoming>MID11</bpmn2:incoming>
         </bpmn2:endEvent>
         <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="IDBuyRequest" name="Send: buy(BuyRequest) to Store" operationRef="OP_Store_buy" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming>MID10</bpmn2:incoming>
+            <bpmn2:outgoing>MID9</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID8" messageRef="IDBuyConfirmed" name="Receive: buy(BuyConfirmed) from Store" operationRef="OP_Store_buy" xsi:type="bpmn2:tReceiveTask">
             <bpmn2:incoming>MID9</bpmn2:incoming>
-            <bpmn2:outgoing>MID8</bpmn2:outgoing>
+            <bpmn2:outgoing>MID11</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" messageRef="IDBuyConfirmed" name="Receive: buy(BuyConfirmed) from Store" operationRef="OP_Store_buy" xsi:type="bpmn2:tReceiveTask">
-            <bpmn2:incoming>MID8</bpmn2:incoming>
-            <bpmn2:outgoing>MID10</bpmn2:outgoing>
-        </bpmn2:task>
-        <bpmn2:sequenceFlow id="MID8" sourceRef="MID6" targetRef="MID7"/>
-        <bpmn2:sequenceFlow id="MID9" sourceRef="MID4" targetRef="MID6"/>
-        <bpmn2:sequenceFlow id="MID10" sourceRef="MID7" targetRef="MID5"/>
+        <bpmn2:sequenceFlow id="MID9" sourceRef="MID6" targetRef="MID8"/>
+        <bpmn2:sequenceFlow id="MID10" sourceRef="MID4" targetRef="MID6"/>
+        <bpmn2:sequenceFlow id="MID11" sourceRef="MID8" targetRef="MID5"/>
     </bpmn2:process>
     <bpmn2:interface id="StoreInterface" name="Store">
         <bpmn2:operation id="OP_Store_buy" name="buy">
@@ -60,21 +63,21 @@
             <bpmndi:BPMNShape bpmnElement="MID6" id="NID4">
                 <dc:Bounds height="60.0" width="110.0" x="130.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="MID7" id="NID5">
+            <bpmndi:BPMNShape bpmnElement="MID8" id="NID5">
                 <dc:Bounds height="60.0" width="110.0" x="290.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID8" id="NID6" sourceElement="NID4" targetElement="NID5">
+            <bpmndi:BPMNEdge bpmnElement="MID9" id="NID6" sourceElement="NID4" targetElement="NID5">
                 <ns4:waypoint x="240.0" y="70.0"/>
                 <ns4:waypoint x="290.0" y="70.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="MID9" id="NID7" sourceElement="NID3" targetElement="NID4">
+            <bpmndi:BPMNEdge bpmnElement="MID10" id="NID7" sourceElement="NID3" targetElement="NID4">
                 <ns4:waypoint x="80.0" y="70.0"/>
                 <ns4:waypoint x="130.0" y="70.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="MID5" id="NID8">
                 <dc:Bounds height="30.0" width="30.0" x="450.0" y="55.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="MID10" id="NID9" sourceElement="NID5" targetElement="NID8">
+            <bpmndi:BPMNEdge bpmnElement="MID11" id="NID9" sourceElement="NID5" targetElement="NID8">
                 <ns4:waypoint x="400.0" y="70.0"/>
                 <ns4:waypoint x="450.0" y="70.0"/>
             </bpmndi:BPMNEdge>

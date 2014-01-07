@@ -37,6 +37,11 @@ public class ProtocolModelGeneratorImplTest {
 	}
 	
 	@Test
+	public void testSuccessfulPurchaseAsync() {
+		testScenarioToProtocolModels("SuccessfulPurchaseAsync");
+	}
+	
+	@Test
 	public void testCustomerUnknown() {
 		testScenarioToProtocolModels("CustomerUnknown");
 	}

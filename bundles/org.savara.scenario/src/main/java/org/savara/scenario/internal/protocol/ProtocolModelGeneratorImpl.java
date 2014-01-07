@@ -394,7 +394,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 	 * @return Whether it is a request
 	 */
 	protected static boolean isRequest(Scenario scenario, Protocol p, MessageEvent me) {
-		boolean ret=false;
+		boolean ret=true;
 		
 		// Need to find event's other role
 		String otherRole=null;
@@ -410,6 +410,29 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 		}
 		
 		if (otherRole != null) {
+			
+			// Check whether there is a preceding message event of the same type
+			// with the same operation name, and inverted roles, where that
+			// message event is a request - in which case, this message event is 
+			// a response
+			int pos=scenario.getEvent().indexOf(me);
+			
+			for (int i=pos-1; i >= 0; i--) {
+				Event evt=scenario.getEvent().get(i);
+				
+				if (evt.getClass() == me.getClass()) {
+					MessageEvent me2=(MessageEvent)evt;
+					
+					if (me2.getOperationName().equals(me.getOperationName())) {
+						if (((Role)me2.getRole()).getName().equals(otherRole)) {
+							ret = !isRequest(scenario, p, me2);
+							break;
+						}
+					}
+				}
+			}
+			
+			/*
 			// Check if client role
 			if (p.getParameterDefinitions().size() > 0 &&
 					p.getParameterDefinitions().get(0).getName().equals(otherRole)) {
@@ -424,6 +447,7 @@ public class ProtocolModelGeneratorImpl implements ProtocolModelGenerator {
 					ret = intro.getIntroducedRole(otherRole) != null;
 				}
 			}
+			*/
 		}
 		
 		return (ret);

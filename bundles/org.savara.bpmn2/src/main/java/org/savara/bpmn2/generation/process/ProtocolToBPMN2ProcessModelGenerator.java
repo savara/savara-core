@@ -21,7 +21,6 @@ package org.savara.bpmn2.generation.process;
 
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.savara.bpmn2.internal.generation.BPMN2GenerationException;
@@ -46,19 +45,14 @@ import org.savara.bpmn2.internal.generation.components.SequenceActivity;
 import org.savara.bpmn2.internal.generation.components.ServiceInvocationActivity;
 import org.savara.bpmn2.model.TBoundaryEvent;
 import org.savara.bpmn2.model.TDefinitions;
-import org.savara.bpmn2.model.TError;
 import org.savara.bpmn2.model.TErrorEventDefinition;
 import org.savara.bpmn2.model.TImport;
-import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TItemDefinition;
 import org.savara.bpmn2.model.TMessage;
-import org.savara.bpmn2.model.TOperation;
 import org.savara.bpmn2.model.TProcess;
 import org.savara.bpmn2.model.TReceiveTask;
-import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.model.TSendTask;
 import org.savara.bpmn2.model.TServiceTask;
-import org.savara.bpmn2.util.BPMN2ServiceUtil;
 import org.savara.common.logging.FeedbackHandler;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.common.model.annotation.Annotation;
@@ -269,29 +263,6 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 		return (ret);
 	}
 
-	protected TInterface getInterface(TDefinitions defns, Role role) {
-		TInterface ret=null;
-		String intfName=role.getName();
-		
-		for (JAXBElement<? extends TRootElement> rootElem : defns.getRootElement()) {
-			if (rootElem.getValue() instanceof TInterface &&
-					((TInterface)rootElem.getValue()).getName().equals(intfName)) {
-				ret = (TInterface)rootElem.getValue();
-				break;
-			}
-		}
-		
-		if (ret == null) {
-			ret = new TInterface();
-			ret.setId(intfName+BPMN2ServiceUtil.INTERFACE_ID_SUFFIX);
-			ret.setName(intfName);
-			
-			defns.getRootElement().add(_objectFactory.createInterface(ret));
-		}
-		
-		return(ret);
-	}
-	
 	protected void generateProcess(ProtocolModel local, BPMN2ModelVisitor visitor,
 					FeedbackHandler handler, ResourceLocator locator) {
 		local.visit(visitor);
@@ -571,8 +542,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						TSendTask task=sa.getSendTask();
 						
 						if (task != null) {
-							task.setMessageRef(getMessageReference(elem));
-							task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
+							task.setMessageRef(m_modelFactory.getMessageReference(elem));
+							task.setOperationRef(m_modelFactory.getOperationReference(elem, task.getMessageRef()));
 						}
 					}
 				} else {
@@ -591,7 +562,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 							TServiceTask task=sa.getServiceTask();
 							
 							if (task != null) {
-								task.setOperationRef(getOperationReference(elem, getMessageReference(elem)));
+								task.setOperationRef(m_modelFactory.getOperationReference(elem,
+											m_modelFactory.getMessageReference(elem)));
 							}
 							
 							pushBPMNActivity(sa);
@@ -608,6 +580,12 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 				if (InteractionUtil.isRequest(elem) ||
 						getMessageBasedInvocation() || act == null) {
 					
+					if (act != null) {
+						// Pop the serivce invocation activity, so that the receive
+						// occurs after the service task
+						popBPMNActivity();
+					}
+					
 					BPMNActivity umls=getBPMNActivity();
 					if (umls != null) {
 						ReceiveActivity sa=
@@ -621,8 +599,8 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						TReceiveTask task=sa.getReceiveTask();
 						
 						if (task != null) {
-							task.setMessageRef(getMessageReference(elem));
-							task.setOperationRef(getOperationReference(elem, task.getMessageRef()));
+							task.setMessageRef(m_modelFactory.getMessageReference(elem));
+							task.setOperationRef(m_modelFactory.getOperationReference(elem, task.getMessageRef()));
 						}
 					}
 				} else {
@@ -636,11 +614,11 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 						
 						TErrorEventDefinition eed=new TErrorEventDefinition();
 						eed.setId(m_modelFactory.createId());
-						eed.setErrorRef(getErrorReference(elem));
+						eed.setErrorRef(m_modelFactory.getErrorReference(elem));
 						
 						// Call this method to establish the error reference on the
 						// appropriate service interface (if not already defined)
-						getOperationReference(elem, eed.getErrorRef());
+						m_modelFactory.getOperationReference(elem, eed.getErrorRef());
 						
 						event.getEventDefinition().add(_objectFactory.createErrorEventDefinition(eed));
 						
@@ -656,7 +634,7 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 					} else {
 						// Need to associate response with service interface - task will then
 						// be automatically associated with it via the operation reference
-						getOperationReference(elem, getMessageReference(elem));
+						m_modelFactory.getOperationReference(elem, m_modelFactory.getMessageReference(elem));
 					}
 				}
 			}
@@ -836,248 +814,5 @@ public class ProtocolToBPMN2ProcessModelGenerator implements ModelGenerator {
 			}
 		}
 		
-		/**
-		 * This method establishes the associated message details,
-		 * if not defined, and returns a reference to it.
-		 * 
-		 * @param interaction The interaction
-		 * @return The message reference
-		 */
-		protected QName getMessageReference(Interaction interaction) {
-			QName ret=null;
-			
-			if (interaction.getMessageSignature() == null ||
-					interaction.getMessageSignature().getTypeReferences().size() == 0) {
-				return(null);
-			}
-			
-			// Check for Message definition
-			for (JAXBElement<? extends TRootElement> rootElem :
-							m_modelFactory.getDefinitions().getRootElement()) {
-				if (rootElem.getValue() instanceof TMessage) {
-					TMessage mesg=(TMessage)rootElem.getValue();
-					
-					if (mesg.getName().equals(interaction.getMessageSignature().
-									getTypeReferences().get(0).getName())) {
-						ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-											mesg.getId(), "tns");
-						
-						// Check if fault, and if so, that an error has been defined
-						if (InteractionUtil.isFaultResponse(interaction)) {
-							String faultName=InteractionUtil.getFaultName(interaction);
-							boolean found=false;
-							
-							for (JAXBElement<? extends TRootElement> subRootElem :
-								m_modelFactory.getDefinitions().getRootElement()) {
-								
-								if (subRootElem.getValue() instanceof TError &&
-										((TError)subRootElem.getValue()).getStructureRef().equals(
-												mesg.getItemRef()) &&
-										((TError)subRootElem.getValue()).getName().equals(faultName)) {
-									found = true;
-								}
-							}
-							
-							if (!found) {
-								TError error=new TError();
-								error.setId("ERR"+faultName);
-								error.setName(faultName);
-								error.setErrorCode(faultName);
-								error.setStructureRef(mesg.getItemRef());
-								m_modelFactory.getDefinitions().getRootElement().add(
-										_objectFactory.createError(error));
-							}
-						}
-						
-						break;
-					}
-				}
-			}
-			
-			return(ret);
-		}
-		
-		/**
-		 * This method establishes the associated message details,
-		 * if not defined, and returns a reference to it.
-		 * 
-		 * @param interaction The interaction
-		 * @return The message reference
-		 */
-		protected QName getErrorReference(Interaction interaction) {
-			QName ret=null;
-			
-			if (interaction.getMessageSignature() == null ||
-					interaction.getMessageSignature().getTypeReferences().size() == 0) {
-				return(null);
-			}
-			
-			if (!InteractionUtil.isFaultResponse(interaction)) {
-				return(null);
-			}
-			
-			// Check for error definition
-			for (JAXBElement<? extends TRootElement> rootElem :
-							m_modelFactory.getDefinitions().getRootElement()) {
-				if (rootElem.getValue() instanceof TMessage) {
-					TMessage mesg=(TMessage)rootElem.getValue();
-					
-					if (mesg.getName().equals(interaction.getMessageSignature().
-									getTypeReferences().get(0).getName())) {
-
-						String faultName=InteractionUtil.getFaultName(interaction);
-						TError error=null;
-						
-						for (JAXBElement<? extends TRootElement> subRootElem :
-							m_modelFactory.getDefinitions().getRootElement()) {
-							
-							if (subRootElem.getValue() instanceof TError &&
-									((TError)subRootElem.getValue()).getStructureRef().equals(
-											mesg.getItemRef()) &&
-									((TError)subRootElem.getValue()).getName().equals(faultName)) {
-								error = (TError)subRootElem.getValue();
-								
-								break;
-							}
-						}
-						
-						if (error == null) {
-							error = new TError();
-							error.setId("ERR"+faultName);
-							error.setName(faultName);
-							error.setErrorCode(faultName);
-							error.setStructureRef(mesg.getItemRef());
-							m_modelFactory.getDefinitions().getRootElement().add(
-									_objectFactory.createError(error));
-						}
-						
-						ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(),
-								error.getId(), "tns");
-
-						break;
-					}
-				}
-			}
-			
-			return(ret);
-		}
-
-		/**
-		 * This method establishes the associated operation details,
-		 * if not defined, and returns a reference to it. If the
-		 * interaction represents a fault, then the error reference
-		 * is supplied, otherwise the associated message reference
-		 * is supplied.
-		 * 
-		 * @param interaction The interaction
-		 * @param messageOrErrorRef The message or error ref
-		 * @return The operation reference
-		 */
-		protected QName getOperationReference(Interaction interaction, QName messageOrErrorRef) {
-			QName ret=null;
-			
-			// Check that interaction has an operation name
-			if (interaction.getMessageSignature().getOperation() == null) {
-				return(null);
-			}
-			
-			// Find interface
-			Role serverRole=null;
-			
-			if (InteractionUtil.isRequest(interaction)) {
-				if (interaction.getToRoles().size() > 0) {
-					serverRole = interaction.getToRoles().get(0);
-				}
-				
-				if (serverRole == null) {
-					serverRole = interaction.getEnclosingProtocol().getLocatedRole();
-				}
-			} else {
-				serverRole = interaction.getFromRole();
-				
-				if (serverRole == null) {
-					serverRole = interaction.getEnclosingProtocol().getLocatedRole();
-				}
-			}
-			
-			if (serverRole == null) {
-				// TODO: REPORT ERROR
-				return (null);
-			}
-			
-			TInterface intf=getInterface(m_modelFactory.getDefinitions(), serverRole);
-			
-			if (intf == null) {
-				// TODO: REPORT ERROR
-				return (null);
-			}
-			
-			// Find operation
-			TOperation op=null;
-			
-			String opName=InteractionUtil.getOperationName(interaction);
-			
-			for (TOperation curop : intf.getOperation()) {
-				if (curop.getName().equals(opName)) {
-					op = curop;
-					break;
-				}
-			}
-			
-			if (op == null) {
-				op = new TOperation();
-				op.setName(opName);
-				op.setId("OP_"+serverRole.getName()+"_"+op.getName());
-				
-				intf.getOperation().add(op);
-			}
-			
-			ret = new QName(m_modelFactory.getDefinitions().getTargetNamespace(), op.getId(), "tns");
-			
-			if (InteractionUtil.isRequest(interaction)) {
-				if (op.getInMessageRef() == null) {
-					op.setInMessageRef(messageOrErrorRef);
-				} else if (!op.getInMessageRef().equals(messageOrErrorRef)) {
-					// TODO: Report mismatch
-				}
-			} else if (InteractionUtil.isFaultResponse(interaction)) {
-				String faultName=InteractionUtil.getFaultName(interaction);
-				TError error=null;
-				
-				// Check for Error definition with associated fault name and message ref
-				for (JAXBElement<? extends TRootElement> rootElem :
-							m_modelFactory.getDefinitions().getRootElement()) {
-					if (rootElem.getValue() instanceof TError) {
-						TError cur=(TError)rootElem.getValue();
-						
-						// Check if error has same fault name
-						// TODO: may need to also check same item def??
-						if (cur.getErrorCode().equals(faultName)) {
-							error = cur;
-							break;
-						}
-					}
-				}
-				
-				if (error != null) {
-					QName qname=new QName(m_modelFactory.getDefinitions().getTargetNamespace(), error.getId(), "tns");
-					
-					if (!op.getErrorRef().contains(qname)) {
-						op.getErrorRef().add(qname);
-					}
-				} else {
-					// TODO: Report unable to find Error for fault name
-				}
-			} else {
-				// Normal response
-				if (op.getOutMessageRef() == null) {
-					op.setOutMessageRef(messageOrErrorRef);
-				} else if (!op.getOutMessageRef().equals(messageOrErrorRef)) {
-					// TODO: Report mismatch
-				}
-			}
-			
-			return(ret);
-		}
 	}
 }

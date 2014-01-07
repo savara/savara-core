@@ -17,7 +17,9 @@
     <bpmn2:itemDefinition id="ITEMcreditCheckResponse" structureRef="ns2:creditCheckResponse"/>
     <bpmn2:message id="IDcreditCheckResponse" itemRef="tns:ITEMcreditCheckResponse" name="creditCheckResponse"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID3" name="DrivingRecordService" processRef="tns:MID2"/>
+        <bpmn2:participant id="MID3" name="DrivingRecordService" processRef="tns:MID2">
+            <bpmn2:interfaceRef>tns:DrivingRecordServiceInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="DrivingRecordService" processType="Public">
         <bpmn2:startEvent id="MID4">

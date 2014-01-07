@@ -8,7 +8,9 @@
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/creditAgency" id="ITEMCreditRating" structureRef="CreditRating"/>
     <bpmn2:message id="IDCreditRating" itemRef="tns:ITEMCreditRating" name="CreditRating"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID3" name="CreditAgency" processRef="tns:MID2"/>
+        <bpmn2:participant id="MID3" name="CreditAgency" processRef="tns:MID2">
+            <bpmn2:interfaceRef>tns:CreditAgencyInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="CreditAgency" processType="Public">
         <bpmn2:startEvent id="MID4">

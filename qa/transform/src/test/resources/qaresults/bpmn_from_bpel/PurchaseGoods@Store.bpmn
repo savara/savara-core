@@ -22,70 +22,78 @@
     <bpmn2:itemDefinition xmlns="http://www.jboss.org/examples/store" id="ITEMAccountNotFound" structureRef="AccountNotFound"/>
     <bpmn2:message id="IDAccountNotFound" itemRef="tns:ITEMAccountNotFound" name="AccountNotFound"/>
     <bpmn2:collaboration id="MID1">
-        <bpmn2:participant id="MID3" name="Store" processRef="tns:MID2"/>
+        <bpmn2:participant id="MID3" name="Store" processRef="tns:MID2">
+            <bpmn2:interfaceRef>tns:StoreInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:participant id="MID8" name="CreditAgency">
+            <bpmn2:interfaceRef>tns:CreditAgencyInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
+        <bpmn2:participant id="MID14" name="Logistics">
+            <bpmn2:interfaceRef>tns:LogisticsInterface</bpmn2:interfaceRef>
+        </bpmn2:participant>
     </bpmn2:collaboration>
     <bpmn2:process id="MID2" name="Store" processType="Public">
         <bpmn2:startEvent id="MID4">
-            <bpmn2:outgoing>tns:MID27</bpmn2:outgoing>
+            <bpmn2:outgoing>tns:MID29</bpmn2:outgoing>
         </bpmn2:startEvent>
         <bpmn2:endEvent id="MID5">
-            <bpmn2:incoming>tns:MID28</bpmn2:incoming>
+            <bpmn2:incoming>tns:MID30</bpmn2:incoming>
         </bpmn2:endEvent>
         <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID6" messageRef="tns:IDBuyRequest" name="Receive: buy(BuyRequest) from Buyer" operationRef="tns:OP_Store_buy" xsi:type="bpmn2:tReceiveTask">
-            <bpmn2:incoming>tns:MID27</bpmn2:incoming>
-            <bpmn2:outgoing>tns:MID26</bpmn2:outgoing>
+            <bpmn2:incoming>tns:MID29</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID28</bpmn2:outgoing>
         </bpmn2:task>
         <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID7" name="Service: creditCheck(CreditCheckRequest) to CreditAgency" operationRef="tns:OP_CreditAgency_creditCheck" xsi:type="bpmn2:tServiceTask">
-            <bpmn2:incoming>tns:MID26</bpmn2:incoming>
-            <bpmn2:outgoing>tns:MID22</bpmn2:outgoing>
+            <bpmn2:incoming>tns:MID28</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID24</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID8">
-            <bpmn2:incoming>tns:MID23</bpmn2:incoming>
-            <bpmn2:incoming>tns:MID25</bpmn2:incoming>
-            <bpmn2:outgoing>tns:MID28</bpmn2:outgoing>
-        </bpmn2:exclusiveGateway>
         <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID9">
-            <bpmn2:incoming>tns:MID22</bpmn2:incoming>
-            <bpmn2:outgoing>tns:MID18</bpmn2:outgoing>
+            <bpmn2:incoming>tns:MID25</bpmn2:incoming>
+            <bpmn2:incoming>tns:MID27</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID30</bpmn2:outgoing>
+        </bpmn2:exclusiveGateway>
+        <bpmn2:exclusiveGateway gatewayDirection="Diverging" id="MID10">
+            <bpmn2:incoming>tns:MID24</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID20</bpmn2:outgoing>
+            <bpmn2:outgoing>tns:MID22</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID10">
-            <bpmn2:incoming>tns:MID19</bpmn2:incoming>
+        <bpmn2:exclusiveGateway gatewayDirection="Converging" id="MID11">
             <bpmn2:incoming>tns:MID21</bpmn2:incoming>
-            <bpmn2:outgoing>tns:MID23</bpmn2:outgoing>
+            <bpmn2:incoming>tns:MID23</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID25</bpmn2:outgoing>
         </bpmn2:exclusiveGateway>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID11" messageRef="tns:IDBuyFailed" name="Send: buy_InsufficientCredit(BuyFailed) to Buyer" operationRef="tns:OP_Store_buy" xsi:type="bpmn2:tSendTask">
-            <bpmn2:incoming>tns:MID18</bpmn2:incoming>
-            <bpmn2:outgoing>tns:MID19</bpmn2:outgoing>
-        </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID12" name="Service: delivery(DeliveryRequest) to Logistics" operationRef="tns:OP_Logistics_delivery" xsi:type="bpmn2:tServiceTask">
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID12" messageRef="tns:IDBuyFailed" name="Send: buy_InsufficientCredit(BuyFailed) to Buyer" operationRef="tns:OP_Store_buy" xsi:type="bpmn2:tSendTask">
             <bpmn2:incoming>tns:MID20</bpmn2:incoming>
-            <bpmn2:outgoing>tns:MID17</bpmn2:outgoing>
-        </bpmn2:task>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID13" messageRef="tns:IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="tns:OP_Store_buy" xsi:type="bpmn2:tSendTask">
-            <bpmn2:incoming>tns:MID17</bpmn2:incoming>
             <bpmn2:outgoing>tns:MID21</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:boundaryEvent attachedToRef="tns:MID7" id="MID14">
-            <bpmn2:outgoing>tns:MID24</bpmn2:outgoing>
-            <bpmn2:errorEventDefinition errorRef="tns:ERRCustomerUnknown" id="MID15"/>
-        </bpmn2:boundaryEvent>
-        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID16" messageRef="tns:IDAccountNotFound" name="Send: buy_AccountNotFound(AccountNotFound) to Buyer" operationRef="tns:OP_Store_buy" xsi:type="bpmn2:tSendTask">
-            <bpmn2:incoming>tns:MID24</bpmn2:incoming>
-            <bpmn2:outgoing>tns:MID25</bpmn2:outgoing>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID13" name="Service: delivery(DeliveryRequest) to Logistics" operationRef="tns:OP_Logistics_delivery" xsi:type="bpmn2:tServiceTask">
+            <bpmn2:incoming>tns:MID22</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID19</bpmn2:outgoing>
         </bpmn2:task>
-        <bpmn2:sequenceFlow id="MID17" sourceRef="MID12" targetRef="MID13"/>
-        <bpmn2:sequenceFlow id="MID18" sourceRef="MID9" targetRef="MID11"/>
-        <bpmn2:sequenceFlow id="MID19" sourceRef="MID11" targetRef="MID10"/>
-        <bpmn2:sequenceFlow id="MID20" sourceRef="MID9" targetRef="MID12"/>
-        <bpmn2:sequenceFlow id="MID21" sourceRef="MID13" targetRef="MID10"/>
-        <bpmn2:sequenceFlow id="MID22" sourceRef="MID7" targetRef="MID9"/>
-        <bpmn2:sequenceFlow id="MID23" sourceRef="MID10" targetRef="MID8"/>
-        <bpmn2:sequenceFlow id="MID24" sourceRef="MID14" targetRef="MID16"/>
-        <bpmn2:sequenceFlow id="MID25" sourceRef="MID16" targetRef="MID8"/>
-        <bpmn2:sequenceFlow id="MID26" sourceRef="MID6" targetRef="MID7"/>
-        <bpmn2:sequenceFlow id="MID27" sourceRef="MID4" targetRef="MID6"/>
-        <bpmn2:sequenceFlow id="MID28" sourceRef="MID8" targetRef="MID5"/>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID15" messageRef="tns:IDBuyConfirmed" name="Send: buy(BuyConfirmed) to Buyer" operationRef="tns:OP_Store_buy" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming>tns:MID19</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID23</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:boundaryEvent attachedToRef="tns:MID7" id="MID16">
+            <bpmn2:outgoing>tns:MID26</bpmn2:outgoing>
+            <bpmn2:errorEventDefinition errorRef="tns:ERRCustomerUnknown" id="MID17"/>
+        </bpmn2:boundaryEvent>
+        <bpmn2:task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="MID18" messageRef="tns:IDAccountNotFound" name="Send: buy_AccountNotFound(AccountNotFound) to Buyer" operationRef="tns:OP_Store_buy" xsi:type="bpmn2:tSendTask">
+            <bpmn2:incoming>tns:MID26</bpmn2:incoming>
+            <bpmn2:outgoing>tns:MID27</bpmn2:outgoing>
+        </bpmn2:task>
+        <bpmn2:sequenceFlow id="MID19" sourceRef="MID13" targetRef="MID15"/>
+        <bpmn2:sequenceFlow id="MID20" sourceRef="MID10" targetRef="MID12"/>
+        <bpmn2:sequenceFlow id="MID21" sourceRef="MID12" targetRef="MID11"/>
+        <bpmn2:sequenceFlow id="MID22" sourceRef="MID10" targetRef="MID13"/>
+        <bpmn2:sequenceFlow id="MID23" sourceRef="MID15" targetRef="MID11"/>
+        <bpmn2:sequenceFlow id="MID24" sourceRef="MID7" targetRef="MID10"/>
+        <bpmn2:sequenceFlow id="MID25" sourceRef="MID11" targetRef="MID9"/>
+        <bpmn2:sequenceFlow id="MID26" sourceRef="MID16" targetRef="MID18"/>
+        <bpmn2:sequenceFlow id="MID27" sourceRef="MID18" targetRef="MID9"/>
+        <bpmn2:sequenceFlow id="MID28" sourceRef="MID6" targetRef="MID7"/>
+        <bpmn2:sequenceFlow id="MID29" sourceRef="MID4" targetRef="MID6"/>
+        <bpmn2:sequenceFlow id="MID30" sourceRef="MID9" targetRef="MID5"/>
     </bpmn2:process>
     <bpmn2:interface id="StoreInterface" name="Store">
         <bpmn2:operation id="OP_Store_buy" name="buy">
@@ -125,93 +133,93 @@
             <bpmndi:BPMNShape bpmnElement="tns:MID7" id="NID5">
                 <dc:Bounds height="60.0" width="110.0" x="290.0" y="140.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="tns:MID9" id="NID6">
+            <bpmndi:BPMNShape bpmnElement="tns:MID10" id="NID6">
                 <dc:Bounds height="30.0" width="30.0" x="450.0" y="105.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="tns:MID11" id="NID7">
+            <bpmndi:BPMNShape bpmnElement="tns:MID12" id="NID7">
                 <dc:Bounds height="60.0" width="270.0" x="530.0" y="40.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="tns:MID12" id="NID8">
+            <bpmndi:BPMNShape bpmnElement="tns:MID13" id="NID8">
                 <dc:Bounds height="60.0" width="110.0" x="530.0" y="140.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="tns:MID13" id="NID9">
+            <bpmndi:BPMNShape bpmnElement="tns:MID15" id="NID9">
                 <dc:Bounds height="60.0" width="110.0" x="690.0" y="140.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID17" id="NID10" sourceElement="tns:NID8" targetElement="tns:NID9">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID19" id="NID10" sourceElement="tns:NID8" targetElement="tns:NID9">
                 <ns4:waypoint x="640.0" y="170.0"/>
                 <ns4:waypoint x="690.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="tns:MID10" id="NID11">
+            <bpmndi:BPMNShape bpmnElement="tns:MID11" id="NID11">
                 <dc:Bounds height="30.0" width="30.0" x="850.0" y="105.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID18" id="NID12" sourceElement="tns:NID6" targetElement="tns:NID7">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID20" id="NID12" sourceElement="tns:NID6" targetElement="tns:NID7">
                 <ns4:waypoint x="500.0" y="120.0"/>
                 <ns4:waypoint x="515.0" y="120.0"/>
                 <ns4:waypoint x="515.0" y="70.0"/>
                 <ns4:waypoint x="530.0" y="70.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID19" id="NID13" sourceElement="tns:NID7" targetElement="tns:NID11">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID21" id="NID13" sourceElement="tns:NID7" targetElement="tns:NID11">
                 <ns4:waypoint x="800.0" y="70.0"/>
                 <ns4:waypoint x="825.0" y="70.0"/>
                 <ns4:waypoint x="825.0" y="120.0"/>
                 <ns4:waypoint x="850.0" y="120.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID20" id="NID14" sourceElement="tns:NID6" targetElement="tns:NID8">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID22" id="NID14" sourceElement="tns:NID6" targetElement="tns:NID8">
                 <ns4:waypoint x="500.0" y="120.0"/>
                 <ns4:waypoint x="515.0" y="120.0"/>
                 <ns4:waypoint x="515.0" y="170.0"/>
                 <ns4:waypoint x="530.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID21" id="NID15" sourceElement="tns:NID9" targetElement="tns:NID11">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID23" id="NID15" sourceElement="tns:NID9" targetElement="tns:NID11">
                 <ns4:waypoint x="800.0" y="170.0"/>
                 <ns4:waypoint x="825.0" y="170.0"/>
                 <ns4:waypoint x="825.0" y="120.0"/>
                 <ns4:waypoint x="850.0" y="120.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="tns:MID16" id="NID16">
+            <bpmndi:BPMNShape bpmnElement="tns:MID18" id="NID16">
                 <dc:Bounds height="60.0" width="430.0" x="450.0" y="240.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="tns:MID8" id="NID17">
+            <bpmndi:BPMNShape bpmnElement="tns:MID9" id="NID17">
                 <dc:Bounds height="30.0" width="30.0" x="930.0" y="155.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID22" id="NID18" sourceElement="tns:NID5" targetElement="tns:NID6">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID24" id="NID18" sourceElement="tns:NID5" targetElement="tns:NID6">
                 <ns4:waypoint x="400.0" y="170.0"/>
                 <ns4:waypoint x="425.0" y="170.0"/>
                 <ns4:waypoint x="425.0" y="120.0"/>
                 <ns4:waypoint x="450.0" y="120.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID23" id="NID19" sourceElement="tns:NID11" targetElement="tns:NID17">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID25" id="NID19" sourceElement="tns:NID11" targetElement="tns:NID17">
                 <ns4:waypoint x="900.0" y="120.0"/>
                 <ns4:waypoint x="915.0" y="120.0"/>
                 <ns4:waypoint x="915.0" y="170.0"/>
                 <ns4:waypoint x="930.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="tns:MID14" id="NID20">
+            <bpmndi:BPMNShape bpmnElement="tns:MID16" id="NID20">
                 <dc:Bounds height="30.0" width="30.0" x="290.0" y="185.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID24" id="NID21" sourceElement="tns:NID20" targetElement="tns:NID16">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID26" id="NID21" sourceElement="tns:NID20" targetElement="tns:NID16">
                 <ns4:waypoint x="320.0" y="200.0"/>
                 <ns4:waypoint x="305.0" y="270.0"/>
                 <ns4:waypoint x="450.0" y="270.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID25" id="NID22" sourceElement="tns:NID16" targetElement="tns:NID17">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID27" id="NID22" sourceElement="tns:NID16" targetElement="tns:NID17">
                 <ns4:waypoint x="880.0" y="270.0"/>
                 <ns4:waypoint x="905.0" y="270.0"/>
                 <ns4:waypoint x="905.0" y="170.0"/>
                 <ns4:waypoint x="930.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID26" id="NID23" sourceElement="tns:NID4" targetElement="tns:NID5">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID28" id="NID23" sourceElement="tns:NID4" targetElement="tns:NID5">
                 <ns4:waypoint x="240.0" y="170.0"/>
                 <ns4:waypoint x="290.0" y="170.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID27" id="NID24" sourceElement="tns:NID3" targetElement="tns:NID4">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID29" id="NID24" sourceElement="tns:NID3" targetElement="tns:NID4">
                 <ns4:waypoint x="80.0" y="170.0"/>
                 <ns4:waypoint x="130.0" y="170.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="tns:MID5" id="NID25">
                 <dc:Bounds height="30.0" width="30.0" x="1010.0" y="155.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="tns:MID28" id="NID26" sourceElement="tns:NID17" targetElement="tns:NID25">
+            <bpmndi:BPMNEdge bpmnElement="tns:MID30" id="NID26" sourceElement="tns:NID17" targetElement="tns:NID25">
                 <ns4:waypoint x="980.0" y="170.0"/>
                 <ns4:waypoint x="1010.0" y="170.0"/>
             </bpmndi:BPMNEdge>

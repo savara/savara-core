@@ -1,0 +1,10 @@
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditCheckRequest" as CreditCheckRequest;
+import xsd "{http://www.jboss.org/examples/creditAgency}CreditRating" as CreditRating;
+[[ Interface(name=CreditAgencyInterface,role=CreditAgency,namespace=http://namespace/CreditAgency) ]]
+[[ Type(prefix=savns0,namespace=http://www.jboss.org/examples/creditAgency) ]]
+protocol SuccessfulPurchaseAsync at CreditAgency(role Store) {
+	[[ Correlation(request=checkCredit) ]]
+	checkCredit(CreditCheckRequest) from Store;
+	[[ Correlation(request=checkCreditCallback) ]]
+	checkCreditCallback(CreditRating) to Store;
+}

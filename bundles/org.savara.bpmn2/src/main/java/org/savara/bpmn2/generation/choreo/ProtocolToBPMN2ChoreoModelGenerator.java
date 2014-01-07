@@ -17,7 +17,6 @@
  */
 package org.savara.bpmn2.generation.choreo;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
@@ -47,7 +46,6 @@ import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TItemDefinition;
 import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TOperation;
-import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TRootElement;
 import org.savara.bpmn2.util.BPMN2ServiceUtil;
 import org.savara.common.logging.FeedbackHandler;
@@ -192,6 +190,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		visitor.completeModels();
 		
 		// Define interfaces for the choreography
+		/*
 		java.util.Map<TParticipant,TInterface> intfs=
 				BPMN2ServiceUtil.introspect(defns);
 
@@ -200,6 +199,7 @@ public class ProtocolToBPMN2ChoreoModelGenerator implements ModelGenerator {
 		} else if (logger.isLoggable(Level.FINE)) {
 			logger.fine("No interfaces detected in generated BPMN2 choreography");
 		}
+		*/
 		
 		String ret=modelName+BPMN_FILE_EXTENSION;
 		

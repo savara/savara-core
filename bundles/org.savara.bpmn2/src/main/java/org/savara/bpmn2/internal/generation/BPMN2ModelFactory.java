@@ -41,11 +41,13 @@ import org.savara.bpmn2.model.TFlowNode;
 import org.savara.bpmn2.model.TGateway;
 import org.savara.bpmn2.model.TGatewayDirection;
 import org.savara.bpmn2.model.TInclusiveGateway;
+import org.savara.bpmn2.model.TInterface;
 import org.savara.bpmn2.model.TIntermediateCatchEvent;
 import org.savara.bpmn2.model.TIntermediateThrowEvent;
 import org.savara.bpmn2.model.TLinkEventDefinition;
 import org.savara.bpmn2.model.TMessage;
 import org.savara.bpmn2.model.TMessageFlow;
+import org.savara.bpmn2.model.TOperation;
 import org.savara.bpmn2.model.TParallelGateway;
 import org.savara.bpmn2.model.TParticipant;
 import org.savara.bpmn2.model.TProcess;
@@ -59,6 +61,7 @@ import org.savara.bpmn2.model.TStartEvent;
 import org.savara.bpmn2.model.TSubChoreography;
 import org.savara.bpmn2.model.TSubProcess;
 import org.savara.bpmn2.model.TTask;
+import org.savara.bpmn2.util.BPMN2ServiceUtil;
 import org.savara.common.model.annotation.Annotation;
 import org.savara.common.model.annotation.AnnotationDefinitions;
 import org.savara.protocol.model.Join;
@@ -355,7 +358,7 @@ public class BPMN2ModelFactory {
 	 * @param interaction The interaction
 	 * @return The message reference
 	 */
-	protected QName getMessageReference(Interaction interaction) {
+	public QName getMessageReference(Interaction interaction) {
 		QName ret=null;
 		
 		if (interaction.getMessageSignature() == null ||
@@ -409,6 +412,218 @@ public class BPMN2ModelFactory {
 		return(ret);
 	}
 	
+	/**
+	 * This method establishes the associated message details,
+	 * if not defined, and returns a reference to it.
+	 * 
+	 * @param interaction The interaction
+	 * @return The message reference
+	 */
+	public QName getErrorReference(Interaction interaction) {
+		QName ret=null;
+		
+		if (interaction.getMessageSignature() == null ||
+				interaction.getMessageSignature().getTypeReferences().size() == 0) {
+			return(null);
+		}
+		
+		if (!org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
+			return(null);
+		}
+		
+		// Check for error definition
+		for (JAXBElement<? extends TRootElement> rootElem :
+						getDefinitions().getRootElement()) {
+			if (rootElem.getValue() instanceof TMessage) {
+				TMessage mesg=(TMessage)rootElem.getValue();
+				
+				if (mesg.getName().equals(interaction.getMessageSignature().
+								getTypeReferences().get(0).getName())) {
+
+					String faultName=org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction);
+					TError error=null;
+					
+					for (JAXBElement<? extends TRootElement> subRootElem :
+						getDefinitions().getRootElement()) {
+						
+						if (subRootElem.getValue() instanceof TError &&
+								((TError)subRootElem.getValue()).getStructureRef().equals(
+										mesg.getItemRef()) &&
+								((TError)subRootElem.getValue()).getName().equals(faultName)) {
+							error = (TError)subRootElem.getValue();
+							
+							break;
+						}
+					}
+					
+					if (error == null) {
+						error = new TError();
+						error.setId("ERR"+faultName);
+						error.setName(faultName);
+						error.setErrorCode(faultName);
+						error.setStructureRef(mesg.getItemRef());
+						getDefinitions().getRootElement().add(
+								m_factory.createError(error));
+					}
+					
+					ret = new QName(getDefinitions().getTargetNamespace(),
+							error.getId(), TARGET_NAMESPACE_PREFIX);
+
+					break;
+				}
+			}
+		}
+		
+		return(ret);
+	}
+
+	/**
+	 * This method establishes the associated operation details,
+	 * if not defined, and returns a reference to it. If the
+	 * interaction represents a fault, then the error reference
+	 * is supplied, otherwise the associated message reference
+	 * is supplied.
+	 * 
+	 * @param interaction The interaction
+	 * @param messageOrErrorRef The message or error ref
+	 * @return The operation reference
+	 */
+	public QName getOperationReference(Interaction interaction, QName messageOrErrorRef) {
+		QName ret=null;
+		
+		// Check that interaction has an operation name
+		if (interaction.getMessageSignature().getOperation() == null) {
+			return(null);
+		}
+		
+		// Find interface
+		Role serverRole=null;
+		
+		if (org.savara.protocol.model.util.InteractionUtil.isRequest(interaction)) {
+			if (interaction.getToRoles().size() > 0) {
+				serverRole = interaction.getToRoles().get(0);
+			}
+			
+			if (serverRole == null) {
+				serverRole = interaction.getEnclosingProtocol().getLocatedRole();
+			}
+		} else {
+			serverRole = interaction.getFromRole();
+			
+			if (serverRole == null) {
+				serverRole = interaction.getEnclosingProtocol().getLocatedRole();
+			}
+		}
+		
+		if (serverRole == null) {
+			// TODO: REPORT ERROR
+			return (null);
+		}
+		
+		TInterface intf=getInterface(getDefinitions(), serverRole);
+		
+		if (intf == null) {
+			// TODO: REPORT ERROR
+			return (null);
+		}
+		
+		// Find operation
+		TOperation op=null;
+		
+		String opName=org.savara.protocol.model.util.InteractionUtil.getOperationName(interaction);
+		
+		for (TOperation curop : intf.getOperation()) {
+			if (curop.getName().equals(opName)) {
+				op = curop;
+				break;
+			}
+		}
+		
+		if (op == null) {
+			op = new TOperation();
+			op.setName(opName);
+			op.setId("OP_"+serverRole.getName()+"_"+op.getName());
+			
+			intf.getOperation().add(op);
+		}
+		
+		ret = new QName(getDefinitions().getTargetNamespace(), op.getId(), "tns");
+		
+		if (org.savara.protocol.model.util.InteractionUtil.isRequest(interaction)) {
+			if (op.getInMessageRef() == null) {
+				op.setInMessageRef(messageOrErrorRef);
+			} else if (!op.getInMessageRef().equals(messageOrErrorRef)) {
+				// TODO: Report mismatch
+			}
+		} else if (org.savara.protocol.model.util.InteractionUtil.isFaultResponse(interaction)) {
+			String faultName=org.savara.protocol.model.util.InteractionUtil.getFaultName(interaction);
+			TError error=null;
+			
+			// Check for Error definition with associated fault name and message ref
+			for (JAXBElement<? extends TRootElement> rootElem :
+						getDefinitions().getRootElement()) {
+				if (rootElem.getValue() instanceof TError) {
+					TError cur=(TError)rootElem.getValue();
+					
+					// Check if error has same fault name
+					// TODO: may need to also check same item def??
+					if (cur.getErrorCode().equals(faultName)) {
+						error = cur;
+						break;
+					}
+				}
+			}
+			
+			if (error != null) {
+				QName qname=new QName(getDefinitions().getTargetNamespace(), error.getId(), "tns");
+				
+				if (!op.getErrorRef().contains(qname)) {
+					op.getErrorRef().add(qname);
+				}
+			} else {
+				// TODO: Report unable to find Error for fault name
+			}
+		} else {
+			// Normal response
+			if (op.getOutMessageRef() == null) {
+				op.setOutMessageRef(messageOrErrorRef);
+			} else if (!op.getOutMessageRef().equals(messageOrErrorRef)) {
+				// TODO: Report mismatch
+			}
+		}
+		
+		return(ret);
+	}
+
+	public TInterface getInterface(TDefinitions defns, Role role) {
+		TInterface ret=null;
+		String intfName=role.getName();
+		
+		for (JAXBElement<? extends TRootElement> rootElem : defns.getRootElement()) {
+			if (rootElem.getValue() instanceof TInterface &&
+					((TInterface)rootElem.getValue()).getName().equals(intfName)) {
+				ret = (TInterface)rootElem.getValue();
+				break;
+			}
+		}
+		
+		if (ret == null) {
+			ret = new TInterface();
+			ret.setId(intfName+BPMN2ServiceUtil.INTERFACE_ID_SUFFIX);
+			ret.setName(intfName);
+			
+			defns.getRootElement().add(m_factory.createInterface(ret));
+			
+			// Add reference to target role
+			TParticipant participant=getParticipant(role.getName());
+			
+			participant.getInterfaceRef().add(
+					new QName(m_definitions.getTargetNamespace(), ret.getId(), TARGET_NAMESPACE_PREFIX));
+		}
+		
+		return(ret);
+	}
+	
 	public Object createChoreographyTask(Object container, Interaction interaction) {
 		TChoreographyTask task=new TChoreographyTask();
 		task.setId(createId());
@@ -440,6 +655,10 @@ public class BPMN2ModelFactory {
 		QName mesg=getMessageReference(interaction);
 		if (mesg != null) {
 			mf.setMessageRef(mesg);
+			
+			// Need to associate interaction with service interface - task will then
+			// be automatically associated with it via the operation reference
+			getOperationReference(interaction, mesg);
 		}
 		
 		_choreography.getMessageFlow().add(mf);
